@@ -46,7 +46,7 @@ SET(PREFIX_INCLUDE include)
 SET(PREFIX_DATA share)
 SET(PREFIX_PARENTDATA ${PREFIX_DATA}/${PARENT})
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src ~/OpenCPN/include )
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src )
 
 # require proper c++
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic -Wno-variadic-macros" )
@@ -82,7 +82,7 @@ FIND_PACKAGE(Gettext REQUIRED)
 # header files and cpp/c files and CMake will sort them out
 
 
-SET(SRC_DEMO
+SET(SRC_SQUIDDIO
     src/squiddio_pi.h
  	src/squiddio_pi.cpp
  	src/icons.h
@@ -111,10 +111,10 @@ SET(SRC_DEMO
 
 INCLUDE_DIRECTORIES(src/mygdal)
 
-ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_DEMO} ${SRC_NMEA0183} )
+ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} )
 
 IF(WIN32)
-  SET(OPENCPN_IMPORT_LIB "../../../${CMAKE_CFG_INTDIR}/${PARENT}")
+  SET(OPENCPN_IMPORT_LIB "../../../build/${CMAKE_CFG_INTDIR}/${PARENT}")
   TARGET_LINK_LIBRARIES( ${PACKAGE_NAME} ${OPENCPN_IMPORT_LIB} )
   ADD_DEPENDENCIES(${PACKAGE_NAME} ${PARENT})
 ENDIF(WIN32)
