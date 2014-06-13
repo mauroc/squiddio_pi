@@ -32,8 +32,19 @@
 class Layer
 {
 public:
-      Layer(void);
-      ~Layer(void);
+      Layer(void)
+		{
+			m_bIsVisibleOnChart = true;
+			m_bIsVisibleOnListing = false;
+			m_bHasVisibleNames = true;
+			m_NoOfItems = 0;
+
+			m_LayerName = _T("");
+			m_LayerFileName = _T("");
+			m_LayerDescription = _T("");
+			m_CreateTime = wxDateTime::Now();
+		}
+      ~Layer(void) {}
       wxString CreatePropString(void) { return m_LayerFileName; }
       bool IsVisibleOnChart() { return m_bIsVisibleOnChart; }
       void SetVisibleOnChart(bool viz = true){ m_bIsVisibleOnChart = viz; }

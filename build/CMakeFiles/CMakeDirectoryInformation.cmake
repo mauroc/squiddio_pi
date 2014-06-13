@@ -12,7 +12,6 @@ SET(CMAKE_FORCE_UNIX_PATHS 1)
 SET(CMAKE_C_INCLUDE_PATH
   "../include"
   "../src"
-  "/home/mauro/OpenCPN/include"
   "/usr/lib/i386-linux-gnu/wx/include/gtk2-unicode-release-2.8"
   "/usr/include/wx-2.8"
   "../src/mygdal"

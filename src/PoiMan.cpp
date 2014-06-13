@@ -103,7 +103,7 @@ bool PoiMan::RemoveRoutePoint(Poi *prp)
     return true;
 }
 
-wxString PoiMan::CreateGUID( Poi *pRP )
+/*wxString PoiMan::CreateGUID( Poi *pRP )
 //  Create the unique identifier
 {
     //FIXME: this method is not needed at all (if GetUUID works...)
@@ -116,4 +116,4 @@ wxString PoiMan::CreateGUID( Poi *pRP )
 
      return GUID;
     return GpxDocument::GetUUID();
-}
+}*/

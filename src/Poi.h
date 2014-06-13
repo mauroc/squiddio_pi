@@ -34,7 +34,7 @@
 class ocpnDC;
 class wxDC;
 
-const wxChar *ParseGPXDateTime( wxDateTime &dt, const wxChar *datetime ); // from navutil.h
+
 
 class Poi
 {
@@ -77,6 +77,8 @@ public:
       double GetCourse() { return m_routeprop_course; };
       void SetDistance( double distance) { m_routeprop_distance = distance; };
       double GetDistance() { return m_routeprop_distance; };
+
+	  const wxChar *ParseGPXDateTime( wxDateTime &dt, const wxChar *datetime ); // from navutil.h
 
 
 //      bool SendToGPS(const wxString& com_name, wxGauge *pProgress);

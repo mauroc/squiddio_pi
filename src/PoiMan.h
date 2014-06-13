@@ -54,7 +54,7 @@ class PoiMan
 public:
       PoiMan();
       ~PoiMan();
-      wxString CreateGUID(Poi *pRP);
+      //wxString CreateGUID(Poi *pRP);
       bool AddRoutePoint(Poi *prp);
       bool RemoveRoutePoint(Poi *prp);
       PoiList *GetWaypointList(void) { return m_pWayPointList; }

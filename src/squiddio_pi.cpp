@@ -32,6 +32,11 @@
 
 #include "wx/wxprec.h"
 
+
+#ifdef __WXMSW__
+	#define WXUSINGDLL
+#endif
+
 #ifndef  WX_PRECOMP
 	#include "wx/wx.h"
 	#include "wx/event.h"
