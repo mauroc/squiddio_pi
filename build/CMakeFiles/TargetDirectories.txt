@@ -1,1 +1,0 @@
-/home/mauro/OpenCPN/plugins/squiddio_pi/build/CMakeFiles/squiddio_pi.dir
