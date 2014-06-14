@@ -44,7 +44,9 @@ public:
 			m_LayerDescription = _T("");
 			m_CreateTime = wxDateTime::Now();
 		}
-      ~Layer(void) {}
+      ~Layer(void) {
+    	  /* */
+      }
       wxString CreatePropString(void) { return m_LayerFileName; }
       bool IsVisibleOnChart() { return m_bIsVisibleOnChart; }
       void SetVisibleOnChart(bool viz = true){ m_bIsVisibleOnChart = viz; }

@@ -237,6 +237,7 @@ void Poi::CalculateNameExtents( void )
 
 }
 
+/*
 #ifdef ocpnUSE_GL
 void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
 {
@@ -249,10 +250,10 @@ void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
     if(m_wpBBox.GetValid() &&
        vp.chart_scale == m_wpBBox_chart_scale &&
        vp.rotation == m_wpBBox_rotation) {
-        /* see if this waypoint can intersect with bounding box */
+         see if this waypoint can intersect with bounding box
         LLBBox vpBBox = vp.GetBBox();
         if( vpBBox.IntersectOut( m_wpBBox ) ) {
-            /* try with vp crossing IDL */
+             try with vp crossing IDL
             if(vpBBox.GetMinX() < -180 && vpBBox.GetMaxX() > -180) {
                 wxPoint2DDouble xlate( -360., 0. );
                 wxBoundingBox test_box2 = m_wpBBox;
@@ -308,9 +309,9 @@ void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
     hilitebox = r3;
     hilitebox.x -= r.x;
     hilitebox.y -= r.y;
-    hilitebox.Inflate( 2 ); /* mouse poop? */
+    hilitebox.Inflate( 2 );  mouse poop?
 
-    /* update bounding box */
+     update bounding box
     if(!m_wpBBox.GetValid() || vp.chart_scale != m_wpBBox_chart_scale || vp.rotation != m_wpBBox_rotation) {
         double lat1, lon1, lat2, lon2;
         cc1->GetCanvasPixPoint(r.x+hilitebox.x, r.y+hilitebox.y+hilitebox.height, lat1, lon1);
@@ -371,7 +372,7 @@ void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
     if( m_bShowName && m_pMarkFont ) {
         int w = m_NameExtents.x, h = m_NameExtents.y;
         if(!m_iTextTexture && w && h) {
-            wxBitmap tbm(w, h); /* render text on dc */
+            wxBitmap tbm(w, h);  render text on dc
             wxMemoryDC dc;
             dc.SelectObject( tbm );               
             dc.SetBackground( wxBrush( *wxBLACK ) );
@@ -381,14 +382,14 @@ void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
             dc.DrawText( m_MarkName, 0, 0);
             dc.SelectObject( wxNullBitmap );
             
-            /* make alpha texture for text */
+             make alpha texture for text
             wxImage image = tbm.ConvertToImage();
             unsigned char *d = image.GetData();
             unsigned char *e = new unsigned char[w * h];
             for( int p = 0; p < w*h; p++)
                 e[p] = d[3*p + 0];
             
-            /* create texture for rendered text */
+             create texture for rendered text
             glGenTextures(1, &m_iTextTexture);
             glBindTexture(GL_TEXTURE_2D, m_iTextTexture);
             
@@ -405,7 +406,7 @@ void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
         }
 
         if(m_iTextTexture) {
-            /* draw texture with text */
+             draw texture with text
             glBindTexture(GL_TEXTURE_2D, m_iTextTexture);
             
             glEnable(GL_TEXTURE_2D);
@@ -438,6 +439,7 @@ void Poi::DrawGL( ViewPort &vp, OCPNRegion &region )
     if( m_bBlink ) g_blink_rect = CurrentRect_in_DC;               // also save for global blinker
 }
 #endif
+*/
 
 void Poi::SetPosition( double lat, double lon )
 {

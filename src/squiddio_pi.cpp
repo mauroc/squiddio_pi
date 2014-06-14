@@ -68,6 +68,9 @@
 	#error You must set wxUSE_DIALUP_MANAGER to 1 in setup.h
 #endif
 
+#include <wx/listimpl.cpp>
+WX_DEFINE_LIST(LayerList);
+
 // the class factories, used to create and destroy instances of the PlugIn
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
@@ -97,6 +100,8 @@ squiddio_pi::squiddio_pi( void *ppimgr )
 
 squiddio_pi::~squiddio_pi( void )
 {
+	delete	pLayerList;
+	delete pPoiMan;
     delete _img_marina_grn;
     delete _img_anchor_blu;
     delete _img_club_pur ;

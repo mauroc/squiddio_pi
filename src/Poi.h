@@ -133,6 +133,7 @@ public:
       HyperlinkList     *m_HyperlinkList;
       bool              m_btemp;
 
+/*
 #ifdef ocpnUSE_GL
       void DrawGL( ViewPort &vp, OCPNRegion &region );
       unsigned int m_iTextTexture;
@@ -143,6 +144,7 @@ public:
 
       static bool s_bUpdateWaypointsDisplayList;
 #endif
+*/
 
 private:
       wxString          m_MarkName;

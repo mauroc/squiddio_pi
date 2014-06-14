@@ -149,6 +149,8 @@ Poi.h
 /home/mauro/OpenCPN/plugins/squiddio_pi/src/Poi.h
 NavObjectCollection.h
 /home/mauro/OpenCPN/plugins/squiddio_pi/src/NavObjectCollection.h
+wx/listimpl.cpp
+-
 
 /home/mauro/OpenCPN/plugins/squiddio_pi/src/squiddio_pi.h
 wx/wxprec.h
@@ -1867,6 +1869,8 @@ wx/mac/carbon/listctrl.h
 /usr/include/wx-2.8/wx/wx/mac/carbon/listctrl.h
 wx/generic/listctrl.h
 /usr/include/wx-2.8/wx/wx/generic/listctrl.h
+
+/usr/include/wx-2.8/wx/listimpl.cpp
 
 /usr/include/wx-2.8/wx/log.h
 wx/defs.h
