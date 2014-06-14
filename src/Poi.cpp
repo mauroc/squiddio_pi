@@ -30,6 +30,7 @@
 
 #include "PoiMan.h"
 #include "Poi.h"
+
 //#include "navutil.h"
 
 
@@ -41,6 +42,7 @@ int g_LayerIdx;
 
 
 WX_DEFINE_LIST ( PoiList );
+WX_DEFINE_LIST ( HyperlinkList );
 
 Poi::Poi()
 {

@@ -28,12 +28,12 @@
 #include <wx/datetime.h>
 #include <wx/gdicmn.h>
 #include <wx/gauge.h>
+
 #include "Hyperlink.h"
 #include "gpxdocument.h"
 
 class ocpnDC;
 class wxDC;
-
 
 
 class Poi
