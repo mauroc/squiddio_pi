@@ -4,4 +4,7 @@ index.sh
 include/version.h
 build
 Debug
+CMakeFiles
 cscope.out
+.cproject
+.project
