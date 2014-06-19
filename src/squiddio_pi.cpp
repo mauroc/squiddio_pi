@@ -91,7 +91,7 @@ PoiMan *pPoiMan;
 //---------------------------------------------------------------------------------------------------------
 
 squiddio_pi::squiddio_pi( void *ppimgr )
-	:opencpn_plugin_110( ppimgr )
+	:opencpn_plugin_110( ppimgr ) // constructor initialization
 {
     // Create the PlugIn icons
 	initialize_images();
@@ -111,9 +111,9 @@ squiddio_pi::~squiddio_pi( void )
 
 int squiddio_pi::Init(void) {
 	//      printf("squiddio_pi Init()\n");
+    wxLogMessage( _T("squiddio_pi Init()") );
 
 	// Get a pointer to the opencpn display canvas, to use as a parent for windows created
-
 	m_parent_window = GetOCPNCanvasWindow();
 
 	wxMenu dummy_menu;
