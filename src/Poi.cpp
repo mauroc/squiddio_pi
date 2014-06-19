@@ -172,7 +172,7 @@ Poi::Poi( double lat, double lon, const wxString& icon_ident, const wxString& na
 
     if( !pGUID.IsEmpty() )
         m_GUID = pGUID;
-    else
+    //else
         //m_GUID = pPoiMan->CreateGUID( this );
 
     //      Get Icon bitmap
@@ -180,7 +180,6 @@ Poi::Poi( double lat, double lon, const wxString& icon_ident, const wxString& na
     //ReLoadIcon();
 
     SetName( name );
-
     //  Possibly add the waypoint to the global list maintained by the waypoint manager
 
     if( bAddToList && NULL != pPoiMan )
