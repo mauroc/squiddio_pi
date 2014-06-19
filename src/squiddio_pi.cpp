@@ -26,16 +26,18 @@
 
 // todo fix formatting of description view
 // todo compile in Windows
-// todo package as opensource repo
 // todo code style. cleanup, comments
+// write readme
+// create download urls on squiddio
 // todo localization
 
 #include "wx/wxprec.h"
 
-
+/*
 #ifdef __WXMSW__
 	#define WXUSINGDLL
 #endif
+*/
 
 #ifndef  WX_PRECOMP
 	#include "wx/wx.h"
@@ -50,15 +52,12 @@
 #include <wx/utils.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
-//#include <wx/config.h>
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
 
 #include <typeinfo>
 #include "squiddio_pi.h"
 #include "icons.h"
-//#include "chart1.h"
-//#include "navutil.h"
 
 #include "PoiMan.h"
 #include "Poi.h"
