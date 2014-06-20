@@ -24,7 +24,6 @@
  ***************************************************************************
  */
 
-// todo fix formatting of description view
 // memory management
 // todo code style. cleanup, comments
 // write readme
@@ -355,11 +354,8 @@ bool squiddio_pi::ShowWaypoint(Poi * wp){
 	PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name, m_GUID);
 	pPoint->m_MarkDescription = wp->m_MarkDescription;
 
-	//link->Link = _T("http://squidd.io");
-	//link->DescrText = _T("visit this location on squidd.io");
 	wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
 	wp_link = linknode->GetData();
-
 	link->Link = wp_link->Link;
 	link->DescrText = wp_link->DescrText;
 	link->Type = wxEmptyString;
