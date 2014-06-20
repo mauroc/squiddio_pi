@@ -28,8 +28,6 @@
 
 
 #include <wx/imaglist.h>
-
-//#include "chart1.h"                 // for ColorScheme definition
 #include "Poi.h"
 
 //----------------------------------------------------------------------------

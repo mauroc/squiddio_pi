@@ -42,7 +42,7 @@ int g_LayerIdx;
 
 
 WX_DEFINE_LIST ( PoiList );
-WX_DEFINE_LIST ( HyperlinkList );
+//WX_DEFINE_LIST ( HyperlinkList );
 
 Poi::Poi()
 {

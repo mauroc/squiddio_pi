@@ -48,7 +48,7 @@
 
 #include "../../../include/ocpn_plugin.h"
 #include "Layer.h"
-
+#include "Hyperlink.h"
 
 //class demoWindow;
 class Layer;
@@ -56,7 +56,6 @@ class Poi;
 class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
-//class  Plugin_HyperlinkList;
 
 extern PoiMan *pPoiMan;
 
@@ -142,6 +141,8 @@ private:
 
       int 		 		g_LayerIdx;
       bool				g_bShowLayers;
+      Plugin_Hyperlink *link;
+      Hyperlink 	   *wp_link;
 };
 
 #endif

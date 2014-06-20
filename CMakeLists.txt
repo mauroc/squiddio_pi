@@ -98,8 +98,6 @@ SET(SRC_SQUIDDIO
  	src/pugixml.cpp
  	src/mygdal/ogrsf_frmts.h
  	src/mygdal/ogr_feature.h
- 	#src/chart1.h
- 	#src/navutil.h
  	src/ocpn_types.h
  	src/pugiconfig.hpp
  	src/Hyperlink.h

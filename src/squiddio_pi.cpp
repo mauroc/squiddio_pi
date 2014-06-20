@@ -25,7 +25,7 @@
  */
 
 // todo fix formatting of description view
-// todo compile in Windows
+// memory management
 // todo code style. cleanup, comments
 // write readme
 // create download urls on squiddio
@@ -69,6 +69,8 @@
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(LayerList);
+WX_DEFINE_LIST ( HyperlinkList );
+WX_DEFINE_LIST ( Plugin_HyperlinkList );
 
 // the class factories, used to create and destroy instances of the PlugIn
 
@@ -147,6 +149,7 @@ int squiddio_pi::Init(void) {
 
 	pLayerList 	= new LayerList;
 	pPoiMan 	= new PoiMan;
+	link 		= new Plugin_Hyperlink;
 
 	m_pconfig = GetOCPNConfigObject();
 	LoadConfig();
@@ -352,14 +355,17 @@ bool squiddio_pi::ShowWaypoint(Poi * wp){
 	PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name, m_GUID);
 	pPoint->m_MarkDescription = wp->m_MarkDescription;
 
-	Plugin_Hyperlink *link = new Plugin_Hyperlink;
-	link->Link = _T("http://squidd.io");
-	link->DescrText = _T("visit this location on squidd.io");
+	//link->Link = _T("http://squidd.io");
+	//link->DescrText = _T("visit this location on squidd.io");
+	wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+	wp_link = linknode->GetData();
+
+	link->Link = wp_link->Link;
+	link->DescrText = wp_link->DescrText;
 	link->Type = wxEmptyString;
 
-	//pPoint->m_HyperlinkList->Append( link );
-
-	//pPoint->m_HyperlinkList = linklist;
+	pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
+	pPoint->m_HyperlinkList->Insert( link );
 
 	bool added = AddSingleWaypoint(pPoint, false);
 	return added;
