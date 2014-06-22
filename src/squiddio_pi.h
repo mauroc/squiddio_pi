@@ -112,8 +112,8 @@ public:
       bool LoadLayers(wxString &path);
       bool LoadLayerItems(wxString & path, Layer *l, bool show);
 
-      bool ShowWaypoint(Poi* wp);
-      bool HideWaypoint(Poi* wp);
+      bool ShowPOI(Poi* wp);
+      bool HidePOI(Poi* wp);
       // todo can the follwoign be moved to private?
       double m_cursor_lat, m_cursor_lon;
       Layer *local_sq_layer;

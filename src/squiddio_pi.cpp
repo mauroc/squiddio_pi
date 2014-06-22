@@ -28,15 +28,11 @@
 // todo code style. cleanup, comments
 // write readme
 // create download urls on squiddio
+// clean up places database
+// escape codes in place names xml
 // todo localization
 
 #include "wx/wxprec.h"
-
-/*
-#ifdef __WXMSW__
-	#define WXUSINGDLL
-#endif
-*/
 
 #ifndef  WX_PRECOMP
 	#include "wx/wx.h"
@@ -68,10 +64,11 @@
 
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(LayerList);
-WX_DEFINE_LIST ( HyperlinkList );
-WX_DEFINE_LIST ( Plugin_HyperlinkList );
+WX_DEFINE_LIST(HyperlinkList );
+WX_DEFINE_LIST(Plugin_HyperlinkList);
 
 // the class factories, used to create and destroy instances of the PlugIn
+//
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
 	//return (opencpn_plugin *) new squiddio_pi(ppimgr);
@@ -140,7 +137,7 @@ int squiddio_pi::Init(void) {
 	SetCanvasContextMenuItemViz(m_report_id, true);
 
 	AddCustomWaypointIcon(_img_marina_grn, 	_T("marina_grn"), 	_T("Marina"));
-	AddCustomWaypointIcon(_img_anchor_blu, 	_T("anchor_blu"), 	_T("Anchorage"));
+	AddCustomWaypointIcon(_img_anchor_blu, 	_T("anchor_blu"), 	_T("Anchorage/Buoys"));
 	AddCustomWaypointIcon(_img_club_pur, 	_T("club_pur"), 	_T("Yacht Club"));
 	AddCustomWaypointIcon(_img_fuelpump_red,_T("fuelpump_red"), _T("Fuel Station"));
 	AddCustomWaypointIcon(_img_pier_yel, 	_T("pier_yel"), 	_T("Dock/Pier"));
@@ -269,10 +266,8 @@ bool squiddio_pi::LoadLayers(wxString &path)
                 pLayerList->Insert( l );
 
                 //  Load the entire file array as a single layer
-
                 for( unsigned int i = 0; i < file_array.GetCount(); i++ ) {
                     wxString file_path = file_array[i];
-
                     if( ::wxFileExists( file_path ) ) {
                     	LoadLayerItems( file_path, l ,bLayerViz);
                     }
@@ -316,7 +311,7 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show){
 
 void squiddio_pi::RenderLayerContentsOnChart( Layer *layer ){
 
-    // Process waypoints in this layer
+    // Process POIs in this layer
 
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
 
@@ -326,9 +321,9 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer ){
             rp->SetVisible( layer->IsVisibleOnChart() );
             rp->SetNameShown( false );
             if (layer->IsVisibleOnChart())
-            	ShowWaypoint(rp);
+            	ShowPOI(rp);
             else
-            	HideWaypoint(rp);
+            	HidePOI(rp);
         }
         node = node->GetNext();
     }
@@ -344,7 +339,7 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer ){
     }
     SaveConfig();
 }
-bool squiddio_pi::ShowWaypoint(Poi * wp){
+bool squiddio_pi::ShowPOI(Poi * wp){
 	double lat = wp->m_lat;
 	double lon = wp->m_lon;
 	wxString name = wp->GetName();
@@ -367,7 +362,7 @@ bool squiddio_pi::ShowWaypoint(Poi * wp){
 	return added;
 }
 
-bool squiddio_pi::HideWaypoint(Poi * wp){
+bool squiddio_pi::HidePOI(Poi * wp){
 	return DeleteSingleWaypoint( wp->m_GUID );
 }
 
@@ -407,10 +402,12 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 		}
 }
 
+
+
 void squiddio_pi::OnContextMenuItemCallback(int id) {
 	wxLogMessage(_T("squiddio_pi OnContextMenuCallBack()"));
 
-	wxString request_region = local_region; // fixes the cursor position at time of request so that intervening mouse movements do not alter the layer name that will be created
+	wxString request_region = local_region; // fixes the cursor's hover region at time of request so that intervening mouse movements do not alter the layer name that will be created
 	Layer * request_layer = local_sq_layer; // fixes the layer at time of request so that intervening mouse movements do not alter the layer name that will be created
 
 	if (id == m_show_id || id == m_hide_id)
@@ -445,10 +442,10 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 				RenderLayerContentsOnChart(new_layer);
 
 				if (isLayerUpdate){
-					wxMessageBox(_T("local Layer has been updated"));
+					wxMessageBox(_T("local destinations have been updated"));
 				}
 			} else {
-				wxMessageBox(_T("no waypoints available for the region"));
+				wxMessageBox(_T("no destinations available for the region"));
 			}
 		} else {
 			wxMessageBox(_T("server not responding. Check your Internet connection"));
@@ -483,8 +480,6 @@ wxString squiddio_pi::DownloadLayer(){
 	{
 		wxStringOutputStream out_stream(&res);
 		httpStream->Read(out_stream);
-	   //::wxBell();
-		//wxMessageBox(res);
 	}
 	else
 	{
@@ -523,7 +518,6 @@ bool squiddio_pi::IsOnline() {
     }
     else {
     	if (m_network->IsOnline()) {
-    		//::wxBell();
     		wxLogMessage(wxT("squiddio_plugin: network status: online"));
     		isOnline= true;
     	}
