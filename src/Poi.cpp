@@ -1,10 +1,12 @@
 /***************************************************************************
  *
- * Project:  OpenCPN - squiddio fork
-* test
+ * Project:  OpenCPN
+ * Purpose   Squiddio plugin
+ * Note:     This work is based on the original RoutePoint.cpp file which is:
+ * Copyright (C) 2013 by David S. Register
  *
  ***************************************************************************
- *   Copyright (C) 2013 by David S. Register                               *
+ *   Copyright (C) 2014 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

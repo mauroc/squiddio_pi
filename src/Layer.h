@@ -1,9 +1,12 @@
 /******************************************************************************
  *
  * Project:  OpenCPN
+ * Purpose   Squiddio plugin
+ * This work is based on the Layer.h, file which is:
+ * Copyright (C) 2010 by David S. Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2014 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

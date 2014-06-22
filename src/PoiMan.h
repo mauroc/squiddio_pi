@@ -1,11 +1,12 @@
 /***************************************************************************
  *
- * Project:  OpenCPN - squiddio fork
- * Purpose:  Route Manager
- * Author:   David Register
+ * Project:  OpenCPN
+ * Purpose   Squiddio plugin
+ * Note:     This work is based on the original RoutePointMan.h file which is:
+ * Copyright (C) 2010 by David S. Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2014 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +23,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  **************************************************************************/
+
 
 #ifndef __ROUTEMANSQ_H__
 #define __ROUTEMANSQ_H__

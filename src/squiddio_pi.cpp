@@ -1,11 +1,9 @@
 /******************************************************************************
- * updated: 4-5-2012  
  * Project:  OpenCPN
- * Purpose:  cruising POIs database
- * Author:   Mauro Calvi
+ * Purpose:  Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2010 by Mauro Calvi									   *
+ *   Copyright (C) 2014 by Mauro Calvi									   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,6 +29,7 @@
 // clean up places database
 // escape codes in place names xml
 // todo localization
+
 
 #include "wx/wxprec.h"
 

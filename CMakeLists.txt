@@ -96,8 +96,8 @@ SET(SRC_SQUIDDIO
  	src/Layer.h
  	src/pugixml.hpp
  	src/pugixml.cpp
- 	src/mygdal/ogrsf_frmts.h
- 	src/mygdal/ogr_feature.h
+ 	#src/mygdal/ogrsf_frmts.h
+ 	#src/mygdal/ogr_feature.h
  	src/ocpn_types.h
  	src/pugiconfig.hpp
  	src/Hyperlink.h

@@ -1,11 +1,12 @@
 /***************************************************************************
  *
  * Project:  OpenCPN
- * Purpose:  Route Manager
- * Author:   David Register
+ * Purpose   Squiddio plugin
+ * Note:     This work is based on the original RoutePointMan.cpp file which is:
+ * Copyright (C) 2010 by David S. Register
  *
  ***************************************************************************
- *   Copyright (C) 2010 by David S. Register                               *
+ *   Copyright (C) 2014 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,7 +43,7 @@
 #include "PoiMan.h"
 
 //--------------------------------------------------------------------------------
-//      WayPointman   Implementation
+//      PoiMan   Implementation
 //--------------------------------------------------------------------------------
 
 PoiMan::PoiMan()
@@ -103,17 +104,4 @@ bool PoiMan::RemoveRoutePoint(Poi *prp)
     return true;
 }
 
-/*wxString PoiMan::CreateGUID( Poi *pRP )
-//  Create the unique identifier
-{
-    //FIXME: this method is not needed at all (if GetUUID works...)
-    wxDateTime now = wxDateTime::Now();
-     time_t ticks = now.GetTicks();
-     wxString GUID;
-     GUID.Printf(_T("%d-%d-%d-%d"), ((int)fabs(pRP->m_lat * 1e4)), ((int)fabs(pRP->m_lon * 1e4)), (int)ticks, m_nGUID);
 
-     m_nGUID++;
-
-     return GUID;
-    return GpxDocument::GetUUID();
-}*/
