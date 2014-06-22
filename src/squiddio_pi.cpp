@@ -23,7 +23,6 @@
  */
 
 // memory management
-// todo code style. cleanup, comments
 // write readme
 // create download urls on squiddio
 // clean up places database
@@ -70,7 +69,6 @@ WX_DEFINE_LIST(Plugin_HyperlinkList);
 //
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
-	//return (opencpn_plugin *) new squiddio_pi(ppimgr);
 	return new squiddio_pi(ppimgr);
 }
 
@@ -108,7 +106,7 @@ squiddio_pi::~squiddio_pi( void )
 
 int squiddio_pi::Init(void) {
 	//      printf("squiddio_pi Init()\n");
-    wxLogMessage( _T("squiddio_pi Init()") );
+    wxLogMessage( _T("squiddio_pi: Init()") );
 
 	// Get a pointer to the opencpn display canvas, to use as a parent for windows created
 	m_parent_window = GetOCPNCanvasWindow();
@@ -158,7 +156,7 @@ int squiddio_pi::Init(void) {
 
     if( wxDir::Exists( layerdir ) ) {
         wxString laymsg;
-        laymsg.Printf( wxT("Getting squiddio .gpx layer files from: %s"), layerdir.c_str() );
+        laymsg.Printf( wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str() );
         wxLogMessage( laymsg );
 
         LoadLayers(layerdir);
@@ -189,6 +187,9 @@ bool squiddio_pi::DeInit(void) {
 //          m_pdemo_window->Destroy(); //Gives a Segmentation fault
 	}
 	*/
+    delete pLayerList;
+    delete pPoiMan;
+    delete link;
 	return true;
 }
 bool squiddio_pi::LoadConfig(void)
@@ -259,7 +260,7 @@ bool squiddio_pi::LoadLayers(wxString &path)
                 l->m_bIsVisibleOnChart = bLayerViz;
 
                 wxString laymsg;
-                laymsg.Printf( wxT("New layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str() );
+                laymsg.Printf( wxT("squiddio_pi: new layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str() );
                 wxLogMessage( laymsg );
 
                 pLayerList->Insert( l );
@@ -302,7 +303,7 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show){
     l->m_NoOfItems += nItems;
 
     wxString objmsg;
-    objmsg.Printf( wxT("Loaded GPX file %s with %d items."), file_path.c_str(), nItems );
+    objmsg.Printf( wxT("squiddio_pi: loaded GPX file %s with %d items."), file_path.c_str(), nItems );
     wxLogMessage( objmsg );
     delete pSet;
     return nItems > 0;
@@ -401,10 +402,8 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 		}
 }
 
-
-
 void squiddio_pi::OnContextMenuItemCallback(int id) {
-	wxLogMessage(_T("squiddio_pi OnContextMenuCallBack()"));
+	wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
 	wxString request_region = local_region; // fixes the cursor's hover region at time of request so that intervening mouse movements do not alter the layer name that will be created
 	Layer * request_layer = local_sq_layer; // fixes the layer at time of request so that intervening mouse movements do not alter the layer name that will be created
@@ -413,7 +412,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 	{
 		request_layer->SetVisibleOnChart( !request_layer->IsVisibleOnChart() );
 		RenderLayerContentsOnChart( request_layer );
-		wxLogMessage(_T("toggled layer: ")+request_layer->m_LayerName);
+		wxLogMessage(_T("squiddio_pi: toggled layer: ")+request_layer->m_LayerName);
 	}
 	else if (id == m_update_id )
 	{
@@ -441,19 +440,19 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 				RenderLayerContentsOnChart(new_layer);
 
 				if (isLayerUpdate){
-					wxMessageBox(_T("local destinations have been updated"));
+					wxMessageBox(_T("Local destinations have been updated"));
 				}
 			} else {
-				wxMessageBox(_T("no destinations available for the region"));
+				wxMessageBox(_T("No destinations available for the region"));
 			}
 		} else {
-			wxMessageBox(_T("server not responding. Check your Internet connection"));
+			wxMessageBox(_T("Server not responding. Check your Internet connection"));
 		}
 	} else if (id == m_report_id) {
 		wxString url_path = _T("http://squidd.io/places/new?lat=");
 		url_path.Append(wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=") << wxString::Format(wxT("%f"), m_cursor_lon));
 		if (!IsOnline() || !wxLaunchDefaultBrowser(url_path))
-			wxMessageBox(_T("could not launch default browser. Check your Internet connection"));
+			wxMessageBox(_T("Could not launch default browser. Check your Internet connection"));
 	}
 }
 
@@ -471,7 +470,7 @@ wxString squiddio_pi::DownloadLayer(){
 	wxApp::IsMainLoopRunning();
 
 	wxString url_path = _T("/places/download_xml_layers.xml?region=")+local_region;
-	wxLogMessage(url_path);
+	//wxLogMessage(url_path);
 
 	wxInputStream *httpStream = get.GetInputStream(url_path );
 
@@ -482,7 +481,7 @@ wxString squiddio_pi::DownloadLayer(){
 	}
 	else
 	{
-		wxMessageBox(_T("squiddio_pi: unable to connect to host"));
+		wxMessageBox(_T("Squiddio_pi: unable to connect to host"));
 	}
 	wxDELETE(httpStream);
 	get.Close();
@@ -490,21 +489,21 @@ wxString squiddio_pi::DownloadLayer(){
 }
 
 bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path){
-    // write file to the layers directory
+    // write file to the squiddio directory
    	bool isUpdate = wxFile::Exists(file_path);
    	wxFile gpxFile;
 
    	if (isUpdate)
-   		wxLogMessage(_T("squiddio_pi plugin: updating existing layer file"));
+   		wxLogMessage(_T("squiddio_pi: updating existing layer file"));
    	else
-   		wxLogMessage(_T("squiddio_pi plugin: creating new layer file"));
+   		wxLogMessage(_T("squiddio_pi: creating new layer file"));
 
     if (gpxFile.Create( file_path , true )){
 		   gpxFile.Write(layerStr);
 		   gpxFile.Close();
 	}
     else
-        wxLogMessage(_T("Unable to create sQuiddio layer file"));
+        wxLogMessage(_T("squiddio_pi: unable to create layer file"));
     return isUpdate;
 }
 
@@ -579,8 +578,7 @@ wxString squiddio_pi::GetShortDescription() {
 wxString squiddio_pi::GetLongDescription() {
 	return _(
 			"Squiddio for OpenCPN\n\
-user-sourced database of sailing destinations.");
-
+User-sourced database of sailing destinations.");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
