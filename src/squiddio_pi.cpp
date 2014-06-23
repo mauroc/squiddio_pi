@@ -22,8 +22,6 @@
  ***************************************************************************
  */
 
-// memory management
-// write readme
 // create download urls on squiddio
 // clean up places database
 // escape codes in place names xml
@@ -576,9 +574,15 @@ wxString squiddio_pi::GetShortDescription() {
 }
 
 wxString squiddio_pi::GetLongDescription() {
-	return _(
-			"Squiddio for OpenCPN\n\
-User-sourced database of sailing destinations.");
+	return _("User-sourced database of sailing destinations.\n\n\
+To download destinations for a desired region (requires Internet connection):\n\
+* Position cursor on area where you want to view destinations and right click mouse\n\
+* Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n\
+Destinations appear as OpenCPN waypoints. Right-click on waypoint to view destination information and for link to sQuiddio's destination page. Follow link to rate destination and add comments online.\n\n\
+Other menu options: \n\ 	        
+* Toggle visibility for local destinations on/off \n\
+* Submit a new destination (requires Internet connection and free sQuiddio account) \n\
+");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
