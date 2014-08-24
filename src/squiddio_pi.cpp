@@ -447,7 +447,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 			wxMessageBox(_T("Server not responding. Check your Internet connection"));
 		}
 	} else if (id == m_report_id) {
-		wxString url_path = _T("http://squidd.io/places/new?lat=");
+		wxString url_path = _T("http://squidd.io/locations/new?lat=");
 		url_path.Append(wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=") << wxString::Format(wxT("%f"), m_cursor_lon));
 		if (!IsOnline() || !wxLaunchDefaultBrowser(url_path))
 			wxMessageBox(_T("Could not launch default browser. Check your Internet connection"));
