@@ -22,12 +22,6 @@
  ***************************************************************************
  */
 
-// create download urls on squiddio
-// clean up places database
-// escape codes in place names xml
-// todo localization
-
-
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
