@@ -568,14 +568,16 @@ wxString squiddio_pi::GetShortDescription() {
 }
 
 wxString squiddio_pi::GetLongDescription() {
-	return _("User-sourced database of sailing destinations.\n\n\
+    return _("User-sourced database of sailing destinations.\n\n\
 To download destinations for a desired region (requires Internet connection):\n\
 * Position cursor on area where you want to view destinations and right click mouse\n\
 * Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n\
-Destinations appear as OpenCPN waypoints. Right-click on waypoint to view destination information and for link to sQuiddio's destination page. Follow link to rate destination and add comments online.\n\n\
-Other menu options: \n* Toggle visibility for local destinations on/off \n\
-* Submit a new destination (requires Internet connection and free sQuiddio account) \n\
-");
+Destinations appear as OpenCPN waypoints: \n\
+* Right-click on waypoint for link to sQuiddio's destination page. \n\
+* Follow link to rate destination and add comments online.\n\n\
+Other menu options: \n\
+* Toggle visibility for local destinations on/off \n\
+* Submit a new destination (requires Internet connection and free user account)");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
