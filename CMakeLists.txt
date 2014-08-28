@@ -96,8 +96,6 @@ SET(SRC_SQUIDDIO
  	src/Layer.h
  	src/pugixml.hpp
  	src/pugixml.cpp
- 	#src/mygdal/ogrsf_frmts.h
- 	#src/mygdal/ogr_feature.h
  	src/ocpn_types.h
  	src/pugiconfig.hpp
  	src/Hyperlink.h
@@ -106,8 +104,6 @@ SET(SRC_SQUIDDIO
  	src/tinystr.h
  	)
  	
-
-INCLUDE_DIRECTORIES(src/mygdal)
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} )
 
