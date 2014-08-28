@@ -86,8 +86,6 @@ squiddio_pi::squiddio_pi( void *ppimgr )
 
 squiddio_pi::~squiddio_pi( void )
 {
-	delete	pLayerList;
-	delete pPoiMan;
     delete _img_marina_grn;
     delete _img_anchor_blu;
     delete _img_club_pur ;
