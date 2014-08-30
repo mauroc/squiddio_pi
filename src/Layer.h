@@ -42,9 +42,9 @@ public:
 			m_bHasVisibleNames = true;
 			m_NoOfItems = 0;
 
-			m_LayerName = _T("");
-			m_LayerFileName = _T("");
-			m_LayerDescription = _T("");
+			m_LayerName = _("");
+			m_LayerFileName = _("");
+			m_LayerDescription = _ ("");
 			m_CreateTime = wxDateTime::Now();
 		}
       ~Layer(void) {

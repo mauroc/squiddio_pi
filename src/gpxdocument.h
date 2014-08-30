@@ -136,7 +136,7 @@ typedef enum {
 #define GPX_WPT_ROUTEPOINT (char *)"rtept"
 #define GPX_WPT_TRACKPOINT (char *)"trkpt"
 
-#define GPX_EMPTY_STRING _T("")
+#define GPX_EMPTY_STRING _("")
 
 class GpxWptElement : public TiXmlElement
 {
