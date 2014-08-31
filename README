@@ -6,15 +6,28 @@ Compiling
 =========
 You have to be able to compile OpenCPN itself - Get the info at http://opencpn.org/ocpn/developers_manual
 
-* go to the plugin subdirectory in your OpenCPN source tree
 * git clone git://github.com/mauroc/squiddio_pi.git
 
-Build as normally:
+Build:
 
-* cd ..
+* cd squiddio_pi
+* mkdir build
 * cd build
 * cmake ..
+On Unix:
 * make
+On Windows:
+You need a corresponding opencpn.lib file in your build directory. If you don't want to build one yourself as part of the OpenCPN core, several different are available at https://sourceforge.net/projects/opencpnplugins/files/opencpn_lib/. For this plugin, the 3.3.1824 or newer is fine.
+* cmake --build .
+
+Generate packages:
+
+On Unix:
+To build RPM packages, you need the respective tools, so on Debian/Ubuntu, do "sudo apt-get install rpm"
+* make package
+
+On Windows:
+cmake --build . --target package --config release
 
 License
 =======
