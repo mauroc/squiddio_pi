@@ -33,11 +33,6 @@
   #include "wx/wx.h"
 #endif //precompiled headers
 
-#if !wxUSE_DIALUP_MANAGER
-	#error You must set wxUSE_DIALUP_MANAGER to 1 in setup.h!
-#endif
-
-#include "wx/dialup.h"
 #include <wx/list.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
@@ -108,7 +103,6 @@ public:
       Layer * GetLocalLayer(void);
       Layer * LoadLayer(wxString, wxString);
       void ReportDestination(double lat, double lon);
-      wxDialUpManager *GetDialer() const { return m_network; }
       bool LoadLayers(wxString &path);
       bool LoadLayerItems(wxString & path, Layer *l, bool show);
 
@@ -130,7 +124,6 @@ private:
       int              	m_hide_id;
       int 				m_update_id;
       int 				m_report_id;
-      wxDialUpManager  *m_network;
       bool 				isLayerUpdate;
       wxString 			local_region;
       wxString			layerdir;
@@ -143,6 +136,9 @@ private:
       bool				g_bShowLayers;
       Plugin_Hyperlink *link;
       Hyperlink 	   *wp_link;
+      
+      long              last_online_chk;
+      bool              last_online;
 };
 
 #endif
