@@ -326,6 +326,7 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer ){
             g_InvisibleLayers.Append(layer->m_LayerName+_T(";"));
         g_VisibleLayers.Replace(layer->m_LayerName+_T(";"),wxEmptyString);
     }
+    RequestRefresh(m_parent_window);
     SaveConfig();
 }
 bool squiddio_pi::ShowPOI(Poi * wp){
