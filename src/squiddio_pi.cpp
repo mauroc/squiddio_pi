@@ -137,9 +137,9 @@ int squiddio_pi::Init(void) {
     m_pconfig = GetOCPNConfigObject();
     LoadConfig();
 
-    wxString * pPath = GetpPrivateApplicationDataLocation();
-    appendOSDirSlash( pPath );
-    layerdir = (*pPath).Append(_T("squiddio"));
+    layerdir = *GetpPrivateApplicationDataLocation();
+    layerdir += wxFileName::GetPathSeparator();
+    layerdir += _T("squiddio");
 
     if( !wxDir::Exists( layerdir ) )
         wxFileName::Mkdir(layerdir);
