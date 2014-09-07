@@ -32,7 +32,6 @@
 
 #include <wx/sstream.h>
 #include <wx/protocol/http.h>
-#include "wx/dialup.h"
 #include <wx/aui/aui.h>
 #include <wx/utils.h>
 #include <wx/dir.h>
@@ -48,14 +47,12 @@
 #include "Poi.h"
 #include "NavObjectCollection.h"
 
-#if !wxUSE_DIALUP_MANAGER
-    #error You must set wxUSE_DIALUP_MANAGER to 1 in setup.h
-#endif
-
 #include <wx/listimpl.cpp>
 WX_DEFINE_LIST(LayerList);
 WX_DEFINE_LIST(HyperlinkList );
 WX_DEFINE_LIST(Plugin_HyperlinkList);
+
+#define ONLINE_CHECK_RETRY 10
 
 // the class factories, used to create and destroy instances of the PlugIn
 //
@@ -100,6 +97,8 @@ int squiddio_pi::Init(void) {
 
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
+    
+    last_online_chk = 0;
 
     wxMenu dummy_menu;
 
@@ -137,9 +136,9 @@ int squiddio_pi::Init(void) {
     m_pconfig = GetOCPNConfigObject();
     LoadConfig();
 
-    wxString * pPath = GetpPrivateApplicationDataLocation();
-    appendOSDirSlash( pPath );
-    layerdir = (*pPath).Append(_T("squiddio"));
+    layerdir = *GetpPrivateApplicationDataLocation();
+    layerdir += wxFileName::GetPathSeparator();
+    layerdir += _T("squiddio");
 
     if( !wxDir::Exists( layerdir ) )
         wxFileName::Mkdir(layerdir);
@@ -327,6 +326,7 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer ){
             g_InvisibleLayers.Append(layer->m_LayerName+_T(";"));
         g_VisibleLayers.Replace(layer->m_LayerName+_T(";"),wxEmptyString);
     }
+    RequestRefresh(m_parent_window);
     SaveConfig();
 }
 bool squiddio_pi::ShowPOI(Poi * wp){
@@ -448,14 +448,19 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 
 wxString squiddio_pi::DownloadLayer(){
     // --------------------------------- setup http GET request
+    int cnt = 0;
     wxString res;
     wxHTTP get;
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
     get.SetTimeout(10); // 10 seconds of timeout instead of 10 minutes ...
 
     while (!get.Connect(_T("squidd.io")))
-    //while (!get.Connect(_T("localhost")))
-        wxSleep(5);
+    {
+        if (cnt > 10)
+            break;
+        wxSleep(1);
+        cnt++;
+    }
 
     wxApp::IsMainLoopRunning();
 
@@ -498,23 +503,24 @@ bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path){
 }
 
 bool squiddio_pi::IsOnline() {
-    bool isOnline;
-    m_network = wxDialUpManager::Create();
-    if ( !m_network->IsOk() ){
-        wxLogError(wxT("squiddio_plugin: could not detect status of network."));
-        isOnline=false;
+    if (wxDateTime::GetTimeNow() < last_online_chk + ONLINE_CHECK_RETRY)
+        return last_online;
+    wxHTTP get;
+    get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
+    get.SetTimeout(10); // 10 seconds of timeout instead of 10 minutes ...
+    int cnt = 0;
+
+    while (!get.Connect(_T("yahoo.com")))
+    {
+        if (cnt > 5)
+            last_online = false;
+            return false;
+        wxSleep(1);
+        cnt++;
     }
-    else {
-        if (m_network->IsOnline()) {
-            wxLogMessage(wxT("squiddio_plugin: network status: online"));
-            isOnline= true;
-        }
-        else{
-            wxLogMessage(wxT("squiddio_plugin: network status: offline"));
-            isOnline= false;
-        }
-    }
-    return isOnline;
+    get.Close();
+    last_online = true;
+    return true;
 }
 
 Layer * squiddio_pi::GetLocalLayer(){
