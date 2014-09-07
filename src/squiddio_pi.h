@@ -82,7 +82,7 @@ public:
 
 //    The optional method overrides
 
-      void RenderLayerContentsOnChart(Layer *layer);
+      void RenderLayerContentsOnChart(Layer *layer, bool save_config = true);
 
       void OnContextMenuItemCallback(int id);
       void UpdateAuiStatus(void);
