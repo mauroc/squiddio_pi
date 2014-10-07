@@ -36,7 +36,7 @@
 #include <wx/list.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    2
+#define     PLUGIN_VERSION_MINOR    3
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
@@ -82,7 +82,7 @@ public:
 
 //    The optional method overrides
 
-      void RenderLayerContentsOnChart(Layer *layer);
+      void RenderLayerContentsOnChart(Layer *layer, bool save_config = true);
 
       void OnContextMenuItemCallback(int id);
       void UpdateAuiStatus(void);
