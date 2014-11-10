@@ -52,6 +52,11 @@ class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
 
+//-----------------------------------
+class demoWindow;
+//-----------------------------------
+
+
 extern PoiMan *pPoiMan;
 
 
@@ -139,7 +144,37 @@ private:
       
       long              last_online_chk;
       bool              last_online;
+
+      // ------------------------------------ new
+      //demoWindow       *m_pdemo_window;
+      int               m_demoshow_id;
+      int               m_demohide_id;
+      //-------------------------------------
 };
+
+
+//------------------------------------------ new
+/*
+class demoWindow : public wxWindow
+{
+public:
+      demoWindow(wxWindow *pparent, wxWindowID id);
+      ~demoWindow();
+
+      //void OnPaint(wxPaintEvent& event){}
+      //void SetSentence(wxString &sentence){}
+      //void OnSize(wxSizeEvent& event){}
+
+      //NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
+
+      //wxString          m_NMEASentence;
+      double            mLat, mLon, mSog, mCog, mVar;
+
+
+//DECLARE_EVENT_TABLE()
+};
+*/
+//-------------------------------------------
 
 #endif
 
