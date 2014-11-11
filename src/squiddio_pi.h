@@ -102,6 +102,7 @@ public:
       void SetCursorLatLon(double lat, double lon);
       bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
       int GetToolbarToolCount(void);
+
       void ShowPreferencesDialog( wxWindow* parent );
       void OnToolbarToolCallback(int id);
       void SetPluginMessage(wxString &message_id, wxString &message_body);
@@ -163,12 +164,16 @@ private:
 class demoWindow : public wxWindow
 {
 public:
-      demoWindow(wxWindow *pparent, wxWindowID id);
-      ~demoWindow();
+      demoWindow(wxWindow *pparent, wxWindowID id)
+        :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
+        {
+        }
 
-      //void OnPaint(wxPaintEvent& event){}
-      //void SetSentence(wxString &sentence){}
-      //void OnSize(wxSizeEvent& event){}
+      ~demoWindow(){}
+
+      void OnPaint(wxPaintEvent& event){}
+      void SetSentence(wxString &sentence){}
+      void OnSize(wxSizeEvent& event){}
 
       //NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
 

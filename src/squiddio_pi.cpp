@@ -95,23 +95,6 @@ int squiddio_pi::Init(void) {
     wxMenuItem *pmidh = new wxMenuItem(&dummy_menu, -1, _("Hide PlugIn DemoWindow"));
     m_demohide_id = AddCanvasContextMenuItem(pmidh, this );
     SetCanvasContextMenuItemViz(m_demohide_id, false);
-    /*
-    m_pdemo_window = new demoWindow(m_parent_window, wxID_ANY);
-
-    m_AUImgr = GetFrameAuiManager();
-    m_AUImgr->AddPane(m_pdemo_window);
-    m_AUImgr->GetPane(m_pdemo_window).Name(_T("Demo Window Name"));
-
-    m_AUImgr->GetPane(m_pdemo_window).Float();
-    m_AUImgr->GetPane(m_pdemo_window).FloatingPosition(300,30);
-
-    m_AUImgr->GetPane(m_pdemo_window).Caption(_T("AUI Managed Demo Window"));
-    m_AUImgr->GetPane(m_pdemo_window).CaptionVisible(true);
-    m_AUImgr->GetPane(m_pdemo_window).GripperTop(true);
-    m_AUImgr->GetPane(m_pdemo_window).CloseButton(true);
-    m_AUImgr->GetPane(m_pdemo_window).Show(false);
-    m_AUImgr->Update();
-`   */
 
     wxMenuItem *pmi = new wxMenuItem(&dummy_menu, -1,
             _("Show local sQuiddio destinations"));
@@ -132,6 +115,24 @@ int squiddio_pi::Init(void) {
             _("Report a Destination at this location"));
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
+
+
+    m_pdemo_window = new demoWindow(m_parent_window, wxID_ANY);
+
+    m_AUImgr = GetFrameAuiManager();
+    m_AUImgr->AddPane(m_pdemo_window);
+    m_AUImgr->GetPane(m_pdemo_window).Name(_T("Demo Window Name"));
+
+    m_AUImgr->GetPane(m_pdemo_window).Float();
+    m_AUImgr->GetPane(m_pdemo_window).FloatingPosition(300,30);
+
+    m_AUImgr->GetPane(m_pdemo_window).Caption(_T("AUI Managed Demo Window"));
+    m_AUImgr->GetPane(m_pdemo_window).CaptionVisible(true);
+    m_AUImgr->GetPane(m_pdemo_window).GripperTop(true);
+    m_AUImgr->GetPane(m_pdemo_window).CloseButton(true);
+    m_AUImgr->GetPane(m_pdemo_window).Show(false);
+    m_AUImgr->Update();
+
 
     AddCustomWaypointIcon(_img_marina_grn,  _T("marina_grn"),   _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu,  _T("anchor_blu"),   _T("Anchorage/Buoys"));
@@ -179,14 +180,12 @@ int squiddio_pi::Init(void) {
 
 
 bool squiddio_pi::DeInit(void) {
-    /*
     m_AUImgr->DetachPane(m_pdemo_window);
 
     if (m_pdemo_window) {
         m_pdemo_window->Close();
 //          m_pdemo_window->Destroy(); //Gives a Segmentation fault
     }
-    */
 
     RemoveCanvasContextMenuItem(m_show_id);
     RemoveCanvasContextMenuItem(m_hide_id);
@@ -413,6 +412,8 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_update_id, IsOnline() );
     SetCanvasContextMenuItemViz(m_report_id, IsOnline() );
 
+
+
 }
 
 void squiddio_pi::SetCursorLatLon(double lat, double lon) {
@@ -439,7 +440,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
     wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
     //-----------------------------------------------------------------
-    /*
+
     wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
 
     if(!pane.IsShown())
@@ -461,7 +462,6 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
           pane.Show(false);
           m_AUImgr->Update();
     }
-    */
     //-----------------------------------------------------------------
 
 
@@ -678,3 +678,11 @@ void squiddio_pi::SetPluginMessage(wxString &message_id,
 void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
 }
+
+BEGIN_EVENT_TABLE(demoWindow, wxWindow)
+  EVT_PAINT ( demoWindow::OnPaint )
+  EVT_SIZE(demoWindow::OnSize)
+
+
+END_EVENT_TABLE()
+
