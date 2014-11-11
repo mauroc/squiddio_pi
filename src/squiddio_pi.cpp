@@ -391,7 +391,7 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer, bool save_config ){
         if( rp && ( rp->m_LayerID == layer->m_LayerID ) ) {
             rp->SetVisible( layer->IsVisibleOnChart() );
             rp->SetNameShown( false );
-            if (layer->IsVisibleOnChart())
+            if (layer->IsVisibleOnChart() && ShowType(rp))
                 ShowPOI(rp);
             else
                 HidePOI(rp);
@@ -497,7 +497,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
         Layer * new_layer = NULL;
 
         if (IsOnline())
-            layerContents = DownloadLayer();
+            layerContents = DownloadLayer(_T("/places/download_xml_layers.xml?region=")+local_region);
 
         wxString gpxFilePath = layerdir;
         appendOSDirSlash( &gpxFilePath );
@@ -533,13 +533,13 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
     }
 }
 
-wxString squiddio_pi::DownloadLayer(){
+wxString squiddio_pi::DownloadLayer(wxString url_path){
     // --------------------------------- setup http GET request
     int cnt = 0;
     wxString res;
     wxHTTP get;
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    get.SetTimeout(10); // 10 seconds of timeout instead of 10 minutes ...
+    get.SetTimeout(3);
 
     while (!get.Connect(_T("squidd.io")))
     {
@@ -549,25 +549,37 @@ wxString squiddio_pi::DownloadLayer(){
         cnt++;
     }
 
-    wxApp::IsMainLoopRunning();
+    wxString tmp;
+    tmp.Printf( wxT("squiddio_pi: count %d."),  cnt );
+    wxLogMessage(tmp);
 
-    wxString url_path = _T("/places/download_xml_layers.xml?region=")+local_region;
-    //wxLogMessage(url_path);
+        if (cnt <= 10)
+        {
+            wxApp::IsMainLoopRunning();
 
-    wxInputStream *httpStream = get.GetInputStream(url_path );
+            //wxString url_path = _T("/places/download_xml_layers.xml?region=")+local_region;
+            //wxLogMessage(url_path);
 
-    if (get.GetError() == wxPROTO_NOERR)
-    {
-        wxStringOutputStream out_stream(&res);
-        httpStream->Read(out_stream);
-    }
-    else
-    {
-        wxMessageBox(_("Squiddio_pi: unable to connect to host"));
-    }
-    wxDELETE(httpStream);
-    get.Close();
-    return res;
+            wxInputStream *httpStream = get.GetInputStream(url_path );
+
+    tmp.Printf( wxT("squiddio_pi: GetError %d."),  get.GetError() );
+    wxLogMessage(tmp);
+
+            if (get.GetError() == wxPROTO_NOERR)
+            {
+                wxStringOutputStream out_stream(&res);
+                httpStream->Read(out_stream);
+            }
+            else
+            {
+                //wxMessageBox(_("Squiddio_pi: unable to connect to host"));
+                wxLogMessage(_("Squiddio_pi: unable to connect to host"));
+            }
+            wxDELETE(httpStream);
+            get.Close();
+
+        }
+        return res;
 }
 
 bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path){
@@ -683,7 +695,46 @@ int squiddio_pi::GetToolbarToolCount(void) {
     return 1;
 }
 void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
+    {
+        SquiddioPrefsDialogBase *dialog =
+            new SquiddioPrefsDialogBase( parent, wxID_ANY, _("sQuiddio Preferences"),
+                                       wxPoint( m_squiddio_dialog_x, m_squiddio_dialog_y),
+                                       wxDefaultSize, wxDEFAULT_DIALOG_STYLE );
 
+        dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
+        dialog->m_textSquiddioID->SetValue(g_Email);
+        dialog->m_textApiKey->SetValue(g_ApiKey);
+        dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
+        dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
+        dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
+        dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
+        dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
+        dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
+        dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+
+        dialog->Fit();
+        wxColour cl;
+        GetGlobalColor(_T("DILG1"), &cl);
+        dialog->SetBackgroundColour(cl);
+
+        if(dialog->ShowModal() == wxID_OK)
+        {
+            g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
+            g_Email = dialog->m_textSquiddioID->GetValue();
+            g_ApiKey = dialog->m_textApiKey->GetValue();
+            g_ViewMarinas    = dialog->m_checkBoxMarinas->GetValue();
+            g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
+            g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
+            g_ViewDocks      = dialog->m_checkBoxDocks->GetValue();
+            g_ViewRamps      = dialog->m_checkBoxRamps->GetValue();
+            g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
+            g_ViewOthers     = dialog->m_checkBoxOthers->GetValue();
+
+            SaveConfig();
+            RenderLayers();
+        }
+        delete dialog;
+    }
 }
 void squiddio_pi::OnToolbarToolCallback(int id) {
 

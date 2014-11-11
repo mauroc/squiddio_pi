@@ -53,6 +53,7 @@
 #include "PoiMan.h"
 #include "Poi.h"
 #include "NavObjectCollection.h"
+#include "squiddioPrefsDialogBase.h"
 
 class Layer;
 class Poi;
@@ -113,7 +114,7 @@ public:
       void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
       void appendOSDirSlash( wxString* pString );
       bool IsOnline(void);
-      wxString DownloadLayer(void);
+      wxString DownloadLayer(wxString url_path);
       bool SaveLayer(wxString,wxString);
       Layer * GetLocalLayer(void);
       Layer * LoadLayer(wxString, wxString);
@@ -158,6 +159,10 @@ private:
       
       long              last_online_chk;
       bool              last_online;
+
+
+
+
       int         g_LastUpdate;
       int         g_PostPeriod;
       wxString    g_Email;
@@ -170,6 +175,9 @@ private:
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
 
+      int         m_squiddio_dialog_x, m_squiddio_dialog_y;
+      wxArrayInt  m_period_secs;
+      Layer       *m_LogsLayer;
 
       // ------------------------------------ new
       demoWindow       *m_pdemo_window;
