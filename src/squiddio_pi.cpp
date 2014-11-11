@@ -73,6 +73,18 @@ squiddio_pi::~squiddio_pi( void )
     delete _img_fuelpump_red;
     delete _img_pier_yel;
     delete _img_ramp_azu;
+    delete _img_logimg_N;
+    delete _img_logimg_NE;
+    delete _img_logimg_E;
+    delete _img_logimg_SE;
+    delete _img_logimg_S;
+    delete _img_logimg_SW;
+    delete _img_logimg_W;
+    delete _img_logimg_NW;
+    delete _img_logimg_C;
+    delete _img_logimg_U;
+
+
 }
 
 int squiddio_pi::Init(void) {
@@ -167,7 +179,11 @@ int squiddio_pi::Init(void) {
     return (
     INSTALLS_CONTEXTMENU_ITEMS |
     WANTS_CURSOR_LATLON |
-    USES_AUI_MANAGER);
+    WANTS_NMEA_SENTENCES |
+    WANTS_PREFERENCES    |
+    USES_AUI_MANAGER |
+    WANTS_LATE_INIT
+    );
 }
 
 
@@ -192,7 +208,7 @@ bool squiddio_pi::DeInit(void) {
         RenderLayerContentsOnChart( l, false );
         pLayerList->DeleteObject( l );
     }
-
+    SaveConfig();
     RequestRefresh(m_parent_window);
     
     delete pLayerList;
@@ -211,6 +227,17 @@ bool squiddio_pi::LoadConfig(void)
     pConf->SetPath ( _T( "/PlugIns/libsquiddio_pi.so" ) );
     pConf->Read( _T ( "VisibleLayers" ), &g_VisibleLayers );
     pConf->Read( _T ( "InvisibleLayers" ), &g_InvisibleLayers );
+    pConf->Read( _T ( "PostPeriod" ), &g_PostPeriod );
+    pConf->Read( _T ( "LastUpdate" ), &g_LastUpdate);
+    pConf->Read( _T ( "Email" ), &g_Email);
+    pConf->Read( _T ( "ApiKey" ), &g_ApiKey);
+    pConf->Read( _T ( "ViewMarinas" ), &g_ViewMarinas, true);
+    pConf->Read( _T ( "ViewAnchorages" ), &g_ViewAnchorages,true);
+    pConf->Read( _T ( "ViewDocks" ), &g_ViewDocks, true);
+    pConf->Read( _T ( "ViewYachtClubs" ), &g_ViewYachtClubs,true);
+    pConf->Read( _T ( "ViewFuelStations" ), &g_ViewFuelStations,true);
+    pConf->Read( _T ( "ViewRamps" ), &g_ViewRamps,true);
+    pConf->Read( _T ( "ViewOthers" ), &g_ViewOthers,true);
     return true;
 }
 
@@ -224,7 +251,17 @@ bool squiddio_pi::SaveConfig(void)
     pConf->SetPath ( _T( "/PlugIns/libsquiddio_pi.so" ) );
     pConf->Write ( _T ( "VisibleLayers" ), g_VisibleLayers );
     pConf->Write ( _T ( "InvisibleLayers" ), g_InvisibleLayers );
-
+    pConf->Write ( _T ( "PostPeriod" ), g_PostPeriod );
+    pConf->Write ( _T ( "LastUpdate" ), g_LastUpdate );
+    pConf->Write( _T ( "Email" ), g_Email);
+    pConf->Write( _T ( "ApiKey" ),g_ApiKey);
+    pConf->Write( _T ( "ViewMarinas" ),     g_ViewMarinas);
+    pConf->Write( _T ( "ViewAnchorages" ),  g_ViewAnchorages);
+    pConf->Write( _T ( "ViewDocks" ),       g_ViewDocks);
+    pConf->Write( _T ( "ViewYachtClubs" ),  g_ViewYachtClubs);
+    pConf->Write( _T ( "ViewRamps" ),       g_ViewRamps);
+    pConf->Write( _T ( "ViewFuelStations" ),   g_ViewFuelStations);
+    pConf->Write( _T ( "ViewOthers" ),      g_ViewOthers);
     return true;
 }
 
@@ -289,21 +326,6 @@ bool squiddio_pi::LoadLayers(wxString &path)
 
 }
 
-Layer * squiddio_pi::LoadLayer(wxString file_path, wxString region){
-    Layer * l = new Layer();
-    if( ::wxFileExists( file_path ) ) {
-
-        l->m_LayerID = ++g_LayerIdx;
-        l->m_LayerName = _T("SQ_")+region;
-        l->m_LayerFileName = file_path;
-        l->m_bIsVisibleOnChart = true;
-        pLayerList->Insert( l );
-
-        LoadLayerItems(file_path, l, true);
-    }
-    return l;
-}
-
 bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show){
     NavObjectCollection1 *pSet = new NavObjectCollection1;
     pSet->load_file(file_path.fn_str());
@@ -316,6 +338,46 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show){
     wxLogMessage( objmsg );
     delete pSet;
     return nItems > 0;
+}
+
+Layer * squiddio_pi::LoadLayer(wxString file_path, wxString region){
+    Layer * l = new Layer();
+    if( ::wxFileExists( file_path ) ) {
+
+        l->m_LayerID = ++g_LayerIdx;
+        if (file_path.Contains(_T("logs.gpx"))){
+            l->m_LayerName = _T("logs");
+        } else {
+            l->m_LayerName = _T("SQ_")+region;
+        }
+        l->m_LayerFileName = file_path;
+        l->m_bIsVisibleOnChart = true;
+        pLayerList->Insert( l );
+
+        LoadLayerItems(file_path, l, true);
+    }
+    return l;
+}
+
+bool squiddio_pi::ShowType(Poi * wp){
+    if      (wp->m_IconName == _T("marina_grn"))     return g_ViewMarinas;
+    else if (wp->m_IconName == _T("anchor_blu"))   return g_ViewAnchorages;
+    else if (wp->m_IconName == _T("club_pur"))      return g_ViewYachtClubs;
+    else if (wp->m_IconName == _T("fuelpump_red"))  return g_ViewFuelStations;
+    else if (wp->m_IconName == _T("pier_yel"))      return g_ViewDocks;
+    else if (wp->m_IconName == _T("ramp_azu"))      return g_ViewRamps;
+    else return g_ViewOthers;
+}
+
+void squiddio_pi::RenderLayers(){
+    Layer * l;
+    LayerList::iterator it;
+    int index = 0;
+    for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
+        l = (Layer *) (*it);
+        l->SetVisibleNames( false );
+        RenderLayerContentsOnChart(l);
+    }
 }
 
 void squiddio_pi::RenderLayerContentsOnChart( Layer *layer, bool save_config ){

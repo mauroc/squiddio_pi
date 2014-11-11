@@ -120,9 +120,12 @@ public:
       void ReportDestination(double lat, double lon);
       bool LoadLayers(wxString &path);
       bool LoadLayerItems(wxString & path, Layer *l, bool show);
-
       bool ShowPOI(Poi* wp);
       bool HidePOI(Poi* wp);
+
+      void RenderLayers();
+
+
       // todo can the follwoign be moved to private?
       double m_cursor_lat, m_cursor_lon;
       Layer *local_sq_layer;
@@ -132,6 +135,7 @@ public:
 private:
       bool LoadConfig(void);
       bool SaveConfig(void);
+      bool ShowType(Poi * wp);
 
       wxWindow         *m_parent_window;
       wxAuiManager     *m_AUImgr;
@@ -154,6 +158,18 @@ private:
       
       long              last_online_chk;
       bool              last_online;
+      int         g_LastUpdate;
+      int         g_PostPeriod;
+      wxString    g_Email;
+      wxString    g_ApiKey;
+      bool        g_ViewMarinas;
+      bool        g_ViewAnchorages;
+      bool        g_ViewYachtClubs;
+      bool        g_ViewDocks;
+      bool        g_ViewRamps;
+      bool        g_ViewFuelStations;
+      bool        g_ViewOthers;
+
 
       // ------------------------------------ new
       demoWindow       *m_pdemo_window;
