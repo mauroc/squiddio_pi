@@ -26,28 +26,11 @@
 
 #ifndef  WX_PRECOMP
     #include "wx/wx.h"
-    #include "wx/event.h"
-    #include "wx/string.h"
 #endif //precompiled headers
 
-#include <wx/sstream.h>
-#include <wx/protocol/http.h>
 #include <wx/aui/aui.h>
-#include <wx/utils.h>
-#include <wx/dir.h>
-#include <wx/filename.h>
-#include <wx/fileconf.h>
-#include <wx/stdpaths.h>
-
-#include <typeinfo>
 #include "squiddio_pi.h"
-#include "icons.h"
 
-#include "PoiMan.h"
-#include "Poi.h"
-#include "NavObjectCollection.h"
-
-#include <wx/listimpl.cpp>
 WX_DEFINE_LIST(LayerList);
 WX_DEFINE_LIST(HyperlinkList );
 WX_DEFINE_LIST(Plugin_HyperlinkList);
@@ -56,12 +39,13 @@ WX_DEFINE_LIST(Plugin_HyperlinkList);
 
 // the class factories, used to create and destroy instances of the PlugIn
 //
-
-extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
+extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
+{
     return new squiddio_pi(ppimgr);
 }
 
-extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p){
+extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
+{
     delete p;
 }
 
@@ -95,6 +79,8 @@ int squiddio_pi::Init(void) {
     //      printf("squiddio_pi Init()\n");
     wxLogMessage( _T("squiddio_pi: Init()") );
 
+    m_pdemo_window = NULL;
+
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
     
@@ -109,7 +95,6 @@ int squiddio_pi::Init(void) {
     wxMenuItem *pmidh = new wxMenuItem(&dummy_menu, -1, _("Hide PlugIn DemoWindow"));
     m_demohide_id = AddCanvasContextMenuItem(pmidh, this );
     SetCanvasContextMenuItemViz(m_demohide_id, false);
-
     /*
     m_pdemo_window = new demoWindow(m_parent_window, wxID_ANY);
 
@@ -126,7 +111,7 @@ int squiddio_pi::Init(void) {
     m_AUImgr->GetPane(m_pdemo_window).CloseButton(true);
     m_AUImgr->GetPane(m_pdemo_window).Show(false);
     m_AUImgr->Update();
-    */
+`   */
 
     wxMenuItem *pmi = new wxMenuItem(&dummy_menu, -1,
             _("Show local sQuiddio destinations"));
@@ -202,6 +187,7 @@ bool squiddio_pi::DeInit(void) {
 //          m_pdemo_window->Destroy(); //Gives a Segmentation fault
     }
     */
+
     RemoveCanvasContextMenuItem(m_show_id);
     RemoveCanvasContextMenuItem(m_hide_id);
     RemoveCanvasContextMenuItem(m_update_id);
@@ -216,17 +202,6 @@ bool squiddio_pi::DeInit(void) {
         pLayerList->DeleteObject( l );
     }
     
-    //---------------------------------------------------------
-    /*
-    m_AUImgr->DetachPane(m_pdemo_window);
-    if(m_pdemo_window)
-    {
-      m_pdemo_window->Close();
-//          m_pdemo_window->Destroy(); //Gives a Segmentation fault
-    }
-    return true;
-    */
-    //---------------------------------------------------------
 
     RequestRefresh(m_parent_window);
     
@@ -419,7 +394,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
 
     //    We use this callback here to keep the context menu selection in sync with the window state
 
-    // --------------------------------------------------------------------
+    // -------------------------------------------------------- new
     /*
     wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
     if(!pane.IsOk())
@@ -430,7 +405,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_demohide_id, pane.IsShown());
     SetCanvasContextMenuItemViz(m_demoshow_id, !pane.IsShown());
     */
-    // --------------------------------------------------------------------
+    // --------------------------------------------------------
 
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);

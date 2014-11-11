@@ -27,13 +27,10 @@
 #define _SQUIDDIOPI_H_
 
 #include "wx/wxprec.h"
-#include "wx/dialog.h"
 
 #ifndef  WX_PRECOMP
   #include "wx/wx.h"
 #endif //precompiled headers
-
-#include <wx/list.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
 #define     PLUGIN_VERSION_MINOR    3
@@ -41,24 +38,32 @@
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
 
+#include <wx/list.h>
+#include <wx/sstream.h>
+#include <wx/protocol/http.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+#include <wx/fileconf.h>
+#include <wx/listimpl.cpp>
+
 #include "ocpn_plugin.h"
+#include "icons.h"
 #include "Layer.h"
 #include "Hyperlink.h"
+#include "PoiMan.h"
+#include "Poi.h"
+#include "NavObjectCollection.h"
 
-//class demoWindow;
 class Layer;
 class Poi;
 class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
-
-//-----------------------------------
+//-----------------------------------new
 class demoWindow;
 //-----------------------------------
 
-
 extern PoiMan *pPoiMan;
-
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -146,7 +151,7 @@ private:
       bool              last_online;
 
       // ------------------------------------ new
-      //demoWindow       *m_pdemo_window;
+      demoWindow       *m_pdemo_window;
       int               m_demoshow_id;
       int               m_demohide_id;
       //-------------------------------------
@@ -154,7 +159,7 @@ private:
 
 
 //------------------------------------------ new
-/*
+
 class demoWindow : public wxWindow
 {
 public:
@@ -168,12 +173,12 @@ public:
       //NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
 
       //wxString          m_NMEASentence;
-      double            mLat, mLon, mSog, mCog, mVar;
+      //double            mLat, mLon, mSog, mCog, mVar;
 
 
-//DECLARE_EVENT_TABLE()
+DECLARE_EVENT_TABLE()
 };
-*/
+
 //-------------------------------------------
 
 #endif
