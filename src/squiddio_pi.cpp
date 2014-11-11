@@ -646,3 +646,15 @@ void demoWindow::OnTimerTimeout(wxTimerEvent& event)
   Refresh(false);
   wxBell();
 }
+
+void demoWindow::OnPaint(wxPaintEvent& event)
+{
+      //wxLogMessage(_T("squidd_pi onpaint"));
+      wxPaintDC dc ( this );
+      {
+        dc.Clear();
+        wxString data;
+        data.Printf(_T("Lat: %s "), wxNow().c_str() );
+        dc.DrawText(data, 10, 10);
+      }
+}

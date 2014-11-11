@@ -176,7 +176,7 @@ public:
         }
       ~demoWindow(){}
 
-      void OnPaint(wxPaintEvent& event){}
+      void OnPaint(wxPaintEvent& event);
       void OnSize(wxSizeEvent& event){}
       void OnTimerTimeout(wxTimerEvent& event);
 
