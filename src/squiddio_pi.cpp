@@ -88,14 +88,6 @@ int squiddio_pi::Init(void) {
 
     wxMenu dummy_menu;
 
-    wxMenuItem *pmid = new wxMenuItem(&dummy_menu, -1, _("Show PlugIn DemoWindow"));
-    m_demoshow_id = AddCanvasContextMenuItem(pmid, this );
-    SetCanvasContextMenuItemViz(m_demoshow_id, true);
-
-    wxMenuItem *pmidh = new wxMenuItem(&dummy_menu, -1, _("Hide PlugIn DemoWindow"));
-    m_demohide_id = AddCanvasContextMenuItem(pmidh, this );
-    SetCanvasContextMenuItemViz(m_demohide_id, false);
-
     wxMenuItem *pmi = new wxMenuItem(&dummy_menu, -1,
             _("Show local sQuiddio destinations"));
     m_show_id = AddCanvasContextMenuItem(pmi, this);
@@ -126,10 +118,10 @@ int squiddio_pi::Init(void) {
     m_AUImgr->GetPane(m_pdemo_window).Float();
     m_AUImgr->GetPane(m_pdemo_window).FloatingPosition(300,30);
 
-    m_AUImgr->GetPane(m_pdemo_window).Caption(_T("AUI Managed Demo Window"));
-    m_AUImgr->GetPane(m_pdemo_window).CaptionVisible(true);
-    m_AUImgr->GetPane(m_pdemo_window).GripperTop(true);
-    m_AUImgr->GetPane(m_pdemo_window).CloseButton(true);
+    m_AUImgr->GetPane(m_pdemo_window).Caption(_T("sQuiddio latest updates"));
+    m_AUImgr->GetPane(m_pdemo_window).CaptionVisible(false);
+    m_AUImgr->GetPane(m_pdemo_window).GripperTop(false);
+    m_AUImgr->GetPane(m_pdemo_window).CloseButton(false);
     m_AUImgr->GetPane(m_pdemo_window).Show(false);
     m_AUImgr->Update();
 
@@ -200,13 +192,13 @@ bool squiddio_pi::DeInit(void) {
         RenderLayerContentsOnChart( l, false );
         pLayerList->DeleteObject( l );
     }
-    
 
     RequestRefresh(m_parent_window);
     
     delete pLayerList;
     delete pPoiMan;
     delete link;
+    delete m_pdemo_window;
     return true;
 }
 bool squiddio_pi::LoadConfig(void)
@@ -393,26 +385,15 @@ void squiddio_pi::UpdateAuiStatus(void) {
 
     //    We use this callback here to keep the context menu selection in sync with the window state
 
-    // -------------------------------------------------------- new
-    /*
-    wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
-    if(!pane.IsOk())
-          return;
-
-    printf("update %d\n",pane.IsShown());
-
-    SetCanvasContextMenuItemViz(m_demohide_id, pane.IsShown());
-    SetCanvasContextMenuItemViz(m_demoshow_id, !pane.IsShown());
-    */
-    // --------------------------------------------------------
-
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
     SetCanvasContextMenuItemViz(m_update_id, IsOnline() );
     SetCanvasContextMenuItemViz(m_report_id, IsOnline() );
 
-
+    wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
+    pane.Show(true);
+    m_AUImgr->Update();
 
 }
 
@@ -438,32 +419,6 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 
 void squiddio_pi::OnContextMenuItemCallback(int id) {
     wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
-
-    //-----------------------------------------------------------------
-
-    wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
-
-    if(!pane.IsShown())
-    {
-//            printf("show\n");
-          SetCanvasContextMenuItemViz(m_demohide_id, true);
-          SetCanvasContextMenuItemViz(m_demoshow_id, false);
-
-          pane.Show(true);
-          m_AUImgr->Update();
-
-    }
-    else
-    {
-//            printf("hide\n");
-          SetCanvasContextMenuItemViz(m_demohide_id, false);
-          SetCanvasContextMenuItemViz(m_demoshow_id, true);
-
-          pane.Show(false);
-          m_AUImgr->Update();
-    }
-    //-----------------------------------------------------------------
-
 
     wxString request_region = local_region; // fixes the cursor's hover region at time of request so that intervening mouse movements do not alter the layer name that will be created
     Layer * request_layer = local_sq_layer; // fixes the layer at time of request so that intervening mouse movements do not alter the layer name that will be created
@@ -680,9 +635,14 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 }
 
 BEGIN_EVENT_TABLE(demoWindow, wxWindow)
+  EVT_TIMER(TIMER_ID, demoWindow::OnTimerTimeout)
   EVT_PAINT ( demoWindow::OnPaint )
   EVT_SIZE(demoWindow::OnSize)
+END_EVENT_TABLE();
 
 
-END_EVENT_TABLE()
-
+void demoWindow::OnTimerTimeout(wxTimerEvent& event)
+{
+  Refresh(false);
+  wxBell();
+}

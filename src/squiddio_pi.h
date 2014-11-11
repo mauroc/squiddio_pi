@@ -64,6 +64,10 @@ class demoWindow;
 //-----------------------------------
 
 extern PoiMan *pPoiMan;
+enum
+{
+    TIMER_ID= 10
+};
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -167,13 +171,17 @@ public:
       demoWindow(wxWindow *pparent, wxWindowID id)
         :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
         {
+          m_pTimer = new wxTimer(this,TIMER_ID);
+          m_pTimer->Start(2000);
         }
-
       ~demoWindow(){}
 
       void OnPaint(wxPaintEvent& event){}
-      void SetSentence(wxString &sentence){}
       void OnSize(wxSizeEvent& event){}
+      void OnTimerTimeout(wxTimerEvent& event);
+
+      wxTimer* m_pTimer;
+      wxStaticText* m_pStaticText;
 
       //NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
 
