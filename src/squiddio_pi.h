@@ -54,6 +54,7 @@
 #include "Poi.h"
 #include "NavObjectCollection.h"
 #include "squiddioPrefsDialogBase.h"
+#include "nmea0183/nmea0183.h"
 
 class Layer;
 class Poi;
@@ -126,12 +127,16 @@ public:
 
       void RenderLayers();
 
+      void SetNMEASentence(wxString &sentence);
+      wxString PostPosition(double lat, double lon, double sog, double cog);
 
       // todo can the follwoign be moved to private?
       double m_cursor_lat, m_cursor_lon;
       Layer *local_sq_layer;
 
-
+      NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
+      wxString          m_NMEASentence;
+      double            mLat, mLon, mSog, mCog, mVar;
 
 private:
       bool LoadConfig(void);

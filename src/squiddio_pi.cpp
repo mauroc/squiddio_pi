@@ -176,6 +176,15 @@ int squiddio_pi::Init(void) {
         }
     }
 
+    m_period_secs.Add(0);
+    m_period_secs.Add(85400);
+    m_period_secs.Add(43200);
+    m_period_secs.Add(3600);
+    m_period_secs.Add(1800);
+    m_period_secs.Add(60);
+    m_period_secs.Add(30);
+    m_period_secs.Add(10);
+
     return (
     INSTALLS_CONTEXTMENU_ITEMS |
     WANTS_CURSOR_LATLON |
@@ -745,6 +754,96 @@ void squiddio_pi::SetPluginMessage(wxString &message_id,
 }
 void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
+}
+
+void squiddio_pi::SetNMEASentence(wxString &sentence) {
+    wxString PostResponse;
+
+    if (!IsOnline() || g_Email.Length() == 0 || g_ApiKey.Length() ==0 || g_PostPeriod == 0)
+        return;
+
+    if (wxDateTime::GetTimeNow() > g_LastUpdate + m_period_secs[g_PostPeriod])
+    {
+        m_NMEA0183 << sentence;
+
+        bool bGoodData = false;
+
+        if(m_NMEA0183.PreParse())
+        {
+              if(m_NMEA0183.LastSentenceIDReceived == _T("RMC"))
+              {
+                if(m_NMEA0183.Parse())
+                {
+                    if(m_NMEA0183.Rmc.IsDataValid == NTrue)
+                    {
+                      float llt = m_NMEA0183.Rmc.Position.Latitude.Latitude;
+                      int lat_deg_int = (int)(llt / 100);
+                      float lat_deg = lat_deg_int;
+                      float lat_min = llt - (lat_deg * 100);
+                      mLat = lat_deg + (lat_min/60.);
+                      if(m_NMEA0183.Rmc.Position.Latitude.Northing == South)
+                            mLat = -mLat;
+
+                      float lln = m_NMEA0183.Rmc.Position.Longitude.Longitude;
+                      int lon_deg_int = (int)(lln / 100);
+                      float lon_deg = lon_deg_int;
+                      float lon_min = lln - (lon_deg * 100);
+                      mLon = lon_deg + (lon_min/60.);
+                      if(m_NMEA0183.Rmc.Position.Longitude.Easting == West)
+                            mLon = -mLon;
+
+                      mSog = m_NMEA0183.Rmc.SpeedOverGroundKnots;
+                      mCog = m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue;
+
+                      if(m_NMEA0183.Rmc.MagneticVariationDirection == East)
+                            mVar =  m_NMEA0183.Rmc.MagneticVariation;
+                      else if(m_NMEA0183.Rmc.MagneticVariationDirection == West)
+                            mVar = -m_NMEA0183.Rmc.MagneticVariation;
+                      bGoodData = true;
+                    }
+                 }
+              }
+        }
+
+        if (bGoodData) {
+            //ShowFriendsLogs();
+            wxLogMessage(_T("Latitude: %f ,  Longitude: %f "), mLat, mLon);
+            PostResponse = PostPosition(mLat, mLon, mSog, mCog);
+            if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
+              wxLogMessage(PostResponse);
+            g_LastUpdate = wxDateTime::GetTimeNow();
+        }
+    }
+}
+
+wxString squiddio_pi::PostPosition(double lat, double lon, double sog, double cog)
+{
+   wxString reply = wxEmptyString;
+   wxString parameters;
+
+   parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f"), g_ApiKey.c_str(), g_Email.c_str(), lat, lon, sog,cog );
+
+   wxHTTP post;
+   post.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
+   post.SetPostBuffer(_T("text/html; charset=utf-8")); //this seems to be the only way to set the http method to POST. Other wxHTTP methods (e.g. SetMethod) are not supported in v 2.8
+   post.SetTimeout(3);
+
+   post.Connect(_T("squidd.io"));
+   wxApp::IsMainLoopRunning();
+
+   wxInputStream *http_stream = post.GetInputStream(_T("/positions?")+parameters); // not the most elegant way to set POST parameters, but SetPostText is not supported in wxWidgets 2.8?
+
+   if (post.GetError() == wxPROTO_NOERR)
+   {
+      wxStringOutputStream out_stream(&reply);
+      http_stream->Read(out_stream);
+   }
+   else reply = wxEmptyString;
+
+   wxDELETE(http_stream);
+   post.Close();
+
+   return reply;
 }
 
 BEGIN_EVENT_TABLE(demoWindow, wxWindow)
