@@ -125,7 +125,7 @@ int squiddio_pi::Init(void) {
     SetCanvasContextMenuItemViz(m_report_id, true);
 
 
-    m_pdemo_window = new demoWindow(m_parent_window, wxID_ANY);
+    m_pdemo_window = new demoWindow(this, m_parent_window, wxID_ANY);
 
     m_AUImgr = GetFrameAuiManager();
     m_AUImgr->AddPane(m_pdemo_window);
@@ -856,6 +856,7 @@ void squiddio_pi::ShowFriendsLogs() {
     //Layer * new_layer = NULL;
     wxString pp= g_ApiKey;
     wxString ee= g_Email;
+    wxBell();
 
     request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), g_ApiKey.c_str(), g_Email.c_str() );
     wxString gpxFilePath = layerdir;
@@ -888,19 +889,20 @@ BEGIN_EVENT_TABLE(demoWindow, wxWindow)
 END_EVENT_TABLE();
 
 
-demoWindow::demoWindow(wxWindow *pparent, wxWindowID id)
+demoWindow::demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id)
   :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
   {
+    p_plugin = plugin;
     m_pTimer = new wxTimer(this,TIMER_ID);
     m_pTimer->Start(8000);
   }
 
 void demoWindow::OnTimerTimeout(wxTimerEvent& event)
 {
-  //p_sqpi->ShowFriendsLogs();
+  p_plugin->ShowFriendsLogs();
   //p_sqpi->LoadConfig();
   Refresh(false);
-  wxBell();
+  //wxBell();
 }
 
 void demoWindow::OnPaint(wxPaintEvent& event)

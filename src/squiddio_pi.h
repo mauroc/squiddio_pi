@@ -199,7 +199,7 @@ private:
 class demoWindow : public wxWindow
 {
 public:
-      demoWindow(wxWindow *pparent, wxWindowID id);
+      demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~demoWindow(){}
 
       void OnPaint(wxPaintEvent& event);
@@ -209,11 +209,8 @@ public:
       wxTimer* m_pTimer;
       wxStaticText* m_pStaticText;
 
-      //NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
-
-      //wxString          m_NMEASentence;
-      //double            mLat, mLon, mSog, mCog, mVar;
-
+private:
+      squiddio_pi * p_plugin;
 
 DECLARE_EVENT_TABLE()
 };
