@@ -39,18 +39,22 @@ WX_DEFINE_LIST(Plugin_HyperlinkList);
 
 // the class factories, used to create and destroy instances of the PlugIn
 //
+
+// these variables are shared with NavObjectCollection
+PoiMan *pPoiMan;
+//squiddio_pi * p_sqpi;
+
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
 {
+    //squiddio_pi * p_sqpi = new squiddio_pi(ppimgr);
     return new squiddio_pi(ppimgr);
+    //return p_sqpi;
 }
 
 extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 {
     delete p;
 }
-
-// these variables are shared with NavObjectCollection
-PoiMan *pPoiMan;
 
 //---------------------------------------------------------------------------------------------------------
 //
@@ -846,6 +850,37 @@ wxString squiddio_pi::PostPosition(double lat, double lon, double sog, double co
    return reply;
 }
 
+void squiddio_pi::ShowFriendsLogs() {
+    wxString layerContents;
+    wxString request_url;
+    //Layer * new_layer = NULL;
+    wxString pp= g_ApiKey;
+    wxString ee= g_Email;
+
+    request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), g_ApiKey.c_str(), g_Email.c_str() );
+    wxString gpxFilePath = layerdir;
+    appendOSDirSlash( &gpxFilePath );
+    gpxFilePath.Append(_T("logs.gpx"));
+    wxString null_region;
+
+    layerContents = DownloadLayer(request_url);
+
+    if (layerContents.length()> 200 ){
+        isLayerUpdate = SaveLayer(layerContents, gpxFilePath);
+        if (isLayerUpdate ){
+             // hide and delete the current logs layer
+             m_LogsLayer ->SetVisibleOnChart( false );
+             RenderLayerContentsOnChart(m_LogsLayer);
+             pLayerList->DeleteObject( m_LogsLayer );
+         }
+         m_LogsLayer = LoadLayer(gpxFilePath, null_region);
+         m_LogsLayer->SetVisibleNames( false );
+         RenderLayerContentsOnChart(m_LogsLayer);
+        //RequestRefresh(m_parent_window);
+    }
+}
+
+
 BEGIN_EVENT_TABLE(demoWindow, wxWindow)
   EVT_TIMER(TIMER_ID, demoWindow::OnTimerTimeout)
   EVT_PAINT ( demoWindow::OnPaint )
@@ -853,20 +888,29 @@ BEGIN_EVENT_TABLE(demoWindow, wxWindow)
 END_EVENT_TABLE();
 
 
+demoWindow::demoWindow(wxWindow *pparent, wxWindowID id)
+  :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
+  {
+    m_pTimer = new wxTimer(this,TIMER_ID);
+    m_pTimer->Start(8000);
+  }
+
 void demoWindow::OnTimerTimeout(wxTimerEvent& event)
 {
+  //p_sqpi->ShowFriendsLogs();
+  //p_sqpi->LoadConfig();
   Refresh(false);
   wxBell();
 }
 
 void demoWindow::OnPaint(wxPaintEvent& event)
 {
-      //wxLogMessage(_T("squidd_pi onpaint"));
-      wxPaintDC dc ( this );
-      {
-        dc.Clear();
-        wxString data;
-        data.Printf(_T("Lat: %s "), wxNow().c_str() );
-        dc.DrawText(data, 10, 10);
-      }
+  //wxLogMessage(_T("squidd_pi onpaint"));
+  wxPaintDC dc ( this );
+  {
+    dc.Clear();
+    wxString data;
+    data.Printf(_T("Lat: %s "), wxNow().c_str() );
+    dc.DrawText(data, 10, 10);
+  }
 }

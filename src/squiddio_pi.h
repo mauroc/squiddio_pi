@@ -108,6 +108,7 @@ public:
       void SetCursorLatLon(double lat, double lon);
       bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
       int GetToolbarToolCount(void);
+      bool LoadConfig(void);
 
       void ShowPreferencesDialog( wxWindow* parent );
       void OnToolbarToolCallback(int id);
@@ -129,6 +130,7 @@ public:
 
       void SetNMEASentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
+      void ShowFriendsLogs();
 
       // todo can the follwoign be moved to private?
       double m_cursor_lat, m_cursor_lon;
@@ -139,7 +141,7 @@ public:
       double            mLat, mLon, mSog, mCog, mVar;
 
 private:
-      bool LoadConfig(void);
+
       bool SaveConfig(void);
       bool ShowType(Poi * wp);
 
@@ -197,12 +199,7 @@ private:
 class demoWindow : public wxWindow
 {
 public:
-      demoWindow(wxWindow *pparent, wxWindowID id)
-        :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
-        {
-          m_pTimer = new wxTimer(this,TIMER_ID);
-          m_pTimer->Start(2000);
-        }
+      demoWindow(wxWindow *pparent, wxWindowID id);
       ~demoWindow(){}
 
       void OnPaint(wxPaintEvent& event);
