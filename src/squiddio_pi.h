@@ -166,11 +166,8 @@ private:
       
       long              last_online_chk;
       bool              last_online;
-
-
-
-
       int         g_LastUpdate;
+
       int         g_PostPeriod;
       wxString    g_Email;
       wxString    g_ApiKey;
@@ -208,7 +205,8 @@ public:
 
       wxTimer       * m_pTimer;
       wxStaticText  * m_pStaticText;
-      int           m_LastLogsRcvd;
+      wxDateTime        m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
+      wxDateTime        m_LastLogSent;
 
 private:
       wxWindow      * m_parent_window;

@@ -829,7 +829,7 @@ void squiddio_pi::SetNMEASentence(wxString &sentence) {
             if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
               wxLogMessage(PostResponse);
             g_LastUpdate = wxDateTime::GetTimeNow();
-            m_pdemo_window->m_LastLogsRcvd = g_LastUpdate;
+            m_pdemo_window->m_LastLogSent = wxDateTime::Now();
             m_pdemo_window->Refresh(false);
         }
     }
@@ -880,19 +880,20 @@ void squiddio_pi::ShowFriendsLogs() {
 
     if (layerContents.length()> 200 ){
         isLayerUpdate = SaveLayer(layerContents, gpxFilePath);
-        if (isLayerUpdate && m_LogsLayer ){
-             // hide and delete the current logs layer
-             m_LogsLayer->SetVisibleOnChart( false );
+        if (isLayerUpdate) {
+            if (m_LogsLayer ){
+                 // hide and delete the current logs layer
+                 m_LogsLayer->SetVisibleOnChart( false );
+                 RenderLayerContentsOnChart(m_LogsLayer);
+                 pLayerList->DeleteObject( m_LogsLayer );
+             }
+             m_LogsLayer = LoadLayer(gpxFilePath, null_region);
+             m_LogsLayer->SetVisibleNames( false );
              RenderLayerContentsOnChart(m_LogsLayer);
-             pLayerList->DeleteObject( m_LogsLayer );
-         }
-         m_LogsLayer = LoadLayer(gpxFilePath, null_region);
-         m_LogsLayer->SetVisibleNames( false );
-         RenderLayerContentsOnChart(m_LogsLayer);
-        //RequestRefresh(m_parent_window);
+             m_pdemo_window->m_LastLogsRcvd = wxDateTime::Now();
+        }
     }
 }
-
 
 BEGIN_EVENT_TABLE(demoWindow, wxWindow)
   EVT_TIMER(TIMER_ID, demoWindow::OnTimerTimeout)
@@ -921,12 +922,16 @@ void demoWindow::OnPaint(wxPaintEvent& event)
 {
   //wxLogMessage(_T("squidd_pi onpaint"));
   wxPaintDC dc ( this );
+  //wxDateTime t = wxDateTime::Now();
+  wxString lastRcvd = m_LastLogsRcvd.Format( _T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+  wxString lastSent = m_LastLogSent.Format( _T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+
   {
     dc.Clear();
     wxString data;
-    data.Printf(_T("Log sent: %s "), wxNow().c_str() );
+    data.Printf(_T("Log sent: %s "),  lastSent.c_str() );
     dc.DrawText(data, 5, 5);
-    data.Printf(_T("Logs rcvd: %i "), m_LastLogsRcvd );
+    data.Printf(_T("Logs rcvd: %s "), lastRcvd.c_str() );
     dc.DrawText(data, 5, 25);
   }
 }
