@@ -95,7 +95,8 @@ int squiddio_pi::Init(void) {
     //      printf("squiddio_pi Init()\n");
     wxLogMessage( _T("squiddio_pi: Init()") );
 
-    m_pdemo_window = NULL;
+    m_pdemo_window  = NULL;
+    m_LogsLayer     = NULL;
 
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
@@ -148,6 +149,16 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_fuelpump_red,_T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel,    _T("pier_yel"),     _T("Dock/Pier"));
     AddCustomWaypointIcon(_img_ramp_azu,    _T("ramp_azu"),     _T("Boat Ramp"));
+    AddCustomWaypointIcon(_img_logimg_N,    _T("logimg_N"),     _T("North"));
+    AddCustomWaypointIcon(_img_logimg_NE,   _T("logimg_NE"),    _T("North East"));
+    AddCustomWaypointIcon(_img_logimg_E,    _T("logimg_E"),     _T("East"));
+    AddCustomWaypointIcon(_img_logimg_SE,   _T("logimg_SE"),    _T("South East"));
+    AddCustomWaypointIcon(_img_logimg_S,    _T("logimg_S"),     _T("South"));
+    AddCustomWaypointIcon(_img_logimg_SW,   _T("logimg_SW"),    _T("South West"));
+    AddCustomWaypointIcon(_img_logimg_W,    _T("logimg_W"),     _T("West"));
+    AddCustomWaypointIcon(_img_logimg_NW,   _T("logimg_NW"),    _T("North West"));
+    AddCustomWaypointIcon(_img_logimg_C,    _T("logimg_C"),     _T("Checked in"));
+    AddCustomWaypointIcon(_img_logimg_U,    _T("logimg_U"),     _T("Unknown heading"));
 
     pLayerList  = new LayerList;
     pPoiMan     = new PoiMan;
@@ -275,6 +286,7 @@ bool squiddio_pi::SaveConfig(void)
     pConf->Write( _T ( "ViewRamps" ),       g_ViewRamps);
     pConf->Write( _T ( "ViewFuelStations" ),   g_ViewFuelStations);
     pConf->Write( _T ( "ViewOthers" ),      g_ViewOthers);
+
     return true;
 }
 
@@ -809,6 +821,7 @@ void squiddio_pi::SetNMEASentence(wxString &sentence) {
               }
         }
 
+        //if (false) {
         if (bGoodData) {
             //ShowFriendsLogs();
             wxLogMessage(_T("Latitude: %f ,  Longitude: %f "), mLat, mLon);
@@ -816,6 +829,8 @@ void squiddio_pi::SetNMEASentence(wxString &sentence) {
             if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
               wxLogMessage(PostResponse);
             g_LastUpdate = wxDateTime::GetTimeNow();
+            m_pdemo_window->m_LastLogsRcvd = g_LastUpdate;
+            m_pdemo_window->Refresh(false);
         }
     }
 }
@@ -853,9 +868,6 @@ wxString squiddio_pi::PostPosition(double lat, double lon, double sog, double co
 void squiddio_pi::ShowFriendsLogs() {
     wxString layerContents;
     wxString request_url;
-    //Layer * new_layer = NULL;
-    wxString pp= g_ApiKey;
-    wxString ee= g_Email;
     wxBell();
 
     request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), g_ApiKey.c_str(), g_Email.c_str() );
@@ -868,9 +880,9 @@ void squiddio_pi::ShowFriendsLogs() {
 
     if (layerContents.length()> 200 ){
         isLayerUpdate = SaveLayer(layerContents, gpxFilePath);
-        if (isLayerUpdate ){
+        if (isLayerUpdate && m_LogsLayer ){
              // hide and delete the current logs layer
-             m_LogsLayer ->SetVisibleOnChart( false );
+             m_LogsLayer->SetVisibleOnChart( false );
              RenderLayerContentsOnChart(m_LogsLayer);
              pLayerList->DeleteObject( m_LogsLayer );
          }
@@ -893,16 +905,16 @@ demoWindow::demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id)
   :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
   {
     p_plugin = plugin;
+    m_parent_window = pparent;
     m_pTimer = new wxTimer(this,TIMER_ID);
     m_pTimer->Start(8000);
   }
 
 void demoWindow::OnTimerTimeout(wxTimerEvent& event)
 {
+  RequestRefresh(m_parent_window);
   p_plugin->ShowFriendsLogs();
-  //p_sqpi->LoadConfig();
   Refresh(false);
-  //wxBell();
 }
 
 void demoWindow::OnPaint(wxPaintEvent& event)
@@ -912,7 +924,9 @@ void demoWindow::OnPaint(wxPaintEvent& event)
   {
     dc.Clear();
     wxString data;
-    data.Printf(_T("Lat: %s "), wxNow().c_str() );
-    dc.DrawText(data, 10, 10);
+    data.Printf(_T("Log sent: %s "), wxNow().c_str() );
+    dc.DrawText(data, 5, 5);
+    data.Printf(_T("Logs rcvd: %i "), m_LastLogsRcvd );
+    dc.DrawText(data, 5, 25);
   }
 }

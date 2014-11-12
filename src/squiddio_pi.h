@@ -206,11 +206,14 @@ public:
       void OnSize(wxSizeEvent& event){}
       void OnTimerTimeout(wxTimerEvent& event);
 
-      wxTimer* m_pTimer;
-      wxStaticText* m_pStaticText;
+      wxTimer       * m_pTimer;
+      wxStaticText  * m_pStaticText;
+      int           m_LastLogsRcvd;
 
 private:
-      squiddio_pi * p_plugin;
+      wxWindow      * m_parent_window;
+      squiddio_pi   * p_plugin;
+
 
 DECLARE_EVENT_TABLE()
 };
