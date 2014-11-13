@@ -27,13 +27,10 @@
 #define _SQUIDDIOPI_H_
 
 #include "wx/wxprec.h"
-#include "wx/dialog.h"
 
 #ifndef  WX_PRECOMP
   #include "wx/wx.h"
 #endif //precompiled headers
-
-#include <wx/list.h>
 
 #define     PLUGIN_VERSION_MAJOR    0
 #define     PLUGIN_VERSION_MINOR    3
@@ -41,19 +38,38 @@
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
 
+#include <wx/list.h>
+#include <wx/sstream.h>
+#include <wx/protocol/http.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+#include <wx/fileconf.h>
+#include <wx/listimpl.cpp>
+
 #include "ocpn_plugin.h"
+#include "icons.h"
 #include "Layer.h"
 #include "Hyperlink.h"
+#include "PoiMan.h"
+#include "Poi.h"
+#include "NavObjectCollection.h"
+#include "squiddioPrefsDialogBase.h"
+#include "nmea0183/nmea0183.h"
 
-//class demoWindow;
 class Layer;
 class Poi;
 class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
+//-----------------------------------new
+class demoWindow;
+//-----------------------------------
 
 extern PoiMan *pPoiMan;
-
+enum
+{
+    TIMER_ID= 10
+};
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
@@ -92,31 +108,42 @@ public:
       void SetCursorLatLon(double lat, double lon);
       bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
       int GetToolbarToolCount(void);
+      bool LoadConfig(void);
+
       void ShowPreferencesDialog( wxWindow* parent );
       void OnToolbarToolCallback(int id);
       void SetPluginMessage(wxString &message_id, wxString &message_body);
       void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
       void appendOSDirSlash( wxString* pString );
       bool IsOnline(void);
-      wxString DownloadLayer(void);
+      wxString DownloadLayer(wxString url_path);
       bool SaveLayer(wxString,wxString);
       Layer * GetLocalLayer(void);
       Layer * LoadLayer(wxString, wxString);
       void ReportDestination(double lat, double lon);
       bool LoadLayers(wxString &path);
       bool LoadLayerItems(wxString & path, Layer *l, bool show);
-
       bool ShowPOI(Poi* wp);
       bool HidePOI(Poi* wp);
+
+      void RenderLayers();
+
+      void SetNMEASentence(wxString &sentence);
+      wxString PostPosition(double lat, double lon, double sog, double cog);
+      void ShowFriendsLogs();
+
       // todo can the follwoign be moved to private?
       double m_cursor_lat, m_cursor_lon;
       Layer *local_sq_layer;
 
-
+      NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
+      wxString          m_NMEASentence;
+      double            mLat, mLon, mSog, mCog, mVar;
 
 private:
-      bool LoadConfig(void);
+
       bool SaveConfig(void);
+      bool ShowType(Poi * wp);
 
       wxWindow         *m_parent_window;
       wxAuiManager     *m_AUImgr;
@@ -139,7 +166,57 @@ private:
       
       long              last_online_chk;
       bool              last_online;
+      int         g_LastUpdate;
+
+      int         g_PostPeriod;
+      wxString    g_Email;
+      wxString    g_ApiKey;
+      bool        g_ViewMarinas;
+      bool        g_ViewAnchorages;
+      bool        g_ViewYachtClubs;
+      bool        g_ViewDocks;
+      bool        g_ViewRamps;
+      bool        g_ViewFuelStations;
+      bool        g_ViewOthers;
+
+      int         m_squiddio_dialog_x, m_squiddio_dialog_y;
+      wxArrayInt  m_period_secs;
+      Layer       *m_LogsLayer;
+
+      // ------------------------------------ new
+      demoWindow       *m_pdemo_window;
+      int               m_demoshow_id;
+      int               m_demohide_id;
+      //-------------------------------------
 };
+
+
+//------------------------------------------ new
+
+class demoWindow : public wxWindow
+{
+public:
+      demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
+      ~demoWindow(){}
+
+      void OnPaint(wxPaintEvent& event);
+      void OnSize(wxSizeEvent& event){}
+      void OnTimerTimeout(wxTimerEvent& event);
+
+      wxTimer       * m_pTimer;
+      wxStaticText  * m_pStaticText;
+      wxDateTime        m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
+      wxDateTime        m_LastLogSent;
+
+private:
+      wxWindow      * m_parent_window;
+      squiddio_pi   * p_plugin;
+
+
+DECLARE_EVENT_TABLE()
+};
+
+//-------------------------------------------
 
 #endif
 

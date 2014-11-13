@@ -26,28 +26,11 @@
 
 #ifndef  WX_PRECOMP
     #include "wx/wx.h"
-    #include "wx/event.h"
-    #include "wx/string.h"
 #endif //precompiled headers
 
-#include <wx/sstream.h>
-#include <wx/protocol/http.h>
 #include <wx/aui/aui.h>
-#include <wx/utils.h>
-#include <wx/dir.h>
-#include <wx/filename.h>
-#include <wx/fileconf.h>
-#include <wx/stdpaths.h>
-
-#include <typeinfo>
 #include "squiddio_pi.h"
-#include "icons.h"
 
-#include "PoiMan.h"
-#include "Poi.h"
-#include "NavObjectCollection.h"
-
-#include <wx/listimpl.cpp>
 WX_DEFINE_LIST(LayerList);
 WX_DEFINE_LIST(HyperlinkList );
 WX_DEFINE_LIST(Plugin_HyperlinkList);
@@ -57,16 +40,21 @@ WX_DEFINE_LIST(Plugin_HyperlinkList);
 // the class factories, used to create and destroy instances of the PlugIn
 //
 
-extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
-    return new squiddio_pi(ppimgr);
-}
-
-extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p){
-    delete p;
-}
-
 // these variables are shared with NavObjectCollection
 PoiMan *pPoiMan;
+//squiddio_pi * p_sqpi;
+
+extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr)
+{
+    //squiddio_pi * p_sqpi = new squiddio_pi(ppimgr);
+    return new squiddio_pi(ppimgr);
+    //return p_sqpi;
+}
+
+extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
+{
+    delete p;
+}
 
 //---------------------------------------------------------------------------------------------------------
 //
@@ -89,11 +77,26 @@ squiddio_pi::~squiddio_pi( void )
     delete _img_fuelpump_red;
     delete _img_pier_yel;
     delete _img_ramp_azu;
+    delete _img_logimg_N;
+    delete _img_logimg_NE;
+    delete _img_logimg_E;
+    delete _img_logimg_SE;
+    delete _img_logimg_S;
+    delete _img_logimg_SW;
+    delete _img_logimg_W;
+    delete _img_logimg_NW;
+    delete _img_logimg_C;
+    delete _img_logimg_U;
+
+
 }
 
 int squiddio_pi::Init(void) {
     //      printf("squiddio_pi Init()\n");
     wxLogMessage( _T("squiddio_pi: Init()") );
+
+    m_pdemo_window  = NULL;
+    m_LogsLayer     = NULL;
 
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
@@ -122,12 +125,40 @@ int squiddio_pi::Init(void) {
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
 
+
+    m_pdemo_window = new demoWindow(this, m_parent_window, wxID_ANY);
+
+    m_AUImgr = GetFrameAuiManager();
+    m_AUImgr->AddPane(m_pdemo_window);
+    m_AUImgr->GetPane(m_pdemo_window).Name(_T("Demo Window Name"));
+
+    m_AUImgr->GetPane(m_pdemo_window).Float();
+    m_AUImgr->GetPane(m_pdemo_window).FloatingPosition(300,30);
+
+    m_AUImgr->GetPane(m_pdemo_window).Caption(_T("sQuiddio latest updates"));
+    m_AUImgr->GetPane(m_pdemo_window).CaptionVisible(false);
+    m_AUImgr->GetPane(m_pdemo_window).GripperTop(false);
+    m_AUImgr->GetPane(m_pdemo_window).CloseButton(false);
+    m_AUImgr->GetPane(m_pdemo_window).Show(false);
+    m_AUImgr->Update();
+
+
     AddCustomWaypointIcon(_img_marina_grn,  _T("marina_grn"),   _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu,  _T("anchor_blu"),   _T("Anchorage/Buoys"));
     AddCustomWaypointIcon(_img_club_pur,    _T("club_pur"),     _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red,_T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel,    _T("pier_yel"),     _T("Dock/Pier"));
     AddCustomWaypointIcon(_img_ramp_azu,    _T("ramp_azu"),     _T("Boat Ramp"));
+    AddCustomWaypointIcon(_img_logimg_N,    _T("logimg_N"),     _T("North"));
+    AddCustomWaypointIcon(_img_logimg_NE,   _T("logimg_NE"),    _T("North East"));
+    AddCustomWaypointIcon(_img_logimg_E,    _T("logimg_E"),     _T("East"));
+    AddCustomWaypointIcon(_img_logimg_SE,   _T("logimg_SE"),    _T("South East"));
+    AddCustomWaypointIcon(_img_logimg_S,    _T("logimg_S"),     _T("South"));
+    AddCustomWaypointIcon(_img_logimg_SW,   _T("logimg_SW"),    _T("South West"));
+    AddCustomWaypointIcon(_img_logimg_W,    _T("logimg_W"),     _T("West"));
+    AddCustomWaypointIcon(_img_logimg_NW,   _T("logimg_NW"),    _T("North West"));
+    AddCustomWaypointIcon(_img_logimg_C,    _T("logimg_C"),     _T("Checked in"));
+    AddCustomWaypointIcon(_img_logimg_U,    _T("logimg_U"),     _T("Unknown heading"));
 
     pLayerList  = new LayerList;
     pPoiMan     = new PoiMan;
@@ -160,22 +191,34 @@ int squiddio_pi::Init(void) {
         }
     }
 
+    m_period_secs.Add(0);
+    m_period_secs.Add(85400);
+    m_period_secs.Add(43200);
+    m_period_secs.Add(3600);
+    m_period_secs.Add(1800);
+    m_period_secs.Add(60);
+    m_period_secs.Add(30);
+    m_period_secs.Add(10);
+
     return (
     INSTALLS_CONTEXTMENU_ITEMS |
     WANTS_CURSOR_LATLON |
-    USES_AUI_MANAGER);
+    WANTS_NMEA_SENTENCES |
+    WANTS_PREFERENCES    |
+    USES_AUI_MANAGER |
+    WANTS_LATE_INIT
+    );
 }
 
 
 bool squiddio_pi::DeInit(void) {
-    /*
     m_AUImgr->DetachPane(m_pdemo_window);
 
     if (m_pdemo_window) {
         m_pdemo_window->Close();
 //          m_pdemo_window->Destroy(); //Gives a Segmentation fault
     }
-    */
+
     RemoveCanvasContextMenuItem(m_show_id);
     RemoveCanvasContextMenuItem(m_hide_id);
     RemoveCanvasContextMenuItem(m_update_id);
@@ -189,12 +232,13 @@ bool squiddio_pi::DeInit(void) {
         RenderLayerContentsOnChart( l, false );
         pLayerList->DeleteObject( l );
     }
-    
+    SaveConfig();
     RequestRefresh(m_parent_window);
     
     delete pLayerList;
     delete pPoiMan;
     delete link;
+    delete m_pdemo_window;
     return true;
 }
 bool squiddio_pi::LoadConfig(void)
@@ -207,6 +251,17 @@ bool squiddio_pi::LoadConfig(void)
     pConf->SetPath ( _T( "/PlugIns/libsquiddio_pi.so" ) );
     pConf->Read( _T ( "VisibleLayers" ), &g_VisibleLayers );
     pConf->Read( _T ( "InvisibleLayers" ), &g_InvisibleLayers );
+    pConf->Read( _T ( "PostPeriod" ), &g_PostPeriod );
+    pConf->Read( _T ( "LastUpdate" ), &g_LastUpdate);
+    pConf->Read( _T ( "Email" ), &g_Email);
+    pConf->Read( _T ( "ApiKey" ), &g_ApiKey);
+    pConf->Read( _T ( "ViewMarinas" ), &g_ViewMarinas, true);
+    pConf->Read( _T ( "ViewAnchorages" ), &g_ViewAnchorages,true);
+    pConf->Read( _T ( "ViewDocks" ), &g_ViewDocks, true);
+    pConf->Read( _T ( "ViewYachtClubs" ), &g_ViewYachtClubs,true);
+    pConf->Read( _T ( "ViewFuelStations" ), &g_ViewFuelStations,true);
+    pConf->Read( _T ( "ViewRamps" ), &g_ViewRamps,true);
+    pConf->Read( _T ( "ViewOthers" ), &g_ViewOthers,true);
     return true;
 }
 
@@ -220,6 +275,17 @@ bool squiddio_pi::SaveConfig(void)
     pConf->SetPath ( _T( "/PlugIns/libsquiddio_pi.so" ) );
     pConf->Write ( _T ( "VisibleLayers" ), g_VisibleLayers );
     pConf->Write ( _T ( "InvisibleLayers" ), g_InvisibleLayers );
+    pConf->Write ( _T ( "PostPeriod" ), g_PostPeriod );
+    pConf->Write ( _T ( "LastUpdate" ), g_LastUpdate );
+    pConf->Write( _T ( "Email" ), g_Email);
+    pConf->Write( _T ( "ApiKey" ),g_ApiKey);
+    pConf->Write( _T ( "ViewMarinas" ),     g_ViewMarinas);
+    pConf->Write( _T ( "ViewAnchorages" ),  g_ViewAnchorages);
+    pConf->Write( _T ( "ViewDocks" ),       g_ViewDocks);
+    pConf->Write( _T ( "ViewYachtClubs" ),  g_ViewYachtClubs);
+    pConf->Write( _T ( "ViewRamps" ),       g_ViewRamps);
+    pConf->Write( _T ( "ViewFuelStations" ),   g_ViewFuelStations);
+    pConf->Write( _T ( "ViewOthers" ),      g_ViewOthers);
 
     return true;
 }
@@ -285,21 +351,6 @@ bool squiddio_pi::LoadLayers(wxString &path)
 
 }
 
-Layer * squiddio_pi::LoadLayer(wxString file_path, wxString region){
-    Layer * l = new Layer();
-    if( ::wxFileExists( file_path ) ) {
-
-        l->m_LayerID = ++g_LayerIdx;
-        l->m_LayerName = _T("SQ_")+region;
-        l->m_LayerFileName = file_path;
-        l->m_bIsVisibleOnChart = true;
-        pLayerList->Insert( l );
-
-        LoadLayerItems(file_path, l, true);
-    }
-    return l;
-}
-
 bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show){
     NavObjectCollection1 *pSet = new NavObjectCollection1;
     pSet->load_file(file_path.fn_str());
@@ -314,6 +365,46 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show){
     return nItems > 0;
 }
 
+Layer * squiddio_pi::LoadLayer(wxString file_path, wxString region){
+    Layer * l = new Layer();
+    if( ::wxFileExists( file_path ) ) {
+
+        l->m_LayerID = ++g_LayerIdx;
+        if (file_path.Contains(_T("logs.gpx"))){
+            l->m_LayerName = _T("logs");
+        } else {
+            l->m_LayerName = _T("SQ_")+region;
+        }
+        l->m_LayerFileName = file_path;
+        l->m_bIsVisibleOnChart = true;
+        pLayerList->Insert( l );
+
+        LoadLayerItems(file_path, l, true);
+    }
+    return l;
+}
+
+bool squiddio_pi::ShowType(Poi * wp){
+    if      (wp->m_IconName == _T("marina_grn"))     return g_ViewMarinas;
+    else if (wp->m_IconName == _T("anchor_blu"))   return g_ViewAnchorages;
+    else if (wp->m_IconName == _T("club_pur"))      return g_ViewYachtClubs;
+    else if (wp->m_IconName == _T("fuelpump_red"))  return g_ViewFuelStations;
+    else if (wp->m_IconName == _T("pier_yel"))      return g_ViewDocks;
+    else if (wp->m_IconName == _T("ramp_azu"))      return g_ViewRamps;
+    else return g_ViewOthers;
+}
+
+void squiddio_pi::RenderLayers(){
+    Layer * l;
+    LayerList::iterator it;
+    int index = 0;
+    for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
+        l = (Layer *) (*it);
+        l->SetVisibleNames( false );
+        RenderLayerContentsOnChart(l);
+    }
+}
+
 void squiddio_pi::RenderLayerContentsOnChart( Layer *layer, bool save_config ){
 
     // Process POIs in this layer
@@ -325,7 +416,7 @@ void squiddio_pi::RenderLayerContentsOnChart( Layer *layer, bool save_config ){
         if( rp && ( rp->m_LayerID == layer->m_LayerID ) ) {
             rp->SetVisible( layer->IsVisibleOnChart() );
             rp->SetNameShown( false );
-            if (layer->IsVisibleOnChart())
+            if (layer->IsVisibleOnChart() && ShowType(rp))
                 ShowPOI(rp);
             else
                 HidePOI(rp);
@@ -387,6 +478,10 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_update_id, IsOnline() );
     SetCanvasContextMenuItemViz(m_report_id, IsOnline() );
 
+    wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
+    pane.Show(true);
+    m_AUImgr->Update();
+
 }
 
 void squiddio_pi::SetCursorLatLon(double lat, double lon) {
@@ -427,7 +522,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
         Layer * new_layer = NULL;
 
         if (IsOnline())
-            layerContents = DownloadLayer();
+            layerContents = DownloadLayer(_T("/places/download_xml_layers.xml?region=")+local_region);
 
         wxString gpxFilePath = layerdir;
         appendOSDirSlash( &gpxFilePath );
@@ -463,13 +558,13 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
     }
 }
 
-wxString squiddio_pi::DownloadLayer(){
+wxString squiddio_pi::DownloadLayer(wxString url_path){
     // --------------------------------- setup http GET request
     int cnt = 0;
     wxString res;
     wxHTTP get;
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    get.SetTimeout(10); // 10 seconds of timeout instead of 10 minutes ...
+    get.SetTimeout(3);
 
     while (!get.Connect(_T("squidd.io")))
     {
@@ -479,25 +574,37 @@ wxString squiddio_pi::DownloadLayer(){
         cnt++;
     }
 
-    wxApp::IsMainLoopRunning();
+    wxString tmp;
+    tmp.Printf( wxT("squiddio_pi: count %d."),  cnt );
+    wxLogMessage(tmp);
 
-    wxString url_path = _T("/places/download_xml_layers.xml?region=")+local_region;
-    //wxLogMessage(url_path);
+        if (cnt <= 10)
+        {
+            wxApp::IsMainLoopRunning();
 
-    wxInputStream *httpStream = get.GetInputStream(url_path );
+            //wxString url_path = _T("/places/download_xml_layers.xml?region=")+local_region;
+            //wxLogMessage(url_path);
 
-    if (get.GetError() == wxPROTO_NOERR)
-    {
-        wxStringOutputStream out_stream(&res);
-        httpStream->Read(out_stream);
-    }
-    else
-    {
-        wxMessageBox(_("Squiddio_pi: unable to connect to host"));
-    }
-    wxDELETE(httpStream);
-    get.Close();
-    return res;
+            wxInputStream *httpStream = get.GetInputStream(url_path );
+
+    tmp.Printf( wxT("squiddio_pi: GetError %d."),  get.GetError() );
+    wxLogMessage(tmp);
+
+            if (get.GetError() == wxPROTO_NOERR)
+            {
+                wxStringOutputStream out_stream(&res);
+                httpStream->Read(out_stream);
+            }
+            else
+            {
+                //wxMessageBox(_("Squiddio_pi: unable to connect to host"));
+                wxLogMessage(_("Squiddio_pi: unable to connect to host"));
+            }
+            wxDELETE(httpStream);
+            get.Close();
+
+        }
+        return res;
 }
 
 bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path){
@@ -613,7 +720,46 @@ int squiddio_pi::GetToolbarToolCount(void) {
     return 1;
 }
 void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
+    {
+        SquiddioPrefsDialogBase *dialog =
+            new SquiddioPrefsDialogBase( parent, wxID_ANY, _("sQuiddio Preferences"),
+                                       wxPoint( m_squiddio_dialog_x, m_squiddio_dialog_y),
+                                       wxDefaultSize, wxDEFAULT_DIALOG_STYLE );
 
+        dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
+        dialog->m_textSquiddioID->SetValue(g_Email);
+        dialog->m_textApiKey->SetValue(g_ApiKey);
+        dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
+        dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
+        dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
+        dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
+        dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
+        dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
+        dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+
+        dialog->Fit();
+        wxColour cl;
+        GetGlobalColor(_T("DILG1"), &cl);
+        dialog->SetBackgroundColour(cl);
+
+        if(dialog->ShowModal() == wxID_OK)
+        {
+            g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
+            g_Email = dialog->m_textSquiddioID->GetValue();
+            g_ApiKey = dialog->m_textApiKey->GetValue();
+            g_ViewMarinas    = dialog->m_checkBoxMarinas->GetValue();
+            g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
+            g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
+            g_ViewDocks      = dialog->m_checkBoxDocks->GetValue();
+            g_ViewRamps      = dialog->m_checkBoxRamps->GetValue();
+            g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
+            g_ViewOthers     = dialog->m_checkBoxOthers->GetValue();
+
+            SaveConfig();
+            RenderLayers();
+        }
+        delete dialog;
+    }
 }
 void squiddio_pi::OnToolbarToolCallback(int id) {
 
@@ -624,4 +770,168 @@ void squiddio_pi::SetPluginMessage(wxString &message_id,
 }
 void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
+}
+
+void squiddio_pi::SetNMEASentence(wxString &sentence) {
+    wxString PostResponse;
+
+    if (!IsOnline() || g_Email.Length() == 0 || g_ApiKey.Length() ==0 || g_PostPeriod == 0)
+        return;
+
+    if (wxDateTime::GetTimeNow() > g_LastUpdate + m_period_secs[g_PostPeriod])
+    {
+        m_NMEA0183 << sentence;
+
+        bool bGoodData = false;
+
+        if(m_NMEA0183.PreParse())
+        {
+              if(m_NMEA0183.LastSentenceIDReceived == _T("RMC"))
+              {
+                if(m_NMEA0183.Parse())
+                {
+                    if(m_NMEA0183.Rmc.IsDataValid == NTrue)
+                    {
+                      float llt = m_NMEA0183.Rmc.Position.Latitude.Latitude;
+                      int lat_deg_int = (int)(llt / 100);
+                      float lat_deg = lat_deg_int;
+                      float lat_min = llt - (lat_deg * 100);
+                      mLat = lat_deg + (lat_min/60.);
+                      if(m_NMEA0183.Rmc.Position.Latitude.Northing == South)
+                            mLat = -mLat;
+
+                      float lln = m_NMEA0183.Rmc.Position.Longitude.Longitude;
+                      int lon_deg_int = (int)(lln / 100);
+                      float lon_deg = lon_deg_int;
+                      float lon_min = lln - (lon_deg * 100);
+                      mLon = lon_deg + (lon_min/60.);
+                      if(m_NMEA0183.Rmc.Position.Longitude.Easting == West)
+                            mLon = -mLon;
+
+                      mSog = m_NMEA0183.Rmc.SpeedOverGroundKnots;
+                      mCog = m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue;
+
+                      if(m_NMEA0183.Rmc.MagneticVariationDirection == East)
+                            mVar =  m_NMEA0183.Rmc.MagneticVariation;
+                      else if(m_NMEA0183.Rmc.MagneticVariationDirection == West)
+                            mVar = -m_NMEA0183.Rmc.MagneticVariation;
+                      bGoodData = true;
+                    }
+                 }
+              }
+        }
+
+        //if (false) {
+        if (bGoodData) {
+            //ShowFriendsLogs();
+            wxLogMessage(_T("Latitude: %f ,  Longitude: %f "), mLat, mLon);
+            PostResponse = PostPosition(mLat, mLon, mSog, mCog);
+            if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
+              wxLogMessage(PostResponse);
+            g_LastUpdate = wxDateTime::GetTimeNow();
+            m_pdemo_window->m_LastLogSent = wxDateTime::Now();
+            m_pdemo_window->Refresh(false);
+        }
+    }
+}
+
+wxString squiddio_pi::PostPosition(double lat, double lon, double sog, double cog)
+{
+   wxString reply = wxEmptyString;
+   wxString parameters;
+
+   parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f"), g_ApiKey.c_str(), g_Email.c_str(), lat, lon, sog,cog );
+
+   wxHTTP post;
+   post.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
+   post.SetPostBuffer(_T("text/html; charset=utf-8")); //this seems to be the only way to set the http method to POST. Other wxHTTP methods (e.g. SetMethod) are not supported in v 2.8
+   post.SetTimeout(3);
+
+   post.Connect(_T("squidd.io"));
+   wxApp::IsMainLoopRunning();
+
+   wxInputStream *http_stream = post.GetInputStream(_T("/positions?")+parameters); // not the most elegant way to set POST parameters, but SetPostText is not supported in wxWidgets 2.8?
+
+   if (post.GetError() == wxPROTO_NOERR)
+   {
+      wxStringOutputStream out_stream(&reply);
+      http_stream->Read(out_stream);
+   }
+   else reply = wxEmptyString;
+
+   wxDELETE(http_stream);
+   post.Close();
+
+   return reply;
+}
+
+void squiddio_pi::ShowFriendsLogs() {
+    wxString layerContents;
+    wxString request_url;
+    wxBell();
+
+    request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), g_ApiKey.c_str(), g_Email.c_str() );
+    wxString gpxFilePath = layerdir;
+    appendOSDirSlash( &gpxFilePath );
+    gpxFilePath.Append(_T("logs.gpx"));
+    wxString null_region;
+
+    layerContents = DownloadLayer(request_url);
+
+    if (layerContents.length()> 200 ){
+        isLayerUpdate = SaveLayer(layerContents, gpxFilePath);
+        if (isLayerUpdate) {
+            if (m_LogsLayer ){
+                 // hide and delete the current logs layer
+                 m_LogsLayer->SetVisibleOnChart( false );
+                 RenderLayerContentsOnChart(m_LogsLayer);
+                 pLayerList->DeleteObject( m_LogsLayer );
+             }
+             m_LogsLayer = LoadLayer(gpxFilePath, null_region);
+             m_LogsLayer->SetVisibleNames( false );
+             RenderLayerContentsOnChart(m_LogsLayer);
+             m_pdemo_window->m_LastLogsRcvd = wxDateTime::Now();
+        }
+    }
+}
+
+BEGIN_EVENT_TABLE(demoWindow, wxWindow)
+  EVT_TIMER(TIMER_ID, demoWindow::OnTimerTimeout)
+  EVT_PAINT ( demoWindow::OnPaint )
+  EVT_SIZE(demoWindow::OnSize)
+END_EVENT_TABLE();
+
+
+demoWindow::demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id)
+  :wxWindow(pparent, id, wxPoint(10,10), wxSize(200,200), wxSIMPLE_BORDER, _T("OpenCPN PlugIn"))
+  {
+    p_plugin = plugin;
+    m_parent_window = pparent;
+    m_pTimer = new wxTimer(this,TIMER_ID);
+    m_pTimer->Start(8000);
+  }
+
+void demoWindow::OnTimerTimeout(wxTimerEvent& event)
+{
+  RequestRefresh(m_parent_window);
+  p_plugin->ShowFriendsLogs();
+  Refresh(false);
+}
+
+void demoWindow::OnPaint(wxPaintEvent& event)
+{
+  //wxLogMessage(_T("squidd_pi onpaint"));
+  wxPaintDC dc ( this );
+  //wxDateTime t = wxDateTime::Now();
+  wxString lastRcvd = m_LastLogsRcvd.Format( _T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+  wxString lastSent = m_LastLogSent.Format( _T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+
+  {
+    dc.Clear();
+    wxString data;
+    data.Printf(_T("Log sent: %s "),  lastSent.c_str() );
+    dc.DrawText(data, 5, 5);
+    data.Printf(_T("Logs rcvd: %s "), lastRcvd.c_str() );
+    dc.DrawText(data, 5, 25);
+  }
 }
