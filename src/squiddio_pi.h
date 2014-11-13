@@ -135,10 +135,13 @@ public:
       // todo can the follwoign be moved to private?
       double m_cursor_lat, m_cursor_lon;
       Layer *local_sq_layer;
+      wxArrayInt  m_period_secs;
 
       NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
       wxString          m_NMEASentence;
       double            mLat, mLon, mSog, mCog, mVar;
+      int         g_PostPeriod;
+      int         g_RetrievePeriod;
 
 private:
 
@@ -168,9 +171,8 @@ private:
       bool              last_online;
       int         g_LastUpdate;
 
-      int         g_PostPeriod;
-      wxString    g_Email;
-      wxString    g_ApiKey;
+      wxString     g_Email;
+      wxString     g_ApiKey;
       bool        g_ViewMarinas;
       bool        g_ViewAnchorages;
       bool        g_ViewYachtClubs;
@@ -180,7 +182,6 @@ private:
       bool        g_ViewOthers;
 
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
-      wxArrayInt  m_period_secs;
       Layer       *m_LogsLayer;
 
       // ------------------------------------ new
@@ -205,10 +206,12 @@ public:
 
       wxTimer       * m_pTimer;
       wxStaticText  * m_pStaticText;
-      wxDateTime        m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
-      wxDateTime        m_LastLogSent;
+      wxDateTime      m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
+      wxDateTime      m_LastLogSent;
+
 
 private:
+      int g_RetrieveSecs;
       wxWindow      * m_parent_window;
       squiddio_pi   * p_plugin;
 
