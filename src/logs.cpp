@@ -44,18 +44,18 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_LogsLayer = NULL;
     g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
     if (g_RetrieveSecs > 0)
-        m_pTimer->Start(g_RetrieveSecs*1000);
+       ResetTimer(g_RetrieveSecs);
 }
-
-void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
-
-    if (g_RetrieveSecs != period_secs(p_plugin->g_RetrievePeriod)) {
-    //if (g_RetrieveSecs != p_plugin->m_period_secs[p_plugin->g_RetrievePeriod]) {
-        // todo this needs to be fixed with an OnEvent triggered changing the value in the dialog
-        //delete m_pTimer;
-        //m_pTimer = new wxTimer(this,TIMER_ID);
-        //m_pTimer->Start(tmpRetrieveSecs);
+void logsWindow::ResetTimer(int retrieveSecs){
+    m_pTimer->Stop();
+    if (retrieveSecs>0)
+    {
+        m_pTimer->Start(retrieveSecs*1000);
+        Refresh(false);
     }
+    g_RetrieveSecs = retrieveSecs;
+}
+void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     RequestRefresh(m_parent_window);
     ShowFriendsLogs();
     Refresh(false);
@@ -71,7 +71,6 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     if (m_LastLogsRcvd.IsValid())
         lastRcvd = m_LastLogsRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),
                 wxDateTime::Local);
-
     {
         dc.Clear();
         wxString data;
@@ -79,7 +78,6 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
             data.Printf(_T("Log sent:  %s "), lastSent.c_str());
             dc.DrawText(data, 5, 5);
         }
-
         if (g_RetrieveSecs > 0){
             data.Printf(_T("Logs rcvd: %s "), lastRcvd.c_str());
             dc.DrawText(data, 5, 25);

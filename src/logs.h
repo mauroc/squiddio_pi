@@ -23,15 +23,12 @@
  ***************************************************************************
  */
 
-
 #ifndef LOGS_H_
 #define LOGS_H_
 
 #include "squiddio_pi.h"
 
 class squiddio_pi;
-//class Layer;
-//class NMEA0183;
 
 class logsWindow : public wxWindow
 {
@@ -39,6 +36,7 @@ public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
+      void ResetTimer(int seconds);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
@@ -49,8 +47,8 @@ public:
       double      mLat, mLon, mSog, mCog, mVar;
 
       Layer       *m_LogsLayer;
-      int         g_PostPeriod;
-      int         g_RetrievePeriod;
+      //int         g_PostPeriod;
+      //int         g_RetrievePeriod;
 
       wxTimer      * m_pTimer;
       wxStaticText * m_pStaticText;

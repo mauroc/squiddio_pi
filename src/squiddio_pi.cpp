@@ -763,6 +763,8 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
             SaveConfig();
             RenderLayers();
             ResetLogsWindow();
+            //if (g_RetrievePeriod > 0)
+            m_plogs_window->ResetTimer(period_secs(g_RetrievePeriod));
         }
         delete dialog;
     }
