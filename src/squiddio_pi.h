@@ -176,7 +176,7 @@ private:
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
 
-      logsWindow  *m_pdemo_window;
+      logsWindow  *m_plogs_window;
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
       int         m_demoshow_id;
       int         m_demohide_id;

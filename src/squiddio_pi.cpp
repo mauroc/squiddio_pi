@@ -104,7 +104,7 @@ int squiddio_pi::Init(void) {
 
     wxLogMessage(_T("squiddio_pi: Init()"));
 
-    m_pdemo_window = NULL;
+    m_plogs_window = NULL;
     g_PostPeriod = 0;
     g_RetrievePeriod = 0;
 
@@ -197,10 +197,10 @@ int squiddio_pi::Init(void) {
 }
 
 bool squiddio_pi::DeInit(void) {
-    m_AUImgr->DetachPane(m_pdemo_window);
+    m_AUImgr->DetachPane(m_plogs_window);
 
-    if (m_pdemo_window) {
-        m_pdemo_window->Close();
+    if (m_plogs_window) {
+        m_plogs_window->Close();
     }
 
     RemoveCanvasContextMenuItem(m_show_id);
@@ -222,7 +222,7 @@ bool squiddio_pi::DeInit(void) {
     delete pLayerList;
     delete pPoiMan;
     delete link;
-    delete m_pdemo_window;
+    delete m_plogs_window;
     return true;
 }
 bool squiddio_pi::LoadConfig(void) {
@@ -481,21 +481,21 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_report_id, IsOnline());
 
     if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
-        m_pdemo_window = new logsWindow(this, m_parent_window, wxID_ANY);
+        m_plogs_window = new logsWindow(this, m_parent_window, wxID_ANY);
         m_AUImgr = GetFrameAuiManager();
-        m_AUImgr->AddPane(m_pdemo_window);
-        m_AUImgr->GetPane(m_pdemo_window).Name(_T("Demo Window Name"));
-        m_AUImgr->GetPane(m_pdemo_window).Float();
-        m_AUImgr->GetPane(m_pdemo_window).FloatingPosition(300, 30);
-        m_AUImgr->GetPane(m_pdemo_window).Caption(_T("sQuiddio log updates"));
-        m_AUImgr->GetPane(m_pdemo_window).CaptionVisible(false);
-        m_AUImgr->GetPane(m_pdemo_window).GripperTop(false);
-        m_AUImgr->GetPane(m_pdemo_window).CloseButton(false);
-        m_AUImgr->GetPane(m_pdemo_window).MinimizeButton(true); //doesn't seem to work https://www.kirix.com/forums/viewtopic.php?f=15&t=658
-        m_AUImgr->GetPane(m_pdemo_window).Show(false);
+        m_AUImgr->AddPane(m_plogs_window);
+        m_AUImgr->GetPane(m_plogs_window).Name(_T("Demo Window Name"));
+        m_AUImgr->GetPane(m_plogs_window).Float();
+        m_AUImgr->GetPane(m_plogs_window).FloatingPosition(300, 30);
+        m_AUImgr->GetPane(m_plogs_window).Caption(_T("sQuiddio log updates"));
+        m_AUImgr->GetPane(m_plogs_window).CaptionVisible(false);
+        m_AUImgr->GetPane(m_plogs_window).GripperTop(false);
+        m_AUImgr->GetPane(m_plogs_window).CloseButton(false);
+        m_AUImgr->GetPane(m_plogs_window).MinimizeButton(true); //doesn't seem to work https://www.kirix.com/forums/viewtopic.php?f=15&t=658
+        m_AUImgr->GetPane(m_plogs_window).Show(false);
         m_AUImgr->Update();
 
-        wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_pdemo_window);
+        wxAuiPaneInfo &pane = m_AUImgr->GetPane(m_plogs_window);
         pane.Show(true);
         m_AUImgr->Update();
     }
@@ -796,10 +796,10 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 }
 void squiddio_pi::SetNMEASentence(wxString &sentence)
 {
-    if (m_pdemo_window && IsOnline() && g_Email.Length() > 0 && g_ApiKey.Length() > 0 && g_PostPeriod > 0 &&
+    if (m_plogs_window && IsOnline() && g_Email.Length() > 0 && g_ApiKey.Length() > 0 && g_PostPeriod > 0 &&
         wxDateTime::GetTimeNow() > g_LastUpdate + period_secs(g_PostPeriod) )
     {
-        m_pdemo_window->SetSentence(sentence);
+        m_plogs_window->SetSentence(sentence);
     }
 }
 
