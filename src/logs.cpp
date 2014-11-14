@@ -30,13 +30,13 @@
 
 #include "logs.h"
 
-BEGIN_EVENT_TABLE(demoWindow, wxWindow)
-    EVT_TIMER(TIMER_ID, demoWindow::OnTimerTimeout)
-    EVT_PAINT ( demoWindow::OnPaint )
-    //EVT_SIZE(demoWindow::OnSize)
+BEGIN_EVENT_TABLE(logsWindow, wxWindow)
+    EVT_TIMER(TIMER_ID, logsWindow::OnTimerTimeout)
+    EVT_PAINT ( logsWindow::OnPaint )
+    //EVT_SIZE(logsWindow::OnSize)
 END_EVENT_TABLE();
 
-demoWindow::demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
+logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         wxWindow(pparent, id, wxPoint(10, 10), wxSize(300, 50), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
     p_plugin = plugin;
     m_parent_window = pparent;
@@ -47,7 +47,7 @@ demoWindow::demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         m_pTimer->Start(g_RetrieveSecs*1000);
 }
 
-void demoWindow::OnTimerTimeout(wxTimerEvent& event) {
+void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
 
     if (g_RetrieveSecs != period_secs(p_plugin->g_RetrievePeriod)) {
     //if (g_RetrieveSecs != p_plugin->m_period_secs[p_plugin->g_RetrievePeriod]) {
@@ -61,7 +61,7 @@ void demoWindow::OnTimerTimeout(wxTimerEvent& event) {
     Refresh(false);
 }
 
-void demoWindow::OnPaint(wxPaintEvent& event) {
+void logsWindow::OnPaint(wxPaintEvent& event) {
     wxPaintDC dc(this);
     wxString lastRcvd, lastSent;
 
@@ -87,7 +87,7 @@ void demoWindow::OnPaint(wxPaintEvent& event) {
     }
 }
 
-void demoWindow::SetSentence(wxString &sentence) {
+void logsWindow::SetSentence(wxString &sentence) {
     wxString PostResponse;
     bool bGoodData = false;
 
@@ -140,7 +140,7 @@ void demoWindow::SetSentence(wxString &sentence) {
 
 }
 
-wxString demoWindow::PostPosition(double lat, double lon, double sog,
+wxString logsWindow::PostPosition(double lat, double lon, double sog,
         double cog) {
     wxString reply = wxEmptyString;
     wxString parameters;
@@ -171,7 +171,7 @@ wxString demoWindow::PostPosition(double lat, double lon, double sog,
     return reply;
 }
 
-void demoWindow::ShowFriendsLogs() {
+void logsWindow::ShowFriendsLogs() {
     wxString layerContents;
     wxString request_url;
     bool isLayerUpdate;

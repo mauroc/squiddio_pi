@@ -33,11 +33,11 @@ class squiddio_pi;
 //class Layer;
 //class NMEA0183;
 
-class demoWindow : public wxWindow
+class logsWindow : public wxWindow
 {
 public:
-      demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
-      ~demoWindow(){}
+      logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
+      ~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);

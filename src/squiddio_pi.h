@@ -58,7 +58,7 @@
 #include "nmea0183/nmea0183.h"
 #include "logs.h"
 
-class demoWindow;
+class logsWindow;
 class Layer;
 class Poi;
 class PoiMan;
@@ -176,7 +176,7 @@ private:
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
 
-      demoWindow  *m_pdemo_window;
+      logsWindow  *m_pdemo_window;
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
       int         m_demoshow_id;
       int         m_demohide_id;

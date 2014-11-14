@@ -42,7 +42,7 @@ WX_DEFINE_LIST (Plugin_HyperlinkList);
 
 // these variables are shared with NavObjectCollection
 PoiMan *pPoiMan;
-//class demoWindow;
+class logsWindow;
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
     return new squiddio_pi(ppimgr);
@@ -481,7 +481,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_report_id, IsOnline());
 
     if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
-        m_pdemo_window = new demoWindow(this, m_parent_window, wxID_ANY);
+        m_pdemo_window = new logsWindow(this, m_parent_window, wxID_ANY);
         m_AUImgr = GetFrameAuiManager();
         m_AUImgr->AddPane(m_pdemo_window);
         m_AUImgr->GetPane(m_pdemo_window).Name(_T("Demo Window Name"));
