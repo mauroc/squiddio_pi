@@ -71,6 +71,8 @@ enum
     TIMER_ID= 10
 };
 
+int period_secs(int period);
+
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
@@ -129,50 +131,43 @@ public:
       void RenderLayers();
 
       void SetNMEASentence(wxString &sentence);
-      wxString PostPosition(double lat, double lon, double sog, double cog);
-      void ShowFriendsLogs();
 
-      // todo can the follwoign be moved to private?
-      double m_cursor_lat, m_cursor_lon;
-      Layer *local_sq_layer;
-      wxArrayInt  m_period_secs;
+      wxString	 layerdir;
+      LayerList  *pLayerList;
+      wxString   g_Email;
+      wxString   g_ApiKey;
+      int        g_LastUpdate;
 
-      NMEA0183        m_NMEA0183;                 // Used to parse NMEA Sentences
-      wxString          m_NMEASentence;
-      double            mLat, mLon, mSog, mCog, mVar;
-      int         g_PostPeriod;
-      int         g_RetrievePeriod;
+      double    m_cursor_lat, m_cursor_lon;
+      Layer     *local_sq_layer;
+      int       g_PostPeriod;
+      int       g_RetrievePeriod;
 
 private:
 
       bool SaveConfig(void);
       bool ShowType(Poi * wp);
 
-      wxWindow         *m_parent_window;
-      wxAuiManager     *m_AUImgr;
-      int              	m_show_id;
-      int              	m_hide_id;
-      int 				m_update_id;
-      int 				m_report_id;
-      bool 				isLayerUpdate;
-      wxString 			local_region;
-      wxString			layerdir;
-      wxFileConfig     *m_pconfig;
-      LayerList 	   *pLayerList;
-      wxString			g_VisibleLayers;
-      wxString			g_InvisibleLayers;
+      wxWindow      *m_parent_window;
+      int           m_show_id;
+      int           m_hide_id;
+      int 			m_update_id;
+      int 			m_report_id;
+      bool 			isLayerUpdate;
+      wxString 		local_region;
+      wxString		g_VisibleLayers;
+      wxString		g_InvisibleLayers;
+      int 		 	g_LayerIdx;
+      bool			g_bShowLayers;
 
-      int 		 		g_LayerIdx;
-      bool				g_bShowLayers;
+      wxAuiManager     *m_AUImgr;
+      wxFileConfig     *m_pconfig;
       Plugin_Hyperlink *link;
       Hyperlink 	   *wp_link;
       
-      long              last_online_chk;
-      bool              last_online;
-      int         g_LastUpdate;
+      long        last_online_chk;
+      bool        last_online;
 
-      wxString     g_Email;
-      wxString     g_ApiKey;
       bool        g_ViewMarinas;
       bool        g_ViewAnchorages;
       bool        g_ViewYachtClubs;
@@ -181,14 +176,10 @@ private:
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
 
+      demoWindow  *m_pdemo_window;
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
-      Layer       *m_LogsLayer;
-
-      // ------------------------------------ new
-      demoWindow       *m_pdemo_window;
-      int               m_demoshow_id;
-      int               m_demohide_id;
-      //-------------------------------------
+      int         m_demoshow_id;
+      int         m_demohide_id;
 };
 
 
@@ -199,21 +190,29 @@ class demoWindow : public wxWindow
 public:
       demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~demoWindow(){}
-
-      void OnPaint(wxPaintEvent& event);
-      void OnSize(wxSizeEvent& event){}
       void OnTimerTimeout(wxTimerEvent& event);
+      void OnPaint(wxPaintEvent& event);
+      void SetSentence(wxString &sentence);
+      wxString PostPosition(double lat, double lon, double sog, double cog);
+      void ShowFriendsLogs();
 
-      wxTimer       * m_pTimer;
-      wxStaticText  * m_pStaticText;
-      wxDateTime      m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
-      wxDateTime      m_LastLogSent;
+      NMEA0183     m_NMEA0183;                 // Used to parse NMEA Sentences
+      wxString     m_NMEASentence;
+      double      mLat, mLon, mSog, mCog, mVar;
 
+      Layer       *m_LogsLayer;
+      int         g_PostPeriod;
+      int         g_RetrievePeriod;
+
+      wxTimer      * m_pTimer;
+      wxStaticText * m_pStaticText;
+      wxDateTime   m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
+      wxDateTime   m_LastLogSent;
 
 private:
-      int g_RetrieveSecs;
-      wxWindow      * m_parent_window;
-      squiddio_pi   * p_plugin;
+      int          g_RetrieveSecs;
+      wxWindow     *m_parent_window;
+      squiddio_pi  *p_plugin;
 
 
 DECLARE_EVENT_TABLE()
