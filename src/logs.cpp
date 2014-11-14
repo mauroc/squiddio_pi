@@ -47,6 +47,13 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_LastLogSent   = p_plugin->g_LastLogSent;
     m_LastLogsRcvd  = p_plugin->g_LastLogsRcvd;
 
+    m_LogsFilePath = p_plugin->layerdir;
+    p_plugin->appendOSDirSlash(&m_LogsFilePath);
+    m_LogsFilePath.Append(_T("logs.gpx"));
+
+    if (::wxFileExists(m_LogsFilePath) && g_RetrieveSecs > 0 )
+        DisplayLogsLayer();
+
     if (g_RetrieveSecs > 0)
        ResetTimer(g_RetrieveSecs);
 }
@@ -201,15 +208,12 @@ void logsWindow::ShowFriendsLogs() {
 
 
     request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str());
-    wxString gpxFilePath = p_plugin->layerdir;
-    p_plugin->appendOSDirSlash(&gpxFilePath);
-    gpxFilePath.Append(_T("logs.gpx"));
-    wxString null_region;
+
 
     layerContents = p_plugin->DownloadLayer(request_url);
 
     if (layerContents.length() > 200) {
-        isLayerUpdate = p_plugin->SaveLayer(layerContents, gpxFilePath);
+        isLayerUpdate = p_plugin->SaveLayer(layerContents, m_LogsFilePath);
         if (isLayerUpdate) {
             if (m_LogsLayer) {
                 // hide and delete the current logs layer
@@ -217,9 +221,7 @@ void logsWindow::ShowFriendsLogs() {
                 p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
                 p_plugin->pLayerList->DeleteObject(m_LogsLayer);
             }
-            m_LogsLayer = p_plugin->LoadLayer(gpxFilePath, null_region);
-            m_LogsLayer->SetVisibleNames(false);
-            p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
+            DisplayLogsLayer();
             m_LastLogsRcvd = wxDateTime::Now();
             p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
             wxBell();
@@ -227,4 +229,10 @@ void logsWindow::ShowFriendsLogs() {
     }
 }
 
+void logsWindow::DisplayLogsLayer(){
+    wxString null_region;
+    m_LogsLayer = p_plugin->LoadLayer(m_LogsFilePath, null_region);
+    m_LogsLayer->SetVisibleNames(false);
+    p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
+}
 

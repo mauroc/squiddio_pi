@@ -41,6 +41,7 @@ public:
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
       void ShowFriendsLogs();
+      void DisplayLogsLayer(void);
 
       NMEA0183     m_NMEA0183;
       wxString     m_NMEASentence;
@@ -55,6 +56,7 @@ public:
 
 private:
       int          g_RetrieveSecs;
+      wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
 

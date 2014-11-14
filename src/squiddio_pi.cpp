@@ -248,11 +248,6 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
 
-    //if (!g_PostPeriod)
-    //    g_PostPeriod = 0;
-    //if (!g_RetrievePeriod)
-    //    g_RetrievePeriod = 0;
-
     return true;
 }
 
