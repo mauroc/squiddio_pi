@@ -38,7 +38,7 @@ END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         //wxWindow(pparent, id, wxPoint(10, 10), wxSize(250, 50), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
-        wxWindow(pparent, id, wxPoint(10, 200), wxSize(500, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
+        wxWindow(pparent, id, wxPoint(10, 200), wxSize(480, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
     p_plugin        = plugin;
     m_parent_window = pparent;
     m_pTimer        = new wxTimer(this, TIMER_ID);
@@ -51,8 +51,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
 
-    if (::wxFileExists(m_LogsFilePath) && g_RetrieveSecs > 0 )
-        DisplayLogsLayer();
+    DisplayLogsLayer();
 
     if (g_RetrieveSecs > 0)
        ResetTimer(g_RetrieveSecs);
@@ -111,8 +110,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         } else {
             dc.SetTextForeground(ci);
         }
-        data.Printf(_T("Logs rcvd: %s "), lastRcvd.c_str());
-        //dc.DrawText(data, 5, 25);
+        data.Printf(_T("Logs received: %s "), lastRcvd.c_str());
         dc.DrawText(data, 230, 5);
     }
 }
@@ -178,7 +176,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f"),
             p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), lat, lon, sog, cog);
 
-    wxHTTP post;
+
     post.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
     post.SetPostBuffer(_T("text/html; charset=utf-8")); //this seems to be the only way to set the http method to POST. Other wxHTTP methods (e.g. SetMethod) are not supported in v 2.8
     post.SetTimeout(3);
@@ -196,7 +194,6 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
         reply = wxEmptyString;
 
     wxDELETE(http_stream);
-    post.Close();
 
     return reply;
 }
@@ -206,9 +203,7 @@ void logsWindow::ShowFriendsLogs() {
     wxString request_url;
     bool isLayerUpdate;
 
-
     request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str());
-
 
     layerContents = p_plugin->DownloadLayer(request_url);
 
@@ -229,10 +224,14 @@ void logsWindow::ShowFriendsLogs() {
     }
 }
 
-void logsWindow::DisplayLogsLayer(){
-    wxString null_region;
-    m_LogsLayer = p_plugin->LoadLayer(m_LogsFilePath, null_region);
-    m_LogsLayer->SetVisibleNames(false);
-    p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
+void logsWindow::DisplayLogsLayer()
+{
+    if (::wxFileExists(m_LogsFilePath) && g_RetrieveSecs > 0 )
+    {
+        wxString null_region;
+        m_LogsLayer = p_plugin->LoadLayer(m_LogsFilePath, null_region);
+        m_LogsLayer->SetVisibleNames(false);
+        p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
+    }
 }
 

@@ -34,7 +34,7 @@ class logsWindow : public wxWindow
 {
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
-      ~logsWindow(){}
+      ~logsWindow(){post.Close();}
       void OnTimerTimeout(wxTimerEvent& event);
       void ResetTimer(int seconds);
       void OnPaint(wxPaintEvent& event);
@@ -59,6 +59,8 @@ private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
+      wxHTTP post;
+
 
 DECLARE_EVENT_TABLE()
 };
