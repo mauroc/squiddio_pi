@@ -236,7 +236,8 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("InvisibleLayers"), &g_InvisibleLayers);
     pConf->Read(_T("PostPeriod"), &g_PostPeriod);
     pConf->Read(_T("RetrievePeriod"), &g_RetrievePeriod);
-    pConf->Read(_T("LastUpdate"), &g_LastUpdate);
+    pConf->Read(_T("LastLogSent"), &g_LastLogSent);
+    pConf->Read(_T("LastLogsRcvd"), &g_LastLogsRcvd);
     pConf->Read(_T("Email"), &g_Email);
     pConf->Read(_T("ApiKey"), &g_ApiKey);
     pConf->Read(_T("ViewMarinas"), &g_ViewMarinas, true);
@@ -266,7 +267,8 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("InvisibleLayers"), g_InvisibleLayers);
     pConf->Write(_T("PostPeriod"), g_PostPeriod);
     pConf->Write(_T("RetrievePeriod"), g_RetrievePeriod);
-    pConf->Write(_T("LastUpdate"), g_LastUpdate);
+    pConf->Write(_T("LastLogSent"), g_LastLogSent);
+    pConf->Write(_T("LastLogsRcvd"), g_LastLogsRcvd);
     pConf->Write(_T("Email"), g_Email);
     pConf->Write(_T("ApiKey"), g_ApiKey);
     pConf->Write(_T("ViewMarinas"), g_ViewMarinas);
@@ -813,7 +815,7 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 void squiddio_pi::SetNMEASentence(wxString &sentence)
 {
     if (m_plogs_window && IsOnline() && g_PostPeriod > 0 &&
-            wxDateTime::GetTimeNow() > g_LastUpdate + period_secs(g_PostPeriod) )
+            wxDateTime::GetTimeNow() > g_LastLogSent + period_secs(g_PostPeriod) )
     {
         m_plogs_window->SetSentence(sentence);
     }

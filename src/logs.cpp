@@ -37,23 +37,25 @@ BEGIN_EVENT_TABLE(logsWindow, wxWindow)
 END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
-        wxWindow(pparent, id, wxPoint(10, 10), wxSize(300, 50), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
-    p_plugin = plugin;
+        //wxWindow(pparent, id, wxPoint(10, 10), wxSize(250, 50), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
+        wxWindow(pparent, id, wxPoint(10, 200), wxSize(500, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
+    p_plugin        = plugin;
     m_parent_window = pparent;
-    m_pTimer = new wxTimer(this, TIMER_ID);
-    m_LogsLayer = NULL;
-    g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
+    m_pTimer        = new wxTimer(this, TIMER_ID);
+    m_LogsLayer     = NULL;
+    g_RetrieveSecs  = period_secs(p_plugin->g_RetrievePeriod);
+    m_LastLogSent   = p_plugin->g_LastLogSent;
+    m_LastLogsRcvd  = p_plugin->g_LastLogsRcvd;
+
     if (g_RetrieveSecs > 0)
        ResetTimer(g_RetrieveSecs);
 }
 void logsWindow::ResetTimer(int retrieveSecs){
     m_pTimer->Stop();
     if (retrieveSecs>0)
-    {
         m_pTimer->Start(retrieveSecs*1000);
-        Refresh(false);
-    }
     g_RetrieveSecs = retrieveSecs;
+    Refresh(false);
 }
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     RequestRefresh(m_parent_window);
@@ -63,25 +65,48 @@ void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
 
 void logsWindow::OnPaint(wxPaintEvent& event) {
     wxPaintDC dc(this);
-    wxString lastRcvd, lastSent;
+    wxColour cs;
+    GetGlobalColor(_T("GREEN2"),&cs);
+    wxColour cr;
+    GetGlobalColor(_T("BLUE2"), &cr);
+    wxColour ci;
+    GetGlobalColor(_T("DASHL"), &ci);
+    wxColour cb;
+    GetGlobalColor(_T("DASHB"), &cb);
+    dc.SetBackground(cb);
+    dc.SetTextBackground(cb);
+    wxString  lastRcvd, lastSent;
 
-    if (m_LastLogSent.IsValid())
-        lastSent = m_LastLogSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),
-                wxDateTime::Local);
-    if (m_LastLogsRcvd.IsValid())
-        lastRcvd = m_LastLogsRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),
-                wxDateTime::Local);
+    wxFont *g_pFontSmall;
+    g_pFontSmall = new wxFont( 8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
+    //dc->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, wxS("")));
+    dc.SetFont(*g_pFontSmall);
+
+
+    if (m_LastLogSent.IsValid() && m_LastLogSent.GetYear() > 1969 ) // can't figure out how to assess if it is NULL (i.e. 31/12/1969)
+        lastSent = m_LastLogSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+
+    if (m_LastLogsRcvd.IsValid() && m_LastLogsRcvd.GetYear() > 1969)
+        lastRcvd = m_LastLogsRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),wxDateTime::Local);
     {
         dc.Clear();
         wxString data;
         if (p_plugin->g_PostPeriod > 0){
-            data.Printf(_T("Log sent:  %s "), lastSent.c_str());
-            dc.DrawText(data, 5, 5);
+            dc.SetTextForeground(cs);
+        } else {
+            dc.SetTextForeground(ci);
         }
+        data.Printf(_T("Log sent:  %s "), lastSent.c_str());
+        dc.DrawText(data, 5, 5);
+
         if (g_RetrieveSecs > 0){
-            data.Printf(_T("Logs rcvd: %s "), lastRcvd.c_str());
-            dc.DrawText(data, 5, 25);
+            dc.SetTextForeground(cr);
+        } else {
+            dc.SetTextForeground(ci);
         }
+        data.Printf(_T("Logs rcvd: %s "), lastRcvd.c_str());
+        //dc.DrawText(data, 5, 25);
+        dc.DrawText(data, 230, 5);
     }
 }
 
@@ -131,8 +156,8 @@ void logsWindow::SetSentence(wxString &sentence) {
         PostResponse = PostPosition(mLat, mLon, mSog, mCog);
         if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
             wxLogMessage(PostResponse);
-        p_plugin->g_LastUpdate = wxDateTime::GetTimeNow();
         m_LastLogSent = wxDateTime::Now();
+        p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
         Refresh(false);
     }
 
@@ -174,7 +199,6 @@ void logsWindow::ShowFriendsLogs() {
     wxString request_url;
     bool isLayerUpdate;
 
-    wxBell();
 
     request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str());
     wxString gpxFilePath = p_plugin->layerdir;
@@ -197,6 +221,8 @@ void logsWindow::ShowFriendsLogs() {
             m_LogsLayer->SetVisibleNames(false);
             p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
             m_LastLogsRcvd = wxDateTime::Now();
+            p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
+            wxBell();
         }
     }
 }

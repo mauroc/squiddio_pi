@@ -47,8 +47,6 @@ public:
       double      mLat, mLon, mSog, mCog, mVar;
 
       Layer       *m_LogsLayer;
-      //int         g_PostPeriod;
-      //int         g_RetrievePeriod;
 
       wxTimer      * m_pTimer;
       wxStaticText * m_pStaticText;
@@ -59,7 +57,6 @@ private:
       int          g_RetrieveSecs;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
-
 
 DECLARE_EVENT_TABLE()
 };

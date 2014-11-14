@@ -137,7 +137,8 @@ public:
       LayerList  *pLayerList;
       wxString   g_Email;
       wxString   g_ApiKey;
-      int        g_LastUpdate;
+      int        g_LastLogSent;
+      int        g_LastLogsRcvd;
 
       double    m_cursor_lat, m_cursor_lon;
       Layer     *local_sq_layer;
