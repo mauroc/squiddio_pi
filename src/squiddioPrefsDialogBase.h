@@ -37,6 +37,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 	
 	protected:
 		wxStaticText* m_staticText6;
+		wxStaticText* m_staticText4;
 		wxStaticText* m_staticText7;
 		wxStaticText* m_staticText8;
 		wxStdDialogButtonSizer* m_sdbButtonSizer;
@@ -59,10 +60,11 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxCheckBox* m_checkBoxFuelStations;
 		wxCheckBox* m_checkBoxOthers;
 		wxChoice* m_choiceHowOften;
+		wxChoice* m_choiceReceive;
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
 		
-		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,376 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,400 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~SquiddioPrefsDialogBase();
 	
 };
