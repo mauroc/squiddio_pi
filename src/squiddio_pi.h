@@ -45,6 +45,7 @@
 #include <wx/filename.h>
 #include <wx/fileconf.h>
 #include <wx/listimpl.cpp>
+#include <wx/aui/aui.h>
 
 #include "ocpn_plugin.h"
 #include "icons.h"
@@ -55,15 +56,14 @@
 #include "NavObjectCollection.h"
 #include "squiddioPrefsDialogBase.h"
 #include "nmea0183/nmea0183.h"
+#include "logs.h"
 
+class demoWindow;
 class Layer;
 class Poi;
 class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
-//-----------------------------------new
-class demoWindow;
-//-----------------------------------
 
 extern PoiMan *pPoiMan;
 enum
@@ -181,44 +181,6 @@ private:
       int         m_demoshow_id;
       int         m_demohide_id;
 };
-
-
-//------------------------------------------ new
-
-class demoWindow : public wxWindow
-{
-public:
-      demoWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
-      ~demoWindow(){}
-      void OnTimerTimeout(wxTimerEvent& event);
-      void OnPaint(wxPaintEvent& event);
-      void SetSentence(wxString &sentence);
-      wxString PostPosition(double lat, double lon, double sog, double cog);
-      void ShowFriendsLogs();
-
-      NMEA0183     m_NMEA0183;                 // Used to parse NMEA Sentences
-      wxString     m_NMEASentence;
-      double      mLat, mLon, mSog, mCog, mVar;
-
-      Layer       *m_LogsLayer;
-      int         g_PostPeriod;
-      int         g_RetrievePeriod;
-
-      wxTimer      * m_pTimer;
-      wxStaticText * m_pStaticText;
-      wxDateTime   m_LastLogsRcvd; //this and the following should be type int but can't figure out how to convert that string
-      wxDateTime   m_LastLogSent;
-
-private:
-      int          g_RetrieveSecs;
-      wxWindow     *m_parent_window;
-      squiddio_pi  *p_plugin;
-
-
-DECLARE_EVENT_TABLE()
-};
-
-//-------------------------------------------
 
 #endif
 

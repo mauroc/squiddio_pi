@@ -43,6 +43,8 @@ SET(SRC_SQUIDDIO
  	src/SquiddioPrefsDialog.h 	
  	src/icons.h
  	src/icons.cpp
+ 	src/logs.cpp
+ 	src/logs.h
  	src/NavObjectCollection.h
  	src/NavObjectCollection.cpp
  	src/Poi.h
