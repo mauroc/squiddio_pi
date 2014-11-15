@@ -197,6 +197,9 @@ int squiddio_pi::Init(void) {
 }
 
 bool squiddio_pi::DeInit(void) {
+
+    get.Close();
+
     m_AUImgr->DetachPane(m_plogs_window);
 
     if (m_plogs_window) {
@@ -568,7 +571,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     // --------------------------------- setup http GET request
     int cnt = 0;
     wxString res;
-    wxHTTP get;
+
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
     get.SetTimeout(3);
 
@@ -602,8 +605,6 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
             wxLogMessage(_("Squiddio_pi: unable to connect to host"));
         }
         wxDELETE(httpStream);
-        get.Close();
-
     }
     return res;
 }
