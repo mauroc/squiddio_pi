@@ -10,3 +10,4 @@ cscope.out
 .project
 Release
 core
+.settings/

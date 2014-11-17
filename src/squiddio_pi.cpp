@@ -197,6 +197,9 @@ int squiddio_pi::Init(void) {
 }
 
 bool squiddio_pi::DeInit(void) {
+
+    get.Close();
+
     m_AUImgr->DetachPane(m_plogs_window);
 
     if (m_plogs_window) {
@@ -236,7 +239,8 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("InvisibleLayers"), &g_InvisibleLayers);
     pConf->Read(_T("PostPeriod"), &g_PostPeriod);
     pConf->Read(_T("RetrievePeriod"), &g_RetrievePeriod);
-    pConf->Read(_T("LastUpdate"), &g_LastUpdate);
+    pConf->Read(_T("LastLogSent"), &g_LastLogSent);
+    pConf->Read(_T("LastLogsRcvd"), &g_LastLogsRcvd);
     pConf->Read(_T("Email"), &g_Email);
     pConf->Read(_T("ApiKey"), &g_ApiKey);
     pConf->Read(_T("ViewMarinas"), &g_ViewMarinas, true);
@@ -246,11 +250,6 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewFuelStations"), &g_ViewFuelStations, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
-
-    //if (!g_PostPeriod)
-    //    g_PostPeriod = 0;
-    //if (!g_RetrievePeriod)
-    //    g_RetrievePeriod = 0;
 
     return true;
 }
@@ -266,7 +265,8 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("InvisibleLayers"), g_InvisibleLayers);
     pConf->Write(_T("PostPeriod"), g_PostPeriod);
     pConf->Write(_T("RetrievePeriod"), g_RetrievePeriod);
-    pConf->Write(_T("LastUpdate"), g_LastUpdate);
+    pConf->Write(_T("LastLogSent"), g_LastLogSent);
+    pConf->Write(_T("LastLogsRcvd"), g_LastLogsRcvd);
     pConf->Write(_T("Email"), g_Email);
     pConf->Write(_T("ApiKey"), g_ApiKey);
     pConf->Write(_T("ViewMarinas"), g_ViewMarinas);
@@ -571,7 +571,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     // --------------------------------- setup http GET request
     int cnt = 0;
     wxString res;
-    wxHTTP get;
+
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
     get.SetTimeout(3);
 
@@ -605,8 +605,6 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
             wxLogMessage(_("Squiddio_pi: unable to connect to host"));
         }
         wxDELETE(httpStream);
-        get.Close();
-
     }
     return res;
 }
@@ -763,8 +761,9 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
             SaveConfig();
             RenderLayers();
             ResetLogsWindow();
-            //if (g_RetrievePeriod > 0)
             m_plogs_window->ResetTimer(period_secs(g_RetrievePeriod));
+            if (g_RetrievePeriod > 0)
+                m_plogs_window->DisplayLogsLayer();
         }
         delete dialog;
     }
@@ -813,7 +812,7 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 void squiddio_pi::SetNMEASentence(wxString &sentence)
 {
     if (m_plogs_window && IsOnline() && g_PostPeriod > 0 &&
-            wxDateTime::GetTimeNow() > g_LastUpdate + period_secs(g_PostPeriod) )
+            wxDateTime::GetTimeNow() > g_LastLogSent + period_secs(g_PostPeriod) )
     {
         m_plogs_window->SetSentence(sentence);
     }

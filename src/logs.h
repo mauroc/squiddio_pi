@@ -34,21 +34,20 @@ class logsWindow : public wxWindow
 {
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
-      ~logsWindow(){}
+      ~logsWindow(){post.Close();}
       void OnTimerTimeout(wxTimerEvent& event);
       void ResetTimer(int seconds);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
       void ShowFriendsLogs();
+      void DisplayLogsLayer(void);
 
       NMEA0183     m_NMEA0183;
       wxString     m_NMEASentence;
       double      mLat, mLon, mSog, mCog, mVar;
 
       Layer       *m_LogsLayer;
-      //int         g_PostPeriod;
-      //int         g_RetrievePeriod;
 
       wxTimer      * m_pTimer;
       wxStaticText * m_pStaticText;
@@ -57,8 +56,11 @@ public:
 
 private:
       int          g_RetrieveSecs;
+      wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
+      wxHTTP post;
+      bool         m_LaunchCycle;
 
 
 DECLARE_EVENT_TABLE()

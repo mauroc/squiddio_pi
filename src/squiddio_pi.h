@@ -137,7 +137,8 @@ public:
       LayerList  *pLayerList;
       wxString   g_Email;
       wxString   g_ApiKey;
-      int        g_LastUpdate;
+      int        g_LastLogSent;
+      int        g_LastLogsRcvd;
 
       double    m_cursor_lat, m_cursor_lon;
       Layer     *local_sq_layer;
@@ -181,6 +182,7 @@ private:
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
       int         m_demoshow_id;
       int         m_demohide_id;
+      wxHTTP get;
 };
 
 #endif
