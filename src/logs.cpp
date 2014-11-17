@@ -46,6 +46,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     g_RetrieveSecs  = period_secs(p_plugin->g_RetrievePeriod);
     m_LastLogSent   = p_plugin->g_LastLogSent;
     m_LastLogsRcvd  = p_plugin->g_LastLogsRcvd;
+    m_LaunchCycle   = false;
 
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
@@ -53,20 +54,35 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     DisplayLogsLayer();
 
+    if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs)
+        m_LaunchCycle   = true; // delays the first logs request to avoid interfering with ocpn launch
+
     if (g_RetrieveSecs > 0)
        ResetTimer(g_RetrieveSecs);
 }
 void logsWindow::ResetTimer(int retrieveSecs){
     m_pTimer->Stop();
-    if (retrieveSecs>0)
+    if (m_LaunchCycle)
+    {
+        m_pTimer->Start(5000);
+    }else{
         m_pTimer->Start(retrieveSecs*1000);
+    }
     g_RetrieveSecs = retrieveSecs;
     Refresh(false);
 }
+
+
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     RequestRefresh(m_parent_window);
     ShowFriendsLogs();
+    if (m_LaunchCycle)
+    {
+        m_LaunchCycle = false;
+        ResetTimer(g_RetrieveSecs);
+    }
     Refresh(false);
+
 }
 
 void logsWindow::OnPaint(wxPaintEvent& event) {
