@@ -479,7 +479,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_update_id, IsOnline());
     SetCanvasContextMenuItemViz(m_report_id, IsOnline());
 
-    ResetLogsWindow();
+    SetLogsWindow();
 
 }
 
@@ -759,8 +759,7 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
 
             SaveConfig();
             RenderLayers();
-            ResetLogsWindow();
-            //m_plogs_window->ResetTimer(period_secs(g_RetrievePeriod));
+            SetLogsWindow();
             if (g_RetrievePeriod > 0)
                 m_plogs_window->DisplayLogsLayer();
         }
@@ -768,7 +767,7 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
     }
 }
 
-void squiddio_pi::ResetLogsWindow()
+void squiddio_pi::SetLogsWindow()
 {
     if (g_Email.Length() > 0 && g_ApiKey.Length() > 0 && (g_PostPeriod > 0 || g_RetrievePeriod > 0))
     {

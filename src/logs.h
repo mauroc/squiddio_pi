@@ -27,6 +27,10 @@
 #define LOGS_H_
 
 #include "squiddio_pi.h"
+enum
+{
+    TIMER_ID= 10
+};
 
 class squiddio_pi;
 
@@ -37,7 +41,7 @@ public:
       ~logsWindow(){post.Close();}
       //~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
-      void ResetTimer(int seconds);
+      //void ResetTimer(int seconds);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
@@ -60,8 +64,8 @@ private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
-      wxHTTP post;
-      bool         m_LaunchCycle;
+      wxHTTP        post;
+      //bool         m_LaunchCycle;
 
 
 DECLARE_EVENT_TABLE()

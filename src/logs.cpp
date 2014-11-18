@@ -45,47 +45,38 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     g_RetrieveSecs  = period_secs(p_plugin->g_RetrievePeriod);
     m_LastLogSent   = p_plugin->g_LastLogSent;
     m_LastLogsRcvd  = p_plugin->g_LastLogsRcvd;
-    m_LaunchCycle   = false;
+    //m_LaunchCycle   = false;
 
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
 
     DisplayLogsLayer();
-    if (g_RetrieveSecs > 0)
-        m_pTimer->Start(g_RetrieveSecs*1000);
 
-    //if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs)
-        //m_LaunchCycle   = true; // delays the first logs request to avoid interfering with ocpn launch
-
-    //if (g_RetrieveSecs > 0)
-       //ResetTimer(g_RetrieveSecs);
-
-}
-
-void logsWindow::ResetTimer(int retrieveSecs){
-    m_pTimer->Stop();
-    if (m_LaunchCycle)
+    if (g_RetrieveSecs > 0)  // display friends' logs
     {
-        m_pTimer->Start(5000);
-    }else{
-        m_pTimer->Start(retrieveSecs*1000);
+        if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs) // overdue request at startup?
+        {
+            //wxThread::Sleep(3000);
+            RequestRefresh(m_parent_window);
+            ShowFriendsLogs();
+        }
+        int dummy = g_RetrieveSecs - (wxDateTime::GetTimeNow() - m_LastLogsRcvd.GetSecond());
+        dummy = wxMin(dummy, g_RetrieveSecs);
+        dummy = wxMax(dummy, 7);
+        m_pTimer->Start(dummy*1000);
     }
-    g_RetrieveSecs = retrieveSecs;
-    Refresh(false);
 }
-
 
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     RequestRefresh(m_parent_window);
     ShowFriendsLogs();
-    //if (m_LaunchCycle)
-    //{
-        //m_LaunchCycle = false;
-        //ResetTimer(g_RetrieveSecs);
-    //}
+    if (m_pTimer->GetInterval()/1000 < g_RetrieveSecs)
+    {
+        m_pTimer->Stop();
+        m_pTimer->Start(g_RetrieveSecs*1000);
+    }
     Refresh(false);
-
 }
 
 void logsWindow::OnPaint(wxPaintEvent& event) {
