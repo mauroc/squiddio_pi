@@ -588,9 +588,6 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     if (cnt <= 10) {
         wxApp::IsMainLoopRunning();
 
-        //wxString url_path = _T("/places/download_xml_layers.xml?region=")+local_region;
-        //wxLogMessage(url_path);
-
         wxInputStream *httpStream = get.GetInputStream(url_path);
 
         tmp.Printf(wxT("squiddio_pi: GetError %d."), get.GetError());
@@ -600,7 +597,6 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
             wxStringOutputStream out_stream(&res);
             httpStream->Read(out_stream);
         } else {
-            //wxMessageBox(_("Squiddio_pi: unable to connect to host"));
             wxLogMessage(_("Squiddio_pi: unable to connect to host"));
         }
         wxDELETE(httpStream);
@@ -631,7 +627,7 @@ bool squiddio_pi::IsOnline() {
         return last_online;
     wxHTTP get;
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    get.SetTimeout(10); // 10 seconds of timeout instead of 10 minutes ...
+    get.SetTimeout(10); // 10 seconds of timeout
     int cnt = 0;
 
     while (!get.Connect(_T("yahoo.com"))) {
@@ -769,7 +765,7 @@ void squiddio_pi::SetLogsWindow()
 {
     if (g_Email.Length() > 0 && g_ApiKey.Length() > 0 && (g_PostPeriod > 0 || g_RetrievePeriod > 0))
     {
-        // auth info available and logd requested
+        // auth info available and either log type requested: open status window
         if (!m_plogs_window){
             // open window if not yet open
             m_plogs_window = new logsWindow(this, m_parent_window, wxID_ANY);
@@ -787,12 +783,13 @@ void squiddio_pi::SetLogsWindow()
         // now make it visible
         m_AUImgr->GetPane(m_plogs_window).Show(true);
         m_AUImgr->Update();
+        m_plogs_window->SetTimer(period_secs(g_RetrievePeriod));
         if (g_RetrievePeriod > 0)
             m_plogs_window->DisplayLogsLayer();
 
     } else if (m_plogs_window) {
-        // log updates no longer requested: hide window and stop timer
-        m_plogs_window->m_pTimer->Stop();
+        // log updates no longer requested: hide status window and stop timer
+        m_plogs_window->SetTimer(0);
         m_AUImgr->GetPane(m_plogs_window).Show(false);
         m_AUImgr->Update();
     }

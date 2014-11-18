@@ -41,7 +41,7 @@ public:
       ~logsWindow(){post.Close();}
       //~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
-      //void ResetTimer(int seconds);
+      void SetTimer(int RetrieveSecs);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
@@ -65,11 +65,8 @@ private:
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
       wxHTTP        post;
-      //bool         m_LaunchCycle;
-
 
 DECLARE_EVENT_TABLE()
 };
-
 
 #endif /* LOGS_H_ */

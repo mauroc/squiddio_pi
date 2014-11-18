@@ -45,7 +45,6 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     g_RetrieveSecs  = period_secs(p_plugin->g_RetrievePeriod);
     m_LastLogSent   = p_plugin->g_LastLogSent;
     m_LastLogsRcvd  = p_plugin->g_LastLogsRcvd;
-    //m_LaunchCycle   = false;
 
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
@@ -57,15 +56,20 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     {
         if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs) // overdue request at startup?
         {
-            //wxThread::Sleep(3000);
             RequestRefresh(m_parent_window);
             ShowFriendsLogs();
         }
-        int dummy = g_RetrieveSecs - (wxDateTime::GetTimeNow() - m_LastLogsRcvd.GetSecond());
-        dummy = wxMin(dummy, g_RetrieveSecs);
-        dummy = wxMax(dummy, 7);
-        m_pTimer->Start(dummy*1000);
+        int nextEvent = g_RetrieveSecs - (wxDateTime::GetTimeNow() - m_LastLogsRcvd.GetSecond());
+        // if update is overdue, delay by a few seconds to avoid interfering with opencpn launch, else schedule it for when it's due
+        SetTimer(wxMax(wxMin(wxMin(nextEvent, g_RetrieveSecs), g_RetrieveSecs), 7));
     }
+}
+void logsWindow::SetTimer(int RetrieveSecs){
+    m_pTimer->Stop();
+    if (RetrieveSecs > 0)
+        m_pTimer->Start(RetrieveSecs*1000);
+    g_RetrieveSecs = RetrieveSecs;
+    Refresh(false);
 }
 
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
@@ -73,8 +77,9 @@ void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     ShowFriendsLogs();
     if (m_pTimer->GetInterval()/1000 < g_RetrieveSecs)
     {
-        m_pTimer->Stop();
-        m_pTimer->Start(g_RetrieveSecs*1000);
+        // after initial friends update, reset the timer to the required interval
+        SetTimer(0);
+        SetTimer(g_RetrieveSecs*1000);
     }
     Refresh(false);
 }
