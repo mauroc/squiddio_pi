@@ -72,7 +72,6 @@ int period_secs(int period){
     }
     return 0;
 }
-
 squiddio_pi::squiddio_pi(void *ppimgr) :
         opencpn_plugin_110(ppimgr) // constructor initialization
 {
@@ -748,8 +747,8 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
         if (dialog->ShowModal() == wxID_OK) {
             g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
             g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
-            g_Email = dialog->m_textSquiddioID->GetValue();
-            g_ApiKey = dialog->m_textApiKey->GetValue();
+            g_Email = dialog->m_textSquiddioID->GetValue().Trim();
+            g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
             g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
             g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
             g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
@@ -761,7 +760,7 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
             SaveConfig();
             RenderLayers();
             ResetLogsWindow();
-            m_plogs_window->ResetTimer(period_secs(g_RetrievePeriod));
+            //m_plogs_window->ResetTimer(period_secs(g_RetrievePeriod));
             if (g_RetrievePeriod > 0)
                 m_plogs_window->DisplayLogsLayer();
         }

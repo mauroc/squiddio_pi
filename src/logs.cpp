@@ -37,7 +37,6 @@ BEGIN_EVENT_TABLE(logsWindow, wxWindow)
 END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
-        //wxWindow(pparent, id, wxPoint(10, 10), wxSize(250, 50), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
         wxWindow(pparent, id, wxPoint(10, 200), wxSize(480, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
     p_plugin        = plugin;
     m_parent_window = pparent;
@@ -53,13 +52,17 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_LogsFilePath.Append(_T("logs.gpx"));
 
     DisplayLogsLayer();
-
-    if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs)
-        m_LaunchCycle   = true; // delays the first logs request to avoid interfering with ocpn launch
-
     if (g_RetrieveSecs > 0)
-       ResetTimer(g_RetrieveSecs);
+        m_pTimer->Start(g_RetrieveSecs*1000);
+
+    //if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs)
+        //m_LaunchCycle   = true; // delays the first logs request to avoid interfering with ocpn launch
+
+    //if (g_RetrieveSecs > 0)
+       //ResetTimer(g_RetrieveSecs);
+
 }
+
 void logsWindow::ResetTimer(int retrieveSecs){
     m_pTimer->Stop();
     if (m_LaunchCycle)
@@ -76,11 +79,11 @@ void logsWindow::ResetTimer(int retrieveSecs){
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     RequestRefresh(m_parent_window);
     ShowFriendsLogs();
-    if (m_LaunchCycle)
-    {
-        m_LaunchCycle = false;
-        ResetTimer(g_RetrieveSecs);
-    }
+    //if (m_LaunchCycle)
+    //{
+        //m_LaunchCycle = false;
+        //ResetTimer(g_RetrieveSecs);
+    //}
     Refresh(false);
 
 }
@@ -101,7 +104,6 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 
     wxFont *g_pFontSmall;
     g_pFontSmall = new wxFont( 8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
-    //dc->SetFont(wxFont(8, wxSWISS, wxNORMAL, wxBOLD, false, wxS("")));
     dc.SetFont(*g_pFontSmall);
 
 
@@ -192,6 +194,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f"),
             p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), lat, lon, sog, cog);
 
+    //wxHTTP post;
 
     post.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
     post.SetPostBuffer(_T("text/html; charset=utf-8")); //this seems to be the only way to set the http method to POST. Other wxHTTP methods (e.g. SetMethod) are not supported in v 2.8
@@ -203,14 +206,18 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     wxInputStream *http_stream = post.GetInputStream(
             _T("/positions?") + parameters); // not the most elegant way to set POST parameters, but SetPostText is not supported in wxWidgets 2.8?
 
+    // api_key=Q6euBOWcpngVAf98T &email=info@squidd.io&lat=35.948661&lon=26.458073&sog=25199.700000&cog=61.000000
+    int a = post.GetError();
+
     if (post.GetError() == wxPROTO_NOERR) {
         wxStringOutputStream out_stream(&reply);
         http_stream->Read(out_stream);
+        wxBell();
     } else
         reply = wxEmptyString;
 
     wxDELETE(http_stream);
-
+    //post.Close();
     return reply;
 }
 

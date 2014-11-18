@@ -35,6 +35,7 @@ class logsWindow : public wxWindow
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~logsWindow(){post.Close();}
+      //~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
       void ResetTimer(int seconds);
       void OnPaint(wxPaintEvent& event);
