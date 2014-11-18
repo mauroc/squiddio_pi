@@ -60,7 +60,7 @@ public:
       wxDateTime   m_LastLogSent;
 
 private:
-      int          g_RetrieveSecs;
+      int           g_RetrieveSecs;
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;

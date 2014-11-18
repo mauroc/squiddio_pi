@@ -760,8 +760,6 @@ void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
             SaveConfig();
             RenderLayers();
             SetLogsWindow();
-            if (g_RetrievePeriod > 0)
-                m_plogs_window->DisplayLogsLayer();
         }
         delete dialog;
     }
@@ -789,8 +787,12 @@ void squiddio_pi::SetLogsWindow()
         // now make it visible
         m_AUImgr->GetPane(m_plogs_window).Show(true);
         m_AUImgr->Update();
+        if (g_RetrievePeriod > 0)
+            m_plogs_window->DisplayLogsLayer();
+
     } else if (m_plogs_window) {
-        // log updates no longer requested: hide window
+        // log updates no longer requested: hide window and stop timer
+        m_plogs_window->m_pTimer->Stop();
         m_AUImgr->GetPane(m_plogs_window).Show(false);
         m_AUImgr->Update();
     }

@@ -197,9 +197,6 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     wxInputStream *http_stream = post.GetInputStream(
             _T("/positions?") + parameters); // not the most elegant way to set POST parameters, but SetPostText is not supported in wxWidgets 2.8?
 
-    // api_key=Q6euBOWcpngVAf98T &email=info@squidd.io&lat=35.948661&lon=26.458073&sog=25199.700000&cog=61.000000
-    int a = post.GetError();
-
     if (post.GetError() == wxPROTO_NOERR) {
         wxStringOutputStream out_stream(&reply);
         http_stream->Read(out_stream);
