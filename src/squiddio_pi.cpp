@@ -765,6 +765,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent){
         g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
         g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
 
+        if ((g_RetrievePeriod > 0 || g_PostPeriod >0) && (g_Email.Length()==0 || g_ApiKey.Length() ==0 ))
+        	wxMessageBox(_T("Log sharing was not activated as proper credentials are missing. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard)."));
         SaveConfig();
         RenderLayers();
         SetLogsWindow();

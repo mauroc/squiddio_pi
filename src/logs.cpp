@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE(logsWindow, wxWindow)
 END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
-        wxWindow(pparent, id, wxPoint(10, 200), wxSize(480, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
+        wxWindow(pparent, id, wxPoint(10, 200), wxSize(500, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
     p_plugin        = plugin;
     m_parent_window = pparent;
     m_pTimer        = new wxTimer(this, TIMER_ID);
@@ -60,8 +60,8 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
             ShowFriendsLogs();
         }
         int nextEvent = g_RetrieveSecs - (wxDateTime::GetTimeNow() - m_LastLogsRcvd.GetSecond());
-        // if update is overdue, delay by a few seconds to avoid interfering with opencpn launch, else schedule it for when it's due
-        SetTimer(wxMax(wxMin(wxMin(nextEvent, g_RetrieveSecs), g_RetrieveSecs), 7));
+        // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch, else schedule it for when it's due
+        SetTimer(wxMax(wxMin(nextEvent, g_RetrieveSecs), 7));
     }
 }
 void logsWindow::SetTimer(int RetrieveSecs){
@@ -111,12 +111,14 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     {
         dc.Clear();
         wxString data;
+        wxString lastSentAv = (lastSent.Length() > 0  ? lastSent : _T("(awaiting NMEA events)") );
         if (p_plugin->g_PostPeriod > 0){
             dc.SetTextForeground(cs);
         } else {
             dc.SetTextForeground(ci);
         }
-        data.Printf(_T("Log sent:  %s "), lastSent.c_str());
+        //data.Printf(_T("Log sent:  %s "), lastSent.c_str());
+        data.Printf(_T("Log sent:  %s "), lastSentAv.c_str() );
         dc.DrawText(data, 5, 5);
 
         if (g_RetrieveSecs > 0){
