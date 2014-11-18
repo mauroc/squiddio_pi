@@ -69,6 +69,8 @@ extern PoiMan *pPoiMan;
 
 int period_secs(int period);
 
+#define SQUIDDIO_TOOL_POSITION    -1  // Request default positioning of toolbar tool
+
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
@@ -145,6 +147,7 @@ private:
 
       bool SaveConfig(void);
       bool ShowType(Poi * wp);
+      void PreferencesDialog(wxWindow* parent);
 
       wxWindow      *m_parent_window;
       int           m_show_id;
@@ -179,6 +182,7 @@ private:
       int         m_demoshow_id;
       int         m_demohide_id;
       wxHTTP      get;
+      int         m_leftclick_tool_id;
 };
 
 #endif

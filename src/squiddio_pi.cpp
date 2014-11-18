@@ -186,18 +186,29 @@ int squiddio_pi::Init(void) {
         }
     }
 
+    //    This PlugIn needs a toolbar icon, so request its insertion
+    m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_marina_grn, _img_marina_grn, wxITEM_NORMAL,
+                         _("sQuiddio"), _T(""), NULL, SQUIDDIO_TOOL_POSITION, 0, this);
+
+    //m_pCelestialNavigationDialog = NULL;
+
+
     return (
     INSTALLS_CONTEXTMENU_ITEMS |
     WANTS_CURSOR_LATLON |
     WANTS_NMEA_SENTENCES |
     WANTS_PREFERENCES |
     USES_AUI_MANAGER |
+    WANTS_TOOLBAR_CALLBACK    |
+    INSTALLS_TOOLBAR_TOOL |
     WANTS_LATE_INIT);
 }
 
 bool squiddio_pi::DeInit(void) {
 
     get.Close();
+
+    RemovePlugInTool(m_leftclick_tool_id);
 
     m_AUImgr->DetachPane(m_plogs_window);
 
@@ -716,49 +727,53 @@ bool squiddio_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
 int squiddio_pi::GetToolbarToolCount(void) {
     return 1;
 }
-void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
-    {
-        SquiddioPrefsDialogBase *dialog = new SquiddioPrefsDialogBase(parent,
-                wxID_ANY, _("sQuiddio Preferences"),
-                wxPoint(m_squiddio_dialog_x, m_squiddio_dialog_y),
-                wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
 
-        dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
-        dialog->m_choiceReceive->SetSelection(g_RetrievePeriod);
-        dialog->m_textSquiddioID->SetValue(g_Email);
-        dialog->m_textApiKey->SetValue(g_ApiKey);
-        dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
-        dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
-        dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
-        dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
-        dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
-        dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
-        dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+void squiddio_pi::PreferencesDialog(wxWindow* parent){
+{
+    SquiddioPrefsDialogBase *dialog = new SquiddioPrefsDialogBase(parent,
+            wxID_ANY, _("sQuiddio Preferences"),
+            wxPoint(m_squiddio_dialog_x, m_squiddio_dialog_y),
+            wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
 
-        dialog->Fit();
-        wxColour cl;
-        GetGlobalColor(_T("DILG1"), &cl);
-        dialog->SetBackgroundColour(cl);
+    dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
+    dialog->m_choiceReceive->SetSelection(g_RetrievePeriod);
+    dialog->m_textSquiddioID->SetValue(g_Email);
+    dialog->m_textApiKey->SetValue(g_ApiKey);
+    dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
+    dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
+    dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
+    dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
+    dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
+    dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
+    dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
 
-        if (dialog->ShowModal() == wxID_OK) {
-            g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
-            g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
-            g_Email = dialog->m_textSquiddioID->GetValue().Trim();
-            g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
-            g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
-            g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
-            g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
-            g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
-            g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
-            g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
-            g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+    dialog->Fit();
+    wxColour cl;
+    GetGlobalColor(_T("DILG1"), &cl);
+    dialog->SetBackgroundColour(cl);
 
-            SaveConfig();
-            RenderLayers();
-            SetLogsWindow();
-        }
-        delete dialog;
+    if (dialog->ShowModal() == wxID_OK) {
+        g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
+        g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
+        g_Email = dialog->m_textSquiddioID->GetValue().Trim();
+        g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
+        g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
+        g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
+        g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
+        g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
+        g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
+        g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
+        g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+
+        SaveConfig();
+        RenderLayers();
+        SetLogsWindow();
     }
+    delete dialog;
+}
+}
+void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
+    PreferencesDialog(parent);
 }
 
 void squiddio_pi::SetLogsWindow()
@@ -797,7 +812,7 @@ void squiddio_pi::SetLogsWindow()
 
 
 void squiddio_pi::OnToolbarToolCallback(int id) {
-
+    PreferencesDialog(m_parent_window);
 }
 void squiddio_pi::SetPluginMessage(wxString &message_id,
         wxString &message_body) {
