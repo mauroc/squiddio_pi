@@ -134,24 +134,23 @@ int squiddio_pi::Init(void) {
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
 
-    AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
-    AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"),
-            _T("Anchorage/Buoys"));
-    AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
-    AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"),
-            _T("Fuel Station"));
-    AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
-    AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_azu"), _T("Boat Ramp"));
-    AddCustomWaypointIcon(_img_logimg_N, _T("logimg_N"), _T("North"));
-    AddCustomWaypointIcon(_img_logimg_NE, _T("logimg_NE"), _T("North East"));
-    AddCustomWaypointIcon(_img_logimg_E, _T("logimg_E"), _T("East"));
-    AddCustomWaypointIcon(_img_logimg_SE, _T("logimg_SE"), _T("South East"));
-    AddCustomWaypointIcon(_img_logimg_S, _T("logimg_S"), _T("South"));
-    AddCustomWaypointIcon(_img_logimg_SW, _T("logimg_SW"), _T("South West"));
-    AddCustomWaypointIcon(_img_logimg_W, _T("logimg_W"), _T("West"));
-    AddCustomWaypointIcon(_img_logimg_NW, _T("logimg_NW"), _T("North West"));
-    AddCustomWaypointIcon(_img_logimg_C, _T("logimg_C"), _T("Checked in"));
-    AddCustomWaypointIcon(_img_logimg_U, _T("logimg_U"), _T("Unknown heading"));
+    AddCustomWaypointIcon(_img_marina_grn, 		_T("marina_grn"), _T("Marina"));
+    AddCustomWaypointIcon(_img_anchor_blu, 		_T("anchor_blu"),_T("Anchorage/Buoys"));
+    AddCustomWaypointIcon(_img_club_pur, 		_T("club_pur"), _T("Yacht Club"));
+    AddCustomWaypointIcon(_img_fuelpump_red, 	_T("fuelpump_red"),_T("Fuel Station"));
+    AddCustomWaypointIcon(_img_pier_yel, 		_T("pier_yel"), _T("Dock/Pier"));
+    AddCustomWaypointIcon(_img_ramp_azu, 		_T("ramp_azu"), _T("Boat Ramp"));
+
+    AddCustomWaypointIcon(_img_logimg_N, 		_T("logimg_N"), _T("North"));
+    AddCustomWaypointIcon(_img_logimg_NE, 		_T("logimg_NE"), _T("North East"));
+    AddCustomWaypointIcon(_img_logimg_E, 		_T("logimg_E"), _T("East"));
+    AddCustomWaypointIcon(_img_logimg_SE, 		_T("logimg_SE"), _T("South East"));
+    AddCustomWaypointIcon(_img_logimg_S, 		_T("logimg_S"), _T("South"));
+    AddCustomWaypointIcon(_img_logimg_SW, 		_T("logimg_SW"), _T("South West"));
+    AddCustomWaypointIcon(_img_logimg_W, 		_T("logimg_W"), _T("West"));
+    AddCustomWaypointIcon(_img_logimg_NW, 		_T("logimg_NW"), _T("North West"));
+    AddCustomWaypointIcon(_img_logimg_C, 		_T("logimg_C"), _T("Checked in"));
+    AddCustomWaypointIcon(_img_logimg_U, 		_T("logimg_U"), _T("Unknown heading"));
 
     pLayerList = new LayerList;
     pPoiMan = new PoiMan;
@@ -189,8 +188,6 @@ int squiddio_pi::Init(void) {
     //    This PlugIn needs a toolbar icon, so request its insertion
     m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_plugin_logo, _img_plugin_logo, wxITEM_NORMAL,
                          _("sQuiddio"), _T(""), NULL, SQUIDDIO_TOOL_POSITION, 0, this);
-
-    //m_pCelestialNavigationDialog = NULL;
 
 
     return (
@@ -401,8 +398,10 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewDocks;
     else if (wp->m_IconName == _T("ramp_azu"))
         return g_ViewRamps;
-    else
+    else if (wp->m_IconName == _T("others"))
         return g_ViewOthers;
+    else
+        return true;
 }
 
 void squiddio_pi::RenderLayers() {

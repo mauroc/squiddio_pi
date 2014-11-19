@@ -38,7 +38,9 @@ END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         wxWindow(pparent, id, wxPoint(10, 200), wxSize(500, 25), wxSIMPLE_BORDER, _T("OpenCPN PlugIn")) {
-    p_plugin        = plugin;
+
+	this->SetTransparent(30);
+	p_plugin        = plugin;
     m_parent_window = pparent;
     m_pTimer        = new wxTimer(this, TIMER_ID);
     m_LogsLayer     = NULL;
