@@ -64,7 +64,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
 		
-		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,400 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,420 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~SquiddioPrefsDialogBase();
 	
 };

@@ -187,7 +187,7 @@ int squiddio_pi::Init(void) {
     }
 
     //    This PlugIn needs a toolbar icon, so request its insertion
-    m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_marina_grn, _img_marina_grn, wxITEM_NORMAL,
+    m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_plugin_logo, _img_plugin_logo, wxITEM_NORMAL,
                          _("sQuiddio"), _T(""), NULL, SQUIDDIO_TOOL_POSITION, 0, this);
 
     //m_pCelestialNavigationDialog = NULL;
@@ -691,7 +691,7 @@ int squiddio_pi::GetPlugInVersionMinor() {
     return PLUGIN_VERSION_MINOR;
 }
 wxBitmap *squiddio_pi::GetPlugInBitmap() {
-    return _img_marina_grn;
+    return _img_plugin_logo;
 }
 
 wxString squiddio_pi::GetCommonName() {
@@ -730,10 +730,13 @@ int squiddio_pi::GetToolbarToolCount(void) {
 
 void squiddio_pi::PreferencesDialog(wxWindow* parent){
 {
-    SquiddioPrefsDialogBase *dialog = new SquiddioPrefsDialogBase(parent,
+    /*SquiddioPrefsDialogBase *dialog = new SquiddioPrefsDialogBase(parent,
             wxID_ANY, _("sQuiddio Preferences"),
             wxPoint(m_squiddio_dialog_x, m_squiddio_dialog_y),
             wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
+	*/
+
+	SquiddioPrefsDialog * dialog = new SquiddioPrefsDialog(*this, m_parent_window);
 
     dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
     dialog->m_choiceReceive->SetSelection(g_RetrievePeriod);
@@ -830,6 +833,44 @@ void squiddio_pi::SetNMEASentence(wxString &sentence)
     {
         m_plogs_window->SetSentence(sentence);
     }
+}
+
+//---------------------------------------------- preferences dialog event handlers
+void SquiddioPrefsDialog::OnCheckBoxAll( wxCommandEvent& event )
+{
+	wxCheckBox *checkbox = (wxCheckBox*)event.GetEventObject();
+	if (checkbox->IsChecked())
+	{
+		m_checkBoxMarinas->SetValue(true);
+		m_checkBoxAnchorages->SetValue(true);
+		m_checkBoxYachtClubs->SetValue(true);
+		m_checkBoxDocks->SetValue(true);
+		m_checkBoxRamps->SetValue(true);
+		m_checkBoxFuelStations->SetValue(true);
+		m_checkBoxOthers->SetValue(true);
+
+		m_checkBoxMarinas->Enable(false);
+		m_checkBoxAnchorages->Enable(false);
+		m_checkBoxYachtClubs->Enable(false);
+		m_checkBoxDocks->Enable(false);
+		m_checkBoxRamps->Enable(false);
+		m_checkBoxFuelStations->Enable(false);
+		m_checkBoxOthers->Enable(false);
+	}else{
+		m_checkBoxMarinas->Enable(true);
+		m_checkBoxAnchorages->Enable(true);
+		m_checkBoxYachtClubs->Enable(true);
+		m_checkBoxDocks->Enable(true);
+		m_checkBoxRamps->Enable(true);
+		m_checkBoxFuelStations->Enable(true);
+		m_checkBoxOthers->Enable(true);
+	}
+}
+
+void SquiddioPrefsDialog::LaunchHelpPage( wxCommandEvent& event )
+{
+    if (!wxLaunchDefaultBrowser(_T("http://squidd.io/squiddio_pi")))
+        wxMessageBox(_("Could not launch default browser. Check your Internet connection"));
 }
 
 

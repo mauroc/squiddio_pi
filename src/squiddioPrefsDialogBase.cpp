@@ -23,6 +23,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSubSizer->SetFlexibleDirection( wxBOTH );
 	fgSubSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
+	fgSubSizer->SetMinSize( wxSize( -1,380 ) ); 
 	wxStaticBoxSizer* sbDestSizer;
 	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("View Destinations") ), wxVERTICAL );
 	
@@ -32,9 +33,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	m_checkBoxAll = new wxCheckBox( this, ID_CB_ALL, wxT("All"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxAll->SetValue(true); 
-	m_checkBoxAll->Enable( false );
-	
 	fgSizer5->Add( m_checkBoxAll, 0, wxALL, 5 );
 	
 	m_checkBoxMarinas = new wxCheckBox( this, wxID_ANY, wxT("Marinas"), wxDefaultPosition, wxDefaultSize, 0 );
