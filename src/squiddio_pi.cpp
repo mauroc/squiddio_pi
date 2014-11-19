@@ -749,6 +749,11 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent){
     dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
     dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
     dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+    if (g_PostPeriod > 0 || g_RetrievePeriod > 0)
+    {
+		dialog->m_textSquiddioID->Enable(true);
+		dialog->m_textApiKey->Enable(true);
+    }
 
     dialog->Fit();
     wxColour cl;
@@ -871,6 +876,18 @@ void SquiddioPrefsDialog::LaunchHelpPage( wxCommandEvent& event )
 {
     if (!wxLaunchDefaultBrowser(_T("http://squidd.io/squiddio_pi")))
         wxMessageBox(_("Could not launch default browser. Check your Internet connection"));
+}
+void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event )
+{
+	if (m_choiceHowOften->GetSelection() == 0 && m_choiceReceive->GetSelection() == 0)
+	{
+		m_textSquiddioID->Enable(false);
+		m_textApiKey->Enable(false);
+	}else{
+		m_textSquiddioID->Enable(true);
+		m_textApiKey->Enable(true);
+	}
+	Refresh(false);
 }
 
 

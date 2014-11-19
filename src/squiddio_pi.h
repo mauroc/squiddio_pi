@@ -193,6 +193,7 @@ public:
 
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
+    void OnShareChoice( wxCommandEvent& event );
 
 protected:
     squiddio_pi &m_sq_pi;
