@@ -30,6 +30,7 @@
 
 #include "squiddio_pi.h"
 #include "logs.h"
+#include <wx/fileconf.h>
 
 WX_DEFINE_LIST (LayerList);
 WX_DEFINE_LIST (HyperlinkList);
@@ -58,17 +59,17 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p) {
 //
 //---------------------------------------------------------------------------------------------------------
 
-int period_secs(int period){
+int period_secs(int period) {
     switch (period) {
-        case 0: return 0;
-        case 1: return 85400;
-        case 2: return 43200;
-        case 3: return 3600;
-        case 4: return 1800;
-        case 5: return 60;
-        case 6: return 30;
-        case 7: return 10;
-        default: break;
+    case 0: return 0;
+    case 1: return 85400;
+    case 2: return 43200;
+    case 3: return 3600;
+    case 4: return 1800;
+    case 5: return 60;
+    case 6: return 30;
+    case 7: return 10;
+    default: break;
     }
     return 0;
 }
@@ -134,23 +135,25 @@ int squiddio_pi::Init(void) {
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
 
-    AddCustomWaypointIcon(_img_marina_grn, 		_T("marina_grn"), _T("Marina"));
-    AddCustomWaypointIcon(_img_anchor_blu, 		_T("anchor_blu"),_T("Anchorage/Buoys"));
-    AddCustomWaypointIcon(_img_club_pur, 		_T("club_pur"), _T("Yacht Club"));
-    AddCustomWaypointIcon(_img_fuelpump_red, 	_T("fuelpump_red"),_T("Fuel Station"));
-    AddCustomWaypointIcon(_img_pier_yel, 		_T("pier_yel"), _T("Dock/Pier"));
-    AddCustomWaypointIcon(_img_ramp_azu, 		_T("ramp_azu"), _T("Boat Ramp"));
+    AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
+    AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"),
+            _T("Anchorage/Buoys"));
+    AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
+    AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"),
+            _T("Fuel Station"));
+    AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
+    AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_azu"), _T("Boat Ramp"));
 
-    AddCustomWaypointIcon(_img_logimg_N, 		_T("logimg_N"), _T("North"));
-    AddCustomWaypointIcon(_img_logimg_NE, 		_T("logimg_NE"), _T("North East"));
-    AddCustomWaypointIcon(_img_logimg_E, 		_T("logimg_E"), _T("East"));
-    AddCustomWaypointIcon(_img_logimg_SE, 		_T("logimg_SE"), _T("South East"));
-    AddCustomWaypointIcon(_img_logimg_S, 		_T("logimg_S"), _T("South"));
-    AddCustomWaypointIcon(_img_logimg_SW, 		_T("logimg_SW"), _T("South West"));
-    AddCustomWaypointIcon(_img_logimg_W, 		_T("logimg_W"), _T("West"));
-    AddCustomWaypointIcon(_img_logimg_NW, 		_T("logimg_NW"), _T("North West"));
-    AddCustomWaypointIcon(_img_logimg_C, 		_T("logimg_C"), _T("Checked in"));
-    AddCustomWaypointIcon(_img_logimg_U, 		_T("logimg_U"), _T("Unknown heading"));
+    AddCustomWaypointIcon(_img_logimg_N, _T("logimg_N"), _T("North"));
+    AddCustomWaypointIcon(_img_logimg_NE, _T("logimg_NE"), _T("North East"));
+    AddCustomWaypointIcon(_img_logimg_E, _T("logimg_E"), _T("East"));
+    AddCustomWaypointIcon(_img_logimg_SE, _T("logimg_SE"), _T("South East"));
+    AddCustomWaypointIcon(_img_logimg_S, _T("logimg_S"), _T("South"));
+    AddCustomWaypointIcon(_img_logimg_SW, _T("logimg_SW"), _T("South West"));
+    AddCustomWaypointIcon(_img_logimg_W, _T("logimg_W"), _T("West"));
+    AddCustomWaypointIcon(_img_logimg_NW, _T("logimg_NW"), _T("North West"));
+    AddCustomWaypointIcon(_img_logimg_C, _T("logimg_C"), _T("Checked in"));
+    AddCustomWaypointIcon(_img_logimg_U, _T("logimg_U"), _T("Unknown heading"));
 
     pLayerList = new LayerList;
     pPoiMan = new PoiMan;
@@ -186,9 +189,9 @@ int squiddio_pi::Init(void) {
     }
 
     //    This PlugIn needs a toolbar icon, so request its insertion
-    m_leftclick_tool_id  = InsertPlugInTool(_T(""), _img_plugin_logo, _img_plugin_logo, wxITEM_NORMAL,
-                         _("sQuiddio"), _T(""), NULL, SQUIDDIO_TOOL_POSITION, 0, this);
-
+    m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_plugin_logo,
+            _img_plugin_logo, wxITEM_NORMAL, _("sQuiddio"), _T(""), NULL,
+            SQUIDDIO_TOOL_POSITION, 0, this);
 
     return (
     INSTALLS_CONTEXTMENU_ITEMS |
@@ -196,7 +199,8 @@ int squiddio_pi::Init(void) {
     WANTS_NMEA_SENTENCES |
     WANTS_PREFERENCES |
     USES_AUI_MANAGER |
-    WANTS_TOOLBAR_CALLBACK    |
+    WANTS_CONFIG |
+    WANTS_TOOLBAR_CALLBACK |
     INSTALLS_TOOLBAR_TOOL |
     WANTS_LATE_INIT);
 }
@@ -207,9 +211,8 @@ bool squiddio_pi::DeInit(void) {
 
     RemovePlugInTool(m_leftclick_tool_id);
 
-    m_AUImgr->DetachPane(m_plogs_window);
-
     if (m_plogs_window) {
+        m_AUImgr->DetachPane(m_plogs_window);
         m_plogs_window->Close();
     }
 
@@ -222,8 +225,6 @@ bool squiddio_pi::DeInit(void) {
     int index = 0;
     for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
         Layer * l = (Layer *) (*it);
-        l->SetVisibleOnChart(false);
-        RenderLayerContentsOnChart(l, false);
         pLayerList->DeleteObject(l);
     }
     SaveConfig();
@@ -242,8 +243,8 @@ bool squiddio_pi::LoadConfig(void) {
         return false;
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-    pConf->Read(_T("VisibleLayers"), &g_VisibleLayers);
-    pConf->Read(_T("InvisibleLayers"), &g_InvisibleLayers);
+    pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
+    pConf->Read(_T("InvisibleSqLayers"), &g_InvisibleLayers);
     pConf->Read(_T("PostPeriod"), &g_PostPeriod);
     pConf->Read(_T("RetrievePeriod"), &g_RetrievePeriod);
     pConf->Read(_T("LastLogSent"), &g_LastLogSent);
@@ -268,8 +269,8 @@ bool squiddio_pi::SaveConfig(void) {
         return false;
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-    pConf->Write(_T("VisibleLayers"), g_VisibleLayers);
-    pConf->Write(_T("InvisibleLayers"), g_InvisibleLayers);
+    pConf->Write(_T("VisibleSqLayers"), g_VisibleLayers);
+    pConf->Write(_T("InvisibleSqLayers"), g_InvisibleLayers);
     pConf->Write(_T("PostPeriod"), g_PostPeriod);
     pConf->Write(_T("RetrievePeriod"), g_RetrievePeriod);
     pConf->Write(_T("LastLogSent"), g_LastLogSent);
@@ -342,6 +343,7 @@ bool squiddio_pi::LoadLayers(wxString &path) {
                     if (::wxFileExists(file_path)) {
                         LoadLayerItems(file_path, l, bLayerViz);
                     }
+                //delete l;
                 }
             }
             cont = dir.GetNext(&filename);
@@ -490,7 +492,6 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_report_id, IsOnline());
 
     SetLogsWindow();
-
 }
 
 void squiddio_pi::SetCursorLatLon(double lat, double lon) {
@@ -524,7 +525,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 
     if (id == m_show_id || id == m_hide_id) {
         request_layer->SetVisibleOnChart(!request_layer->IsVisibleOnChart());
-        RenderLayerContentsOnChart(request_layer);
+        RenderLayerContentsOnChart(request_layer, true);
         wxLogMessage(
                 _T("squiddio_pi: toggled layer: ")
                         + request_layer->m_LayerName);
@@ -547,12 +548,12 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
                 if (isLayerUpdate && request_layer != NULL) {
                     // hide and delete the current layer
                     request_layer->SetVisibleOnChart(false);
-                    RenderLayerContentsOnChart(request_layer);
+                    RenderLayerContentsOnChart(request_layer, true);
                     pLayerList->DeleteObject(request_layer);
                 }
                 new_layer = LoadLayer(gpxFilePath, request_region);
                 new_layer->SetVisibleNames(false);
-                RenderLayerContentsOnChart(new_layer);
+                RenderLayerContentsOnChart(new_layer, true);
 
                 if (isLayerUpdate) {
                     wxMessageBox(_("Local destinations have been updated"));
@@ -712,7 +713,10 @@ Destinations appear as OpenCPN waypoints: \n\
 * Follow link to rate destination and add comments online.\n\n\
 Other menu options: \n\
 * Toggle visibility for local destinations on/off \n\
-* Submit a new destination (requires Internet connection and free user account)");
+* Submit a new destination (requires Internet connection and free user account)\n\
+\nStay Connected\n\n\
+* Share your GPS coordinates with your cruising friends and visualize their position\n\
+on your OpenCPN charts (requires a free sQuiddio account)");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
@@ -727,77 +731,86 @@ int squiddio_pi::GetToolbarToolCount(void) {
     return 1;
 }
 
-void squiddio_pi::PreferencesDialog(wxWindow* parent){
-{
-    /*SquiddioPrefsDialogBase *dialog = new SquiddioPrefsDialogBase(parent,
-            wxID_ANY, _("sQuiddio Preferences"),
-            wxPoint(m_squiddio_dialog_x, m_squiddio_dialog_y),
-            wxDefaultSize, wxDEFAULT_DIALOG_STYLE);
-	*/
-
-	SquiddioPrefsDialog * dialog = new SquiddioPrefsDialog(*this, m_parent_window);
-
-    dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
-    dialog->m_choiceReceive->SetSelection(g_RetrievePeriod);
-    dialog->m_textSquiddioID->SetValue(g_Email);
-    dialog->m_textApiKey->SetValue(g_ApiKey);
-    dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
-    dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
-    dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
-    dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
-    dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
-    dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
-    dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
-    if (g_PostPeriod > 0 || g_RetrievePeriod > 0)
+void squiddio_pi::PreferencesDialog(wxWindow* parent) {
     {
-		dialog->m_textSquiddioID->Enable(true);
-		dialog->m_textApiKey->Enable(true);
+
+        SquiddioPrefsDialog * dialog = new SquiddioPrefsDialog(*this,
+                m_parent_window);
+        if (g_ViewMarinas && g_ViewAnchorages == true
+                && g_ViewYachtClubs == true && g_ViewDocks == true
+                && g_ViewRamps == true && g_ViewFuelStations == true
+                && g_ViewOthers == true) {
+            dialog->m_checkBoxAll->SetValue(true);
+            dialog->m_checkBoxMarinas->Enable(false);
+            dialog->m_checkBoxAnchorages->Enable(false);
+            dialog->m_checkBoxYachtClubs->Enable(false);
+            dialog->m_checkBoxDocks->Enable(false);
+            dialog->m_checkBoxRamps->Enable(false);
+            dialog->m_checkBoxFuelStations->Enable(false);
+            dialog->m_checkBoxOthers->Enable(false);
+        } else {
+            dialog->m_checkBoxAll->SetValue(false);
+        }
+
+        dialog->m_choiceHowOften->SetSelection(g_PostPeriod);
+        dialog->m_choiceReceive->SetSelection(g_RetrievePeriod);
+        dialog->m_textSquiddioID->SetValue(g_Email);
+        dialog->m_textApiKey->SetValue(g_ApiKey);
+        dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
+        dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
+        dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
+        dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
+        dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
+        dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
+        dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+        if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
+            dialog->m_textSquiddioID->Enable(true);
+            dialog->m_textApiKey->Enable(true);
+        }
+
+        dialog->Fit();
+        wxColour cl;
+        GetGlobalColor(_T("DILG1"), &cl);
+        dialog->SetBackgroundColour(cl);
+
+        if (dialog->ShowModal() == wxID_OK) {
+            g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
+            g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
+            g_Email = dialog->m_textSquiddioID->GetValue().Trim();
+            g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
+            g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
+            g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
+            g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
+            g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
+            g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
+            g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
+            g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+
+            if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
+                wxMessageBox(_T("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard)."));
+            SaveConfig();
+            RenderLayers();
+            SetLogsWindow();
+        }
+        delete dialog;
     }
-
-    dialog->Fit();
-    wxColour cl;
-    GetGlobalColor(_T("DILG1"), &cl);
-    dialog->SetBackgroundColour(cl);
-
-    if (dialog->ShowModal() == wxID_OK) {
-        g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
-        g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
-        g_Email = dialog->m_textSquiddioID->GetValue().Trim();
-        g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
-        g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
-        g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
-        g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
-        g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
-        g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
-        g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
-        g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
-
-        if ((g_RetrievePeriod > 0 || g_PostPeriod >0) && (g_Email.Length()==0 || g_ApiKey.Length() ==0 ))
-        	wxMessageBox(_T("Log sharing was not activated as proper credentials are missing. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard)."));
-        SaveConfig();
-        RenderLayers();
-        SetLogsWindow();
-    }
-    delete dialog;
-}
 }
 void squiddio_pi::ShowPreferencesDialog(wxWindow* parent) {
     PreferencesDialog(parent);
 }
 
-void squiddio_pi::SetLogsWindow()
-{
-    if (g_Email.Length() > 0 && g_ApiKey.Length() > 0 && (g_PostPeriod > 0 || g_RetrievePeriod > 0))
-    {
+void squiddio_pi::SetLogsWindow() {
+    if (g_Email.Length() > 0 && g_ApiKey.Length() > 0
+            && (g_PostPeriod > 0 || g_RetrievePeriod > 0)) {
         // auth info available and either log type requested: open status window
-        if (!m_plogs_window){
+        if (!m_plogs_window) {
             // open window if not yet open
             m_plogs_window = new logsWindow(this, m_parent_window, wxID_ANY);
             m_AUImgr = GetFrameAuiManager();
             m_AUImgr->AddPane(m_plogs_window);
             m_AUImgr->GetPane(m_plogs_window).Name(_T("Demo Window Name"));
             m_AUImgr->GetPane(m_plogs_window).Float();
-            m_AUImgr->GetPane(m_plogs_window).FloatingPosition(300, 30);
+            m_AUImgr->GetPane(m_plogs_window).FloatingPosition(300, 600);
             m_AUImgr->GetPane(m_plogs_window).Caption(_T("sQuiddio log updates"));
             m_AUImgr->GetPane(m_plogs_window).CaptionVisible(false);
             m_AUImgr->GetPane(m_plogs_window).GripperTop(false);
@@ -819,7 +832,6 @@ void squiddio_pi::SetLogsWindow()
     }
 }
 
-
 void squiddio_pi::OnToolbarToolCallback(int id) {
     PreferencesDialog(m_parent_window);
 }
@@ -830,63 +842,58 @@ void squiddio_pi::SetPluginMessage(wxString &message_id,
 void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
 }
-void squiddio_pi::SetNMEASentence(wxString &sentence)
-{
-    if (m_plogs_window && IsOnline() && g_PostPeriod > 0 &&
-            wxDateTime::GetTimeNow() > g_LastLogSent + period_secs(g_PostPeriod) )
-    {
+void squiddio_pi::SetNMEASentence(wxString &sentence) {
+    if (m_plogs_window && IsOnline() && g_PostPeriod > 0
+            && wxDateTime::GetTimeNow()
+                    > g_LastLogSent + period_secs(g_PostPeriod)) {
         m_plogs_window->SetSentence(sentence);
     }
 }
 
 //---------------------------------------------- preferences dialog event handlers
-void SquiddioPrefsDialog::OnCheckBoxAll( wxCommandEvent& event )
-{
-	wxCheckBox *checkbox = (wxCheckBox*)event.GetEventObject();
-	if (checkbox->IsChecked())
-	{
-		m_checkBoxMarinas->SetValue(true);
-		m_checkBoxAnchorages->SetValue(true);
-		m_checkBoxYachtClubs->SetValue(true);
-		m_checkBoxDocks->SetValue(true);
-		m_checkBoxRamps->SetValue(true);
-		m_checkBoxFuelStations->SetValue(true);
-		m_checkBoxOthers->SetValue(true);
+void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
+    wxCheckBox *checkbox = (wxCheckBox*) event.GetEventObject();
+    if (checkbox->IsChecked()) {
+        m_checkBoxMarinas->SetValue(true);
+        m_checkBoxAnchorages->SetValue(true);
+        m_checkBoxYachtClubs->SetValue(true);
+        m_checkBoxDocks->SetValue(true);
+        m_checkBoxRamps->SetValue(true);
+        m_checkBoxFuelStations->SetValue(true);
+        m_checkBoxOthers->SetValue(true);
 
-		m_checkBoxMarinas->Enable(false);
-		m_checkBoxAnchorages->Enable(false);
-		m_checkBoxYachtClubs->Enable(false);
-		m_checkBoxDocks->Enable(false);
-		m_checkBoxRamps->Enable(false);
-		m_checkBoxFuelStations->Enable(false);
-		m_checkBoxOthers->Enable(false);
-	}else{
-		m_checkBoxMarinas->Enable(true);
-		m_checkBoxAnchorages->Enable(true);
-		m_checkBoxYachtClubs->Enable(true);
-		m_checkBoxDocks->Enable(true);
-		m_checkBoxRamps->Enable(true);
-		m_checkBoxFuelStations->Enable(true);
-		m_checkBoxOthers->Enable(true);
-	}
+        m_checkBoxMarinas->Enable(false);
+        m_checkBoxAnchorages->Enable(false);
+        m_checkBoxYachtClubs->Enable(false);
+        m_checkBoxDocks->Enable(false);
+        m_checkBoxRamps->Enable(false);
+        m_checkBoxFuelStations->Enable(false);
+        m_checkBoxOthers->Enable(false);
+    } else {
+        m_checkBoxMarinas->Enable(true);
+        m_checkBoxAnchorages->Enable(true);
+        m_checkBoxYachtClubs->Enable(true);
+        m_checkBoxDocks->Enable(true);
+        m_checkBoxRamps->Enable(true);
+        m_checkBoxFuelStations->Enable(true);
+        m_checkBoxOthers->Enable(true);
+    }
 }
 
-void SquiddioPrefsDialog::LaunchHelpPage( wxCommandEvent& event )
-{
+void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
     if (!wxLaunchDefaultBrowser(_T("http://squidd.io/squiddio_pi")))
-        wxMessageBox(_("Could not launch default browser. Check your Internet connection"));
+        wxMessageBox(
+                _("Could not launch default browser. Check your Internet connection"));
 }
-void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event )
-{
-	if (m_choiceHowOften->GetSelection() == 0 && m_choiceReceive->GetSelection() == 0)
-	{
-		m_textSquiddioID->Enable(false);
-		m_textApiKey->Enable(false);
-	}else{
-		m_textSquiddioID->Enable(true);
-		m_textApiKey->Enable(true);
-	}
-	Refresh(false);
+void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
+    if (m_choiceHowOften->GetSelection() == 0
+            && m_choiceReceive->GetSelection() == 0) {
+        m_textSquiddioID->Enable(false);
+        m_textApiKey->Enable(false);
+    } else {
+        m_textSquiddioID->Enable(true);
+        m_textApiKey->Enable(true);
+    }
+    Refresh(false);
 }
-
 
