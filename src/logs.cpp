@@ -75,13 +75,16 @@ void logsWindow::SetTimer(int RetrieveSecs){
 }
 
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
-    RequestRefresh(m_parent_window);
-    ShowFriendsLogs();
-    if (m_pTimer->GetInterval()/1000 < g_RetrieveSecs)
+    if (p_plugin->IsOnline())
     {
-        // after initial friends update, reset the timer to the required interval
-        SetTimer(0);
-        SetTimer(g_RetrieveSecs*1000);
+        RequestRefresh(m_parent_window);
+        ShowFriendsLogs();
+        if (m_pTimer->GetInterval()/1000 < g_RetrieveSecs)
+        {
+            // after initial friends update, reset the timer to the required interval
+            SetTimer(0);
+            SetTimer(g_RetrieveSecs*1000);
+        }
     }
     Refresh(false);
 }
@@ -114,7 +117,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         dc.Clear();
         wxString data;
         wxString lastSentAv = (lastSent.Length() > 0  ? lastSent : _T("(awaiting NMEA events)") );
-        if (p_plugin->g_PostPeriod > 0){
+        if (p_plugin->g_PostPeriod > 0 && p_plugin->IsOnline()){
             dc.SetTextForeground(cs);
         } else {
             dc.SetTextForeground(ci);
@@ -123,7 +126,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         data.Printf(_T("Log sent:  %s "), lastSentAv.c_str() );
         dc.DrawText(data, 5, 5);
 
-        if (g_RetrieveSecs > 0){
+        if (g_RetrieveSecs > 0 && p_plugin->IsOnline()){
             dc.SetTextForeground(cr);
         } else {
             dc.SetTextForeground(ci);

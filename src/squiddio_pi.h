@@ -46,6 +46,7 @@
 #include <wx/fileconf.h>
 #include <wx/listimpl.cpp>
 #include <wx/aui/aui.h>
+#include <wx/aui/framemanager.h>
 
 #include "ocpn_plugin.h"
 #include "icons.h"

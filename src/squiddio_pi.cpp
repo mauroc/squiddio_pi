@@ -881,7 +881,7 @@ void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
 }
 
 void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
-    if (!wxLaunchDefaultBrowser(_T("http://squidd.io/squiddio_pi")))
+    if (!wxLaunchDefaultBrowser(_T("http://squidd.io/faq#opencpn")))
         wxMessageBox(
                 _("Could not launch default browser. Check your Internet connection"));
 }
