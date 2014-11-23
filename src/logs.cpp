@@ -238,9 +238,12 @@ void logsWindow::ShowFriendsLogs() {
                 // hide and delete the current logs layer
                 m_LogsLayer->SetVisibleOnChart(false);
                 p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
+                RequestRefresh(m_parent_window);
                 p_plugin->pLayerList->DeleteObject(m_LogsLayer);
             }
+
             DisplayLogsLayer();
+
             m_LastLogsRcvd = wxDateTime::Now();
             p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
             wxBell();

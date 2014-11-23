@@ -490,8 +490,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
-    SetCanvasContextMenuItemViz(m_update_id, IsOnline());
-    SetCanvasContextMenuItemViz(m_report_id, IsOnline());
+
 
     SetLogsWindow();
 }
@@ -636,23 +635,25 @@ bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path) {
 }
 
 bool squiddio_pi::IsOnline() {
-    if (wxDateTime::GetTimeNow() < last_online_chk + ONLINE_CHECK_RETRY)
-        return last_online;
-    wxHTTP get;
-    get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    get.SetTimeout(5); // 10 seconds of timeout
-    int cnt = 0;
+    if (wxDateTime::GetTimeNow() > last_online_chk + ONLINE_CHECK_RETRY)
+    {
+        wxHTTP get;
+        get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
+        get.SetTimeout(5); // 10 seconds of timeout
 
-    while (!get.Connect(_T("yahoo.com"))) {
-        if (cnt > 5)
+        if (get.Connect(_T("yahoo.com")))
+        {
+            last_online = true;
+        } else {
             last_online = false;
-        return false;
-        wxSleep(1);
-        cnt++;
+        }
+
+        SetCanvasContextMenuItemViz(m_update_id, last_online);
+        SetCanvasContextMenuItemViz(m_report_id, last_online);
+        get.Close();
     }
-    get.Close();
-    last_online = true;
-    return true;
+
+    return last_online;
 }
 
 Layer * squiddio_pi::GetLocalLayer() {
