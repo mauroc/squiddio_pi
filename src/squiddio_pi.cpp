@@ -111,7 +111,8 @@ int squiddio_pi::Init(void) {
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
 
-    last_online_chk = 0;
+    last_online_chk = wxDateTime::GetTimeNow();
+    last_online =false;
 
     wxMenu dummy_menu;
 
@@ -201,8 +202,9 @@ int squiddio_pi::Init(void) {
     USES_AUI_MANAGER |
     WANTS_CONFIG |
     WANTS_TOOLBAR_CALLBACK |
-    INSTALLS_TOOLBAR_TOOL |
-    WANTS_LATE_INIT);
+    INSTALLS_TOOLBAR_TOOL
+    //WANTS_LATE_INIT
+    );
 }
 
 bool squiddio_pi::DeInit(void) {
@@ -518,7 +520,7 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 }
 
 void squiddio_pi::OnContextMenuItemCallback(int id) {
-    wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
+    //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
     wxString request_region = local_region; // fixes the cursor's hover region at time of request so that intervening mouse movements do not alter the layer name that will be created
     Layer * request_layer = local_sq_layer; // fixes the layer at time of request so that intervening mouse movements do not alter the layer name that will be created
@@ -638,7 +640,7 @@ bool squiddio_pi::IsOnline() {
         return last_online;
     wxHTTP get;
     get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    get.SetTimeout(10); // 10 seconds of timeout
+    get.SetTimeout(5); // 10 seconds of timeout
     int cnt = 0;
 
     while (!get.Connect(_T("yahoo.com"))) {
@@ -820,7 +822,9 @@ void squiddio_pi::SetLogsWindow() {
         // now make it visible
         m_AUImgr->GetPane(m_plogs_window).Show(true);
         m_AUImgr->Update();
+
         m_plogs_window->SetTimer(period_secs(g_RetrievePeriod));
+
         if (g_RetrievePeriod > 0)
             m_plogs_window->DisplayLogsLayer();
 

@@ -59,7 +59,8 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         if ( wxDateTime::GetTimeNow() > m_LastLogsRcvd.GetSecond() + g_RetrieveSecs) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
-            ShowFriendsLogs();
+            if (p_plugin->IsOnline())
+                ShowFriendsLogs();
         }
         int nextEvent = g_RetrieveSecs - (wxDateTime::GetTimeNow() - m_LastLogsRcvd.GetSecond());
         // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch, else schedule it for when it's due
