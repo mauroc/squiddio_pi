@@ -43,6 +43,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 	p_plugin        = plugin;
     m_parent_window = pparent;
     m_pTimer        = new wxTimer(this, TIMER_ID);
+
     m_LogsLayer     = NULL;
     g_RetrieveSecs  = period_secs(p_plugin->g_RetrievePeriod);
     m_LastLogSent   = p_plugin->g_LastLogSent;
@@ -118,7 +119,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         dc.Clear();
         wxString data;
         wxString lastSentAv = (lastSent.Length() > 0  ? lastSent : _T("(awaiting NMEA events)") );
-        if (p_plugin->g_PostPeriod > 0 && p_plugin->IsOnline()){
+        if (p_plugin->g_PostPeriod > 0 && p_plugin->last_online ){
             dc.SetTextForeground(cs);
         } else {
             dc.SetTextForeground(ci);
@@ -127,7 +128,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         data.Printf(_T("Log sent:  %s "), lastSentAv.c_str() );
         dc.DrawText(data, 5, 5);
 
-        if (g_RetrieveSecs > 0 && p_plugin->IsOnline()){
+        if (g_RetrieveSecs > 0 && p_plugin->last_online ){
             dc.SetTextForeground(cr);
         } else {
             dc.SetTextForeground(ci);

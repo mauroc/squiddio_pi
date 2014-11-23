@@ -111,7 +111,7 @@ int squiddio_pi::Init(void) {
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
 
-    last_online_chk = wxDateTime::GetTimeNow();
+    last_online_chk = 0;
     last_online =false;
 
     wxMenu dummy_menu;
@@ -490,8 +490,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
-
-
+    IsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
     SetLogsWindow();
 }
 
@@ -602,7 +601,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
 
         wxInputStream *httpStream = get.GetInputStream(url_path);
 
-        tmp.Printf(wxT("squiddio_pi: GetError %d."), get.GetError());
+        tmp.Printf(wxT("squiddio_pi: GetError %d."), get.GetError() );
         wxLogMessage(tmp);
 
         if (get.GetError() == wxPROTO_NOERR) {
@@ -639,17 +638,17 @@ bool squiddio_pi::IsOnline() {
     {
         wxHTTP get;
         get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-        get.SetTimeout(5); // 10 seconds of timeout
+        get.SetTimeout(5);
 
         if (get.Connect(_T("yahoo.com")))
-        {
             last_online = true;
-        } else {
+        else
             last_online = false;
-        }
 
         SetCanvasContextMenuItemViz(m_update_id, last_online);
         SetCanvasContextMenuItemViz(m_report_id, last_online);
+
+        last_online_chk = wxDateTime::GetTimeNow();
         get.Close();
     }
 
@@ -848,11 +847,9 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
 }
 void squiddio_pi::SetNMEASentence(wxString &sentence) {
-    if (m_plogs_window && IsOnline() && g_PostPeriod > 0
-            && wxDateTime::GetTimeNow()
-                    > g_LastLogSent + period_secs(g_PostPeriod)) {
-        m_plogs_window->SetSentence(sentence);
-    }
+    if (m_plogs_window && g_PostPeriod > 0 && wxDateTime::GetTimeNow() > g_LastLogSent + period_secs(g_PostPeriod))
+        if (IsOnline())
+            m_plogs_window->SetSentence(sentence);
 }
 
 //---------------------------------------------- preferences dialog event handlers

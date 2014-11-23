@@ -143,6 +143,7 @@ public:
       Layer     *local_sq_layer;
       int       g_PostPeriod;
       int       g_RetrievePeriod;
+      bool        last_online;
 
 private:
 
@@ -168,7 +169,6 @@ private:
       Hyperlink 	   *wp_link;
       
       long        last_online_chk;
-      bool        last_online;
 
       bool        g_ViewMarinas;
       bool        g_ViewAnchorages;
