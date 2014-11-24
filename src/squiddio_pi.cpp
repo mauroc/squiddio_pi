@@ -520,6 +520,8 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 void squiddio_pi::OnContextMenuItemCallback(int id) {
     //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
+    IsOnline();
+
     wxString request_region = local_region; // fixes the cursor's hover region at time of request so that intervening mouse movements do not alter the layer name that will be created
     Layer * request_layer = local_sq_layer; // fixes the layer at time of request so that intervening mouse movements do not alter the layer name that will be created
 
@@ -634,6 +636,13 @@ bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path) {
 }
 
 bool squiddio_pi::IsOnline() {
+    /* this function is designed to minimize data traffic over expensive/high-latency network connections (e.g. satellite phones), since the get.Connect
+    method generates traffic each time. We only call get.Connect if >10 seconds have elapsed since the last time. We also only call IsOnline
+    1) at Init (or rather updateAUIStatus)  2) when a NMEA sentence is received from ocpn (and user has chosen the "send" option) and
+    3) when a log update is retrieved. The status of the network connection between these events is not checked, which
+    means the sQuiddio options in the contextual menu may not be up to date.
+    */
+
     if (wxDateTime::GetTimeNow() > last_online_chk + ONLINE_CHECK_RETRY)
     {
         wxHTTP get;
@@ -841,7 +850,6 @@ void squiddio_pi::OnToolbarToolCallback(int id) {
 }
 void squiddio_pi::SetPluginMessage(wxString &message_id,
         wxString &message_body) {
-
 }
 void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
