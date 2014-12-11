@@ -598,7 +598,9 @@ Destinations appear as OpenCPN waypoints: \n\
 * Follow link to rate destination and add comments online.\n\n\
 Other menu options: \n\
 * Toggle visibility for local destinations on/off \n\
-* Submit a new destination (requires Internet connection and free user account)");
+* Submit a new destination (requires Internet connection and free user account)\n\n\
+IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
+and Conditions, available at http://squidd.io/enduser_agreement");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
