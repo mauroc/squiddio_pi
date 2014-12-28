@@ -195,40 +195,29 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
         double cog) {
     wxString reply = wxEmptyString;
     wxString parameters;
+    
 
     parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f"),
             p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), lat, lon, sog, cog);
 
-    //wxHTTP post;
-
-    post.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    post.SetPostBuffer(_T("text/html; charset=utf-8")); //this seems to be the only way to set the http method to POST. Other wxHTTP methods (e.g. SetMethod) are not supported in v 2.8
-    post.SetTimeout(3);
-
-    post.Connect(_T("squidd.io"));
     wxApp::IsMainLoopRunning();
 
-    wxInputStream *http_stream = post.GetInputStream(
-            _T("/positions?") + parameters); // not the most elegant way to set POST parameters, but SetPostText is not supported in wxWidgets 2.8?
+    size_t result = post.Post(parameters.ToAscii(), parameters.Len(), _T("http://squidd.io/positions")); // not the most elegant way to set POST parameters, but SetPostText is not supported in wxWidgets 2.8?
 
-    if (post.GetError() == wxPROTO_NOERR) {
-        wxStringOutputStream out_stream(&reply);
-        http_stream->Read(out_stream);
-        wxBell();
+    if (result) {
+        reply = post.GetResponseBody();
     } else
         reply = wxEmptyString;
 
-    wxDELETE(http_stream);
-    //post.Close();
     return reply;
 }
 
-void logsWindow::ShowFriendsLogs() {
+void logsWindow::ShowFriendsLogs() { 
     wxString layerContents;
     wxString request_url;
     bool isLayerUpdate;
 
-    request_url.Printf(_T("http://squidd.io/connections.xml?api_key=%s&email=%s"), p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str());
+    request_url.Printf(_T("/connections.xml?api_key=%s&email=%s"), p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str());
 
     layerContents = p_plugin->DownloadLayer(request_url);
 

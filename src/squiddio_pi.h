@@ -38,9 +38,9 @@
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
 
+#include "squiddio_pi_utils.h"
 #include <wx/list.h>
 #include <wx/sstream.h>
-#include <wx/protocol/http.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/fileconf.h>
@@ -182,7 +182,7 @@ private:
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
       int         m_demoshow_id;
       int         m_demohide_id;
-      wxHTTP      get;
+      myCurlHTTP  get;
       int         m_leftclick_tool_id;
 };
 

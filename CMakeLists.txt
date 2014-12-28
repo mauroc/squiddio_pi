@@ -36,30 +36,44 @@ INCLUDE("cmake/PluginConfigure.cmake")
 
 SET(SRC_SQUIDDIO
     src/squiddio_pi.h
- 	src/squiddio_pi.cpp
- 	src/squiddioPrefsDialogBase.cpp
- 	src/squiddioPrefsDialogBase.h
- 	src/icons.h
- 	src/icons.cpp
- 	src/logs.cpp
- 	src/logs.h
- 	src/NavObjectCollection.h
- 	src/NavObjectCollection.cpp
- 	src/Poi.h
- 	src/Poi.cpp
- 	src/PoiMan.h
- 	src/PoiMan.cpp
- 	src/Layer.h
- 	src/pugixml.hpp
- 	src/pugixml.cpp
- 	src/ocpn_types.h
- 	src/pugiconfig.hpp
- 	src/Hyperlink.h
- 	src/gpxdocument.h
- 	src/tinyxml.h
- 	src/tinystr.h
- 	)
- 	
+    src/squiddio_pi.cpp
+    src/squiddio_pi_utils.h
+    src/squiddio_pi_utils.cpp
+    src/squiddioPrefsDialogBase.cpp
+    src/squiddioPrefsDialogBase.h
+    src/icons.h
+    src/icons.cpp
+    src/logs.cpp
+    src/logs.h
+    src/NavObjectCollection.h
+    src/NavObjectCollection.cpp
+    src/Poi.h
+    src/Poi.cpp
+    src/PoiMan.h
+    src/PoiMan.cpp
+    src/Layer.h
+    src/pugixml.hpp
+    src/pugixml.cpp
+    src/ocpn_types.h
+    src/pugiconfig.hpp
+    src/Hyperlink.h
+    src/gpxdocument.h
+    src/tinyxml.h
+    src/tinystr.h
+    src/wxcurl/base.cpp
+    src/wxcurl/dav.cpp
+    src/wxcurl/davtool.cpp
+    src/wxcurl/dialog.cpp
+    src/wxcurl/ftp.cpp
+    src/wxcurl/ftpparse.cpp
+    src/wxcurl/ftptool.cpp
+    src/wxcurl/http.cpp
+    src/wxcurl/panel.cpp
+    src/wxcurl/telnet.cpp
+    src/wxcurl/thread.cpp
+    src/wxcurl/utils.cpp
+     )
+     
 SET(SRC_NMEA0183
     src/nmea0183/LatLong.hpp
     src/nmea0183/latlong.cpp
@@ -123,11 +137,13 @@ SET(SRC_NMEA0183
     src/nmea0183/vlw.hpp
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
-	)
+    )
 INCLUDE_DIRECTORIES(nmea0183)
 
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} ${SRC_NMEA0183})
 
 INCLUDE("cmake/PluginInstall.cmake")
+INCLUDE("cmake/PluginCurl.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
+
