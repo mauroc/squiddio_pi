@@ -107,6 +107,8 @@ int squiddio_pi::Init(void) {
     m_plogs_window = NULL;
     g_PostPeriod = 0;
     g_RetrievePeriod = 0;
+    
+    wxCurlHTTP::Init();
 
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
@@ -208,9 +210,7 @@ int squiddio_pi::Init(void) {
 }
 
 bool squiddio_pi::DeInit(void) {
-
-    get.Close();
-
+    wxCurlHTTP::Shutdown();
     RemovePlugInTool(m_leftclick_tool_id);
 
     if (m_plogs_window) {
@@ -580,40 +580,19 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
 }
 
 wxString squiddio_pi::DownloadLayer(wxString url_path) {
-    // --------------------------------- setup http GET request
-    int cnt = 0;
-    wxString res;
-
-    get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-    get.SetTimeout(3);
-
-    while (!get.Connect(_T("squidd.io"))) {
-        if (cnt > 10)
-            break;
-        wxSleep(1);
-        cnt++;
+    wxString res = wxEmptyString;
+    char * response;
+    myCurlHTTP http;
+    size_t result = http.Get( response, _T("http://squidd.io") + url_path );
+    if( result )
+    {
+        res = wxString::FromUTF8(response);
     }
-
-    wxString tmp;
-    tmp.Printf(wxT("squiddio_pi: count %d."), cnt);
-    wxLogMessage(tmp);
-
-    if (cnt <= 10) {
-        wxApp::IsMainLoopRunning();
-
-        wxInputStream *httpStream = get.GetInputStream(url_path);
-
-        tmp.Printf(wxT("squiddio_pi: GetError %d."), get.GetError() );
-        wxLogMessage(tmp);
-
-        if (get.GetError() == wxPROTO_NOERR) {
-            wxStringOutputStream out_stream(&res);
-            httpStream->Read(out_stream);
-        } else {
-            wxLogMessage(_("Squiddio_pi: unable to connect to host"));
-        }
-        wxDELETE(httpStream);
+    else
+    {
+        wxLogMessage(_("Squiddio_pi: unable to connect to host"));
     }
+    
     return res;
 }
 
@@ -645,20 +624,14 @@ bool squiddio_pi::IsOnline() {
 
     if (wxDateTime::GetTimeNow() > last_online_chk + ONLINE_CHECK_RETRY)
     {
-        wxHTTP get;
-        get.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-        get.SetTimeout(5);
-
-        if (get.Connect(_T("yahoo.com")))
-            last_online = true;
-        else
-            last_online = false;
+        myCurlHTTP get;
+        get.Head( _T("http://yahoo.com/") );
+        last_online = get.GetResponseCode() > 0;
 
         SetCanvasContextMenuItemViz(m_update_id, last_online);
         SetCanvasContextMenuItemViz(m_report_id, last_online);
 
         last_online_chk = wxDateTime::GetTimeNow();
-        get.Close();
     }
 
     return last_online;

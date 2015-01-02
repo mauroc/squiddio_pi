@@ -26,6 +26,7 @@
 #ifndef LOGS_H_
 #define LOGS_H_
 
+#include "squiddio_pi_utils.h"
 #include "squiddio_pi.h"
 enum
 {
@@ -38,7 +39,7 @@ class logsWindow : public wxWindow
 {
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
-      ~logsWindow(){post.Close();}
+      ~logsWindow(){}
       //~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
       void SetTimer(int RetrieveSecs);
@@ -64,7 +65,7 @@ private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
-      wxHTTP        post;
+      myCurlHTTP    post;
 
 DECLARE_EVENT_TABLE()
 };
