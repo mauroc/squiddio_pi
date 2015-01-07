@@ -327,7 +327,7 @@ bool squiddio_pi::LoadLayers(wxString &path) {
 
                 bool bLayerViz = false;
 
-                if (g_VisibleLayers.Contains(l->m_LayerName))
+                if ((g_VisibleLayers.Contains(l->m_LayerName)) || (l->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod > 0))
                     bLayerViz = true;
 
                 l->m_bIsVisibleOnChart = bLayerViz;
@@ -422,6 +422,8 @@ void squiddio_pi::RenderLayers() {
 void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config) {
 
     // Process POIs in this layer
+    //if (layer->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod ==0 )
+    //    return;
 
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
 
@@ -430,7 +432,7 @@ void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config) {
         if (rp && (rp->m_LayerID == layer->m_LayerID)) {
             rp->SetVisible(layer->IsVisibleOnChart());
             rp->SetNameShown(false);
-            if (layer->IsVisibleOnChart() && ShowType(rp))
+            if (layer->IsVisibleOnChart() && ShowType(rp)  )
                 ShowPOI(rp);
             else
                 HidePOI(rp);
@@ -688,7 +690,7 @@ wxString squiddio_pi::GetShortDescription() {
 
 wxString squiddio_pi::GetLongDescription() {
     return _(
-"User-sourced database of sailing destinations:\n\n\
+"== User-sourced database of sailing destinations ==\n\
 To download destinations for a desired region (requires Internet connection):\n\
 * Position cursor on area where you want to view destinations and right click mouse\n\
 * Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n\
@@ -698,9 +700,11 @@ Destinations appear as OpenCPN waypoints: \n\
 Other menu options: \n\
 * Toggle visibility for local destinations on/off \n\
 * Submit a new destination (requires Internet connection and free user account)\n\
-\nShare your logs:\n\n\
+\n== In-chart log-sharing for cruisers ==\n\
 * Share your GPS coordinates with your cruising friends and visualize their position\n\
-on your OpenCPN charts (requires a free sQuiddio account)");
+on your OpenCPN charts (requires a free sQuiddio account)\n\n\
+IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
+and Conditions, available at http://squidd.io/enduser_agreement");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
@@ -772,6 +776,15 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
                 wxMessageBox(_T("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
+
+            Layer * l;
+            LayerList::iterator it;
+            for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it ) {
+                l = (Layer *) (*it);
+                if (l->m_LayerName.Contains(_T("logs")))
+                    l->m_bIsVisibleOnChart = g_RetrievePeriod > 0;
+            }
+
             SaveConfig();
             RenderLayers();
             SetLogsWindow();

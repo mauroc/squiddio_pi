@@ -30,6 +30,13 @@
 
 #include "logs.h"
 
+const int SECOND = 1;
+const int MINUTE = 60 * SECOND;
+const int HOUR = 60 * MINUTE;
+const int DAY = 24 * HOUR;
+const int MONTH = 30 * DAY;
+
+
 BEGIN_EVENT_TABLE(logsWindow, wxWindow)
 EVT_TIMER(TIMER_ID, logsWindow::OnTimerTimeout)
 EVT_PAINT ( logsWindow::OnPaint )
@@ -142,7 +149,9 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         if (p_plugin->g_ApiKey==_T("squiddio_demo_api"))
             demo_msg = _T("(Demo)");
 
+        //data.Printf(_T("Logs received: %s %s %s"), lastRcvd.c_str(), timeAgo(m_LastLogsRcvd).c_str(), demo_msg.c_str() );
         data.Printf(_T("Logs received: %s %s"), lastRcvd.c_str(), demo_msg.c_str() );
+
         dc.DrawText(data, 230, 5);
     }
 }

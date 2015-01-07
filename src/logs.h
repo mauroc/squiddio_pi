@@ -33,6 +33,8 @@ enum
     TIMER_ID= 10
 };
 
+//wxString timeAgo(wxDateTime currTime);
+
 class squiddio_pi;
 
 class logsWindow : public wxWindow
