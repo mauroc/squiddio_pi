@@ -33,7 +33,6 @@ enum
     TIMER_ID= 10
 };
 
-//wxString timeAgo(wxDateTime currTime);
 
 class squiddio_pi;
 
@@ -50,6 +49,7 @@ public:
       wxString PostPosition(double lat, double lon, double sog, double cog);
       void ShowFriendsLogs();
       void DisplayLogsLayer(void);
+      wxString timeAgo(wxDateTime currTime);
 
       NMEA0183     m_NMEA0183;
       wxString     m_NMEASentence;
