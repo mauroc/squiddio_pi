@@ -30,7 +30,8 @@
 #include "squiddio_pi.h"
 enum
 {
-    TIMER_ID= 10
+    TIMER_ID= 10,
+    TIMER_ID1
 };
 
 
@@ -43,6 +44,7 @@ public:
       ~logsWindow(){}
       //~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
+      void OnRefreshTimeout(wxTimerEvent& event);
       void SetTimer(int RetrieveSecs);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
@@ -58,6 +60,7 @@ public:
       Layer       *m_LogsLayer;
 
       wxTimer      * m_pTimer;
+      wxTimer      * m_pRefreshTimer;
       wxStaticText * m_pStaticText;
       wxDateTime   m_LastLogsRcvd;
       wxDateTime   m_LastLogSent;
