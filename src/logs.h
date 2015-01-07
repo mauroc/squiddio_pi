@@ -65,7 +65,7 @@ private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
-      myCurlHTTP    post;
+      //myCurlHTTP    post;
 
 DECLARE_EVENT_TABLE()
 };

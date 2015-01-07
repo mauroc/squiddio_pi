@@ -583,7 +583,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     wxString res = wxEmptyString;
     char * response;
     myCurlHTTP http;
-    size_t result = http.Get( response, _T("http://squidd.io") + url_path );
+    size_t result = http.Get( response, _T("https://squidd.io") + url_path );
     if( result )
     {
         res = wxString::FromUTF8(response);
@@ -688,7 +688,7 @@ wxString squiddio_pi::GetShortDescription() {
 
 wxString squiddio_pi::GetLongDescription() {
     return _(
-            "User-sourced database of sailing destinations.\n\n\
+"User-sourced database of sailing destinations:\n\n\
 To download destinations for a desired region (requires Internet connection):\n\
 * Position cursor on area where you want to view destinations and right click mouse\n\
 * Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n\
@@ -698,7 +698,7 @@ Destinations appear as OpenCPN waypoints: \n\
 Other menu options: \n\
 * Toggle visibility for local destinations on/off \n\
 * Submit a new destination (requires Internet connection and free user account)\n\
-\nStay Connected\n\n\
+\nShare your logs:\n\n\
 * Share your GPS coordinates with your cruising friends and visualize their position\n\
 on your OpenCPN charts (requires a free sQuiddio account)");
 }
@@ -771,7 +771,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
-                wxMessageBox(_T("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard)."));
+                wxMessageBox(_T("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
             SaveConfig();
             RenderLayers();
             SetLogsWindow();
@@ -864,7 +864,7 @@ void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
 }
 
 void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
-    if (!wxLaunchDefaultBrowser(_T("http://squidd.io/faq#opencpn")))
+    if (!wxLaunchDefaultBrowser(_T("http://squidd.io/faq#opencpn_setup")))
         wxMessageBox(
                 _("Could not launch default browser. Check your Internet connection"));
 }
