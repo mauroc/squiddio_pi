@@ -41,7 +41,7 @@ class logsWindow : public wxWindow
 {
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
-      ~logsWindow(){}
+      ~logsWindow();
       //~logsWindow(){}
       void OnTimerTimeout(wxTimerEvent& event);
       void OnRefreshTimeout(wxTimerEvent& event);

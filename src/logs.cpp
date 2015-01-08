@@ -78,36 +78,46 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     }
 }
 
+logsWindow::~logsWindow(){
+    delete m_pTimer;
+    delete m_pRefreshTimer;
+}
+
 wxString logsWindow::timeAgo(wxDateTime currTime) {
     int delta = wxDateTime::Now().GetTicks() - currTime.GetTicks();
     wxString timeString;
 
-    if (delta == 1)
-        return _T("one second ago");
-    if (delta < MINUTE)
+    if (delta == 0)
+    {
+        return _T("Just now");
+    } else if (delta == 1)
+    {
+        return _T("One second ago");
+    } else if (delta < MINUTE)
     {
         timeString.Printf(_T("%i seconds ago"), delta);
         return timeString;
-    }
-    if (delta < 2 * MINUTE)
+    } else if (delta < 2 * MINUTE)
+    {
         return _T("About a minute ago");
-    if (delta < 45 * MINUTE)
+    } else if (delta < 45 * MINUTE)
     {
         timeString.Printf(_T("%i minutes ago"), delta/MINUTE);
         return timeString;
-    }
-    if (delta < 90 * MINUTE)
+    } else if (delta < 90 * MINUTE)
+    {
         return _T("About an hour ago");
-    if (delta < DAY)
+    } else if (delta < DAY)
     {
         timeString.Printf(_T("%i hours ago"), delta/HOUR);
         return timeString;
-    }
-    if (delta < 48 * HOUR)
+    } else if (delta < 48 * HOUR)
+    {
         return _T("Yesterday");
-
-    timeString.Printf(_T("%i days ago"), delta/DAY);
-    return timeString;
+    } else {
+        timeString.Printf(_T("%i days ago"), delta/DAY);
+        return timeString;
+    }
 }
 
 void logsWindow::SetTimer(int RetrieveSecs) {
@@ -150,8 +160,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     wxString lastRcvd, lastSent;
 
     wxFont *g_pFontSmall;
-    g_pFontSmall = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
-            wxFONTWEIGHT_NORMAL);
+    g_pFontSmall = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     dc.SetFont(*g_pFontSmall);
 
     if (m_LastLogSent.IsValid() && m_LastLogSent.GetYear() > 1969) // can't figure out how to assess if it is NULL (i.e. 31/12/1969)
@@ -159,10 +168,11 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 
     if (m_LastLogsRcvd.IsValid() && m_LastLogsRcvd.GetYear() > 1969)
         lastRcvd = m_LastLogsRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),wxDateTime::Local);
+
     dc.Clear();
     wxString data;
-    wxString lastSentAv = (
-            lastSent.Length() > 0 ? lastSent : _T("(awaiting NMEA events)"));
+    wxString lastSentAv = (lastSent.Length() > 0 ? lastSent : _T("(awaiting NMEA events)"));
+
     if (p_plugin->g_PostPeriod > 0 && p_plugin->last_online) {
         dc.SetTextForeground(cs);
     } else {

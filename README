@@ -8,6 +8,9 @@ You have to be able to compile OpenCPN itself - Get the info at http://opencpn.o
 
 * git clone git://github.com/mauroc/squiddio_pi.git
 
+Note: the plugin requires libcurl. To install in Linux Debian: apt-get install libcurl4-gnutls-dev. 
+Todo: add instructions for Windows
+
 Build:
 
 * cd squiddio_pi

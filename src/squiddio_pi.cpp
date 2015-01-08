@@ -756,6 +756,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             dialog->m_textApiKey->Enable(true);
         }
 
+        int curr_retrieve_period = g_RetrievePeriod;
+
         dialog->Fit();
         wxColour cl;
         GetGlobalColor(_T("DILG1"), &cl);
@@ -775,7 +777,19 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
+            {
                 wxMessageBox(_T("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio and visit your profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
+                g_RetrievePeriod=0;
+                g_PostPeriod    =0;
+            }
+
+            if (g_RetrievePeriod != curr_retrieve_period){
+                if (g_RetrievePeriod > 0){
+                    m_plogs_window->SetTimer(period_secs(g_RetrievePeriod));
+                }else{
+                    m_plogs_window->SetTimer(0);
+                }
+            }
 
             Layer * l;
             LayerList::iterator it;
@@ -786,7 +800,9 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
 
             SaveConfig();
+
             RenderLayers();
+
             SetLogsWindow();
         }
         delete dialog;
@@ -802,7 +818,9 @@ void squiddio_pi::SetLogsWindow() {
         // auth info available and either log type requested: open status window
         if (!m_plogs_window) {
             // open window if not yet open
+
             m_plogs_window = new logsWindow(this, m_parent_window, wxID_ANY);
+
             m_AUImgr = GetFrameAuiManager();
             m_AUImgr->AddPane(m_plogs_window);
             m_AUImgr->GetPane(m_plogs_window).Name(_T("Demo Window Name"));
@@ -818,14 +836,9 @@ void squiddio_pi::SetLogsWindow() {
         m_AUImgr->GetPane(m_plogs_window).Show(true);
         m_AUImgr->Update();
 
-        m_plogs_window->SetTimer(period_secs(g_RetrievePeriod));
-
-        if (g_RetrievePeriod > 0)
-            m_plogs_window->DisplayLogsLayer();
-
     } else if (m_plogs_window) {
         // log updates no longer requested: hide status window and stop timer
-        m_plogs_window->SetTimer(0);
+
         m_AUImgr->GetPane(m_plogs_window).Show(false);
         m_AUImgr->Update();
     }
