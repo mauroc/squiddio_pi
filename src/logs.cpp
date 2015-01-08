@@ -152,6 +152,8 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     GetGlobalColor(_T("GREEN2"), &cs);
     wxColour cr;
     GetGlobalColor(_T("BLUE2"), &cr);
+    wxColour ca;
+    GetGlobalColor(_T("URED"), &ca);
     wxColour ci;
     GetGlobalColor(_T("DASHL"), &ci);
     wxColour cb;
@@ -201,8 +203,8 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     dc.DrawText(timeAgo(m_LastLogsRcvd),610,5);
     dc.DrawText(_T("(")+lastRcvd+_T(")"),750,5);
 
-    dc.SetTextForeground(cb);
-    dc.DrawText(m_ErrorCondition ,900, 5);
+    dc.SetTextForeground(ca);
+    dc.DrawText(m_ErrorCondition ,950, 5);
 
     m_pRefreshTimer->Stop();
     m_pRefreshTimer->Start(5000);
@@ -249,11 +251,17 @@ void logsWindow::SetSentence(wxString &sentence) {
 
     if (bGoodData) {
         PostResponse = PostPosition(mLat, mLon, mSog, mCog);
-        if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
-            wxLogMessage(PostResponse);
-        m_LastLogSent = wxDateTime::Now();
-        p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
-        Refresh(false);
+        //if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
+        if (PostResponse.Contains(_T("error")))
+        {
+            m_ErrorCondition = _T("Unable to post your log. Check your credentials");
+            Refresh(false);
+            wxLogMessage(_T("sQuiddio: ")+m_ErrorCondition);
+        }else{
+            m_LastLogSent = wxDateTime::Now();
+            p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
+            Refresh(false);
+        }
     }
 
 }
@@ -312,8 +320,9 @@ void logsWindow::ShowFriendsLogs() {
             wxBell();
         }
     } else {
-        m_ErrorCondition = _T("sQuiddio: unable to retrieve friends logs: check your credentials and Follow List");
-        wxLogMessage(m_ErrorCondition);
+        m_ErrorCondition = _T("Unable to retrieve friends logs: check your credentials and Follow List");
+        Refresh(false);
+        wxLogMessage(_T("sQuiddio: ")+m_ErrorCondition);
     }
 }
 

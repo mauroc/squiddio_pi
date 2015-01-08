@@ -790,7 +790,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                     m_plogs_window->SetTimer(0);
                 }
             }
-            m_plogs_window->m_ErrorCondition = _T("");
+            m_plogs_window->m_ErrorCondition = wxEmptyString;
 
             Layer * l;
             LayerList::iterator it;
