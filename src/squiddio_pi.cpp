@@ -585,7 +585,9 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     wxString res = wxEmptyString;
     char * response;
     myCurlHTTP http;
-    size_t result = http.Get( response, _T("https://squidd.io") + url_path );
+    //size_t result = http.Get( response, _T("https://squidd.io") + url_path );
+    size_t result = http.Get( response, _T("http://squidd.io") + url_path );
+
     if( result )
     {
         res = wxString::FromUTF8(response);

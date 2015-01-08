@@ -115,9 +115,12 @@ wxString logsWindow::timeAgo(wxDateTime currTime) {
     } else if (delta < 48 * HOUR)
     {
         return _T("Yesterday");
-    } else {
+    } else if (delta < 365 * DAY)
+    {
         timeString.Printf(_T("%i days ago"), delta/DAY);
         return timeString;
+    } else {
+        return wxEmptyString;
     }
 }
 
@@ -160,16 +163,16 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     GetGlobalColor(_T("DASHB"), &cb);
     dc.SetBackground(cb);
     dc.SetTextBackground(cb);
-    wxString lastRcvd, lastSent;
+    wxString lastRcvd, lastSent=wxEmptyString;
 
     wxFont *g_pFontSmall;
     g_pFontSmall = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     dc.SetFont(*g_pFontSmall);
 
-    if (m_LastLogSent.IsValid() && m_LastLogSent.GetYear() > 1969) // can't figure out how to assess if it is NULL (i.e. 31/12/1969)
+    if (m_LastLogSent.IsValid() && m_LastLogSent.GetYear() > 1970 ) // can't figure out how to assess if it is NULL
         lastSent = m_LastLogSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
 
-    if (m_LastLogsRcvd.IsValid() && m_LastLogsRcvd.GetYear() > 1969)
+    if (m_LastLogsRcvd.IsValid() && m_LastLogsRcvd.GetYear() > 1970 )
         lastRcvd = m_LastLogsRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),wxDateTime::Local);
 
     dc.Clear();
@@ -281,7 +284,9 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     wxApp::IsMainLoopRunning();
 
     size_t result = post.Post(parameters.ToAscii(), parameters.Len(),
-            _T("https://squidd.io/positions.json"));
+            //_T("https://squidd.io/positions.json"));
+            _T("http://squidd.io/positions.json"));
+
 
     if (result) {
         reply = post.GetResponseBody();
