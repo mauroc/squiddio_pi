@@ -783,6 +783,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_PostPeriod    =0;
             }
 
+            SetLogsWindow();
+
             if (g_RetrievePeriod != curr_retrieve_period){
                 if (g_RetrievePeriod > 0){
                     m_plogs_window->SetTimer(period_secs(g_RetrievePeriod));
@@ -801,10 +803,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
 
             SaveConfig();
-
             RenderLayers();
-
-            SetLogsWindow();
         }
         delete dialog;
     }
