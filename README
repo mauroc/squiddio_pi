@@ -8,8 +8,8 @@ You have to be able to compile OpenCPN itself - Get the info at http://opencpn.o
 
 * git clone git://github.com/mauroc/squiddio_pi.git
 
-Note: the plugin requires libcurl. To install in Linux Debian: apt-get install libcurl4-gnutls-dev. 
-Todo: add instructions for Windows
+Note: the plugin requires libcurl. To install the libraries in Linux Debian: apt-get install libcurl4-gnutls-dev. 
+To install in Windows, see the "" below.
 
 Build:
 
@@ -33,6 +33,12 @@ To build RPM packages, you need the respective tools, so on Debian/Ubuntu, do "s
 
 On Windows:
 cmake --build . --target package --config release
+
+
+Installing libcurl in Windows
+=============================
+Download all the cotents from: http://sourceforge.net/projects/opencpnplugins/files/weatherfax_pi/wf_depends.7z/download
+When using Mingw, only the single file "libcurl.dll" is needed. In visual studio, copy all the downloaded files to the ... directory.
 
 License
 =======
