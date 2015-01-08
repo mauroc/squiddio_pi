@@ -53,6 +53,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_pRefreshTimer->Start(5000);
 
     m_LogsLayer = NULL;
+    m_ErrorCondition = wxEmptyString;
     g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
     m_LastLogSent = p_plugin->g_LastLogSent;
     m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
@@ -200,6 +201,9 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     dc.DrawText(timeAgo(m_LastLogsRcvd),610,5);
     dc.DrawText(_T("(")+lastRcvd+_T(")"),750,5);
 
+    dc.SetTextForeground(cb);
+    dc.DrawText(m_ErrorCondition ,900, 5);
+
     m_pRefreshTimer->Stop();
     m_pRefreshTimer->Start(5000);
 }
@@ -308,9 +312,8 @@ void logsWindow::ShowFriendsLogs() {
             wxBell();
         }
     } else {
-        wxLogMessage(
-            _T("sQuiddio: unable to retrieve friends logs: check your credentials and Follow List")
-        );
+        m_ErrorCondition = _T("sQuiddio: unable to retrieve friends logs: check your credentials and Follow List");
+        wxLogMessage(m_ErrorCondition);
     }
 }
 

@@ -64,6 +64,7 @@ public:
       wxStaticText * m_pStaticText;
       wxDateTime   m_LastLogsRcvd;
       wxDateTime   m_LastLogSent;
+      wxString     m_ErrorCondition;
 
 private:
       int           g_RetrieveSecs;
