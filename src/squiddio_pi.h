@@ -131,6 +131,7 @@ public:
 
       void SetNMEASentence(wxString &sentence);
       void SetLogsWindow();
+      void LateInit(void);
 
       wxString	 layerdir;
       LayerList  *pLayerList;

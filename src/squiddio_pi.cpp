@@ -204,8 +204,8 @@ int squiddio_pi::Init(void) {
     USES_AUI_MANAGER |
     WANTS_CONFIG |
     WANTS_TOOLBAR_CALLBACK |
-    INSTALLS_TOOLBAR_TOOL
-    //WANTS_LATE_INIT
+    INSTALLS_TOOLBAR_TOOL |
+    WANTS_LATE_INIT
     );
 }
 
@@ -488,14 +488,20 @@ void squiddio_pi::UpdateAuiStatus(void) {
     //    were added to the frame in the PlugIn ctor.
 
     //    We use this callback here to keep the context menu selection in sync with the window state
+    //SetCanvasContextMenuItemViz(m_hide_id, false);
+    //SetCanvasContextMenuItemViz(m_show_id, false);
 
+    //IsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
+    //SetLogsWindow();
+
+}
+void squiddio_pi::LateInit(void){
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
     IsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
     SetLogsWindow();
 }
-
 void squiddio_pi::SetCursorLatLon(double lat, double lon) {
     m_cursor_lon = lon;
     m_cursor_lat = lat;
