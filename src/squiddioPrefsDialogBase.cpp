@@ -25,35 +25,35 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	
 	fgSubSizer->SetMinSize( wxSize( -1,380 ) ); 
 	wxStaticBoxSizer* sbDestSizer;
-	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("View Destinations") ), wxVERTICAL );
+	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("View Destinations") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer5;
 	fgSizer5 = new wxFlexGridSizer( 3, 3, 0, 0 );
 	fgSizer5->SetFlexibleDirection( wxBOTH );
 	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_checkBoxAll = new wxCheckBox( this, ID_CB_ALL, wxT("All"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxAll = new wxCheckBox( this, ID_CB_ALL, _("All"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxAll, 0, wxALL, 5 );
 	
-	m_checkBoxMarinas = new wxCheckBox( this, wxID_ANY, wxT("Marinas"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxMarinas = new wxCheckBox( this, wxID_ANY, _("Marinas"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxMarinas, 0, wxALL, 5 );
 	
-	m_checkBoxAnchorages = new wxCheckBox( this, wxID_ANY, wxT("Anchorages"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxAnchorages = new wxCheckBox( this, wxID_ANY, _("Anchorages"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxAnchorages, 0, wxALL, 5 );
 	
-	m_checkBoxYachtClubs = new wxCheckBox( this, wxID_ANY, wxT("Yacht clubs"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxYachtClubs = new wxCheckBox( this, wxID_ANY, _("Yacht clubs"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxYachtClubs, 0, wxALL, 5 );
 	
-	m_checkBoxDocks = new wxCheckBox( this, wxID_ANY, wxT("Docks/piers"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxDocks = new wxCheckBox( this, wxID_ANY, _("Docks/piers"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxDocks, 0, wxALL, 5 );
 	
-	m_checkBoxRamps = new wxCheckBox( this, wxID_ANY, wxT("Boat ramps"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxRamps = new wxCheckBox( this, wxID_ANY, _("Boat ramps"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxRamps, 0, wxALL, 5 );
 	
-	m_checkBoxFuelStations = new wxCheckBox( this, wxID_ANY, wxT("Fuel Stations"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxFuelStations = new wxCheckBox( this, wxID_ANY, _("Fuel Stations"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxFuelStations, 0, wxALL, 5 );
 	
-	m_checkBoxOthers = new wxCheckBox( this, wxID_ANY, wxT("Other"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxOthers = new wxCheckBox( this, wxID_ANY, _("Other"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxOthers, 0, wxALL, 5 );
 	
 	
@@ -63,18 +63,18 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSubSizer->Add( sbDestSizer, 1, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbLogSizer;
-	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Share logs with friends") ), wxVERTICAL );
+	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Share logs with friends") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizerLogs;
 	fgSizerLogs = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizerLogs->SetFlexibleDirection( wxBOTH );
 	fgSizerLogs->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText6 = new wxStaticText( this, wxID_ANY, wxT("Send"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText6 = new wxStaticText( this, wxID_ANY, _("Send"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText6->Wrap( -1 );
 	fgSizerLogs->Add( m_staticText6, 0, wxALL, 5 );
 	
-	wxString m_choiceHowOftenChoices[] = { wxT("Never"), wxT("Once a day"), wxT("Twice a day"), wxT("Once an hour"), wxT("Twice an hour"), wxT("Once a minute"), wxT("Twice a minute"), wxT("Every 10 seconds") };
+	wxString m_choiceHowOftenChoices[] = { _("Never"), _("Once a day"), _("Twice a day"), _("Once an hour"), _("Twice an hour"), _("Once a minute"), _("Twice a minute"), _("Every 10 seconds") };
 	int m_choiceHowOftenNChoices = sizeof( m_choiceHowOftenChoices ) / sizeof( wxString );
 	m_choiceHowOften = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceHowOftenNChoices, m_choiceHowOftenChoices, 0 );
 	m_choiceHowOften->SetSelection( 0 );
@@ -82,11 +82,11 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	
 	fgSizerLogs->Add( m_choiceHowOften, 0, wxALL, 5 );
 	
-	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("Receive"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4 = new wxStaticText( this, wxID_ANY, _("Receive"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText4->Wrap( -1 );
 	fgSizerLogs->Add( m_staticText4, 0, wxALL, 5 );
 	
-	wxString m_choiceReceiveChoices[] = { wxT("Never"), wxT("Once a day"), wxT("Twice a day"), wxT("Once an hour"), wxT("Twice an hour"), wxT("Once a minute"), wxT("Twice a minute"), wxT("Every 10 seconds") };
+	wxString m_choiceReceiveChoices[] = { _("Never"), _("Once a day"), _("Twice a day"), _("Once an hour"), _("Twice an hour"), _("Once a minute"), _("Twice a minute"), _("Every 10 seconds") };
 	int m_choiceReceiveNChoices = sizeof( m_choiceReceiveChoices ) / sizeof( wxString );
 	m_choiceReceive = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceReceiveNChoices, m_choiceReceiveChoices, 0 );
 	m_choiceReceive->SetSelection( 0 );
@@ -94,7 +94,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	
 	fgSizerLogs->Add( m_choiceReceive, 0, wxALL, 5 );
 	
-	m_staticText7 = new wxStaticText( this, wxID_ANY, wxT("sQuiddio ID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText7 = new wxStaticText( this, wxID_ANY, _("sQuiddio ID"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText7->Wrap( -1 );
 	fgSizerLogs->Add( m_staticText7, 0, wxALL, 5 );
 	
@@ -103,7 +103,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	
 	fgSizerLogs->Add( m_textSquiddioID, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("API Key"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8 = new wxStaticText( this, wxID_ANY, _("API Key"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText8->Wrap( -1 );
 	fgSizerLogs->Add( m_staticText8, 0, wxALL, 5 );
 	

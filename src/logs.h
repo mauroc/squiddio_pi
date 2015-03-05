@@ -65,6 +65,7 @@ public:
       wxDateTime   m_LastLogsRcvd;
       wxDateTime   m_LastLogSent;
       wxString     m_ErrorCondition;
+      double       m_last_lat, m_last_lon;
 
 private:
       int           g_RetrieveSecs;

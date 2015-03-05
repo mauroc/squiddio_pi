@@ -90,34 +90,34 @@ wxString logsWindow::timeAgo(wxDateTime currTime) {
 
     if (delta == 0)
     {
-        return _T("Just now");
+        return _("Just now");
     } else if (delta == 1)
     {
-        return _T("One second ago");
+        return _("One second ago");
     } else if (delta < MINUTE)
     {
-        timeString.Printf(_T("%i seconds ago"), delta);
+        timeString.Printf(_("%i seconds ago"), delta);
         return timeString;
     } else if (delta < 2 * MINUTE)
     {
-        return _T("About a minute ago");
+        return _("About a minute ago");
     } else if (delta < 45 * MINUTE)
     {
-        timeString.Printf(_T("%i minutes ago"), delta/MINUTE);
+        timeString.Printf(_("%i minutes ago"), delta/MINUTE);
         return timeString;
     } else if (delta < 90 * MINUTE)
     {
-        return _T("About an hour ago");
+        return _("About an hour ago");
     } else if (delta < DAY)
     {
-        timeString.Printf(_T("%i hours ago"), delta/HOUR);
+        timeString.Printf(_("%i hours ago"), delta/HOUR);
         return timeString;
     } else if (delta < 48 * HOUR)
     {
-        return _T("Yesterday");
+        return _("Yesterday");
     } else if (delta < 365 * DAY)
     {
-        timeString.Printf(_T("%i days ago"), delta/DAY);
+        timeString.Printf(_("%i days ago"), delta/DAY);
         return timeString;
     } else {
         return wxEmptyString;
@@ -146,6 +146,15 @@ void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
 }
 
 void logsWindow::OnRefreshTimeout(wxTimerEvent& event) {
+    // if the last IsOnline() call returned negative (connection lost), check again every n seconds,
+    // but only if there has been any mouse activity (to minimize data usage)
+    if (!p_plugin->last_online &&
+            (m_last_lat != p_plugin->m_cursor_lat || m_last_lon != p_plugin->m_cursor_lon)){
+        p_plugin->IsOnline();
+        wxBell();
+        m_last_lat =  p_plugin->m_cursor_lat;
+        m_last_lon =  p_plugin->m_cursor_lon;
+    }
     Refresh(false);
 }
 
@@ -186,7 +195,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     }
 
     // own log postings
-    dc.DrawText(_T("Log sent:"), 5, 5);
+    dc.DrawText(_("Log sent:"), 5, 5);
     dc.DrawText(timeAgo(m_LastLogSent),100,5);
     dc.DrawText(_T("(")+lastSent+_T(")"),250,5);
 
@@ -202,7 +211,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     wxString demo_msg = _T("");
     if (p_plugin->g_ApiKey == _T("squiddio_demo_api"))
         demo_msg = _T(" (demo)");
-    dc.DrawText(_T("Logs received")+demo_msg+_T(":"), 480, 5);
+    dc.DrawText(_("Logs received")+demo_msg+_T(":"), 480, 5);
     dc.DrawText(timeAgo(m_LastLogsRcvd),610,5);
     dc.DrawText(_T("(")+lastRcvd+_T(")"),750,5);
 
@@ -254,10 +263,9 @@ void logsWindow::SetSentence(wxString &sentence) {
 
     if (bGoodData) {
         PostResponse = PostPosition(mLat, mLon, mSog, mCog);
-        //if (PostResponse.Find(_T("error")) != wxNOT_FOUND)
         if (PostResponse.Contains(_T("error")))
         {
-            m_ErrorCondition = _T("Unable to post your log. Check your credentials");
+            m_ErrorCondition = _("Unable to post your log. Check your credentials");
             Refresh(false);
             wxLogMessage(_T("sQuiddio: ")+m_ErrorCondition);
         }else{
@@ -290,7 +298,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
 
     if (result) {
         reply = post.GetResponseBody();
-        wxLogMessage(_T("Created sQuiddio log update:") + reply);
+        wxLogMessage(_("Created sQuiddio log update:") + reply);
     } else
         reply = wxEmptyString;
 
@@ -322,7 +330,7 @@ void logsWindow::ShowFriendsLogs() {
 
             m_LastLogsRcvd = wxDateTime::Now();
             p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
-            wxBell();
+            //wxBell();
         }
     } else {
         m_ErrorCondition = _T("Unable to retrieve friends logs: check your credentials and Follow List");

@@ -786,7 +786,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
-                wxMessageBox(_T("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
+                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
                 g_RetrievePeriod=0;
                 g_PostPeriod    =0;
             }

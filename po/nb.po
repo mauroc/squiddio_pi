@@ -1,0 +1,66 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: opencpn\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-28 12:06-0500\n"
+"PO-Revision-Date: 2015-03-04 20:07-0500\n"
+"Last-Translator: nohal <pavel@kalian.cz>\n"
+"Language-Team: Norwegian Bokmal\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Language: nb\n"
+"X-Crowdin-File: /plugins/squiddio_pi/po/squiddio_pi.pot\n"
+
+#: src/squiddio_pi.cpp:107
+msgid "Show local sQuiddio destinations"
+msgstr "Vis lokale sQuiddio destinasjoner"
+
+#: src/squiddio_pi.cpp:112
+msgid "Hide local sQuiddio destinations"
+msgstr "Skjul lokale sQuiddio destinasjoner"
+
+#: src/squiddio_pi.cpp:117
+msgid "Download local sQuiddio destinations"
+msgstr "Last ned lokal sQuiddio destinasjoner"
+
+#: src/squiddio_pi.cpp:122
+msgid "Report a Destination at this location"
+msgstr "Rapporter en destinasjon på dette stedet"
+
+#: src/squiddio_pi.cpp:433
+msgid "Local destinations have been updated"
+msgstr "Lokale destinasjoner er blitt oppdatert"
+
+#: src/squiddio_pi.cpp:436
+msgid "No destinations available for the region"
+msgstr "Ingen destinasjoner tilgjengelig for regionen"
+
+#: src/squiddio_pi.cpp:439
+msgid "Server not responding. Check your Internet connection"
+msgstr "Server svarer ikke. Sjekk din Internettforbindelse"
+
+#: src/squiddio_pi.cpp:445
+msgid "Could not launch default browser. Check your Internet connection"
+msgstr "Kunne ikke starte standard nettleser. Sjekk din Internettforbindelse"
+
+#: src/squiddio_pi.cpp:474
+msgid "Squiddio_pi: unable to connect to host"
+msgstr "Squiddio_pi: kunne ikke koble til vert"
+
+#: src/squiddio_pi.cpp:561
+msgid "Squiddio"
+msgstr "Squiddio"
+
+#: src/squiddio_pi.cpp:565
+msgid "Squiddio for OpenCPN"
+msgstr "Squiddio for OpenCPN"
+
+#: src/squiddio_pi.cpp:569
+msgid "User-sourced database of sailing destinations.\n\nTo download destinations for a desired region (requires Internet connection):\n* Position cursor on area where you want to view destinations and right click mouse\n* Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\nDestinations appear as OpenCPN waypoints: \n* Right-click on waypoint for link to sQuiddio's destination page. \n* Follow link to rate destination and add comments online.\n\nOther menu options: \n* Toggle visibility for local destinations on/off \n* Submit a new destination (requires Internet connection and free user account)"
+msgstr "Brukerbygget database over seilingsdestinasjoner.\n\nFor å laste ned destinasjoner for ønsket område (krever internett forbindelse):\n* Plasser kursor i området du ønsker å se destinasjoner i og høyreklikk med musen\n* Velg 'Last ned lokale sQuiddio destinasjoner' fra den kontekstfølsomme menyen.\n\nDestinasjonene vises som OpenCPN veipunkter: \n* Høyreklikk på veipunktet for lenke til sQiddio's destinasjons side. \n* Følg lenken for å vurdere destinasjon og legge til kommentarer på nettet.\n\nAndre menyvalg: \n* Slå på/av synlighet for lokale destinasjoner\n* Legg til en ny destinasjon (krever internett forbindelse og en gratis brukerkonto)"
+
