@@ -73,11 +73,17 @@ int period_secs(int period) {
     }
     return 0;
 }
+
+BEGIN_EVENT_TABLE( squiddio_pi, wxEvtHandler )
+	EVT_MYEVENT( squiddio_pi::OnThreadActionFinished )
+END_EVENT_TABLE()
+
 squiddio_pi::squiddio_pi(void *ppimgr) :
         opencpn_plugin_110(ppimgr) // constructor initialization
 {
     // Create the PlugIn icons
     initialize_images();
+    SetThreadRunning(false);
 }
 
 squiddio_pi::~squiddio_pi(void) {
@@ -195,6 +201,15 @@ int squiddio_pi::Init(void) {
     m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_plugin_logo,
             _img_plugin_logo, wxITEM_NORMAL, _("sQuiddio"), _T(""), NULL,
             SQUIDDIO_TOOL_POSITION, 0, this);
+            
+    m_pThread = new SquiddioThread(this);
+    wxThreadError err = m_pThread->Run();
+
+    if ( err != wxTHREAD_NO_ERROR )
+    {
+        delete m_pThread;
+        m_pThread = NULL;
+    }
 
     return (
     INSTALLS_CONTEXTMENU_ITEMS |
@@ -231,6 +246,47 @@ bool squiddio_pi::DeInit(void) {
     }
     SaveConfig();
     RequestRefresh(m_parent_window);
+    
+    {
+        wxCriticalSectionLocker enter(m_pThreadCS);
+        if (m_pThread) // does the thread still exist?
+        {
+            while (m_pThread->IsWorking())
+            {
+                wxMilliSleep(10);
+            }
+            if (m_pThread->Delete() != wxTHREAD_NO_ERROR )
+                wxLogError(_T("Can't delete the thread!"));
+        }
+    } // exit from the critical section to give the thread
+        // the possibility to enter its destructor
+        // (which is guarded with m_pThreadCS critical section!)
+    while (1)
+    {
+        { // was the ~MyThread() function executed?
+            wxCriticalSectionLocker enter(m_pThreadCS);
+            if (!m_pThread)
+                break;
+        }
+        // wait for thread completion
+    }
+    
+    //Last resort check for thread completion, wait if it looks bad
+    #define THREAD_WAIT_SECONDS  5
+    //  Try to wait a bit to see if all compression threads exit nicely
+    wxDateTime now = wxDateTime::Now();
+    time_t stall = now.GetTicks();
+    time_t end = stall + THREAD_WAIT_SECONDS;
+    
+    while(IsThreadRunning() && stall < end ){
+        wxDateTime later = wxDateTime::Now();
+        stall = later.GetTicks();
+        
+        wxYield();
+        wxSleep(1);
+        if( !IsThreadRunning() )
+            break;
+    }
 
     delete pLayerList;
     delete pPoiMan;
@@ -499,7 +555,7 @@ void squiddio_pi::LateInit(void){
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
-    IsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
+//    CheckIsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
     SetLogsWindow();
 }
 void squiddio_pi::SetCursorLatLon(double lat, double lon) {
@@ -525,65 +581,64 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
     }
 }
 
+void squiddio_pi::RefreshLayer()
+{
+    wxString layerContents;
+    Layer * new_layer = NULL;
+    
+    if (CheckIsOnline())
+        layerContents = DownloadLayer(
+        _T("/places/download_xml_layers.xml?region=")
+        + m_rgn_to_dld);
+
+    wxString gpxFilePath = layerdir;
+    appendOSDirSlash(&gpxFilePath);
+    gpxFilePath.Append(_T("SQ_") + m_rgn_to_dld + _T(".gpx"));
+
+    if (layerContents.length() != 0) {
+        if (layerContents.length() > 400) {
+            isLayerUpdate = SaveLayer(layerContents, gpxFilePath);
+            new_layer = LoadLayer(gpxFilePath, m_rgn_to_dld);
+            new_layer->SetVisibleNames(false);
+            RenderLayerContentsOnChart(new_layer, true);
+
+            if (isLayerUpdate) {
+                wxLogMessage( _("Local destinations have been updated") );
+            }
+        } else {
+            wxLogMessage( _("No destinations available for the region") );
+        }
+    } else {
+        wxLogMessage( _("Server not responding. Check your Internet connection") );
+    }
+}
+
 void squiddio_pi::OnContextMenuItemCallback(int id) {
     //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
-    IsOnline();
-
-    wxString request_region = local_region; // fixes the cursor's hover region at time of request so that intervening mouse movements do not alter the layer name that will be created
-    Layer * request_layer = local_sq_layer; // fixes the layer at time of request so that intervening mouse movements do not alter the layer name that will be created
-
     if (id == m_show_id || id == m_hide_id) {
-        request_layer->SetVisibleOnChart(!request_layer->IsVisibleOnChart());
-        RenderLayerContentsOnChart(request_layer, true);
+        local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
+        RenderLayerContentsOnChart(local_sq_layer, true);
         wxLogMessage(
                 _T("squiddio_pi: toggled layer: ")
-                        + request_layer->m_LayerName);
+                        + local_sq_layer->m_LayerName);
     } else if (id == m_update_id) {
-        wxString layerContents;
-        Layer * new_layer = NULL;
-
-        if (IsOnline())
-            layerContents = DownloadLayer(
-                    _T("/places/download_xml_layers.xml?region=")
-                            + local_region);
-
-        wxString gpxFilePath = layerdir;
-        appendOSDirSlash(&gpxFilePath);
-        gpxFilePath.Append(_T("SQ_") + request_region + _T(".gpx"));
-
-        if (layerContents.length() != 0) {
-            if (layerContents.length() > 400) {
-                isLayerUpdate = SaveLayer(layerContents, gpxFilePath);
-                if (isLayerUpdate && request_layer != NULL) {
-                    // hide and delete the current layer
-                    request_layer->SetVisibleOnChart(false);
-                    RenderLayerContentsOnChart(request_layer, true);
-                    pLayerList->DeleteObject(request_layer);
-                }
-                new_layer = LoadLayer(gpxFilePath, request_region);
-                new_layer->SetVisibleNames(false);
-                RenderLayerContentsOnChart(new_layer, true);
-
-                if (isLayerUpdate) {
-                    wxMessageBox(_("Local destinations have been updated"));
-                }
-            } else {
-                wxMessageBox(_("No destinations available for the region"));
-            }
-        } else {
-            wxMessageBox(
-                    _("Server not responding. Check your Internet connection"));
+        if (local_sq_layer != NULL) {
+            // hide and delete the current layer
+            local_sq_layer->SetVisibleOnChart(false);
+            RenderLayerContentsOnChart(local_sq_layer, true);
+            pLayerList->DeleteObject(local_sq_layer);
         }
+        m_rgn_to_dld = local_region;
+        if( IsThreadRunning() )
+            m_pThread->GetData();
     } else if (id == m_report_id) {
         wxString url_path = _T("http://squidd.io/locations/new?lat=");
         url_path.Append(
                 wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
                         << wxString::Format(wxT("%f"), m_cursor_lon));
-        if (!IsOnline() || !wxLaunchDefaultBrowser(url_path))
-            wxMessageBox(
-                    _(
-                            "Could not launch default browser. Check your Internet connection"));
+        if (!CheckIsOnline() || !wxLaunchDefaultBrowser(url_path))
+            wxMessageBox( _("Could not launch default browser. Check your Internet connection") );
     }
 }
 
@@ -624,14 +679,8 @@ bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path) {
     return isUpdate;
 }
 
-bool squiddio_pi::IsOnline() {
-    /* this function is designed to minimize data traffic over expensive/high-latency network connections (e.g. satellite phones), since the get.Connect
-    method generates traffic each time. We only call get.Connect if >10 seconds have elapsed since the last time. We also only call IsOnline
-    1) at Init (or rather updateAUIStatus)  2) when a NMEA sentence is received from ocpn (and user has chosen the "send" option) and
-    3) when a log update is retrieved. The status of the network connection between these events is not checked, which
-    means the sQuiddio options in the contextual menu may not be up to date.
-    */
-
+bool squiddio_pi::CheckIsOnline()
+{
     if (wxDateTime::GetTimeNow() > last_online_chk + ONLINE_CHECK_RETRY)
     {
         myCurlHTTP get;
@@ -643,7 +692,6 @@ bool squiddio_pi::IsOnline() {
 
         last_online_chk = wxDateTime::GetTimeNow();
     }
-
     return last_online;
 }
 
@@ -865,9 +913,15 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 }
 void squiddio_pi::SetNMEASentence(wxString &sentence) {
     if (m_plogs_window && g_PostPeriod > 0 && wxDateTime::GetTimeNow() > g_LastLogSent + period_secs(g_PostPeriod))
-        if (IsOnline())
+        if (CheckIsOnline())
             m_plogs_window->SetSentence(sentence);
 }
+
+void squiddio_pi::OnThreadActionFinished(SquiddioEvent& event)
+{
+    //Whatever is needed after an action was performed in the background
+}
+
 
 //---------------------------------------------- preferences dialog event handlers
 void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {

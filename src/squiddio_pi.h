@@ -32,13 +32,12 @@
   #include "wx/wx.h"
 #endif //precompiled headers
 
-#define     PLUGIN_VERSION_MAJOR    0
-#define     PLUGIN_VERSION_MINOR    4
-
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    10
 
+#include "version.h"
 #include "squiddio_pi_utils.h"
+#include "squiddio_pi_thread.h"
 #include <wx/list.h>
 #include <wx/sstream.h>
 #include <wx/dir.h>
@@ -76,8 +75,9 @@ int period_secs(int period);
 //    The PlugIn Class Definition
 //----------------------------------------------------------------------------------------------------------
 
+typedef void (wxEvtHandler::*myEventFunction)(SquiddioEvent&);
 
-class squiddio_pi : public opencpn_plugin_110
+class squiddio_pi : public opencpn_plugin_110, public wxEvtHandler
 {
 public:
       squiddio_pi(void *ppimgr);
@@ -116,12 +116,10 @@ public:
       void SetPluginMessage(wxString &message_id, wxString &message_body);
       void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
       void appendOSDirSlash( wxString* pString );
-      bool IsOnline(void);
       wxString DownloadLayer(wxString url_path);
       bool SaveLayer(wxString,wxString);
       Layer * GetLocalLayer(void);
       Layer * LoadLayer(wxString, wxString);
-      void ReportDestination(double lat, double lon);
       bool LoadLayers(wxString &path);
       bool LoadLayerItems(wxString & path, Layer *l, bool show);
       bool ShowPOI(Poi* wp);
@@ -144,10 +142,19 @@ public:
       Layer     *local_sq_layer;
       int       g_PostPeriod;
       int       g_RetrievePeriod;
-      bool        last_online;
+      bool      last_online;
+      
+      void OnThreadActionFinished(SquiddioEvent& event);
+      void SetThreadRunning( bool state ) { m_bThreadRuning = state; }
+      bool IsThreadRunning() { return m_bThreadRuning; }
+      bool CheckIsOnline();
+      void RefreshLayer();
 
 private:
-
+      SquiddioThread *m_pThread;
+      wxCriticalSection m_pThreadCS; // protects the m_pThread pointer
+      friend class SquiddioThread; // allow it to access our m_pThread
+    
       bool SaveConfig(void);
       bool ShowType(Poi * wp);
       void PreferencesDialog(wxWindow* parent);
@@ -159,6 +166,7 @@ private:
       int 			m_report_id;
       bool 			isLayerUpdate;
       wxString 		local_region;
+      wxString 		m_rgn_to_dld;
       wxString		g_VisibleLayers;
       wxString		g_InvisibleLayers;
       int 		 	g_LayerIdx;
@@ -185,6 +193,10 @@ private:
       int         m_demohide_id;
       myCurlHTTP  get;
       int         m_leftclick_tool_id;
+      
+      bool m_bThreadRuning;
+      
+      DECLARE_EVENT_TABLE()
 };
 
 class SquiddioPrefsDialog : public SquiddioPrefsDialogBase
