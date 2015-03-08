@@ -58,8 +58,6 @@ SET(SRC_SQUIDDIO
     src/pugiconfig.hpp
     src/Hyperlink.h
     src/gpxdocument.h
-    src/tinyxml.h
-    src/tinystr.h
     src/wxcurl/base.cpp
     src/wxcurl/dav.cpp
     src/wxcurl/davtool.cpp
@@ -140,7 +138,25 @@ SET(SRC_NMEA0183
     )
 INCLUDE_DIRECTORIES(nmea0183)
 
-ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} ${SRC_NMEA0183})
+ADD_DEFINITIONS(-DTIXML_USE_STL)
+IF(UNIX)
+ INCLUDE("cmake/FindTinyXML.cmake")
+ FIND_PACKAGE(TinyXML QUIET)
+ENDIF(UNIX)
+
+IF(TINYXML_FOUND)
+ message (STATUS "Building with system tinyxml")
+ INCLUDE_DIRECTORIES(${TINYXML_INCLUDE_DIR})
+ ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} ${SRC_NMEA0183})
+ TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${TINYXML_LIBRARIES} )
+ELSE(TINYXML_FOUND)
+ message (STATUS "Building with embedded tinyxml")
+ SET(SRC_LTINYXML
+    src/tinyxml.h
+    src/tinystr.h
+ )
+ ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} ${SRC_NMEA0183} ${SRC_LTINYXML})
+ENDIF(TINYXML_FOUND)
 
 INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginCurl.cmake")
