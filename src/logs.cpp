@@ -69,7 +69,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         if (wxDateTime::Now().GetTicks() > m_LastLogsRcvd.GetTicks() + g_RetrieveSecs) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
-            if (p_plugin->IsOnline())
+            if (p_plugin->CheckIsOnline())
                 ShowFriendsLogs();
         }
         int nextEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - m_LastLogsRcvd.GetTicks());
@@ -133,7 +133,7 @@ void logsWindow::SetTimer(int RetrieveSecs) {
 }
 
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
-    if (p_plugin->IsOnline()) {
+    if (p_plugin->CheckIsOnline()) {
         RequestRefresh(m_parent_window);
         ShowFriendsLogs();
         if (m_pTimer->GetInterval() / 1000 < g_RetrieveSecs) {
@@ -150,7 +150,7 @@ void logsWindow::OnRefreshTimeout(wxTimerEvent& event) {
     // but only if there has been any mouse activity (to minimize data usage)
     if (!p_plugin->last_online &&
             (m_last_lat != p_plugin->m_cursor_lat || m_last_lon != p_plugin->m_cursor_lon)){
-        p_plugin->IsOnline();
+        p_plugin->CheckIsOnline();
         wxBell();
         m_last_lat =  p_plugin->m_cursor_lat;
         m_last_lon =  p_plugin->m_cursor_lon;

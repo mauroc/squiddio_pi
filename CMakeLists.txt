@@ -41,6 +41,8 @@ SET(SRC_SQUIDDIO
     src/squiddio_pi_utils.cpp
     src/squiddioPrefsDialogBase.cpp
     src/squiddioPrefsDialogBase.h
+    src/squiddio_pi_thread.h
+    src/squiddio_pi_thread.cpp
     src/icons.h
     src/icons.cpp
     src/logs.cpp
