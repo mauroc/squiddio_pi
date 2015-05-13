@@ -1358,7 +1358,7 @@
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="toolbar_pane">0</property>
-                                                <property name="tooltip"></property>
+                                                <property name="tooltip">The email address you use to log into sQuidd.io</property>
                                                 <property name="validator_data_type"></property>
                                                 <property name="validator_style">wxFILTER_NONE</property>
                                                 <property name="validator_type">wxDefaultValidator</property>
@@ -1532,7 +1532,7 @@
                                                 <property name="style"></property>
                                                 <property name="subclass"></property>
                                                 <property name="toolbar_pane">0</property>
-                                                <property name="tooltip"></property>
+                                                <property name="tooltip">Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. &#x0A;&#x0A;IMPORTANT! Do not use your sQuiddio Password as your API Key! </property>
                                                 <property name="validator_data_type"></property>
                                                 <property name="validator_style">wxFILTER_NONE</property>
                                                 <property name="validator_type">wxDefaultValidator</property>
