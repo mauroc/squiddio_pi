@@ -11,3 +11,4 @@ cscope.out
 Release
 core
 .settings/
+src/version.h

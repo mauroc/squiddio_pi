@@ -28,6 +28,9 @@
 
 #include "squiddio_pi_utils.h"
 #include "squiddio_pi.h"
+#include "wxJSON/jsonreader.h"
+//#include "wxJSON/jsonwriter.h"
+
 enum
 {
     TIMER_ID= 10,
@@ -65,6 +68,7 @@ public:
       wxDateTime   m_LastLogsRcvd;
       wxDateTime   m_LastLogSent;
       wxString     m_ErrorCondition;
+      wxString     m_Notice;
       double       m_last_lat, m_last_lon;
 
 private:

@@ -72,6 +72,8 @@ SET(SRC_SQUIDDIO
     src/wxcurl/telnet.cpp
     src/wxcurl/thread.cpp
     src/wxcurl/utils.cpp
+    #src/wxJSON/jsonval.cpp
+    #src/wxJSON/jsonreader.cpp    
      )
      
 SET(SRC_NMEA0183

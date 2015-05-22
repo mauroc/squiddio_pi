@@ -54,6 +54,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     m_LogsLayer = NULL;
     m_ErrorCondition = wxEmptyString;
+    m_Notice = wxEmptyString;
     g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
     m_LastLogSent = p_plugin->g_LastLogSent;
     m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
@@ -218,6 +219,9 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     dc.SetTextForeground(ca);
     dc.DrawText(m_ErrorCondition ,950, 5);
 
+    dc.SetTextForeground(cr);
+    dc.DrawText(m_Notice ,950, 5);
+
     m_pRefreshTimer->Stop();
     m_pRefreshTimer->Start(5000);
 }
@@ -263,12 +267,19 @@ void logsWindow::SetSentence(wxString &sentence) {
 
     if (bGoodData) {
         PostResponse = PostPosition(mLat, mLon, mSog, mCog);
-        if (PostResponse.Contains(_T("error")))
+        wxJSONReader r;
+        wxJSONValue v;
+        r.Parse(PostResponse, &v);
+
+        if (v[_T("error")].AsString() != _T("null") )
         {
-            m_ErrorCondition = _("Unable to post your log. Check your credentials");
+            m_ErrorCondition = v[_T("error")].AsString();
             Refresh(false);
-            wxLogMessage(_T("sQuiddio: ")+m_ErrorCondition);
         }else{
+            if (v[_T("notice")].AsString() != _T("null") )
+                { m_Notice = v[_T("notice")].AsString();}
+            else
+                { m_Notice = wxEmptyString;}
             m_LastLogSent = wxDateTime::Now();
             p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
             Refresh(false);
