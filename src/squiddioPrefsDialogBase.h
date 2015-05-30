@@ -60,6 +60,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxCheckBox* m_checkBoxRamps;
 		wxCheckBox* m_checkBoxFuelStations;
 		wxCheckBox* m_checkBoxOthers;
+		wxCheckBox* m_checkBoxAIS;
 		wxChoice* m_choiceHowOften;
 		wxChoice* m_choiceReceive;
 		wxTextCtrl* m_textSquiddioID;

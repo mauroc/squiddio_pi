@@ -56,6 +56,9 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_checkBoxOthers = new wxCheckBox( this, wxID_ANY, wxT("Other"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( m_checkBoxOthers, 0, wxALL, 5 );
 	
+	m_checkBoxAIS = new wxCheckBox( this, wxID_ANY, wxT("AIS marker"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( m_checkBoxAIS, 0, wxALL, 5 );
+	
 	
 	sbDestSizer->Add( fgSizer5, 1, wxEXPAND, 5 );
 	

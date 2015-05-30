@@ -186,6 +186,7 @@ private:
       bool        g_ViewRamps;
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
+      bool        g_ViewAIS;
 
       logsWindow  *m_plogs_window;
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;

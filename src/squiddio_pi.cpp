@@ -89,6 +89,7 @@ squiddio_pi::squiddio_pi(void *ppimgr) :
 squiddio_pi::~squiddio_pi(void) {
     delete _img_marina_grn;
     delete _img_anchor_blu;
+    delete _img_aton_gry;
     delete _img_club_pur;
     delete _img_fuelpump_red;
     delete _img_pier_yel;
@@ -147,6 +148,8 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"),
             _T("Anchorage/Buoys"));
+    AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"),
+            _T("AIS ATON Marker"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"),
             _T("Fuel Station"));
@@ -460,6 +463,8 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewRamps;
     else if (wp->m_IconName == _T("others"))
         return g_ViewOthers;
+    else if (wp->m_IconName == _T("aton_gry"))
+        return g_ViewAIS;
     else
         return true;
 }
@@ -792,6 +797,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             dialog->m_checkBoxRamps->Enable(false);
             dialog->m_checkBoxFuelStations->Enable(false);
             dialog->m_checkBoxOthers->Enable(false);
+
         } else {
             dialog->m_checkBoxAll->SetValue(false);
         }
@@ -807,6 +813,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
         dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
         dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+        dialog->m_checkBoxAIS->SetValue(g_ViewAIS);
+
         if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
             dialog->m_textSquiddioID->Enable(true);
             dialog->m_textApiKey->Enable(true);
@@ -831,6 +839,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
             g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
             g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+            g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
