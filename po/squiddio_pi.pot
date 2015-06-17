@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-04 19:29-0800\n"
+"POT-Creation-Date: 2015-06-16 18:39-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,55 +17,55 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/squiddio_pi.cpp:122
+#: src/squiddio_pi.cpp:129
 msgid "Show local sQuiddio destinations"
 msgstr ""
 
-#: src/squiddio_pi.cpp:127
+#: src/squiddio_pi.cpp:134
 msgid "Hide local sQuiddio destinations"
 msgstr ""
 
-#: src/squiddio_pi.cpp:132
+#: src/squiddio_pi.cpp:139
 msgid "Download local sQuiddio destinations"
 msgstr ""
 
-#: src/squiddio_pi.cpp:137
+#: src/squiddio_pi.cpp:144
 msgid "Report a Destination at this location"
 msgstr ""
 
-#: src/squiddio_pi.cpp:196
+#: src/squiddio_pi.cpp:205
 msgid "sQuiddio"
 msgstr ""
 
-#: src/squiddio_pi.cpp:569
+#: src/squiddio_pi.cpp:615
 msgid "Local destinations have been updated"
 msgstr ""
 
-#: src/squiddio_pi.cpp:572
+#: src/squiddio_pi.cpp:618
 msgid "No destinations available for the region"
 msgstr ""
 
-#: src/squiddio_pi.cpp:576
+#: src/squiddio_pi.cpp:621
 msgid "Server not responding. Check your Internet connection"
 msgstr ""
 
-#: src/squiddio_pi.cpp:586 src/squiddio_pi.cpp:905
+#: src/squiddio_pi.cpp:650 src/squiddio_pi.cpp:972
 msgid "Could not launch default browser. Check your Internet connection"
 msgstr ""
 
-#: src/squiddio_pi.cpp:603
+#: src/squiddio_pi.cpp:667
 msgid "Squiddio_pi: unable to connect to host"
 msgstr ""
 
-#: src/squiddio_pi.cpp:692
+#: src/squiddio_pi.cpp:749
 msgid "Squiddio"
 msgstr ""
 
-#: src/squiddio_pi.cpp:696
+#: src/squiddio_pi.cpp:753
 msgid "Squiddio for OpenCPN"
 msgstr ""
 
-#: src/squiddio_pi.cpp:701
+#: src/squiddio_pi.cpp:758
 msgid ""
 "== User-sourced database of sailing destinations ==\n"
 "To download destinations for a desired region (requires Internet "
@@ -93,7 +93,7 @@ msgid ""
 "and Conditions, available at http://squidd.io/enduser_agreement"
 msgstr ""
 
-#: src/squiddio_pi.cpp:789
+#: src/squiddio_pi.cpp:850
 msgid ""
 "Log sharing was not activated. Please enter your sQuiddio user ID and API "
 "Key. \n"
@@ -103,59 +103,55 @@ msgid ""
 "'Numbers & Keys' tab."
 msgstr ""
 
-#: src/logs.cpp:93
+#: src/logs.cpp:94
 msgid "Just now"
 msgstr ""
 
-#: src/logs.cpp:96
+#: src/logs.cpp:97
 msgid "One second ago"
 msgstr ""
 
-#: src/logs.cpp:99
+#: src/logs.cpp:100
 #, c-format
 msgid "%i seconds ago"
 msgstr ""
 
-#: src/logs.cpp:103
+#: src/logs.cpp:104
 msgid "About a minute ago"
 msgstr ""
 
-#: src/logs.cpp:106
+#: src/logs.cpp:107
 #, c-format
 msgid "%i minutes ago"
 msgstr ""
 
-#: src/logs.cpp:110
+#: src/logs.cpp:111
 msgid "About an hour ago"
 msgstr ""
 
-#: src/logs.cpp:113
+#: src/logs.cpp:114
 #, c-format
 msgid "%i hours ago"
 msgstr ""
 
-#: src/logs.cpp:117
+#: src/logs.cpp:118
 msgid "Yesterday"
 msgstr ""
 
-#: src/logs.cpp:120
+#: src/logs.cpp:121
 #, c-format
 msgid "%i days ago"
 msgstr ""
 
-#: src/logs.cpp:198
+#: src/logs.cpp:199
 msgid "Log sent:"
 msgstr ""
 
-#: src/logs.cpp:214
+#: src/logs.cpp:215
 msgid "Logs received"
 msgstr ""
 
-#: src/logs.cpp:268
-msgid "Unable to post your log. Check your credentials"
-msgstr ""
-
-#: src/logs.cpp:301
+#: src/logs.cpp:312
 msgid "Created sQuiddio log update:"
 msgstr ""
 
@@ -195,54 +191,71 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:66
+#: src/squiddioPrefsDialogBase.cpp:59
+msgid "AIS marker"
+msgstr ""
+
+#: src/squiddioPrefsDialogBase.cpp:69
 msgid "Share logs with friends"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:73
+#: src/squiddioPrefsDialogBase.cpp:76
 msgid "Send"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Never"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once a day"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice a day"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once an hour"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice an hour"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once a minute"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice a minute"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Every 10 seconds"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:85
+#: src/squiddioPrefsDialogBase.cpp:88
 msgid "Receive"
 msgstr ""
 
-#: src/squiddioPrefsDialogBase.cpp:97
+#: src/squiddioPrefsDialogBase.cpp:100
 msgid "sQuiddio ID"
 msgstr ""
 
 #: src/squiddioPrefsDialogBase.cpp:106
+msgid "The email address you use to log into sQuidd.io"
+msgstr ""
+
+#: src/squiddioPrefsDialogBase.cpp:110
 msgid "API Key"
+msgstr ""
+
+#: src/squiddioPrefsDialogBase.cpp:116
+msgid ""
+"Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io "
+"and click Edit Profile in the Dashboard, then select the Numbers and Keys "
+"tab. Click Help for more information. \n"
+"\n"
+"IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr ""
