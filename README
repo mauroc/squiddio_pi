@@ -39,6 +39,7 @@ Installing libcurl in Windows
 =============================
 Download all the cotents from: http://sourceforge.net/projects/opencpnplugins/files/weatherfax_pi/wf_depends.7z/download
 When using Mingw, only the single file "libcurl.dll" is needed. In visual studio, copy all the downloaded files to the ... directory.
+On Windows, also the CA certificates bundle must be part of the package. Get it from http://sourceforge.net/projects/opencpnplugins/files/chartdldr_pi/curl-ca-bundle.crt/download and place into the buildwin directory
 
 License
 =======
