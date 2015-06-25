@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-04 19:29-0800\n"
-"PO-Revision-Date: 2015-03-04 20:58-0800\n"
+"POT-Creation-Date: 2015-03-08 15:30-0600\n"
+"PO-Revision-Date: 2015-05-23 05:01-0400\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Czech\n"
 "Language: cs_CZ\n"
@@ -11,111 +11,80 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Language: cs\n"
+"X-Crowdin-File: /plugins/squiddio_pi/po/squiddio_pi.pot\n"
 
-#: src/squiddio_pi.cpp:122
+#: src/squiddio_pi.cpp:128
 msgid "Show local sQuiddio destinations"
 msgstr "Zobrazit místní sQuiddio destinace"
 
-#: src/squiddio_pi.cpp:127
+#: src/squiddio_pi.cpp:133
 msgid "Hide local sQuiddio destinations"
 msgstr "Skrýt místní sQuiddio destinace"
 
-#: src/squiddio_pi.cpp:132
+#: src/squiddio_pi.cpp:138
 msgid "Download local sQuiddio destinations"
 msgstr "Stáhnout místní sQuiddio destinace"
 
-#: src/squiddio_pi.cpp:137
+#: src/squiddio_pi.cpp:143
 msgid "Report a Destination at this location"
 msgstr "Nahlásit destinaci na tomto místě"
 
-#: src/squiddio_pi.cpp:196
-#, fuzzy
+#: src/squiddio_pi.cpp:202
 msgid "sQuiddio"
-msgstr "Squiddio"
+msgstr ""
 
-#: src/squiddio_pi.cpp:569
+#: src/squiddio_pi.cpp:606
 msgid "Local destinations have been updated"
 msgstr "Místní destinace byly aktualizovány"
 
-#: src/squiddio_pi.cpp:572
+#: src/squiddio_pi.cpp:609
 msgid "No destinations available for the region"
 msgstr "Žádné dostupné destinace v této oblasti"
 
-#: src/squiddio_pi.cpp:576
+#: src/squiddio_pi.cpp:612
 msgid "Server not responding. Check your Internet connection"
 msgstr "Server neodpovídá. Zkontrolujte připojení k Internetu."
 
-#: src/squiddio_pi.cpp:586 src/squiddio_pi.cpp:905
+#: src/squiddio_pi.cpp:641 src/squiddio_pi.cpp:959
 msgid "Could not launch default browser. Check your Internet connection"
 msgstr "Nelze spustit výchozí prohlížeč. Zkontrolujte připojení k Internetu."
 
-#: src/squiddio_pi.cpp:603
+#: src/squiddio_pi.cpp:658
 msgid "Squiddio_pi: unable to connect to host"
 msgstr "Squiddio_pi: Nelze se připojit k hostiteli"
 
-#: src/squiddio_pi.cpp:692
+#: src/squiddio_pi.cpp:740
 msgid "Squiddio"
 msgstr "Squiddio"
 
-#: src/squiddio_pi.cpp:696
+#: src/squiddio_pi.cpp:744
 msgid "Squiddio for OpenCPN"
 msgstr "Squiddio pro OpenCPN"
 
-#: src/squiddio_pi.cpp:701
-#, fuzzy
-msgid ""
-"== User-sourced database of sailing destinations ==\n"
-"To download destinations for a desired region (requires Internet "
-"connection):\n"
-"* Position cursor on area where you want to view destinations and right "
-"click mouse\n"
-"* Select 'Download local sQuiddio destinations' from context-sensitive "
-"menu.\n"
-"\n"
+#: src/squiddio_pi.cpp:749
+msgid "== User-sourced database of sailing destinations ==\n"
+"To download destinations for a desired region (requires Internet connection):\n"
+"* Position cursor on area where you want to view destinations and right click mouse\n"
+"* Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n"
 "Destinations appear as OpenCPN waypoints: \n"
 "* Right-click on waypoint for link to sQuiddio's destination page. \n"
-"* Follow link to rate destination and add comments online.\n"
-"\n"
+"* Follow link to rate destination and add comments online.\n\n"
 "Other menu options: \n"
 "* Toggle visibility for local destinations on/off \n"
-"* Submit a new destination (requires Internet connection and free user "
-"account)\n"
-"\n"
+"* Submit a new destination (requires Internet connection and free user account)\n\n"
 "== In-chart log-sharing for cruisers ==\n"
-"* Share your GPS coordinates with your cruising friends and visualize their "
-"position\n"
-"on your OpenCPN charts (requires a free sQuiddio account)\n"
-"\n"
+"* Share your GPS coordinates with your cruising friends and visualize their position\n"
+"on your OpenCPN charts (requires a free sQuiddio account)\n\n"
 "IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n"
 "and Conditions, available at http://squidd.io/enduser_agreement"
 msgstr ""
-"Užívatelsky spravovaná databáze navigačních destinací.\n"
-"\n"
-"Pro stažení destinací pro požadovaný region (nutné připojení k internetu):\n"
-"* Nastav kurzor na oblast, kde chceš destinace vidět a klikni pravým "
-"tlačítkem myši.\n"
-"* Vyber 'Stáhnout místní sQuiddio destinace' z kontextové nabídky.\n"
-"\n"
-"Destinace se objeví jako waypointy v OpenCPN: \n"
-"* Klikni pravým tlačítkem na waypoint pro odkaz na stránku destinace na webu "
-"sQuiddio. \n"
-"* Po kliknutí na odkaz, pokud jsi online, můžeš destinaci hodnotit a "
-"komentovat.\n"
-"\n"
-"Další možnosti menu: \n"
-"* Přepínání vyditelnosti lokálních destinací.\n"
-"* Vytváření nových destinací (vyžaduje připojení k internetu a bezplatný "
-"uživatelský účet)."
 
-#: src/squiddio_pi.cpp:789
-msgid ""
-"Log sharing was not activated. Please enter your sQuiddio user ID and API "
-"Key. \n"
-"\n"
-"To obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and "
-"visit your online profile page (see Edit Profile link in the Dashboard), "
-"'Numbers & Keys' tab."
+#: src/squiddio_pi.cpp:837
+msgid "Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\n"
+"To obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."
 msgstr ""
 
 #: src/logs.cpp:93
@@ -255,9 +224,8 @@ msgid "Receive"
 msgstr ""
 
 #: src/squiddioPrefsDialogBase.cpp:97
-#, fuzzy
 msgid "sQuiddio ID"
-msgstr "Squiddio"
+msgstr ""
 
 #: src/squiddioPrefsDialogBase.cpp:106
 msgid "API Key"
