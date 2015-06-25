@@ -8,7 +8,7 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include <wx/jsonreader.h>
+#include <jsonreader.h>
 
 #include <wx/mstream.h>
 #include <wx/sstream.h>
