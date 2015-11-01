@@ -33,10 +33,9 @@
 #endif //precompiled headers
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    10
+#define     MY_API_VERSION_MINOR    13
 
 #include "version.h"
-#include "squiddio_pi_utils.h"
 #include "squiddio_pi_thread.h"
 #include <wx/list.h>
 #include <wx/sstream.h>
@@ -77,7 +76,7 @@ int period_secs(int period);
 
 typedef void (wxEvtHandler::*myEventFunction)(SquiddioEvent&);
 
-class squiddio_pi : public opencpn_plugin_110, public wxEvtHandler
+class squiddio_pi : public opencpn_plugin_113, public wxEvtHandler
 {
 public:
       squiddio_pi(void *ppimgr);
@@ -192,7 +191,6 @@ private:
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
       int         m_demoshow_id;
       int         m_demohide_id;
-      myCurlHTTP  get;
       int         m_leftclick_tool_id;
       
       bool m_bThreadRuning;

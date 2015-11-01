@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-08 15:30-0600\n"
-"PO-Revision-Date: 2015-06-02 20:34-0400\n"
+"POT-Creation-Date: 2015-11-01 12:44-0600\n"
+"PO-Revision-Date: 2015-11-01 13:55-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Estonian\n"
 "Language: et_EE\n"
@@ -16,55 +16,63 @@ msgstr ""
 "X-Crowdin-Language: et\n"
 "X-Crowdin-File: /plugins/squiddio_pi/po/squiddio_pi.pot\n"
 
-#: src/squiddio_pi.cpp:128
+#: src/squiddio_pi.cpp:125
 msgid "Show local sQuiddio destinations"
 msgstr "Kuva kohalikke sQuiddio sihtkohti"
 
-#: src/squiddio_pi.cpp:133
+#: src/squiddio_pi.cpp:130
 msgid "Hide local sQuiddio destinations"
 msgstr "Peida kohalikud sQuiddio sihtkohad"
 
-#: src/squiddio_pi.cpp:138
+#: src/squiddio_pi.cpp:135
 msgid "Download local sQuiddio destinations"
 msgstr "Lae kohalikud sQuiddio sihtkohad alla"
 
-#: src/squiddio_pi.cpp:143
+#: src/squiddio_pi.cpp:140
 msgid "Report a Destination at this location"
 msgstr "Teata sihtkohast selles asukohas"
 
-#: src/squiddio_pi.cpp:202
+#: src/squiddio_pi.cpp:201
 msgid "sQuiddio"
 msgstr "sQuiddio"
 
-#: src/squiddio_pi.cpp:606
+#: src/squiddio_pi.cpp:610
 msgid "Local destinations have been updated"
 msgstr "Kohalikud sihtkohad on uuendatud"
 
-#: src/squiddio_pi.cpp:609
+#: src/squiddio_pi.cpp:613
 msgid "No destinations available for the region"
 msgstr "Selle regiooni kohta puuduvad sihtkohad"
 
-#: src/squiddio_pi.cpp:612
+#: src/squiddio_pi.cpp:616
 msgid "Server not responding. Check your Internet connection"
 msgstr "Server ei reageeri. Kontrolli oma Internetiühendust"
 
-#: src/squiddio_pi.cpp:641 src/squiddio_pi.cpp:959
+#: src/squiddio_pi.cpp:644 src/squiddio_pi.cpp:960
 msgid "Could not launch default browser. Check your Internet connection"
 msgstr "Vaikebrauserit ei saanud käivitada. Kontrolli oma Internetiühendust"
 
-#: src/squiddio_pi.cpp:658
+#: src/squiddio_pi.cpp:654
+msgid "Downloading"
+msgstr ""
+
+#: src/squiddio_pi.cpp:654
+msgid "Downloading: "
+msgstr ""
+
+#: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
 msgstr "Squiddio_pi: ei saa ühendust hostiga"
 
-#: src/squiddio_pi.cpp:740
+#: src/squiddio_pi.cpp:737
 msgid "Squiddio"
 msgstr "Squiddio"
 
-#: src/squiddio_pi.cpp:744
+#: src/squiddio_pi.cpp:741
 msgid "Squiddio for OpenCPN"
 msgstr "Squiddio OpenCPN'i jaoks"
 
-#: src/squiddio_pi.cpp:749
+#: src/squiddio_pi.cpp:746
 msgid "== User-sourced database of sailing destinations ==\n"
 "To download destinations for a desired region (requires Internet connection):\n"
 "* Position cursor on area where you want to view destinations and right click mouse\n"
@@ -96,65 +104,61 @@ msgstr "== Kasutajate hangitud purjetamise sihtkohtade andmebaas ==\n"
 "TÄHTIS; kasutades seda pluginat sa nõustud sQuidd.io Mõistete \n"
 "ja Tingimustega, mis on saadaval http://squidd.io/enduser_agreement"
 
-#: src/squiddio_pi.cpp:837
+#: src/squiddio_pi.cpp:838
 msgid "Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\n"
 "To obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."
 msgstr "Logi jagamine ei olnud aktiveeritud. Palun sisesta oma sQuiddio-kasutaja ID ja API-võti. \n\n"
 "Endale API-võtme saamiseks registreeru sQuiddio's (http://squidd.io/signup) ja käi ära oma võrguprofiili lehel (vaata linki Muuda Profiili armatuurlaual), 'Numbrid & Võtmed' vaheleht."
 
-#: src/logs.cpp:93
+#: src/logs.cpp:94
 msgid "Just now"
 msgstr "Just nüüd"
 
-#: src/logs.cpp:96
+#: src/logs.cpp:97
 msgid "One second ago"
 msgstr "Üks sekund tagasi"
 
-#: src/logs.cpp:99
+#: src/logs.cpp:100
 #, c-format
 msgid "%i seconds ago"
 msgstr "%i sekundit tagasi"
 
-#: src/logs.cpp:103
+#: src/logs.cpp:104
 msgid "About a minute ago"
 msgstr "Umbes minut tagasi"
 
-#: src/logs.cpp:106
+#: src/logs.cpp:107
 #, c-format
 msgid "%i minutes ago"
 msgstr "%i minutit tagasi"
 
-#: src/logs.cpp:110
+#: src/logs.cpp:111
 msgid "About an hour ago"
 msgstr "Umbes tund aega tagasi"
 
-#: src/logs.cpp:113
+#: src/logs.cpp:114
 #, c-format
 msgid "%i hours ago"
 msgstr "%i tundi tagasi"
 
-#: src/logs.cpp:117
+#: src/logs.cpp:118
 msgid "Yesterday"
 msgstr "Eile"
 
-#: src/logs.cpp:120
+#: src/logs.cpp:121
 #, c-format
 msgid "%i days ago"
 msgstr "%i päeva tagasi"
 
-#: src/logs.cpp:198
+#: src/logs.cpp:199
 msgid "Log sent:"
 msgstr "Logi saata:"
 
-#: src/logs.cpp:214
+#: src/logs.cpp:215
 msgid "Logs received"
 msgstr "Logid saadud"
 
-#: src/logs.cpp:268
-msgid "Unable to post your log. Check your credentials"
-msgstr "Ei saa saata su logi. Kontrolli oma mandaati"
-
-#: src/logs.cpp:301
+#: src/logs.cpp:305
 msgid "Created sQuiddio log update:"
 msgstr "Loodud sQuiddio logi uuendus:"
 
@@ -194,55 +198,69 @@ msgstr "Tanklad"
 msgid "Other"
 msgstr "Muu"
 
-#: src/squiddioPrefsDialogBase.cpp:66
+#: src/squiddioPrefsDialogBase.cpp:59
+msgid "AIS marker"
+msgstr "AIS marker"
+
+#: src/squiddioPrefsDialogBase.cpp:69
 msgid "Share logs with friends"
 msgstr "Jaga logisid sõpradega"
 
-#: src/squiddioPrefsDialogBase.cpp:73
+#: src/squiddioPrefsDialogBase.cpp:76
 msgid "Send"
 msgstr "Saada"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Never"
 msgstr "Mitte kunagi"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once a day"
 msgstr "Kord päevas"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice a day"
 msgstr "Kaks korda päevas"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once an hour"
 msgstr "Kord tunnis"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice an hour"
 msgstr "Kaks korda tunnis"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once a minute"
 msgstr "Üks kord minutis"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice a minute"
 msgstr "Kaks korda minutis"
 
-#: src/squiddioPrefsDialogBase.cpp:77 src/squiddioPrefsDialogBase.cpp:89
+#: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Every 10 seconds"
 msgstr "Iga 10 sekundi järel"
 
-#: src/squiddioPrefsDialogBase.cpp:85
+#: src/squiddioPrefsDialogBase.cpp:88
 msgid "Receive"
 msgstr "Võta vastu"
 
-#: src/squiddioPrefsDialogBase.cpp:97
+#: src/squiddioPrefsDialogBase.cpp:100
 msgid "sQuiddio ID"
 msgstr "sQuiddio ID"
 
 #: src/squiddioPrefsDialogBase.cpp:106
+msgid "The email address you use to log into sQuidd.io"
+msgstr "E-posti aadress, mida kasutad sQuidd.io'sse sisselogimiseks"
+
+#: src/squiddioPrefsDialogBase.cpp:110
 msgid "API Key"
 msgstr "API võti"
+
+#: src/squiddioPrefsDialogBase.cpp:116
+msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\n"
+"IMPORTANT! Do not use your sQuiddio Password as your API Key! "
+msgstr "Hangi oma API-võti sQuidd.io profiilist. Logi http://squidd.io sisse ja kliki armatuurlaual Muuda Profiili, siis vali Numbrid ja Võtmed vaheleht. Kliki Abil rohkema info saamiseks. \n\n"
+"TÄHTIS! Ära kasuta oma sQuiddio salasõna kui oma API-võtit! "
 

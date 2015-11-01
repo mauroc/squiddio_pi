@@ -1,11 +1,14 @@
 ##---------------------------------------------------------------------------
-## Author:      Sean D'Epagnier
-## Copyright:   
+## Author:      Pavel Kalian (Based on the work of Sean D'Epagnier)
+## Copyright:   2014
 ## License:     GPLv3+
 ##---------------------------------------------------------------------------
 
 # build a CPack driven installer package
 #include (InstallRequiredSystemLibraries)
+IF (COMMAND cmake_policy)
+  CMAKE_POLICY(SET CMP0002 OLD)
+ENDIF (COMMAND cmake_policy)
 
 SET(CPACK_PACKAGE_NAME "${PACKAGE_NAME}")
 SET(CPACK_PACKAGE_VENDOR "opencpn.org")
@@ -35,7 +38,7 @@ IF(WIN32)
 
 #  These lines set the name of the Windows Start Menu shortcut and the icon that goes with it
 #  SET(CPACK_NSIS_INSTALLED_ICON_NAME "${PACKAGE_NAME}")
-#  SET(CPACK_NSIS_DISPLAY_NAME "OpenCPN ${PACKAGE_NAME}")
+SET(CPACK_NSIS_DISPLAY_NAME "OpenCPN ${PACKAGE_NAME}")
 
 #  SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}_${VERSION_MAJOR}.${VERSION_MINOR}_setup" )
 
@@ -81,7 +84,7 @@ IF(UNIX AND NOT APPLE)
   IF (CMAKE_SYSTEM_PROCESSOR MATCHES "arm*")
     SET (ARCH "armhf")
     # don't bother with rpm on armhf
-    SET(CPACK_GENERATOR "DEB;TBZ2")
+    SET(CPACK_GENERATOR "DEB;RPM;TBZ2")
   ELSE ()
     SET(CPACK_GENERATOR "DEB;RPM;TBZ2")
 
@@ -147,12 +150,13 @@ ENDIF(TWIN32 AND NOT UNIX)
 
 INCLUDE(CPack)
 
-
+IF(NOT STANDALONE MATCHES "BUNDLED")
 IF(APPLE)
+MESSAGE (STATUS "*** Staging to build PlugIn OSX Package ***")
 
  #  Copy a bunch of files so the Packages installer builder can find them
  #  relative to ${CMAKE_CURRENT_BINARY_DIR}
- #  This avoids absolute paths in the *.pkgproj file
+ #  This avoids absolute paths in the chartdldr_pi.pkgproj file
 
 configure_file(${PROJECT_SOURCE_DIR}/cmake/gpl.txt
             ${CMAKE_CURRENT_BINARY_DIR}/license.txt COPYONLY)
@@ -181,3 +185,4 @@ configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
 
 
 ENDIF(APPLE)
+ENDIF(NOT STANDALONE MATCHES "BUNDLED")
