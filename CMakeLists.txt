@@ -39,8 +39,6 @@ INCLUDE("cmake/PluginConfigure.cmake")
 SET(SRC_SQUIDDIO
     src/squiddio_pi.h
     src/squiddio_pi.cpp
-    src/squiddio_pi_utils.h
-    src/squiddio_pi_utils.cpp
     src/squiddioPrefsDialogBase.cpp
     src/squiddioPrefsDialogBase.h
     src/squiddio_pi_thread.h
@@ -62,18 +60,6 @@ SET(SRC_SQUIDDIO
     src/pugiconfig.hpp
     src/Hyperlink.h
     src/gpxdocument.h
-    src/wxcurl/base.cpp
-    src/wxcurl/dav.cpp
-    src/wxcurl/davtool.cpp
-    src/wxcurl/dialog.cpp
-    src/wxcurl/ftp.cpp
-    src/wxcurl/ftpparse.cpp
-    src/wxcurl/ftptool.cpp
-    src/wxcurl/http.cpp
-    src/wxcurl/panel.cpp
-    src/wxcurl/telnet.cpp
-    src/wxcurl/thread.cpp
-    src/wxcurl/utils.cpp
     src/wxJSON/jsonval.cpp
     src/wxJSON/jsonreader.cpp    
      )
@@ -166,7 +152,6 @@ ELSE(TINYXML_FOUND)
 ENDIF(TINYXML_FOUND)
 
 INCLUDE("cmake/PluginInstall.cmake")
-INCLUDE("cmake/PluginCurl.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
