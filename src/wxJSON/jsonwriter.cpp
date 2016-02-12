@@ -8,6 +8,10 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
+//#ifdef __GNUG__
+//    #pragma implementation "jsonwriter.cpp"
+//#endif
+
 
 #include <wx/jsonwriter.h>
 
