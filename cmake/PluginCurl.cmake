@@ -1,6 +1,6 @@
 ##---------------------------------------------------------------------------
 ## Author:      Sean D'Epagnier
-## Copyright:   
+## Copyright:
 ## License:     GPLv3+
 ##---------------------------------------------------------------------------
 
@@ -9,8 +9,8 @@
 INCLUDE_DIRECTORIES(src/wxcurl)
 IF(WIN32)
   IF(MSVC)
-    SET(CURL_LIBRARIES "../buildwin/curllib")
-    INSTALL(FILES "buildwin/curllib.dll" DESTINATION ".")
+    SET(CURL_LIBRARIES "../buildwin/libcurl")
+    INSTALL(FILES "buildwin/libcurl.dll" DESTINATION ".")
     INSTALL(FILES "buildwin/libeay32.dll" DESTINATION ".")
     INSTALL(FILES "buildwin/openldap.dll" DESTINATION ".")
     INSTALL(FILES "buildwin/ssleay32.dll" DESTINATION ".")
@@ -20,7 +20,7 @@ IF(WIN32)
     SET(CURL_LIBRARIES "curl.dll")
     INSTALL(FILES "buildwin/libcurl.dll" DESTINATION ".")
   ENDIF(MSVC)
-    
+
   TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${CURL_LIBRARIES})
   INCLUDE_DIRECTORIES(src/wxcurl/include)
 ENDIF(WIN32)
