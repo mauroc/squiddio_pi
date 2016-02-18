@@ -33,10 +33,9 @@
 #endif //precompiled headers
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    10
+#define     MY_API_VERSION_MINOR    13
 
 #include "version.h"
-#include "squiddio_pi_utils.h"
 #include "squiddio_pi_thread.h"
 #include <wx/list.h>
 #include <wx/sstream.h>
@@ -77,7 +76,7 @@ int period_secs(int period);
 
 typedef void (wxEvtHandler::*myEventFunction)(SquiddioEvent&);
 
-class squiddio_pi : public opencpn_plugin_110, public wxEvtHandler
+class squiddio_pi : public opencpn_plugin_113, public wxEvtHandler
 {
 public:
       squiddio_pi(void *ppimgr);
@@ -131,7 +130,7 @@ public:
       void SetLogsWindow();
       void LateInit(void);
 
-      wxString	 layerdir;
+      wxString   layerdir;
       LayerList  *pLayerList;
       wxString   g_Email;
       wxString   g_ApiKey;
@@ -162,20 +161,20 @@ private:
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
-      int 			m_update_id;
-      int 			m_report_id;
-      bool 			isLayerUpdate;
-      wxString 		local_region;
-      wxString 		m_rgn_to_dld;
-      wxString		g_VisibleLayers;
-      wxString		g_InvisibleLayers;
-      int 		 	g_LayerIdx;
-      bool			g_bShowLayers;
+      int           m_update_id;
+      int           m_report_id;
+      bool          isLayerUpdate;
+      wxString      local_region;
+      wxString      m_rgn_to_dld;
+      wxString      g_VisibleLayers;
+      wxString      g_InvisibleLayers;
+      int           g_LayerIdx;
+      bool          g_bShowLayers;
 
       wxAuiManager     *m_AUImgr;
       wxFileConfig     *m_pconfig;
       Plugin_Hyperlink *link;
-      Hyperlink 	   *wp_link;
+      Hyperlink        *wp_link;
       
       long        last_online_chk;
 
@@ -192,7 +191,6 @@ private:
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
       int         m_demoshow_id;
       int         m_demohide_id;
-      myCurlHTTP  get;
       int         m_leftclick_tool_id;
       
       bool m_bThreadRuning;
@@ -203,8 +201,8 @@ private:
 class SquiddioPrefsDialog : public SquiddioPrefsDialogBase
 {
 public:
-	SquiddioPrefsDialog( squiddio_pi &_sq_pi, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _T("Squiddio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,495 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL )
-		: SquiddioPrefsDialogBase( parent, id, title, pos, size, style ), m_sq_pi(_sq_pi) {}
+    SquiddioPrefsDialog( squiddio_pi &_sq_pi, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _T("Squiddio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,495 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL )
+        : SquiddioPrefsDialogBase( parent, id, title, pos, size, style ), m_sq_pi(_sq_pi) {}
 
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
@@ -215,9 +213,3 @@ protected:
 };
 
 #endif
-
-
-
-
-
-

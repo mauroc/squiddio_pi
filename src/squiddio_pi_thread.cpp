@@ -57,14 +57,7 @@ void *SquiddioThread::Entry()
         if( !m_bIsWorking )
         {
             m_bIsWorking = true;
-            if( m_getdata )
-            {
-                m_getdata = false;
-                m_pHandler->RefreshLayer();
-                SquiddioEvent evt;
-                m_pHandler->AddPendingEvent(evt);
-            }
-            else if ( m_bCheckOnline )
+            if ( m_bCheckOnline )
             {
                 m_pHandler->CheckIsOnline();
                 m_bCheckOnline = false;
@@ -150,3 +143,4 @@ void SquiddioThread::ReportPosition( double lat, double lon, double sog, double 
     m_reportcog = cog;
     m_bPositionReport = true;
 }
+
