@@ -657,7 +657,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     if( result == OCPN_DL_NO_ERROR )
     {
         wxFile f( fn );
-        //f.ReadAll( &res );
+        f.ReadAll( &res );
         f.Close();
         wxRemoveFile( fn );
     }
