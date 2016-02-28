@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-01 12:44-0600\n"
-"PO-Revision-Date: 2015-11-01 13:54-0500\n"
+"PO-Revision-Date: 2016-02-28 17:40-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Catalan\n"
 "Language: ca_ES\n"
@@ -54,15 +54,15 @@ msgstr "No s'ha pogut iniciar el navegador per defecte. Comproveu la connexió d
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading"
-msgstr ""
+msgstr "Descarregant"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading: "
-msgstr ""
+msgstr "Descarregant: "
 
 #: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
-msgstr ""
+msgstr "Squiddio_pi: incapaç de connectar a l'amfitrió"
 
 #: src/squiddio_pi.cpp:737
 msgid "Squiddio"
@@ -200,7 +200,7 @@ msgstr "Altres"
 
 #: src/squiddioPrefsDialogBase.cpp:59
 msgid "AIS marker"
-msgstr ""
+msgstr "Marcador AIS"
 
 #: src/squiddioPrefsDialogBase.cpp:69
 msgid "Share logs with friends"
@@ -252,7 +252,7 @@ msgstr "ID d'sQuiddio"
 
 #: src/squiddioPrefsDialogBase.cpp:106
 msgid "The email address you use to log into sQuidd.io"
-msgstr ""
+msgstr "L'adreça que utilitzeu per accedir a sQuidd.io"
 
 #: src/squiddioPrefsDialogBase.cpp:110
 msgid "API Key"
@@ -261,4 +261,6 @@ msgstr "Clau de l'API"
 #: src/squiddioPrefsDialogBase.cpp:116
 msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\n"
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
-msgstr ""
+msgstr "Recuperar la clau d'API de perfil de sQuidd.io. Registrar a http://squidd.io i feu clic a Edita el perfil en el quadre de comandament, llavors seleccioneu els números i claus. Feu clic a la pestanya d'ajuda per obtenir més informació. \n\n"
+"IMPORTANT! No utilitzeu la vostra contrassenya sQuiddio igual que la vostra clau d'API! "
+
