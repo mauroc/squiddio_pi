@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-01 12:44-0600\n"
-"PO-Revision-Date: 2015-11-01 13:55-0500\n"
+"PO-Revision-Date: 2016-02-25 08:05-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Norwegian Bokmal\n"
 "Language: nb_NO\n"
@@ -54,11 +54,11 @@ msgstr "Kunne ikke starte standard nettleser. Sjekk din Internettforbindelse"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading"
-msgstr ""
+msgstr "Laster ned"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading: "
-msgstr ""
+msgstr "Laster ned: "
 
 #: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
@@ -263,5 +263,4 @@ msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr "Motta din API-nøkkel fra din sQuidd.io profil. Logg inn på http://squidd.io og rediger profilen i Dashbord, velg så nummer og nøkkel fanen. Klikk hjelp for mer informasjon. \n\n"
 "VIKTIG! Ikke bruk ditt passord som din API-nøkkel! "
-
 

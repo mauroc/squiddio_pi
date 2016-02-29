@@ -248,4 +248,3 @@ msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr ""
 
-

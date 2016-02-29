@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-01 12:44-0600\n"
-"PO-Revision-Date: 2015-11-01 13:54-0500\n"
+"PO-Revision-Date: 2016-02-18 16:08-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Spanish\n"
 "Language: es_ES\n"
@@ -54,11 +54,11 @@ msgstr "Puede que el navegador por defecto no funcione. Compruebe su conexión a
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading"
-msgstr ""
+msgstr "Descargando"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading: "
-msgstr ""
+msgstr "Descargando: "
 
 #: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
@@ -263,6 +263,4 @@ msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr "Recuperar su clave de API de su perfil sQuidd.io. Entra en http://squidd.io y haga clic en Edit Profile en el tablero, luego seleccione la pestaña Numbers and Keys. Haga clic sobre teclas haga clic sobre Help para obtener más información. \n\n"
 "¡IMPORTANTE! ¡No utilice su contraseña de sQuiddio como su clave API! "
-
-
 

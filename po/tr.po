@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-01 12:44-0600\n"
-"PO-Revision-Date: 2015-11-01 13:55-0500\n"
+"PO-Revision-Date: 2015-12-31 15:38-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Turkish\n"
 "Language: tr_TR\n"
@@ -54,11 +54,11 @@ msgstr ""
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading"
-msgstr ""
+msgstr "Yükleniyor"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading: "
-msgstr ""
+msgstr "Yükleniyor: "
 
 #: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
@@ -97,11 +97,11 @@ msgstr ""
 
 #: src/logs.cpp:94
 msgid "Just now"
-msgstr ""
+msgstr "Şimdi"
 
 #: src/logs.cpp:97
 msgid "One second ago"
-msgstr ""
+msgstr "Bir saniye önce"
 
 #: src/logs.cpp:100
 #, c-format
@@ -197,35 +197,35 @@ msgstr ""
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Never"
-msgstr ""
+msgstr "Asla"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once a day"
-msgstr ""
+msgstr "Günde bir"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice a day"
-msgstr ""
+msgstr "Günde iki kez"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once an hour"
-msgstr ""
+msgstr "Saatte bir"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice an hour"
-msgstr ""
+msgstr "Saatte iki defa"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Once a minute"
-msgstr ""
+msgstr "Dakikada bir"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Twice a minute"
-msgstr ""
+msgstr "Dakikada iki defa"
 
 #: src/squiddioPrefsDialogBase.cpp:80 src/squiddioPrefsDialogBase.cpp:92
 msgid "Every 10 seconds"
-msgstr ""
+msgstr "Her 10 Saniyede"
 
 #: src/squiddioPrefsDialogBase.cpp:88
 msgid "Receive"
@@ -247,5 +247,4 @@ msgstr ""
 msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\n"
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr ""
-
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-01 12:44-0600\n"
-"PO-Revision-Date: 2015-11-01 13:54-0500\n"
+"PO-Revision-Date: 2016-02-28 17:40-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Finnish\n"
 "Language: fi_FI\n"
@@ -54,11 +54,11 @@ msgstr "Oletusselainta ei voitu käynnistää. Tarkista Internet-yhteys"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading"
-msgstr ""
+msgstr "Ladataan"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading: "
-msgstr ""
+msgstr "Ladataan: "
 
 #: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
@@ -263,6 +263,4 @@ msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr "Hae uudelleen API avaimesi sQuidd.io profiilistasi. Kirjaudu http://squidd.io:n ja klikkaa kojelaudassa Edit Profilea, sitten valitse Numbers and Keys välilehti. Klikkaa Helppiä, saat lisää Infoa. \n\n"
 "TÄRKEÄÄ! Älä käytä sQuiddio salasanaasi API avaimenasi! "
-
-
 
