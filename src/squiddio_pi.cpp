@@ -592,7 +592,7 @@ void squiddio_pi::RefreshLayer()
 
     if (CheckIsOnline())
         layerContents = DownloadLayer(
-        _T("/places/download_xml_layers.xml?version=")+versionMajor+versionMinor+_T("&region=")
+        _T("/places/download_xml_layers.xml?src=ocpn_plugin&version=")+versionMajor+versionMinor+_T("&region=")
         + m_rgn_to_dld);
 
     wxString gpxFilePath = layerdir;
