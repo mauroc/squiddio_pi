@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-01 12:44-0600\n"
-"PO-Revision-Date: 2015-11-01 13:54-0500\n"
+"PO-Revision-Date: 2016-02-28 17:40-0500\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Dutch\n"
 "Language: nl_NL\n"
@@ -22,11 +22,11 @@ msgstr "Toon lokale sQuiddio-bestemmingen"
 
 #: src/squiddio_pi.cpp:130
 msgid "Hide local sQuiddio destinations"
-msgstr "Verberg locale sQuiddio-bestemmingen"
+msgstr "Verberg lokale sQuiddio-bestemmingen"
 
 #: src/squiddio_pi.cpp:135
 msgid "Download local sQuiddio destinations"
-msgstr "Lokale sQuiddio-bestemmingen downloaden"
+msgstr "Download lokale sQuiddio-bestemmingen"
 
 #: src/squiddio_pi.cpp:140
 msgid "Report a Destination at this location"
@@ -54,11 +54,11 @@ msgstr "Kon de standaardbrowser niet starten. Controleer uw internetverbinding."
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading"
-msgstr ""
+msgstr "Downloaden"
 
 #: src/squiddio_pi.cpp:654
 msgid "Downloading: "
-msgstr ""
+msgstr "Downloaden:"
 
 #: src/squiddio_pi.cpp:666
 msgid "Squiddio_pi: unable to connect to host"
@@ -88,27 +88,27 @@ msgid "== User-sourced database of sailing destinations ==\n"
 "on your OpenCPN charts (requires a free sQuiddio account)\n\n"
 "IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n"
 "and Conditions, available at http://squidd.io/enduser_agreement"
-msgstr "== Gebruiker-sourced database van zeil bestemmingen == \n"
-"Om bestemmingen van een gewenste regio te downloaden (internetverbinding vereist): \n"
-"* Plaats cursor op gebied van bestemmingen die u wilt bekijken  en klik met de rechtermuisknop\n"
-" * Selecteer 'Download lokale sQuiddio bestemmingen' van contextgevoelige menu.\n\n"
-"Bestemmingen verschijnen als OpenCPN waypoints: \n"
-"* Klik met de rechtermuisknop op waypoint voor link naar sQuiddio's doelpagina. \n"
-"* Volg de link om voor de  bestemming te stemmen en voeg opmerkingen online toe.\n\n"
+msgstr "== Database van zeilbestemmingen == \n"
+"Om mogelijke bestemmingen van een gewenste regio te downloaden (internetverbinding vereist): \n"
+"* Plaats cursor op een gebied van bestemmingen dat u wilt bekijken en klik met de rechtermuisknop\n"
+" * Klik op 'Download lokale sQuiddio bestemmingen' in het contextgevoelige menu.\n\n"
+"Bestemmingen verschijnen als OpenCPN markeringspunten: \n"
+"* Klik met de rechtermuisknop op het markeringspunt om via link naar sQuiddio's doelpagina te gaan. \n"
+"* Volg de link om voor de  bestemming te stemmen en voeg online opmerkingen toe.\n\n"
 "Andere menu-opties: \n"
 "* Schakel zichtbaarheid voor lokale bestemmingen aan/uit\n"
 "* Indienen van een nieuwe bestemming (vereist internetverbinding en gratis gebruikersaccount) \n\n"
-"== In de kaart log delen voor zeilers == \n"
-"* Deel uw GPS-coördinaten met uw zeil vrienden en laat hun positie op uw\n"
-" OpenCPN kaarten zien (vereist een gratis sQuiddio-account) \n\n"
-"BELANGRIJK: Met het gebruik van deze plugin gaat U akkoord met de sQuidd.io voorwaarden \n"
-"en condities, beschikbaar op http://squidd.io/enduser_agreement"
+"== Positiegegevens delen met anderen == \n"
+"* Deel uw GPS-coördinaten met uw zeilvrienden en toon hun positie op uw\n"
+" OpenCPN kaarten (vereist een gratis sQuiddio-account) \n\n"
+"BELANGRIJK: Met het gebruik van deze PlugIn gaat u akkoord met de sQuidd.io voorwaarden, \n"
+"die beschikbaar zijn op http://squidd.io/enduser_agreement"
 
 #: src/squiddio_pi.cpp:838
 msgid "Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\n"
 "To obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."
-msgstr "Log delen is niet geactiveerd. Vul uw sQuiddio gebruikersnaam en API-sleutel in. \n\n"
-"Voor het verkrijgen van uw API-sleutel, meld u aan bij sQuiddio (http://squidd.io/signup) en bezoek uw online profielpagina (zie profiel bewerken link in het Dashboard), 'Getallen & Keys' tabblad."
+msgstr "Posities delen is niet geactiveerd. Vul uw sQuiddio gebruikersnaam en API-sleutel in. \n\n"
+"Meldt u aan bij sQuiddio (http://squidd.io/signup) om een API-sleutel te verkrijgen en bezoek uw online profielpagina (zie de link 'Profiel bewerken' in het Dashboard, 'Numbers & Keys' tabblad)."
 
 #: src/logs.cpp:94
 msgid "Just now"
@@ -152,19 +152,19 @@ msgstr "%i dagen geleden"
 
 #: src/logs.cpp:199
 msgid "Log sent:"
-msgstr "Log verzonden:"
+msgstr "Positielog verzonden:"
 
 #: src/logs.cpp:215
 msgid "Logs received"
-msgstr "Logs ontvangen"
+msgstr "Positielogs ontvangen"
 
 #: src/logs.cpp:305
 msgid "Created sQuiddio log update:"
-msgstr "sQuiddio log update gecreeerd:"
+msgstr "sQuiddio log update gecreëerd:"
 
 #: src/squiddioPrefsDialogBase.cpp:28
 msgid "View Destinations"
-msgstr "Bekijk Bestemmingen"
+msgstr "Bekijk bestemmingen"
 
 #: src/squiddioPrefsDialogBase.cpp:35
 msgid "All"
@@ -184,11 +184,11 @@ msgstr "Jachtclubs"
 
 #: src/squiddioPrefsDialogBase.cpp:47
 msgid "Docks/piers"
-msgstr "Dokken/piers"
+msgstr "Havens/pieren"
 
 #: src/squiddioPrefsDialogBase.cpp:50
 msgid "Boat ramps"
-msgstr "Boot hellingen"
+msgstr "Boothellingen"
 
 #: src/squiddioPrefsDialogBase.cpp:53
 msgid "Fuel Stations"
@@ -200,11 +200,11 @@ msgstr "Overige"
 
 #: src/squiddioPrefsDialogBase.cpp:59
 msgid "AIS marker"
-msgstr "AIS markering"
+msgstr "AIS-markering"
 
 #: src/squiddioPrefsDialogBase.cpp:69
 msgid "Share logs with friends"
-msgstr "Deel logs met vrienden"
+msgstr "Deel positielogs met vrienden"
 
 #: src/squiddioPrefsDialogBase.cpp:76
 msgid "Send"
@@ -261,7 +261,6 @@ msgstr "API sleutel"
 #: src/squiddioPrefsDialogBase.cpp:116
 msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\n"
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
-msgstr "Haal uw API-sleutel op vanaf uw sQuidd.io profiel. Log in bij http://squidd.io, klik op Profiel Bewerken in het Dashboard en selecteer het tabblad getallen en sleutels. Klik op Help voor meer informatie. \n\n"
+msgstr "Haal uw API-sleutel op vanaf uw sQuidd.io profiel. Log in bij http://squidd.io, klik op 'Profiel Bewerken' in het Dashboard en selecteer het tabblad 'Numbers & Keys'. Klik op Help voor meer informatie. \n\n"
 "BELANGRIJK! Gebruik NIET uw sQuiddio wachtwoord als uw API-sleutel! "
-
 

@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: squiddio_pi 0.5\n"
+"Project-Id-Version: squiddio_pi 0.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-01 12:44-0600\n"
+"POT-Creation-Date: 2016-02-28 19:44-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -266,4 +266,3 @@ msgid ""
 "\n"
 "IMPORTANT! Do not use your sQuiddio Password as your API Key! "
 msgstr ""
-
