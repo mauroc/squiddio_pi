@@ -864,6 +864,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             SaveConfig();
             RenderLayers();
         }
+        dialog->Destroy();
         delete dialog;
     }
 }
@@ -958,6 +959,7 @@ void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
     if (!wxLaunchDefaultBrowser(_T("http://squidd.io/faq#opencpn_setup")))
         wxMessageBox(
                 _("Could not launch default browser. Check your Internet connection"));
+    event.Skip();
 }
 void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
     if (m_choiceHowOften->GetSelection() == 0

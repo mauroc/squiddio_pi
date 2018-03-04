@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  6 2014)
+// C++ code generated with wxFormBuilder (version Feb  6 2018)
 // http://www.wxformbuilder.org/
 //
-// PLEASE DO "NOT" EDIT THIS FILE!
+// PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
 #ifndef __SQUIDDIOPREFSDIALOGBASE_H__
@@ -10,6 +10,7 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
+#include <wx/intl.h>
 #include <wx/string.h>
 #include <wx/checkbox.h>
 #include <wx/gdicmn.h>
@@ -48,7 +49,9 @@ class SquiddioPrefsDialogBase : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCheckBoxAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnShareChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LaunchHelpPage( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -66,7 +69,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
 		
-		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,420 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,420 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~SquiddioPrefsDialogBase();
 	
 };

@@ -207,6 +207,8 @@ public:
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
     void OnShareChoice( wxCommandEvent& event );
+    void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
+    void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
 
 protected:
     squiddio_pi &m_sq_pi;

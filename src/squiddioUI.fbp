@@ -14,7 +14,8 @@
         <property name="file">squiddioPrefsDialogBase</property>
         <property name="first_id">1000</property>
         <property name="help_provider">none</property>
-        <property name="internationalize">0</property>
+        <property name="indent_with_spaces"></property>
+        <property name="internationalize">1</property>
         <property name="name">squiddioUI</property>
         <property name="namespace"></property>
         <property name="path">.</property>
@@ -118,7 +119,7 @@
                         <property name="vgap">20</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND</property>
+                            <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
                             <object class="wxStaticBoxSizer" expanded="0">
                                 <property name="id">wxID_ANY</property>
@@ -126,6 +127,7 @@
                                 <property name="minimum_size">-1,-1</property>
                                 <property name="name">sbDestSizer</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -760,11 +762,11 @@
                                                 <event name="OnUpdateUI"></event>
                                             </object>
                                         </object>
-                                        <object class="sizeritem" expanded="1">
+                                        <object class="sizeritem" expanded="0">
                                             <property name="border">5</property>
                                             <property name="flag">wxALL</property>
                                             <property name="proportion">0</property>
-                                            <object class="wxCheckBox" expanded="1">
+                                            <object class="wxCheckBox" expanded="0">
                                                 <property name="BottomDockable">1</property>
                                                 <property name="LeftDockable">1</property>
                                                 <property name="RightDockable">1</property>
@@ -942,7 +944,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND</property>
+                            <property name="flag">wxALL|wxEXPAND</property>
                             <property name="proportion">1</property>
                             <object class="wxStaticBoxSizer" expanded="0">
                                 <property name="id">wxID_ANY</property>
@@ -950,6 +952,7 @@
                                 <property name="minimum_size">-1,-1</property>
                                 <property name="name">sbLogSizer</property>
                                 <property name="orient">wxVERTICAL</property>
+                                <property name="parent">1</property>
                                 <property name="permission">none</property>
                                 <event name="OnUpdateUI"></event>
                                 <object class="sizeritem" expanded="0">
@@ -1679,11 +1682,11 @@
                                 <property name="name">m_sdbButtonSizer</property>
                                 <property name="permission">protected</property>
                                 <event name="OnApplyButtonClick"></event>
-                                <event name="OnCancelButtonClick"></event>
+                                <event name="OnCancelButtonClick">m_sdbButtonSizerOnCancelButtonClick</event>
                                 <event name="OnContextHelpButtonClick"></event>
                                 <event name="OnHelpButtonClick">LaunchHelpPage</event>
                                 <event name="OnNoButtonClick"></event>
-                                <event name="OnOKButtonClick"></event>
+                                <event name="OnOKButtonClick">m_sdbButtonSizerOnOKButtonClick</event>
                                 <event name="OnSaveButtonClick"></event>
                                 <event name="OnYesButtonClick"></event>
                             </object>
