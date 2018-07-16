@@ -1,0 +1,23 @@
+id: org.opencpn.OpenCPN.Plugin.squiddio
+runtime: org.opencpn.OpenCPN
+runtime-version: stable
+sdk: org.freedesktop.Sdk//1.6
+build-extension: true
+separate-locales: false
+appstream-compose: false
+finish-args:
+    - --socket=x11
+    - --socket=pulseaudio
+    - --filesystem=home
+    - --device=all
+modules:
+    - name: squiddio
+      no-autogen: true
+      cmake: true
+      builddir: true
+      config-opts:
+          - -DCMAKE_INSTALL_PREFIX=/app/extensions/squiddio
+      sources:
+          - type: git
+            url:  https://github.com/mauroc/squiddio_pi.git
+            commit: 614fd0f
