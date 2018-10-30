@@ -1,12 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Feb  6 2018)
+// C++ code generated with wxFormBuilder (version Oct 26 2018)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __SQUIDDIOPREFSDIALOGBASE_H__
-#define __SQUIDDIOPREFSDIALOGBASE_H__
+#pragma once
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
@@ -22,6 +21,7 @@
 #include <wx/stattext.h>
 #include <wx/choice.h>
 #include <wx/textctrl.h>
+#include <wx/radiobox.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 
@@ -32,10 +32,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 /// Class SquiddioPrefsDialogBase
 ///////////////////////////////////////////////////////////////////////////////
-class SquiddioPrefsDialogBase : public wxDialog 
+class SquiddioPrefsDialogBase : public wxDialog
 {
 	private:
-	
+
 	protected:
 		wxStaticText* m_staticText6;
 		wxStaticText* m_staticText4;
@@ -45,15 +45,15 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxButton* m_sdbButtonSizerOK;
 		wxButton* m_sdbButtonSizerCancel;
 		wxButton* m_sdbButtonSizerHelp;
-		
+
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCheckBoxAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnShareChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LaunchHelpPage( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		
-	
+
+
 	public:
 		wxCheckBox* m_checkBoxAll;
 		wxCheckBox* m_checkBoxMarinas;
@@ -68,10 +68,10 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxChoice* m_choiceReceive;
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
-		
-		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,420 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		wxRadioBox* m_radioBoxOCPNorOD;
+
+		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,460 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~SquiddioPrefsDialogBase();
-	
+
 };
 
-#endif //__SQUIDDIOPREFSDIALOGBASE_H__

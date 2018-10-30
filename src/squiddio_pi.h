@@ -56,6 +56,7 @@
 #include "squiddioPrefsDialogBase.h"
 #include "nmea0183/nmea0183.h"
 #include "logs.h"
+#include "ODAPI.h"
 
 class logsWindow;
 class Layer;
@@ -136,6 +137,7 @@ public:
       wxString   g_ApiKey;
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
+      bool       g_OCPN;
 
       double    m_cursor_lat, m_cursor_lon;
       Layer     *local_sq_layer;
@@ -157,7 +159,8 @@ private:
       bool SaveConfig(void);
       bool ShowType(Poi * wp);
       void PreferencesDialog(wxWindow* parent);
-
+      void GetODAPI(void);
+      
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
@@ -195,6 +198,25 @@ private:
       
       bool m_bThreadRuning;
       
+      int     m_iODAPIVersionMajor;
+      int     m_iODAPIVersionMinor;
+      int     m_iODAPIVersionPatch;
+      bool    m_bDoneODAPIVersionCall;
+      bool    m_bOD_FindPointInAnyBoundary;
+      bool    m_bODFindClosestBoundaryLineCrossing;
+      bool    m_bODFindFirstBoundaryLineCrossing;
+      bool    m_bODCreateBoundary;
+      bool    m_bODCreateBoundaryPoint;
+      bool    m_bODCreateTextPoint;
+      bool    m_bODDeleteTextPoint;
+      OD_FindPointInAnyBoundary           m_pOD_FindPointInAnyBoundary;
+      OD_FindClosestBoundaryLineCrossing  m_pODFindClosestBoundaryLineCrossing;
+      OD_FindFirstBoundaryLineCrossing    m_pODFindFirstBoundaryLineCrossing;
+      OD_CreateBoundary                   m_pODCreateBoundary;
+      OD_CreateBoundaryPoint              m_pODCreateBoundaryPoint;
+      OD_CreateTextPoint                  m_pODCreateTextPoint;
+      OD_DeleteTextPoint                  m_pODDeleteTextPoint;
+      
       DECLARE_EVENT_TABLE()
 };
 
@@ -208,7 +230,7 @@ public:
     void LaunchHelpPage( wxCommandEvent& event );
     void OnShareChoice( wxCommandEvent& event );
     void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
-    void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
+    void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxOK); }
 
 protected:
     squiddio_pi &m_sq_pi;

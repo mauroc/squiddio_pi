@@ -31,7 +31,7 @@ SET(CPACK_PACKAGE_CONTACT "Mauro Calvi")
 
 SET(VERSION_MAJOR "0")
 SET(VERSION_MINOR "7")
-SET(VERSION_PATCH "1")
+SET(VERSION_PATCH "2")
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
@@ -44,6 +44,8 @@ SET(SRC_SQUIDDIO
     src/squiddioPrefsDialogBase.h
     src/squiddio_pi_thread.h
     src/squiddio_pi_thread.cpp
+    src/sJSON.cpp
+    src/sJSON.h
     src/icons.h
     src/icons.cpp
     src/logs.cpp

@@ -31,6 +31,9 @@
 #include "squiddio_pi.h"
 #include "logs.h"
 #include <wx/fileconf.h>
+#include "sJSON.h"
+
+#include "wxJSON/jsonwriter.h"
 
 WX_DEFINE_LIST (LayerList);
 WX_DEFINE_LIST (HyperlinkList);
@@ -42,6 +45,15 @@ WX_DEFINE_LIST (Plugin_HyperlinkList);
 // these variables are shared with NavObjectCollection
 PoiMan *pPoiMan;
 class logsWindow;
+
+sJSON   *g_psJSON;
+wxString                g_ReceivedODAPIMessage;
+wxJSONValue             g_ReceivedODAPIJSONMsg;
+wxString                g_ReceivedJSONMessage;
+wxJSONValue             g_ReceivedJSONJSONMsg;
+double                  g_dVar;
+
+
 
 extern "C" DECL_EXP opencpn_plugin* create_pi(void *ppimgr) {
     return new squiddio_pi(ppimgr);
@@ -112,6 +124,25 @@ int squiddio_pi::Init(void) {
     m_plogs_window = NULL;
     g_PostPeriod = 0;
     g_RetrievePeriod = 0;
+    g_OCPN = true;
+    m_bDoneODAPIVersionCall = false;
+    m_bOD_FindPointInAnyBoundary = false;
+    m_bODFindClosestBoundaryLineCrossing = false;
+    m_bODFindFirstBoundaryLineCrossing = false;
+    m_bODCreateBoundary = false;
+    m_bODCreateBoundaryPoint = false;
+    m_bODCreateTextPoint = false;
+    m_bODDeleteTextPoint = false;
+    m_pOD_FindPointInAnyBoundary = NULL;
+    m_pODFindClosestBoundaryLineCrossing = NULL;
+    m_pODFindFirstBoundaryLineCrossing = NULL;
+    m_pODFindFirstBoundaryLineCrossing = NULL;
+    m_pODCreateBoundary = NULL;
+    m_pODCreateBoundaryPoint = NULL;
+    m_pODCreateTextPoint = NULL;
+    m_pODDeleteTextPoint = NULL;
+    
+    
     
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
@@ -170,6 +201,8 @@ int squiddio_pi::Init(void) {
     m_pconfig = GetOCPNConfigObject();
     LoadConfig();
 
+    if(!m_bDoneODAPIVersionCall) GetODAPI();
+    
     layerdir = *GetpPrivateApplicationDataLocation();
     layerdir += wxFileName::GetPathSeparator();
     layerdir += _T("squiddio");
@@ -219,6 +252,7 @@ int squiddio_pi::Init(void) {
     WANTS_CONFIG |
     WANTS_TOOLBAR_CALLBACK |
     INSTALLS_TOOLBAR_TOOL |
+    WANTS_PLUGIN_MESSAGING    |
     WANTS_LATE_INIT
     );
 }
@@ -307,6 +341,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("LastLogsRcvd"), &g_LastLogsRcvd);
     pConf->Read(_T("Email"), &g_Email);
     pConf->Read(_T("ApiKey"), &g_ApiKey);
+    pConf->Read(_T("OCPN"), &g_OCPN);
     pConf->Read(_T("ViewMarinas"), &g_ViewMarinas, true);
     pConf->Read(_T("ViewAnchorages"), &g_ViewAnchorages, true);
     pConf->Read(_T("ViewDocks"), &g_ViewDocks, true);
@@ -333,6 +368,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("LastLogsRcvd"), g_LastLogsRcvd);
     pConf->Write(_T("Email"), g_Email);
     pConf->Write(_T("ApiKey"), g_ApiKey);
+    pConf->Write(_T("OCPN"), g_OCPN);
     pConf->Write(_T("ViewMarinas"), g_ViewMarinas);
     pConf->Write(_T("ViewAnchorages"), g_ViewAnchorages);
     pConf->Write(_T("ViewDocks"), g_ViewDocks);
@@ -417,7 +453,7 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show) {
     l->m_NoOfItems += nItems;
 
     wxString objmsg;
-    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %d items."),
+    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."),
             file_path.c_str(), nItems);
     wxLogMessage(objmsg);
     delete pSet;
@@ -515,26 +551,74 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
     wxString name = wp->GetName();
     wxString m_GUID = wp->m_GUID;
     wxString m_iconname = wp->m_IconName;
+    
+    if(!m_bDoneODAPIVersionCall) GetODAPI();
 
-    PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
-            m_GUID);
-    pPoint->m_MarkDescription = wp->m_MarkDescription;
+    if(g_OCPN) {
+        PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
+                m_GUID);
+        pPoint->m_MarkDescription = wp->m_MarkDescription;
 
-    wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-    wp_link = linknode->GetData();
-    link->Link = wp_link->Link;
-    link->DescrText = wp_link->DescrText;
-    link->Type = wxEmptyString;
+        wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+        wp_link = linknode->GetData();
+        link->Link = wp_link->Link;
+        link->DescrText = wp_link->DescrText;
+        link->Type = wxEmptyString;
 
-    pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
-    pPoint->m_HyperlinkList->Insert(link);
+        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
+        pPoint->m_HyperlinkList->Insert(link);
 
-    bool added = AddSingleWaypoint(pPoint, false);
-    return added;
+        bool added = AddSingleWaypoint(pPoint, false);
+        return added;
+    } else {
+        CreateTextPoint_t *pCTP = new CreateTextPoint_t;
+        pCTP->name = wp->GetName();
+        pCTP->iconname = wp->m_IconName;
+        pCTP->lat = wp->m_lat;
+        pCTP->lon = wp->m_lon;
+        pCTP->GUID = wp->m_GUID;
+        pCTP->description = wp->m_MarkDescription;
+        pCTP->TextToDisplay = wp->m_MarkDescription;
+        pCTP->TextColour = _T("DEFAULT");
+        pCTP->TextPointDisplayTextWhen = TEXTPOINT_DISPLAY_TEXT_SHOW_DEFAULT;
+        pCTP->TextPosition = TEXT_DEFAULT;
+        pCTP->BackgroundColour = _T("DEFAULT");
+        pCTP->BackgroundTransparancy = TEXTPOINT_TEXT_BACKGROUND_TRANSPARANCY_DEFAULT;
+        pCTP->ringscolour = _T("DEFAULT");
+        pCTP->ringsvisible = false;
+        pCTP->ringsnumber = 0;
+        pCTP->defaultFont = true;
+        pCTP->Visible = true;
+        pCTP->temporary = true;
+        
+        wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+        wp_link = linknode->GetData();
+        pCTP->URL = wp_link->Link;
+        pCTP->URLDescription = wp_link->DescrText;
+        
+        bool added = false;
+        
+        if(m_bODCreateTextPoint) added = (*m_pODCreateTextPoint)(pCTP);
+        
+//        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
+//        pPoint->m_HyperlinkList->Insert(link);
+        
+        return added;
+    }
 }
 
 bool squiddio_pi::HidePOI(Poi * wp) {
-    return DeleteSingleWaypoint(wp->m_GUID);
+    if(g_OCPN)
+        return DeleteSingleWaypoint(wp->m_GUID);
+    else {
+        DeleteTextPoint_t * pDTP = new DeleteTextPoint_t;
+        pDTP->GUID = wp->m_GUID;
+        bool deleted = false;
+        if(m_pODDeleteTextPoint)
+            deleted = (*m_pODDeleteTextPoint)(pDTP);
+        return deleted;
+    }
+        
 }
 
 void squiddio_pi::UpdateAuiStatus(void) {
@@ -557,6 +641,7 @@ void squiddio_pi::LateInit(void){
 
 //    CheckIsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
     SetLogsWindow();
+    
 }
 void squiddio_pi::SetCursorLatLon(double lat, double lon) {
     m_cursor_lon = lon;
@@ -798,6 +883,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_choiceReceive->SetSelection(g_RetrievePeriod);
         dialog->m_textSquiddioID->SetValue(g_Email);
         dialog->m_textApiKey->SetValue(g_ApiKey);
+        if(g_OCPN) dialog->m_radioBoxOCPNorOD->SetSelection(0);
+        else dialog->m_radioBoxOCPNorOD->SetSelection(1);
         dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
         dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
         dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
@@ -819,7 +906,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         GetGlobalColor(_T("DILG1"), &cl);
         dialog->SetBackgroundColour(cl);
 
-        if (dialog->ShowModal() == wxID_OK) {
+        if (dialog->ShowModal() == wxOK) {
             g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
             g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
             g_Email = dialog->m_textSquiddioID->GetValue().Trim();
@@ -832,6 +919,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
             g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
             g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
+            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) g_OCPN = true;
+            else g_OCPN = false;
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
@@ -907,8 +996,9 @@ void squiddio_pi::SetLogsWindow() {
 void squiddio_pi::OnToolbarToolCallback(int id) {
     PreferencesDialog(m_parent_window);
 }
-void squiddio_pi::SetPluginMessage(wxString &message_id,
-        wxString &message_body) {
+void squiddio_pi::SetPluginMessage(wxString &message_id, wxString &message_body) {
+    g_psJSON->ProcessMessage(message_id, message_body);
+    return;
 }
 void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
@@ -923,6 +1013,105 @@ void squiddio_pi::OnThreadActionFinished(SquiddioEvent& event)
 {
     //Whatever is needed after an action was performed in the background
 }
+
+void squiddio_pi::GetODAPI()
+{
+    wxJSONValue jMsg;
+    wxJSONWriter writer;
+    wxString    MsgString;
+    
+    jMsg[wxT("Source")] = wxT("SQUIDDIO_PI");
+    jMsg[wxT("Type")] = wxT("Request");
+    jMsg[wxT("Msg")] = wxT("Version");
+    jMsg[wxT("MsgId")] = wxT("Version");
+    writer.Write( jMsg, MsgString );
+    SendPluginMessage( wxS("OCPN_DRAW_PI"), MsgString );
+    if(g_ReceivedODAPIMessage == wxEmptyString) return;
+    
+    if(g_ReceivedODAPIMessage != wxEmptyString &&  g_ReceivedODAPIJSONMsg[wxT("MsgId")].AsString() == wxS("Version")) {
+        m_iODAPIVersionMajor = g_ReceivedODAPIJSONMsg[wxS("Major")].AsInt();
+        m_iODAPIVersionMinor = g_ReceivedODAPIJSONMsg[wxS("Minor")].AsInt();
+        m_iODAPIVersionPatch = g_ReceivedODAPIJSONMsg[wxS("Patch")].AsInt();
+    }
+    m_bDoneODAPIVersionCall = true;
+    
+    wxJSONValue jMsg1;
+    jMsg1[wxT("Source")] = wxT("SQUIDDIO_PI");
+    jMsg1[wxT("Type")] = wxT("Request");
+    jMsg1[wxT("Msg")] = wxS("GetAPIAddresses");
+    jMsg1[wxT("MsgId")] = wxS("GetAPIAddresses");
+    writer.Write( jMsg1, MsgString );
+    SendPluginMessage( wxS("OCPN_DRAW_PI"), MsgString );
+    if(g_ReceivedODAPIMessage != wxEmptyString &&  g_ReceivedODAPIJSONMsg[wxT("MsgId")].AsString() == wxS("GetAPIAddresses")) {
+        wxString sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindPointInAnyBoundary")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pOD_FindPointInAnyBoundary);
+            m_bOD_FindPointInAnyBoundary = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindClosestBoundaryLineCrossing")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODFindClosestBoundaryLineCrossing);
+            m_bODFindClosestBoundaryLineCrossing = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindFirstBoundaryLineCrossing")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODFindFirstBoundaryLineCrossing);
+            m_bODFindFirstBoundaryLineCrossing = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateBoundary")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateBoundary);
+            m_bODCreateBoundary = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateBoundaryPoint")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateBoundaryPoint);
+            m_bODCreateBoundaryPoint = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateTextPoint")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateTextPoint);
+            m_bODCreateTextPoint = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_DeleteTextPoint")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODDeleteTextPoint);
+            m_bODDeleteTextPoint = true;
+        }
+    }
+    
+    wxString l_msg;
+    wxString l_avail;
+    wxString l_notavail;
+    l_msg.Printf(_("ODAPI Version: Major: %i, Minor: %i, Patch: %i\n"), m_iODAPIVersionMajor, m_iODAPIVersionMinor, m_iODAPIVersionPatch);
+    if(m_bOD_FindPointInAnyBoundary) l_avail.Append(_("OD_FindPointInAnyBoundary\n"));
+    if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
+    if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
+    if(m_bODCreateBoundary) l_avail.Append(_("OD_CreateBoundary\n"));
+    if(m_bODCreateBoundaryPoint) l_avail.Append(_("OD_CreateBoundaryPoint\n"));
+    if(m_bODCreateTextPoint) l_avail.Append(_("OD_CreateTextPoint\n"));
+    if(m_bODDeleteTextPoint) l_avail.Append(_("OD_DeleteTextPoint\n"));
+    if(l_avail.Length() > 0) {
+        l_msg.Append(_("The following ODAPI's are available: \n"));
+        l_msg.Append(l_avail);
+    }
+    
+    if(!m_bOD_FindPointInAnyBoundary) l_notavail.Append(_("OD_FindPointInAnyBoundary\n"));
+    if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
+    if(!m_bODFindFirstBoundaryLineCrossing) l_notavail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
+    if(!m_bODCreateBoundary) l_notavail.Append(_("OD_CreateBoundary\n"));
+    if(!m_bODCreateBoundaryPoint) l_notavail.Append(_("OD_CreateBoundaryPoint\n"));
+    if(!m_bODCreateTextPoint) l_notavail.Append(_("OD_CreateTextPoint\n"));
+    if(!m_bODDeleteTextPoint) l_notavail.Append(_("OD_DeleteTextPoint\n"));
+    if(l_notavail.Length() > 0) {
+        l_msg.Append(_("The following ODAPI's are not available:\n"));
+        l_msg.Append(l_notavail);
+    }
+    
+    OCPNMessageBox_PlugIn( m_parent_window, l_msg, _("TESTPLUGIN"), (long) wxYES );
+    
+}
+
 
 
 //---------------------------------------------- preferences dialog event handlers
@@ -972,6 +1161,5 @@ void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
     }
     Refresh(false);
 }
-
 
 
