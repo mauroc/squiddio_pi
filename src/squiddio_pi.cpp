@@ -52,6 +52,8 @@ wxJSONValue             g_ReceivedODAPIJSONMsg;
 wxString                g_ReceivedJSONMessage;
 wxJSONValue             g_ReceivedJSONJSONMsg;
 double                  g_dVar;
+bool                    g_bODAvailable;
+squiddio_pi             *g_squiddio_pi;
 
 
 
@@ -94,6 +96,8 @@ squiddio_pi::squiddio_pi(void *ppimgr) :
     // Create the PlugIn icons
     initialize_images();
     SetThreadRunning(false);
+    g_squiddio_pi = this;
+    g_bODAvailable = false;
 }
 
 squiddio_pi::~squiddio_pi(void) {
@@ -126,7 +130,7 @@ int squiddio_pi::Init(void) {
     g_RetrievePeriod = 0;
     g_OCPN = true;
     m_bDoneODAPIVersionCall = false;
-    m_bOD_FindPointInAnyBoundary = false;
+    m_bODFindPointInAnyBoundary = false;
     m_bODFindClosestBoundaryLineCrossing = false;
     m_bODFindFirstBoundaryLineCrossing = false;
     m_bODCreateBoundary = false;
@@ -500,18 +504,18 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return true;
 }
 
-void squiddio_pi::RenderLayers() {
+void squiddio_pi::RenderLayers(bool hidePOI) {
     Layer * l;
     LayerList::iterator it;
     int index = 0;
     for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
         l = (Layer *) (*it);
         l->SetVisibleNames(false);
-        RenderLayerContentsOnChart(l);
+        RenderLayerContentsOnChart(l, false, hidePOI);
     }
 }
 
-void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config) {
+void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config, bool hidePOI) {
 
     // Process POIs in this layer
     //if (layer->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod ==0 )
@@ -524,7 +528,7 @@ void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config) {
         if (rp && (rp->m_LayerID == layer->m_LayerID)) {
             rp->SetVisible(layer->IsVisibleOnChart());
             rp->SetNameShown(false);
-            if (layer->IsVisibleOnChart() && ShowType(rp)  )
+            if (layer->IsVisibleOnChart() && ShowType(rp) && !hidePOI )
                 ShowPOI(rp);
             else
                 HidePOI(rp);
@@ -593,8 +597,11 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         
         wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
         wp_link = linknode->GetData();
-        pCTP->URL = wp_link->Link;
-        pCTP->URLDescription = wp_link->DescrText;
+        pCTP->TextPointHyperLinkList.clear();
+        HyperLinkList_t *l_list = new HyperLinkList_t;
+        l_list->sLink = wp_link->Link;
+        l_list->sDescription = wp_link->DescrText;
+        pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
         
         bool added = false;
         
@@ -700,6 +707,18 @@ void squiddio_pi::RefreshLayer()
     } else {
         wxLogMessage( _("Server not responding. Check your Internet connection") );
     }
+}
+
+void squiddio_pi::SwitchPointType(bool bPointType) {
+    wxLogMessage(_T("squiddio_pi: Switch from OCPN to ODText Points"));
+    if(local_sq_layer->IsVisibleOnChart()) {
+        if(g_OCPN != bPointType) {
+            RenderLayers(true);
+            g_OCPN = bPointType;
+            RenderLayers();
+        }
+    } else
+        g_OCPN = bPointType;
 }
 
 void squiddio_pi::OnContextMenuItemCallback(int id) {
@@ -919,8 +938,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
             g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
             g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
-            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) g_OCPN = true;
-            else g_OCPN = false;
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
@@ -951,7 +968,18 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
 
             SaveConfig();
-            RenderLayers();
+            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) {
+                if(!g_OCPN) {
+                    SwitchPointType(true);
+                } else
+                    RenderLayers();
+            }
+            else {
+                if(g_OCPN) {
+                    SwitchPointType(false);
+                } else
+                    RenderLayers();
+            }
         }
         dialog->Destroy();
         delete dialog;
@@ -1046,7 +1074,7 @@ void squiddio_pi::GetODAPI()
         wxString sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindPointInAnyBoundary")].AsString();
         if(sptr != _T("null")) {
             sscanf(sptr.To8BitData().data(), "%p", &m_pOD_FindPointInAnyBoundary);
-            m_bOD_FindPointInAnyBoundary = true;
+            m_bODFindPointInAnyBoundary = true;
         }
         sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindClosestBoundaryLineCrossing")].AsString();
         if(sptr != _T("null")) {
@@ -1084,7 +1112,7 @@ void squiddio_pi::GetODAPI()
     wxString l_avail;
     wxString l_notavail;
     l_msg.Printf(_("ODAPI Version: Major: %i, Minor: %i, Patch: %i\n"), m_iODAPIVersionMajor, m_iODAPIVersionMinor, m_iODAPIVersionPatch);
-    if(m_bOD_FindPointInAnyBoundary) l_avail.Append(_("OD_FindPointInAnyBoundary\n"));
+    if(m_bODFindPointInAnyBoundary) l_avail.Append(_("OD_FindPointInAnyBoundary\n"));
     if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
     if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
     if(m_bODCreateBoundary) l_avail.Append(_("OD_CreateBoundary\n"));
@@ -1096,7 +1124,7 @@ void squiddio_pi::GetODAPI()
         l_msg.Append(l_avail);
     }
     
-    if(!m_bOD_FindPointInAnyBoundary) l_notavail.Append(_("OD_FindPointInAnyBoundary\n"));
+    if(!m_bODFindPointInAnyBoundary) l_notavail.Append(_("OD_FindPointInAnyBoundary\n"));
     if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
     if(!m_bODFindFirstBoundaryLineCrossing) l_notavail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
     if(!m_bODCreateBoundary) l_notavail.Append(_("OD_CreateBoundary\n"));
@@ -1112,6 +1140,16 @@ void squiddio_pi::GetODAPI()
     
 }
 
+void squiddio_pi::ResetODAPI()
+{
+    g_squiddio_pi->m_bODFindPointInAnyBoundary = false;
+    g_squiddio_pi->m_bODFindClosestBoundaryLineCrossing = false;
+    g_squiddio_pi->m_bODFindFirstBoundaryLineCrossing = false;
+    g_squiddio_pi->m_bODCreateBoundary = false;
+    g_squiddio_pi->m_bODCreateBoundaryPoint = false;
+    g_squiddio_pi->m_bODCreateTextPoint = false;
+    g_squiddio_pi->m_bODDeleteTextPoint = false;
+}
 
 
 //---------------------------------------------- preferences dialog event handlers

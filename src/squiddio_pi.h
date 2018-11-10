@@ -99,7 +99,7 @@ public:
 
 //    The optional method overrides
 
-      void RenderLayerContentsOnChart(Layer *layer, bool save_config = false);
+      void RenderLayerContentsOnChart(Layer *layer, bool save_config = false, bool hidePOI = false);
 
       void OnContextMenuItemCallback(int id);
       void UpdateAuiStatus(void);
@@ -125,12 +125,15 @@ public:
       bool ShowPOI(Poi* wp);
       bool HidePOI(Poi* wp);
 
-      void RenderLayers();
+      void RenderLayers(bool hidePOI = false);
 
       void SetNMEASentence(wxString &sentence);
       void SetLogsWindow();
       void LateInit(void);
+      
+      void ResetODAPI(void);
 
+      
       wxString   layerdir;
       LayerList  *pLayerList;
       wxString   g_Email;
@@ -160,6 +163,7 @@ private:
       bool ShowType(Poi * wp);
       void PreferencesDialog(wxWindow* parent);
       void GetODAPI(void);
+      void SwitchPointType(bool bPointType);
       
       wxWindow      *m_parent_window;
       int           m_show_id;
@@ -202,7 +206,7 @@ private:
       int     m_iODAPIVersionMinor;
       int     m_iODAPIVersionPatch;
       bool    m_bDoneODAPIVersionCall;
-      bool    m_bOD_FindPointInAnyBoundary;
+      bool    m_bODFindPointInAnyBoundary;
       bool    m_bODFindClosestBoundaryLineCrossing;
       bool    m_bODFindFirstBoundaryLineCrossing;
       bool    m_bODCreateBoundary;
