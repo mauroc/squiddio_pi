@@ -128,6 +128,7 @@ int squiddio_pi::Init(void) {
     m_plogs_window = NULL;
     g_PostPeriod = 0;
     g_RetrievePeriod = 0;
+    g_LayerIdx = 0;
     g_OCPN = true;
     m_bDoneODAPIVersionCall = false;
     m_bODFindPointInAnyBoundary = false;
@@ -276,8 +277,9 @@ bool squiddio_pi::DeInit(void) {
 
     LayerList::iterator it;
     int index = 0;
-    for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
+    for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++index) {
         Layer * l = (Layer *) (*it);
+        ++it;
         pLayerList->DeleteObject(l);
     }
     SaveConfig();
@@ -1108,10 +1110,16 @@ void squiddio_pi::GetODAPI()
         }
     }
     
-    wxString l_msg;
+#ifdef _DEBUG
+    DEBUGST("ODAPI Version: Major: ");
+    DEBUGCONT(m_iODAPIVersionMajor);
+    DEBUGCONT(", Minor: ");
+    DEBUGCONT(m_iODAPIVersionMinor);
+    DEBUGCONT(", Patch: ");
+    DEBUGEND(m_iODAPIVersionPatch);
+    
     wxString l_avail;
     wxString l_notavail;
-    l_msg.Printf(_("ODAPI Version: Major: %i, Minor: %i, Patch: %i\n"), m_iODAPIVersionMajor, m_iODAPIVersionMinor, m_iODAPIVersionPatch);
     if(m_bODFindPointInAnyBoundary) l_avail.Append(_("OD_FindPointInAnyBoundary\n"));
     if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
     if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
@@ -1119,10 +1127,8 @@ void squiddio_pi::GetODAPI()
     if(m_bODCreateBoundaryPoint) l_avail.Append(_("OD_CreateBoundaryPoint\n"));
     if(m_bODCreateTextPoint) l_avail.Append(_("OD_CreateTextPoint\n"));
     if(m_bODDeleteTextPoint) l_avail.Append(_("OD_DeleteTextPoint\n"));
-    if(l_avail.Length() > 0) {
-        l_msg.Append(_("The following ODAPI's are available: \n"));
-        l_msg.Append(l_avail);
-    }
+    DEBUGST("The following ODAPI's are available:\n");
+    DEBUGEND(l_avail);
     
     if(!m_bODFindPointInAnyBoundary) l_notavail.Append(_("OD_FindPointInAnyBoundary\n"));
     if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
@@ -1131,13 +1137,9 @@ void squiddio_pi::GetODAPI()
     if(!m_bODCreateBoundaryPoint) l_notavail.Append(_("OD_CreateBoundaryPoint\n"));
     if(!m_bODCreateTextPoint) l_notavail.Append(_("OD_CreateTextPoint\n"));
     if(!m_bODDeleteTextPoint) l_notavail.Append(_("OD_DeleteTextPoint\n"));
-    if(l_notavail.Length() > 0) {
-        l_msg.Append(_("The following ODAPI's are not available:\n"));
-        l_msg.Append(l_notavail);
-    }
-    
-    OCPNMessageBox_PlugIn( m_parent_window, l_msg, _("TESTPLUGIN"), (long) wxYES );
-    
+    DEBUGST("The following ODAPI's are not available:\n");
+    DEBUGEND(l_notavail);
+#endif    
 }
 
 void squiddio_pi::ResetODAPI()

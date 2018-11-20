@@ -31,7 +31,7 @@ SET(CPACK_PACKAGE_CONTACT "Mauro Calvi")
 
 SET(VERSION_MAJOR "0")
 SET(VERSION_MINOR "7")
-SET(VERSION_PATCH "3")
+SET(VERSION_PATCH "4")
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
@@ -65,6 +65,11 @@ SET(SRC_SQUIDDIO
     src/gpxdocument.h
     src/wxJSON/jsonval.cpp
     src/wxJSON/jsonreader.cpp    
+    src/wxJSON/json_defs.h
+    src/wxJSON/jsonreader.h
+    src/wxJSON/jsonval.h
+    src/wxJSON/jsonwriter.cpp
+    src/wxJSON/jsonwriter.h
      )
      
 SET(SRC_NMEA0183
