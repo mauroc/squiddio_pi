@@ -138,6 +138,8 @@ int squiddio_pi::Init(void) {
     m_bODCreateBoundaryPoint = false;
     m_bODCreateTextPoint = false;
     m_bODDeleteTextPoint = false;
+    m_bODAddPointIcon = false;
+    m_bODDeletePointIcon = false;
     m_pOD_FindPointInAnyBoundary = NULL;
     m_pODFindClosestBoundaryLineCrossing = NULL;
     m_pODFindFirstBoundaryLineCrossing = NULL;
@@ -146,6 +148,8 @@ int squiddio_pi::Init(void) {
     m_pODCreateBoundaryPoint = NULL;
     m_pODCreateTextPoint = NULL;
     m_pODDeleteTextPoint = NULL;
+    m_pODAddPointIcon = NULL;
+    m_pODDeletePointIcon = NULL;
     
     
     
@@ -558,7 +562,10 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
     wxString m_GUID = wp->m_GUID;
     wxString m_iconname = wp->m_IconName;
     
-    if(!m_bDoneODAPIVersionCall) GetODAPI();
+    if(!m_bDoneODAPIVersionCall) {
+        GetODAPI();
+        AddODIcons();
+    }
 
     if(g_OCPN) {
         PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
@@ -1108,6 +1115,16 @@ void squiddio_pi::GetODAPI()
             sscanf(sptr.To8BitData().data(), "%p", &m_pODDeleteTextPoint);
             m_bODDeleteTextPoint = true;
         }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_AddPointIcon")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODAddPointIcon);
+            m_bODAddPointIcon = true;
+        }
+        sptr = g_ReceivedODAPIJSONMsg[_T("OD_DeletePointIcon")].AsString();
+        if(sptr != _T("null")) {
+            sscanf(sptr.To8BitData().data(), "%p", &m_pODDeletePointIcon);
+            m_bODDeletePointIcon = true;
+        }
     }
     
 #ifdef _DEBUG
@@ -1127,6 +1144,8 @@ void squiddio_pi::GetODAPI()
     if(m_bODCreateBoundaryPoint) l_avail.Append(_("OD_CreateBoundaryPoint\n"));
     if(m_bODCreateTextPoint) l_avail.Append(_("OD_CreateTextPoint\n"));
     if(m_bODDeleteTextPoint) l_avail.Append(_("OD_DeleteTextPoint\n"));
+    if(m_bODAddPointIcon) l_avail.Append(_("OD_AddPointIcon\n"));
+    if(m_bODDeletePointIcon) l_avail.Append(_("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are available:\n");
     DEBUGEND(l_avail);
     
@@ -1137,6 +1156,8 @@ void squiddio_pi::GetODAPI()
     if(!m_bODCreateBoundaryPoint) l_notavail.Append(_("OD_CreateBoundaryPoint\n"));
     if(!m_bODCreateTextPoint) l_notavail.Append(_("OD_CreateTextPoint\n"));
     if(!m_bODDeleteTextPoint) l_notavail.Append(_("OD_DeleteTextPoint\n"));
+    if(m_bODAddPointIcon) l_notavail.Append(_("OD_AddPointIcon\n"));
+    if(m_bODDeletePointIcon) l_notavail.Append(_("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are not available:\n");
     DEBUGEND(l_notavail);
 #endif    
@@ -1151,6 +1172,83 @@ void squiddio_pi::ResetODAPI()
     g_squiddio_pi->m_bODCreateBoundaryPoint = false;
     g_squiddio_pi->m_bODCreateTextPoint = false;
     g_squiddio_pi->m_bODDeleteTextPoint = false;
+    g_squiddio_pi->m_bODAddPointIcon = false;
+    g_squiddio_pi->m_bODDeletePointIcon = false;
+}
+
+void squiddio_pi::AddODIcons()
+{
+    if(!m_bODAddPointIcon) return;
+    
+    AddPointIcon_t *pAPI = new AddPointIcon_t;
+    pAPI->PointIcon = *_img_marina_grn;
+    pAPI->PointIconName = _T("marina_grn");
+    pAPI->PointIconDescription = _("Marina");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_anchor_blu;
+    pAPI->PointIconName = _T("aton_gry");
+    pAPI->PointIconDescription = _("Anchorage/Buoys");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_aton_gry;
+    pAPI->PointIconName = _T("aton_gry"); 
+    pAPI->PointIconDescription = _("AIS ATON Marker");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_club_pur;
+    pAPI->PointIconName = _T("club_pur"); 
+    pAPI->PointIconDescription = _("Yacht Club");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_fuelpump_red;
+    pAPI->PointIconName = _T("fuelpump_red"); 
+    pAPI->PointIconDescription = _("Fuel Station");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_pier_yel;
+    pAPI->PointIconName = _T("pier_yel"); 
+    pAPI->PointIconDescription = _("Dock/Pier");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_ramp_azu;
+    pAPI->PointIconName = _T("ramp_azu"); 
+    pAPI->PointIconDescription = _("Boat Ramp");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_N;
+    pAPI->PointIconName = _T("logimg_N"); 
+    pAPI->PointIconDescription = _("North");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_NE;
+    pAPI->PointIconName = _T("logimg_NE"); 
+    pAPI->PointIconDescription = _("North East");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_E;
+    pAPI->PointIconName = _T("logimg_E"); 
+    pAPI->PointIconDescription = _("East");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_SE;
+    pAPI->PointIconName = _T("logimg_SE"); 
+    pAPI->PointIconDescription = _("South East");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_S;
+    pAPI->PointIconName = _T("logimg_S"); 
+    pAPI->PointIconDescription = _("Sout");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_SW;
+    pAPI->PointIconName = _T("logimg_SW"); 
+    pAPI->PointIconDescription = _("South West");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_W;
+    pAPI->PointIconName = _T("logimg_W"); 
+    pAPI->PointIconDescription = _("West");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_NW;
+    pAPI->PointIconName = _T("logimg_NW"); 
+    pAPI->PointIconDescription = _("North West");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_C;
+    pAPI->PointIconName = _T("logimg_C"); 
+    pAPI->PointIconDescription = _("Checked in");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_logimg_U;
+    pAPI->PointIconName = _T("logimg_U"); 
+    pAPI->PointIconDescription = _("Unknown heading");
+    m_pODAddPointIcon(pAPI);
 }
 
 

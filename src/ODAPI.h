@@ -150,6 +150,7 @@ struct CreateTextPoint_t {
     bool        defaultFont;
     wxFont      TextFont;
     int         TextPointDisplayTextWhen;
+    bool        defaultRangeRings;
     bool        ringsvisible;
     int         ringsnumber;
     double      ringssteps;
@@ -167,6 +168,16 @@ struct DeleteTextPoint_t {
     wxString    GUID;
 };
 
+struct AddPointIcon_t {
+    wxBitmap    PointIcon;
+    wxString    PointIconName;
+    wxString    PointIconDescription;
+};
+
+struct DeletePointIcon_t {
+    wxString    PointIconName;
+};
+
 class ODAPI
 {
 public:
@@ -180,6 +191,8 @@ public:
     static bool OD_CreateBoundaryPoint( CreateBoundaryPoint_t *pCBP );
     static bool OD_CreateTextPoint( CreateTextPoint_t *pCTP );
     static bool OD_DeleteTextPoint( DeleteTextPoint_t *pDTP );
+    static void OD_AddPointIcon( AddPointIcon_t *pAPI );
+    static void OD_DeletePointIcon( DeletePointIcon_t *pDPI );
     
 protected:
     
@@ -195,6 +208,7 @@ typedef bool (*OD_CreateBoundary) (CreateBoundary_t *);
 typedef bool (*OD_CreateBoundaryPoint) (CreateBoundaryPoint_t *);
 typedef bool (*OD_CreateTextPoint) (CreateTextPoint_t *);
 typedef bool (*OD_DeleteTextPoint) (DeleteTextPoint_t *);
-
+typedef void (*OD_AddPointIcon) (AddPointIcon_t *);
+typedef void (*OD_DeletePointIcon) (DeletePointIcon_t *);
 
 #endif //_ODAPI_H_

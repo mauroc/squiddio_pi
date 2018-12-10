@@ -252,6 +252,7 @@ private:
       bool ShowType(Poi * wp);
       void PreferencesDialog(wxWindow* parent);
       void GetODAPI(void);
+      void AddODIcons(void);
       void SwitchPointType(bool bPointType);
       
       wxWindow      *m_parent_window;
@@ -289,26 +290,30 @@ private:
       int         m_demohide_id;
       int         m_leftclick_tool_id;
       
-      bool m_bThreadRuning;
+      bool  m_bThreadRuning;
       
-      int     m_iODAPIVersionMajor;
-      int     m_iODAPIVersionMinor;
-      int     m_iODAPIVersionPatch;
-      bool    m_bDoneODAPIVersionCall;
-      bool    m_bODFindPointInAnyBoundary;
-      bool    m_bODFindClosestBoundaryLineCrossing;
-      bool    m_bODFindFirstBoundaryLineCrossing;
-      bool    m_bODCreateBoundary;
-      bool    m_bODCreateBoundaryPoint;
-      bool    m_bODCreateTextPoint;
-      bool    m_bODDeleteTextPoint;
-      OD_FindPointInAnyBoundary           m_pOD_FindPointInAnyBoundary;
-      OD_FindClosestBoundaryLineCrossing  m_pODFindClosestBoundaryLineCrossing;
-      OD_FindFirstBoundaryLineCrossing    m_pODFindFirstBoundaryLineCrossing;
-      OD_CreateBoundary                   m_pODCreateBoundary;
-      OD_CreateBoundaryPoint              m_pODCreateBoundaryPoint;
-      OD_CreateTextPoint                  m_pODCreateTextPoint;
-      OD_DeleteTextPoint                  m_pODDeleteTextPoint;
+      int   m_iODAPIVersionMajor;
+      int   m_iODAPIVersionMinor;
+      int   m_iODAPIVersionPatch;
+      bool  m_bDoneODAPIVersionCall;
+      bool  m_bODFindPointInAnyBoundary;
+      bool  m_bODFindClosestBoundaryLineCrossing;
+      bool  m_bODFindFirstBoundaryLineCrossing;
+      bool  m_bODCreateBoundary;
+      bool  m_bODCreateBoundaryPoint;
+      bool  m_bODCreateTextPoint;
+      bool  m_bODDeleteTextPoint;
+      bool  m_bODAddPointIcon;
+      bool  m_bODDeletePointIcon;
+      OD_FindPointInAnyBoundary             m_pOD_FindPointInAnyBoundary;
+      OD_FindClosestBoundaryLineCrossing    m_pODFindClosestBoundaryLineCrossing;
+      OD_FindFirstBoundaryLineCrossing      m_pODFindFirstBoundaryLineCrossing;
+      OD_CreateBoundary                     m_pODCreateBoundary;
+      OD_CreateBoundaryPoint                m_pODCreateBoundaryPoint;
+      OD_CreateTextPoint                    m_pODCreateTextPoint;
+      OD_DeleteTextPoint                    m_pODDeleteTextPoint;
+      OD_AddPointIcon                       m_pODAddPointIcon;
+      OD_DeletePointIcon                    m_pODDeletePointIcon;
       
       DECLARE_EVENT_TABLE()
 };
