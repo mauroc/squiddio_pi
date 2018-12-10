@@ -267,6 +267,8 @@ int squiddio_pi::Init(void) {
 }
 
 bool squiddio_pi::DeInit(void) {
+    RenderLayers(true);
+    
     RemovePlugInTool(m_leftclick_tool_id);
 
     if (m_plogs_window) {
@@ -630,7 +632,7 @@ bool squiddio_pi::HidePOI(Poi * wp) {
         DeleteTextPoint_t * pDTP = new DeleteTextPoint_t;
         pDTP->GUID = wp->m_GUID;
         bool deleted = false;
-        if(m_pODDeleteTextPoint)
+        if(m_pODDeleteTextPoint && g_bODAvailable)
             deleted = (*m_pODDeleteTextPoint)(pDTP);
         return deleted;
     }
