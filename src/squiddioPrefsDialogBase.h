@@ -22,6 +22,11 @@
 #include <wx/choice.h>
 #include <wx/textctrl.h>
 #include <wx/radiobox.h>
+#include <wx/clrpicker.h>
+#include <wx/slider.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 
@@ -41,6 +46,11 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxStaticText* m_staticText4;
 		wxStaticText* m_staticText7;
 		wxStaticText* m_staticText8;
+		wxStaticText* m_staticText5;
+		wxStaticText* m_staticTextTextColour;
+		wxStaticText* m_staticTextBackgroundColour;
+		wxStaticText* m_staticTextBackgroundTransparency;
+		wxStaticText* m_staticTextFont;
 		wxStdDialogButtonSizer* m_sdbButtonSizer;
 		wxButton* m_sdbButtonSizerOK;
 		wxButton* m_sdbButtonSizerCancel;
@@ -49,6 +59,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCheckBoxAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnShareChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnButtonClickFonts( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LaunchHelpPage( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
@@ -69,8 +80,17 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
 		wxRadioBox* m_radioBoxOCPNorOD;
+		wxFlexGridSizer* m_fgSizerODSettings;
+		wxCheckBox* m_checkBoxShowName;
+		wxChoice* m_choicePosition;
+		wxColourPickerCtrl* m_colourPickerText;
+		wxColourPickerCtrl* m_colourPickerBackgroundColour;
+		wxSlider* m_sliderBackgroundTransparency;
+		wxStaticText* m_staticTextFontFaceExample;
+		wxButton* m_buttonTextFont;
+		wxRadioBox* m_radioBoxShowDisplayText;
 
-		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 367,460 ), long style = wxDEFAULT_DIALOG_STYLE );
+		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 366,760 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~SquiddioPrefsDialogBase();
 
 };

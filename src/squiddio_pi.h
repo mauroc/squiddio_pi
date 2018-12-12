@@ -147,12 +147,16 @@ std::cout << x  << std::endl ; } while (0)
 #include "logs.h"
 #include "ODAPI.h"
 
+#define OCPN_WAYPOINTS true
+#define OD_TEXTPOINTS false
+
 class logsWindow;
 class Layer;
 class Poi;
 class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
+class wxFontDialog;
 
 extern PoiMan *pPoiMan;
 
@@ -236,6 +240,8 @@ public:
       int       g_PostPeriod;
       int       g_RetrievePeriod;
       bool      last_online;
+
+      wxFont      g_fontODDisplayTextFont;
       
       void OnThreadActionFinished(SquiddioEvent& event);
       void SetThreadRunning( bool state ) { m_bThreadRuning = state; }
@@ -283,6 +289,13 @@ private:
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
       bool        g_ViewAIS;
+      
+      bool        g_bODTextPointShowName;
+      int         g_iODTextPointTextPosition;
+      wxColour    g_colourODDefaultTextColour;
+      wxColour    g_colourODDefaultTextBackgroundColour;
+      int         g_iODTextBackgroundTransparency;
+      int         g_iTextPointDisplayTextWhen;
 
       logsWindow  *m_plogs_window;
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
@@ -327,9 +340,12 @@ public:
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
     void OnShareChoice( wxCommandEvent& event );
+    void OnButtonClickFonts( wxCommandEvent& event );
     void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
     void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxOK); }
 
+    wxFontDialog  *m_pfdDialog;
+    
 protected:
     squiddio_pi &m_sq_pi;
 };

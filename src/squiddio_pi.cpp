@@ -31,6 +31,7 @@
 #include "squiddio_pi.h"
 #include "logs.h"
 #include <wx/fileconf.h>
+#include <wx/fontdlg.h>
 #include "sJSON.h"
 
 #include "wxJSON/jsonwriter.h"
@@ -353,7 +354,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("LastLogsRcvd"), &g_LastLogsRcvd);
     pConf->Read(_T("Email"), &g_Email);
     pConf->Read(_T("ApiKey"), &g_ApiKey);
-    pConf->Read(_T("OCPN"), &g_OCPN);
+    pConf->Read(_T("OCPN"), &g_OCPN, true);
     pConf->Read(_T("ViewMarinas"), &g_ViewMarinas, true);
     pConf->Read(_T("ViewAnchorages"), &g_ViewAnchorages, true);
     pConf->Read(_T("ViewDocks"), &g_ViewDocks, true);
@@ -361,7 +362,39 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewFuelStations"), &g_ViewFuelStations, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
-
+    pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
+    pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
+    wxString  l_wxsDefautlTextColour;
+    pConf->Read( wxS( "TextDefaultColour" ), &l_wxsDefautlTextColour, wxS( "BLACK" ) );
+    g_colourODDefaultTextColour.Set( l_wxsDefautlTextColour );
+    wxString  l_wxsDefautlTextBackgroundColour;
+    pConf->Read( wxS( "TextDefaultBackgroundColour" ), &l_wxsDefautlTextBackgroundColour, wxS( "YELLOW" ) );
+    g_colourODDefaultTextBackgroundColour.Set( l_wxsDefautlTextBackgroundColour );
+    pConf->Read(_T("TextBackgroundTransparency"), &g_iODTextBackgroundTransparency, 100);
+    int l_fontInfo;
+    bool l_bfontInfo;
+    wxFont *l_pDisplayTextFont = GetOCPNScaledFont_PlugIn( wxS("Marks"), 0 );
+    pConf->Read( wxS( "DefaultTextPointPointSize" ), &l_fontInfo, (int)l_pDisplayTextFont->GetPointSize() );
+    g_fontODDisplayTextFont.SetPointSize( l_fontInfo );
+    pConf->Read( wxS( "DefaultTextPointFontFamily" ), &l_fontInfo, (int)l_pDisplayTextFont->GetFamily() );
+    g_fontODDisplayTextFont.SetFamily( l_fontInfo );
+    pConf->Read( wxS( "DefaultTextPointFontStyle" ), &l_fontInfo, (int)l_pDisplayTextFont->GetStyle() );
+    g_fontODDisplayTextFont.SetStyle( l_fontInfo );
+    pConf->Read( wxS( "DefaultTextPointFontWeight" ), &l_fontInfo, (int)l_pDisplayTextFont->GetWeight() );
+    g_fontODDisplayTextFont.SetWeight( l_fontInfo );
+    pConf->Read( wxS( "DefaultTextPointFontUnderline" ), &l_bfontInfo, false );
+    g_fontODDisplayTextFont.SetUnderlined( l_bfontInfo );
+#if wxCHECK_VERSION(3,0,0)   
+    pConf->Read( wxS( "DefaultTextPointFontStrikethrough" ), &l_bfontInfo, false );
+    g_fontODDisplayTextFont.SetStrikethrough( l_bfontInfo );
+#endif        
+    wxString l_wxsFaceName;
+    pConf->Read( wxS( "DefaultTextPointFaceName" ), &l_wxsFaceName, l_pDisplayTextFont->GetFaceName() );
+    g_fontODDisplayTextFont.SetFaceName( l_wxsFaceName );
+    pConf->Read( wxS( "DefaultTextPointFontEncoding" ), &l_fontInfo, (int)l_pDisplayTextFont->GetEncoding() );
+    g_fontODDisplayTextFont.SetEncoding( (wxFontEncoding)l_fontInfo );
+    pConf->Read( wxS( "DefaultTextPointDisplayTextWhen" ), &g_iTextPointDisplayTextWhen, TEXTPOINT_DISPLAY_TEXT_SHOW_ON_ROLLOVER );
+    
     return true;
 }
 
@@ -388,7 +421,25 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ViewRamps"), g_ViewRamps);
     pConf->Write(_T("ViewFuelStations"), g_ViewFuelStations);
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
-
+    pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
+    pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
+    pConf->Write(_T("TextDefaultColour"), g_colourODDefaultTextColour.GetAsString( wxC2S_CSS_SYNTAX ));
+    pConf->Write(_T("TextDefaultBackgroundColour"), g_colourODDefaultTextBackgroundColour.GetAsString( wxC2S_CSS_SYNTAX ));
+    pConf->Write(_T("TextBackgroundTransparency"), g_iODTextBackgroundTransparency);
+    pConf->Write(_T("DefaultTextPointPointSize"), g_fontODDisplayTextFont.GetPointSize() );
+    pConf->Write(_T("DefaultTextPointFontFamily"), (int)g_fontODDisplayTextFont.GetFamily() );
+    pConf->Write(_T("DefaultTextPointFontStyle"), (int)g_fontODDisplayTextFont.GetStyle() );
+    pConf->Write(_T("DefaultTextPointFontWeight"), (int)g_fontODDisplayTextFont.GetWeight() );
+    pConf->Write(_T("DefaultTextPointFontUnderline"), g_fontODDisplayTextFont.GetUnderlined() );
+    pConf->Write(_T("DefaultTextPointFontUnderline"), g_fontODDisplayTextFont.GetUnderlined() );
+#if wxCHECK_VERSION(3,0,0)        
+    pConf->Write(_T("DefaultTextPointFontStrikethrough"), g_fontODDisplayTextFont.GetStrikethrough() );
+#endif
+    pConf->Write(_T("DefaultTextPointFaceName"), g_fontODDisplayTextFont.GetFaceName() );
+    pConf->Write(_T("DefaultTextPointFontEncoding"), (int)g_fontODDisplayTextFont.GetEncoding() );
+    pConf->Write(_T("DefaultTextPointDisplayTextWhen"), g_iTextPointDisplayTextWhen );
+    
+    
     return true;
 }
 
@@ -594,11 +645,11 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->GUID = wp->m_GUID;
         pCTP->description = wp->m_MarkDescription;
         pCTP->TextToDisplay = wp->m_MarkDescription;
-        pCTP->TextColour = _T("DEFAULT");
-        pCTP->TextPointDisplayTextWhen = TEXTPOINT_DISPLAY_TEXT_SHOW_DEFAULT;
-        pCTP->TextPosition = TEXT_DEFAULT;
-        pCTP->BackgroundColour = _T("DEFAULT");
-        pCTP->BackgroundTransparancy = TEXTPOINT_TEXT_BACKGROUND_TRANSPARANCY_DEFAULT;
+        pCTP->TextColour = g_colourODDefaultTextColour.GetAsString();
+        pCTP->TextPointDisplayTextWhen = g_iTextPointDisplayTextWhen;
+        pCTP->TextPosition = g_iODTextPointTextPosition;
+        pCTP->BackgroundColour = g_colourODDefaultTextBackgroundColour.GetAsString();
+        pCTP->BackgroundTransparancy = g_iODTextBackgroundTransparency;
         pCTP->ringscolour = _T("DEFAULT");
         pCTP->ringsvisible = false;
         pCTP->ringsnumber = 0;
@@ -892,6 +943,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
         SquiddioPrefsDialog * dialog = new SquiddioPrefsDialog(*this,
                 m_parent_window);
+        dialog->m_pfdDialog = NULL;
         if (g_ViewMarinas && g_ViewAnchorages == true
                 && g_ViewYachtClubs == true && g_ViewDocks == true
                 && g_ViewRamps == true && g_ViewFuelStations == true
@@ -923,7 +975,15 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
         dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
         dialog->m_checkBoxAIS->SetValue(g_ViewAIS);
-
+        dialog->m_checkBoxShowName->SetValue(g_bODTextPointShowName);
+        dialog->m_choicePosition->SetSelection(g_iODTextPointTextPosition);
+        dialog->m_colourPickerText->SetColour(g_colourODDefaultTextColour);
+        dialog->m_colourPickerBackgroundColour->SetColour(g_colourODDefaultTextBackgroundColour);
+        dialog->m_sliderBackgroundTransparency->SetValue(g_iODTextBackgroundTransparency);
+        dialog->m_staticTextFontFaceExample->SetFont(g_fontODDisplayTextFont);
+        dialog->m_radioBoxShowDisplayText->SetSelection(g_iTextPointDisplayTextWhen);
+        
+        
         if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
             dialog->m_textSquiddioID->Enable(true);
             dialog->m_textApiKey->Enable(true);
@@ -949,7 +1009,14 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
             g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
             g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
-
+            g_bODTextPointShowName = dialog->m_checkBoxShowName->GetValue();
+            g_iODTextPointTextPosition = dialog->m_choicePosition->GetSelection();
+            g_colourODDefaultTextColour = dialog->m_colourPickerText->GetColour();
+            g_colourODDefaultTextBackgroundColour = dialog->m_colourPickerBackgroundColour->GetColour();
+            g_iODTextBackgroundTransparency = dialog->m_sliderBackgroundTransparency->GetValue();
+            g_fontODDisplayTextFont = dialog->m_staticTextFontFaceExample->GetFont();
+            g_iTextPointDisplayTextWhen = dialog->m_radioBoxShowDisplayText->GetSelection();
+            
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
                 wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
@@ -979,18 +1046,9 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
 
             SaveConfig();
-            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) {
-                if(!g_OCPN) {
-                    SwitchPointType(true);
-                } else
-                    RenderLayers();
-            }
-            else {
-                if(g_OCPN) {
-                    SwitchPointType(false);
-                } else
-                    RenderLayers();
-            }
+            bool l_bPointType;
+            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) SwitchPointType(OCPN_WAYPOINTS);
+            else SwitchPointType(OD_TEXTPOINTS);
         }
         dialog->Destroy();
         delete dialog;
@@ -1300,6 +1358,24 @@ void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
         m_textApiKey->Enable(true);
     }
     Refresh(false);
+}
+
+void SquiddioPrefsDialog::OnButtonClickFonts( wxCommandEvent& event )
+{
+    if(m_pfdDialog) delete m_pfdDialog;
+    
+    wxFontData l_FontData;
+    l_FontData.SetInitialFont( m_sq_pi.g_fontODDisplayTextFont );
+    m_pfdDialog = new wxFontDialog( this, l_FontData );
+    m_pfdDialog->Centre( wxBOTH );
+    
+    DimeWindow(m_pfdDialog);
+    int iRet = m_pfdDialog->ShowModal();
+    if(iRet == wxID_OK) {
+        m_staticTextFontFaceExample->SetFont(m_pfdDialog->GetFontData().GetChosenFont());
+        m_fgSizerODSettings->RecalcSizes();
+        SendSizeEvent();
+    }
 }
 
 
