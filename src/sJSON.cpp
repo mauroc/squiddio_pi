@@ -81,18 +81,6 @@ void sJSON::ProcessMessage(wxString &message_id, wxString &message_body)
     wxString    sLogMessage;
     wxString    l_sType;
     wxString    l_sMsg;
-    double      l_dLat;
-    double      l_dLon;
-    double      l_dStartLat;
-    double      l_dStartLon;
-    double      l_dEndLat;
-    double      l_dEndLon;
-    double      l_dCrossingLat;
-    double      l_dCrossingLon;
-    double      l_dCrossingDist;
-    wxString    l_GUID;
-    int         l_BoundaryType;
-    int         l_BoundaryState;
     bool        bFail = false;
     
     if(message_id == wxS("SQUIDDIO_PI")) {
