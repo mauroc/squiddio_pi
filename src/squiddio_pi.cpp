@@ -774,9 +774,12 @@ void squiddio_pi::RefreshLayer()
 }
 
 void squiddio_pi::SwitchPointType(bool bPointType) {
-    wxLogMessage(_T("squiddio_pi: Switch from OCPN to ODText Points"));
     if(local_sq_layer->IsVisibleOnChart()) {
         if(g_OCPN != bPointType) {
+            if(bPointType == OCPN_WAYPOINTS)
+                wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
+            else
+                wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
             RenderLayers(true);
             g_OCPN = bPointType;
             RenderLayers();
