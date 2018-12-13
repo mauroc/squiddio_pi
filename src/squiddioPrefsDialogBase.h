@@ -66,6 +66,8 @@ class SquiddioPrefsDialogBase : public wxDialog
 
 
 	public:
+		wxFlexGridSizer* m_fgMainSizer;
+		wxFlexGridSizer* m_fgSubSizer;
 		wxCheckBox* m_checkBoxAll;
 		wxCheckBox* m_checkBoxMarinas;
 		wxCheckBox* m_checkBoxAnchorages;
@@ -90,7 +92,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxButton* m_buttonTextFont;
 		wxRadioBox* m_radioBoxShowDisplayText;
 
-		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 366,760 ), long style = wxDEFAULT_DIALOG_STYLE );
+		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 366,768 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~SquiddioPrefsDialogBase();
 
 };

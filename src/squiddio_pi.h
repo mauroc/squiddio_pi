@@ -234,7 +234,11 @@ public:
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
       bool       g_OCPN;
-
+      
+      bool  m_bODAPIOK;
+      int   m_iODAPIVersionMajor;
+      int   m_iODAPIVersionMinor;
+      
       double    m_cursor_lat, m_cursor_lon;
       Layer     *local_sq_layer;
       int       g_PostPeriod;
@@ -305,10 +309,12 @@ private:
       
       bool  m_bThreadRuning;
       
-      int   m_iODAPIVersionMajor;
-      int   m_iODAPIVersionMinor;
-      int   m_iODAPIVersionPatch;
+      int   m_iODVersionMajor;
+      int   m_iODVersionMinor;
+      int   m_iODVersionPatch;
+      bool  m_bDoneODVersionCall;
       bool  m_bDoneODAPIVersionCall;
+      bool  m_bODAPIMessageShown;
       bool  m_bODFindPointInAnyBoundary;
       bool  m_bODFindClosestBoundaryLineCrossing;
       bool  m_bODFindFirstBoundaryLineCrossing;

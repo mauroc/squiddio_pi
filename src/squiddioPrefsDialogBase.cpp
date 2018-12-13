@@ -13,17 +13,15 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-	wxFlexGridSizer* fgMainSizer;
-	fgMainSizer = new wxFlexGridSizer( 0, 1, 0, 0 );
-	fgMainSizer->SetFlexibleDirection( wxBOTH );
-	fgMainSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
+	m_fgMainSizer = new wxFlexGridSizer( 0, 1, 0, 0 );
+	m_fgMainSizer->SetFlexibleDirection( wxBOTH );
+	m_fgMainSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
 
-	wxFlexGridSizer* fgSubSizer;
-	fgSubSizer = new wxFlexGridSizer( 0, 1, 0, 0 );
-	fgSubSizer->SetFlexibleDirection( wxBOTH );
-	fgSubSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	m_fgSubSizer = new wxFlexGridSizer( 0, 1, 0, 0 );
+	m_fgSubSizer->SetFlexibleDirection( wxBOTH );
+	m_fgSubSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	fgSubSizer->SetMinSize( wxSize( -1,380 ) );
+	m_fgSubSizer->SetMinSize( wxSize( -1,380 ) );
 	wxStaticBoxSizer* sbDestSizer;
 	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("View Destinations") ), wxVERTICAL );
 
@@ -63,7 +61,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbDestSizer->Add( fgSizer5, 1, wxEXPAND, 5 );
 
 
-	fgSubSizer->Add( sbDestSizer, 0, wxALL|wxEXPAND, 5 );
+	m_fgSubSizer->Add( sbDestSizer, 0, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbLogSizer;
 	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Share logs with friends") ), wxVERTICAL );
@@ -121,7 +119,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbLogSizer->Add( fgSizerLogs, 1, wxEXPAND, 5 );
 
 
-	fgSubSizer->Add( sbLogSizer, 0, wxALL|wxEXPAND, 5 );
+	m_fgSubSizer->Add( sbLogSizer, 0, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizerRenderer;
 	sbSizerRenderer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Renderer") ), wxVERTICAL );
@@ -129,11 +127,11 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxString m_radioBoxOCPNorODChoices[] = { _("OpenCPN Waypoint"), _("ODraw TextPoint") };
 	int m_radioBoxOCPNorODNChoices = sizeof( m_radioBoxOCPNorODChoices ) / sizeof( wxString );
 	m_radioBoxOCPNorOD = new wxRadioBox( sbSizerRenderer->GetStaticBox(), wxID_ANY, _("OCPN or ODraw"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
-	m_radioBoxOCPNorOD->SetSelection( 1 );
+	m_radioBoxOCPNorOD->SetSelection( 0 );
 	sbSizerRenderer->Add( m_radioBoxOCPNorOD, 0, wxALL, 5 );
 
 
-	fgSubSizer->Add( sbSizerRenderer, 1, wxALL|wxEXPAND, 5 );
+	m_fgSubSizer->Add( sbSizerRenderer, 0, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Ocpn Draw settings") ), wxVERTICAL );
@@ -208,7 +206,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbODSettings->Add( m_radioBoxShowDisplayText, 0, wxALL, 5 );
 
 
-	fgSubSizer->Add( sbODSettings, 0, wxALL|wxEXPAND, 5 );
+	m_fgSubSizer->Add( sbODSettings, 0, wxALL|wxEXPAND, 5 );
 
 	m_sdbButtonSizer = new wxStdDialogButtonSizer();
 	m_sdbButtonSizerOK = new wxButton( this, wxID_OK );
@@ -219,13 +217,13 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_sdbButtonSizer->AddButton( m_sdbButtonSizerHelp );
 	m_sdbButtonSizer->Realize();
 
-	fgSubSizer->Add( m_sdbButtonSizer, 1, wxEXPAND, 5 );
+	m_fgSubSizer->Add( m_sdbButtonSizer, 1, wxEXPAND|wxFIXED_MINSIZE, 5 );
 
 
-	fgMainSizer->Add( fgSubSizer, 1, wxEXPAND, 5 );
+	m_fgMainSizer->Add( m_fgSubSizer, 0, wxEXPAND, 5 );
 
 
-	this->SetSizer( fgMainSizer );
+	this->SetSizer( m_fgMainSizer );
 	this->Layout();
 
 	this->Centre( wxBOTH );

@@ -131,7 +131,10 @@ int squiddio_pi::Init(void) {
     g_RetrievePeriod = 0;
     g_LayerIdx = 0;
     g_OCPN = true;
+    m_bDoneODVersionCall = false;
     m_bDoneODAPIVersionCall = false;
+    m_bODAPIOK = false;
+    m_bODAPIMessageShown = false;
     m_bODFindPointInAnyBoundary = false;
     m_bODFindClosestBoundaryLineCrossing = false;
     m_bODFindFirstBoundaryLineCrossing = false;
@@ -945,7 +948,6 @@ int squiddio_pi::GetToolbarToolCount(void) {
 
 void squiddio_pi::PreferencesDialog(wxWindow* parent) {
     {
-
         SquiddioPrefsDialog * dialog = new SquiddioPrefsDialog(*this,
                 m_parent_window);
         dialog->m_pfdDialog = NULL;
@@ -995,12 +997,34 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         }
 
         int curr_retrieve_period = g_RetrievePeriod;
-
+        
+        if(!m_bDoneODAPIVersionCall) {
+            GetODAPI();
+            AddODIcons();
+        }
+        
+        if(!m_bODAPIOK) {
+            wxString sMsg;
+            if(g_OCPN == OD_TEXTPOINTS && !m_bODAPIMessageShown) {
+                m_bODAPIMessageShown = true;
+                sMsg.Printf(_("OD Text Points cannot be used, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+                wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
+            }
+            sMsg.Printf(_T("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+            wxLogMessage(sMsg);
+            dialog->m_radioBoxOCPNorOD->SetSelection(0);
+            dialog->m_radioBoxOCPNorOD->Disable();
+        } else
+            dialog->m_radioBoxOCPNorOD->Enable();
+        
+        dialog->m_fgSubSizer->Layout();
+        dialog->m_fgMainSizer->Layout();
+        //dialog->Layout();
         dialog->Fit();
         wxColour cl;
         GetGlobalColor(_T("DILG1"), &cl);
         dialog->SetBackgroundColour(cl);
-
+        
         if (dialog->ShowModal() == wxOK) {
             g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
             g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
@@ -1051,7 +1075,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
 
             SaveConfig();
-            bool l_bPointType;
+
             if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) SwitchPointType(OCPN_WAYPOINTS);
             else SwitchPointType(OD_TEXTPOINTS);
         }
@@ -1131,11 +1155,11 @@ void squiddio_pi::GetODAPI()
     if(g_ReceivedODAPIMessage == wxEmptyString) return;
     
     if(g_ReceivedODAPIMessage != wxEmptyString &&  g_ReceivedODAPIJSONMsg[wxT("MsgId")].AsString() == wxS("Version")) {
-        m_iODAPIVersionMajor = g_ReceivedODAPIJSONMsg[wxS("Major")].AsInt();
-        m_iODAPIVersionMinor = g_ReceivedODAPIJSONMsg[wxS("Minor")].AsInt();
-        m_iODAPIVersionPatch = g_ReceivedODAPIJSONMsg[wxS("Patch")].AsInt();
+        m_iODVersionMajor = g_ReceivedODAPIJSONMsg[wxS("Major")].AsInt();
+        m_iODVersionMinor = g_ReceivedODAPIJSONMsg[wxS("Minor")].AsInt();
+        m_iODVersionPatch = g_ReceivedODAPIJSONMsg[wxS("Patch")].AsInt();
     }
-    m_bDoneODAPIVersionCall = true;
+    m_bDoneODVersionCall = true;
     
     wxJSONValue jMsg1;
     jMsg1[wxT("Source")] = wxT("SQUIDDIO_PI");
@@ -1145,6 +1169,13 @@ void squiddio_pi::GetODAPI()
     writer.Write( jMsg1, MsgString );
     SendPluginMessage( wxS("OCPN_DRAW_PI"), MsgString );
     if(g_ReceivedODAPIMessage != wxEmptyString &&  g_ReceivedODAPIJSONMsg[wxT("MsgId")].AsString() == wxS("GetAPIAddresses")) {
+        m_bDoneODAPIVersionCall = true;
+        
+        m_iODAPIVersionMajor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMajor")].AsInt();
+        m_iODAPIVersionMinor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMinor")].AsInt();
+        if(m_iODAPIVersionMajor == ODAPI_VERSION_MAJOR && m_iODAPIVersionMinor == ODAPI_VERSION_MINOR ) m_bODAPIOK = true;
+        else g_OCPN = OCPN_WAYPOINTS;
+        
         wxString sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindPointInAnyBoundary")].AsString();
         if(sptr != _T("null")) {
             sscanf(sptr.To8BitData().data(), "%p", &m_pOD_FindPointInAnyBoundary);
@@ -1193,12 +1224,16 @@ void squiddio_pi::GetODAPI()
     }
     
 #ifdef _DEBUG
+    DEBUGST("OD Version: Major: ");
+    DEBUGCONT(m_iODVersionMajor);
+    DEBUGCONT(", Minor: ");
+    DEBUGCONT(m_iODVersionMinor);
+    DEBUGCONT(", Patch: ");
+    DEBUGEND(m_iODVersionPatch);
     DEBUGST("ODAPI Version: Major: ");
     DEBUGCONT(m_iODAPIVersionMajor);
     DEBUGCONT(", Minor: ");
-    DEBUGCONT(m_iODAPIVersionMinor);
-    DEBUGCONT(", Patch: ");
-    DEBUGEND(m_iODAPIVersionPatch);
+    DEBUGEND(m_iODAPIVersionMinor);
     
     wxString l_avail;
     wxString l_notavail;
@@ -1243,7 +1278,7 @@ void squiddio_pi::ResetODAPI()
 
 void squiddio_pi::AddODIcons()
 {
-    if(!m_bODAddPointIcon) return;
+    if(!m_bODAddPointIcon || !m_bODAPIOK) return;
     
     AddPointIcon_t *pAPI = new AddPointIcon_t;
     pAPI->PointIcon = *_img_marina_grn;
