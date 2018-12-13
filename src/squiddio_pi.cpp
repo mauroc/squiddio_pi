@@ -640,11 +640,13 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         CreateTextPoint_t *pCTP = new CreateTextPoint_t;
         pCTP->name = wp->GetName();
         pCTP->iconname = wp->m_IconName;
+        pCTP->ShowName = g_bODTextPointShowName;
         pCTP->lat = wp->m_lat;
         pCTP->lon = wp->m_lon;
         pCTP->GUID = wp->m_GUID;
         pCTP->description = wp->m_MarkDescription;
         pCTP->TextToDisplay = wp->m_MarkDescription;
+        pCTP->TextFont = g_fontODDisplayTextFont;
         pCTP->TextColour = g_colourODDefaultTextColour.GetAsString();
         pCTP->TextPointDisplayTextWhen = g_iTextPointDisplayTextWhen;
         pCTP->TextPosition = g_iODTextPointTextPosition;
@@ -653,7 +655,7 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->ringscolour = _T("DEFAULT");
         pCTP->ringsvisible = false;
         pCTP->ringsnumber = 0;
-        pCTP->defaultFont = true;
+        pCTP->defaultFont = false;
         pCTP->Visible = true;
         pCTP->temporary = true;
         
