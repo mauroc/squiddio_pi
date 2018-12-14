@@ -38,7 +38,7 @@
 #endif
 
 #define ODAPI_VERSION_MAJOR 1
-#define ODAPI_VERSION_MINOR 1
+#define ODAPI_VERSION_MINOR 0
 
 #include    <list>
 
