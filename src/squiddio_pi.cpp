@@ -380,11 +380,11 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read( wxS( "DefaultTextPointPointSize" ), &l_fontInfo, (int)l_pDisplayTextFont->GetPointSize() );
     g_fontODDisplayTextFont.SetPointSize( l_fontInfo );
     pConf->Read( wxS( "DefaultTextPointFontFamily" ), &l_fontInfo, (int)l_pDisplayTextFont->GetFamily() );
-    g_fontODDisplayTextFont.SetFamily( l_fontInfo );
+    g_fontODDisplayTextFont.SetFamily( (wxFontFamily)l_fontInfo );
     pConf->Read( wxS( "DefaultTextPointFontStyle" ), &l_fontInfo, (int)l_pDisplayTextFont->GetStyle() );
-    g_fontODDisplayTextFont.SetStyle( l_fontInfo );
+    g_fontODDisplayTextFont.SetStyle( (wxFontStyle)l_fontInfo );
     pConf->Read( wxS( "DefaultTextPointFontWeight" ), &l_fontInfo, (int)l_pDisplayTextFont->GetWeight() );
-    g_fontODDisplayTextFont.SetWeight( l_fontInfo );
+    g_fontODDisplayTextFont.SetWeight( (wxFontWeight)l_fontInfo );
     pConf->Read( wxS( "DefaultTextPointFontUnderline" ), &l_bfontInfo, false );
     g_fontODDisplayTextFont.SetUnderlined( l_bfontInfo );
 #if wxCHECK_VERSION(3,0,0)   
@@ -777,7 +777,7 @@ void squiddio_pi::RefreshLayer()
 }
 
 void squiddio_pi::SwitchPointType(bool bPointType) {
-    if(local_sq_layer->IsVisibleOnChart()) {
+    if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
         if(g_OCPN != bPointType) {
             if(bPointType == OCPN_WAYPOINTS)
                 wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
