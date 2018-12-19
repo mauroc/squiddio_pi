@@ -134,6 +134,9 @@ int squiddio_pi::Init(void) {
     m_bDoneODVersionCall = false;
     m_bDoneODAPIVersionCall = false;
     m_bODAPIOK = false;
+    m_iODAPIVersionMajor = 0;
+    m_iODVersionMinor = 0;
+    m_iODVersionPatch = 0;
     m_bODAPIMessageShown = false;
     m_bODFindPointInAnyBoundary = false;
     m_bODFindClosestBoundaryLineCrossing = false;
