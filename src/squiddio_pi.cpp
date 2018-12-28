@@ -1161,68 +1161,74 @@ void squiddio_pi::GetODAPI()
         m_iODVersionMajor = g_ReceivedODAPIJSONMsg[wxS("Major")].AsInt();
         m_iODVersionMinor = g_ReceivedODAPIJSONMsg[wxS("Minor")].AsInt();
         m_iODVersionPatch = g_ReceivedODAPIJSONMsg[wxS("Patch")].AsInt();
+        m_bDoneODVersionCall = true;
+    } else {
+        m_iODVersionMajor = -1;
+        m_iODVersionMinor = -1;
+        m_iODVersionPatch = -1;
     }
-    m_bDoneODVersionCall = true;
     
-    wxJSONValue jMsg1;
-    jMsg1[wxT("Source")] = wxT("SQUIDDIO_PI");
-    jMsg1[wxT("Type")] = wxT("Request");
-    jMsg1[wxT("Msg")] = wxS("GetAPIAddresses");
-    jMsg1[wxT("MsgId")] = wxS("GetAPIAddresses");
-    writer.Write( jMsg1, MsgString );
-    SendPluginMessage( wxS("OCPN_DRAW_PI"), MsgString );
-    if(g_ReceivedODAPIMessage != wxEmptyString &&  g_ReceivedODAPIJSONMsg[wxT("MsgId")].AsString() == wxS("GetAPIAddresses")) {
-        m_bDoneODAPIVersionCall = true;
-        
-        m_iODAPIVersionMajor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMajor")].AsInt();
-        m_iODAPIVersionMinor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMinor")].AsInt();
-        if(m_iODAPIVersionMajor == ODAPI_VERSION_MAJOR && m_iODAPIVersionMinor == ODAPI_VERSION_MINOR ) m_bODAPIOK = true;
-        else g_OCPN = OCPN_WAYPOINTS;
-        
-        wxString sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindPointInAnyBoundary")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pOD_FindPointInAnyBoundary);
-            m_bODFindPointInAnyBoundary = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindClosestBoundaryLineCrossing")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODFindClosestBoundaryLineCrossing);
-            m_bODFindClosestBoundaryLineCrossing = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindFirstBoundaryLineCrossing")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODFindFirstBoundaryLineCrossing);
-            m_bODFindFirstBoundaryLineCrossing = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateBoundary")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateBoundary);
-            m_bODCreateBoundary = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateBoundaryPoint")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateBoundaryPoint);
-            m_bODCreateBoundaryPoint = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateTextPoint")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateTextPoint);
-            m_bODCreateTextPoint = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_DeleteTextPoint")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODDeleteTextPoint);
-            m_bODDeleteTextPoint = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_AddPointIcon")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODAddPointIcon);
-            m_bODAddPointIcon = true;
-        }
-        sptr = g_ReceivedODAPIJSONMsg[_T("OD_DeletePointIcon")].AsString();
-        if(sptr != _T("null")) {
-            sscanf(sptr.To8BitData().data(), "%p", &m_pODDeletePointIcon);
-            m_bODDeletePointIcon = true;
+    if(m_bDoneODVersionCall) {
+        wxJSONValue jMsg1;
+        jMsg1[wxT("Source")] = wxT("SQUIDDIO_PI");
+        jMsg1[wxT("Type")] = wxT("Request");
+        jMsg1[wxT("Msg")] = wxS("GetAPIAddresses");
+        jMsg1[wxT("MsgId")] = wxS("GetAPIAddresses");
+        writer.Write( jMsg1, MsgString );
+        SendPluginMessage( wxS("OCPN_DRAW_PI"), MsgString );
+        if(g_ReceivedODAPIMessage != wxEmptyString &&  g_ReceivedODAPIJSONMsg[wxT("MsgId")].AsString() == wxS("GetAPIAddresses")) {
+            m_bDoneODAPIVersionCall = true;
+            
+            m_iODAPIVersionMajor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMajor")].AsInt();
+            m_iODAPIVersionMinor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMinor")].AsInt();
+            if(m_iODAPIVersionMajor == ODAPI_VERSION_MAJOR && m_iODAPIVersionMinor == ODAPI_VERSION_MINOR ) m_bODAPIOK = true;
+            else g_OCPN = OCPN_WAYPOINTS;
+            
+            wxString sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindPointInAnyBoundary")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pOD_FindPointInAnyBoundary);
+                m_bODFindPointInAnyBoundary = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindClosestBoundaryLineCrossing")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODFindClosestBoundaryLineCrossing);
+                m_bODFindClosestBoundaryLineCrossing = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindFirstBoundaryLineCrossing")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODFindFirstBoundaryLineCrossing);
+                m_bODFindFirstBoundaryLineCrossing = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateBoundary")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateBoundary);
+                m_bODCreateBoundary = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateBoundaryPoint")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateBoundaryPoint);
+                m_bODCreateBoundaryPoint = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_CreateTextPoint")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODCreateTextPoint);
+                m_bODCreateTextPoint = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_DeleteTextPoint")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODDeleteTextPoint);
+                m_bODDeleteTextPoint = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_AddPointIcon")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODAddPointIcon);
+                m_bODAddPointIcon = true;
+            }
+            sptr = g_ReceivedODAPIJSONMsg[_T("OD_DeletePointIcon")].AsString();
+            if(sptr != _T("null")) {
+                sscanf(sptr.To8BitData().data(), "%p", &m_pODDeletePointIcon);
+                m_bODDeletePointIcon = true;
+            }
         }
     }
     
