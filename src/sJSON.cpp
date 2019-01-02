@@ -151,6 +151,11 @@ void sJSON::ProcessMessage(wxString &message_id, wxString &message_body)
                 g_squiddio_pi->RenderLayers();
         } else {
             g_bODAvailable = false;
+            if(!g_squiddio_pi->g_OCPN) {
+                g_squiddio_pi->g_OCPN = true;
+                wxMessageBox( _("OCPN_Draw_pi not available. POI's will be rendered with OCPN Waypoints.") );
+                g_squiddio_pi->RenderLayers();
+            }
             g_squiddio_pi->ResetODAPI();
         }
     } else if(message_id == _T("WMM_VARIATION_BOAT")) {

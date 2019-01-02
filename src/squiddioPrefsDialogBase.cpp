@@ -208,6 +208,9 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	m_fgSubSizer->Add( sbODSettings, 0, wxALL|wxEXPAND, 5 );
 
+
+	m_fgMainSizer->Add( m_fgSubSizer, 0, wxEXPAND, 5 );
+
 	m_sdbButtonSizer = new wxStdDialogButtonSizer();
 	m_sdbButtonSizerOK = new wxButton( this, wxID_OK );
 	m_sdbButtonSizer->AddButton( m_sdbButtonSizerOK );
@@ -217,10 +220,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_sdbButtonSizer->AddButton( m_sdbButtonSizerHelp );
 	m_sdbButtonSizer->Realize();
 
-	m_fgSubSizer->Add( m_sdbButtonSizer, 1, wxEXPAND|wxFIXED_MINSIZE, 5 );
-
-
-	m_fgMainSizer->Add( m_fgSubSizer, 0, wxEXPAND, 5 );
+	m_fgMainSizer->Add( m_sdbButtonSizer, 1, wxEXPAND|wxFIXED_MINSIZE, 5 );
 
 
 	this->SetSizer( m_fgMainSizer );

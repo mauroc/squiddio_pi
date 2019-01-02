@@ -1006,24 +1006,30 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             AddODIcons();
         }
         
-        if(!m_bODAPIOK) {
-            wxString sMsg;
-            if(!m_bODAPIMessageShown) {
-                m_bODAPIMessageShown = true;
-                sMsg.Printf(_("OD Text Points not available, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
-                wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
-            }
-            sMsg.Printf(_T("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
-            wxLogMessage(sMsg);
+        if(m_bDoneODAPIVersionCall) {
+            if(!m_bODAPIOK) {
+                wxString sMsg;
+                if(!m_bODAPIMessageShown) {
+                    m_bODAPIMessageShown = true;
+                    sMsg.Printf(_("OD Text Points not available, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+                    wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
+                }
+                sMsg.Printf(_T("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+                wxLogMessage(sMsg);
+                dialog->m_radioBoxOCPNorOD->SetSelection(0);
+                dialog->m_radioBoxOCPNorOD->Disable();
+            } else
+                dialog->m_radioBoxOCPNorOD->Enable();
+        } else{
             dialog->m_radioBoxOCPNorOD->SetSelection(0);
             dialog->m_radioBoxOCPNorOD->Disable();
-        } else
-            dialog->m_radioBoxOCPNorOD->Enable();
+        }
         
-        dialog->m_fgSubSizer->Layout();
-        dialog->m_fgMainSizer->Layout();
-        //dialog->Layout();
-        dialog->Fit();
+        dialog->m_fgMainSizer->SetMinSize(dialog->m_fgSubSizer->ComputeFittingClientSize(dialog));
+        dialog->SetMinClientSize(dialog->m_fgMainSizer->ComputeFittingClientSize(dialog));
+        dialog->GetSizer()->Fit(dialog);
+        dialog->Layout();
+
         wxColour cl;
         GetGlobalColor(_T("DILG1"), &cl);
         dialog->SetBackgroundColour(cl);
@@ -1274,6 +1280,13 @@ void squiddio_pi::GetODAPI()
 
 void squiddio_pi::ResetODAPI()
 {
+    m_bDoneODVersionCall = false;
+    m_bDoneODAPIVersionCall = false;
+    m_bODAPIOK = false;
+    m_iODAPIVersionMajor = 0;
+    m_iODAPIVersionMinor = 0;
+    m_iODVersionMinor = 0;
+    m_iODVersionPatch = 0;
     g_squiddio_pi->m_bODFindPointInAnyBoundary = false;
     g_squiddio_pi->m_bODFindClosestBoundaryLineCrossing = false;
     g_squiddio_pi->m_bODFindFirstBoundaryLineCrossing = false;
