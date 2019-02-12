@@ -40,6 +40,7 @@
 #include "sJSON.h"
 #include "ODAPI.h"
 #include "version.h"
+#include "ocpn_plugin.h"
 
 #include <stdio.h>
 
@@ -151,7 +152,7 @@ void sJSON::ProcessMessage(wxString &message_id, wxString &message_body)
                 g_squiddio_pi->RenderLayers();
         } else {
             g_bODAvailable = false;
-            if(!g_squiddio_pi->g_OCPN) {
+            if(!g_squiddio_pi->g_OCPN && !ShuttingDown()) {
                 g_squiddio_pi->g_OCPN = true;
                 wxMessageBox( _("OCPN_Draw_pi not available. POI's will be rendered with OCPN Waypoints.") );
                 g_squiddio_pi->RenderLayers();
