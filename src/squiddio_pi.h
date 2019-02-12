@@ -170,7 +170,7 @@ int period_secs(int period);
 
 typedef void (wxEvtHandler::*myEventFunction)(SquiddioEvent&);
 
-class squiddio_pi : public opencpn_plugin_113, public wxEvtHandler
+class squiddio_pi : public opencpn_plugin_116, public wxEvtHandler
 {
 public:
       squiddio_pi(void *ppimgr);

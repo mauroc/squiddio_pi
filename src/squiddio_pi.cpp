@@ -92,7 +92,7 @@ BEGIN_EVENT_TABLE( squiddio_pi, wxEvtHandler )
 END_EVENT_TABLE()
 
 squiddio_pi::squiddio_pi(void *ppimgr) :
-        opencpn_plugin_113(ppimgr) // constructor initialization
+        opencpn_plugin_116(ppimgr) // constructor initialization
 {
     // Create the PlugIn icons
     initialize_images();
