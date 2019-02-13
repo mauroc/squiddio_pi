@@ -122,7 +122,7 @@ std::cout << x  << std::endl ; } while (0)
 #endif //precompiled headers
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    13
+#define     MY_API_VERSION_MINOR    16
 
 #include "version.h"
 #include "squiddio_pi_thread.h"
