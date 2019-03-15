@@ -236,6 +236,14 @@ bool squiddio_pi::DeInit(void) {
     RemoveCanvasContextMenuItem(m_update_id);
     RemoveCanvasContextMenuItem(m_report_id);
 
+    wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
+    
+    while (node) {
+        Poi *rp = node->GetData();
+        HidePOI(rp);
+        node = node->GetNext();
+    }
+    
     LayerList::iterator it;
     int index = 0;
     for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
