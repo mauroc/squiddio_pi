@@ -29,9 +29,11 @@ SET(VERBOSE_NAME Squiddio)
 SET(TITLE_NAME SQUIDDIO)
 SET(CPACK_PACKAGE_CONTACT "Mauro Calvi")
 
-SET(VERSION_MAJOR "0")
-SET(VERSION_MINOR "7")
-SET(VERSION_PATCH "1")
+SET(VERSION_MAJOR "1")
+SET(VERSION_MINOR "0")
+SET(VERSION_PATCH "0")
+SET(VERSION_DATE "16/03/2019")
+SET(OCPN_MIN_VERSION "ov50")
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
@@ -44,6 +46,8 @@ SET(SRC_SQUIDDIO
     src/squiddioPrefsDialogBase.h
     src/squiddio_pi_thread.h
     src/squiddio_pi_thread.cpp
+    src/sJSON.cpp
+    src/sJSON.h
     src/icons.h
     src/icons.cpp
     src/logs.cpp
@@ -63,6 +67,11 @@ SET(SRC_SQUIDDIO
     src/gpxdocument.h
     src/wxJSON/jsonval.cpp
     src/wxJSON/jsonreader.cpp    
+    src/wxJSON/json_defs.h
+    src/wxJSON/jsonreader.h
+    src/wxJSON/jsonval.h
+    src/wxJSON/jsonwriter.cpp
+    src/wxJSON/jsonwriter.h
      )
      
 SET(SRC_NMEA0183

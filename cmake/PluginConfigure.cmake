@@ -19,6 +19,10 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/src)
 
 # SET(PROFILING 1)
+IF(CMAKE_BUILD_TYPE STREQUAL Debug)
+  ADD_DEFINITIONS( "-DDEBUG_BUILD" )
+  MESSAGE (STATUS "DEBUG available")
+ENDIF(CMAKE_BUILD_TYPE STREQUAL Debug)
 
 #  IF NOT DEBUGGING CFLAGS="-O2 -march=native"
 IF(NOT MSVC)
@@ -26,7 +30,13 @@ IF(NOT MSVC)
   ADD_DEFINITIONS( "-Wall -g -fprofile-arcs -ftest-coverage -fexceptions" )
  ELSE(PROFILING)
 #  ADD_DEFINITIONS( "-Wall -g -fexceptions" )
-  ADD_DEFINITIONS( "-Wall -Wno-unused-result -g -O2 -fexceptions -fPIC" )
+    IF(CMAKE_BUILD_TYPE MATCHES "Debug")
+        ADD_DEFINITIONS( " -O0")
+    ELSE(CMAKE_BUILD_TYPE MATCHES "Debug")
+        ADD_DEFINITIONS( " -O2")
+    ENDIF(CMAKE_BUILD_TYPE MATCHES "Debug")
+
+  ADD_DEFINITIONS( "-Wall -Wno-unused-result -g -fexceptions -fPIC" )
  ENDIF(PROFILING)
 
  IF(NOT APPLE)

@@ -26,6 +26,95 @@
 #ifndef _SQUIDDIOPI_H_
 #define _SQUIDDIOPI_H_
 
+#ifdef __WXMSW__
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#include <sstream>
+#  define DEBUGSL(x) do { \
+std::ostringstream oss; \
+oss << x; \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::string s1(oss.str()); \
+std::string s = stime; \
+s += " :: "; \
+s += s1; \
+s += "\n"; \
+std::wstring stemp = std::wstring(s.begin(), s.end()); \
+LPCWSTR sw = stemp.c_str(); \
+OutputDebugString(sw); } while (0) 
+
+#  define DEBUGST(x) do { \
+std::string s(""); \
+std::ostringstream oss; \
+oss << x; \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+do { \
+std::string s1(oss.str()); \
+s += stime; \
+s += " :: "; \
+s += s1; } while (0);
+
+#  define DEBUGCONT(x) do { \
+std::ostringstream oss; \
+oss << x; \
+std::string s1(oss.str()); \
+s += s1 ; } while (0);
+
+#  define DEBUGEND(x) do { \
+std::string s1(""); \
+std::ostringstream oss; \
+oss << x; \
+s1 = oss.str(); \
+s += s1; } while (0); \
+s += "\n" ; \
+std::wstring stemp = std::wstring(s.begin(), s.end()); \
+LPCWSTR sw = stemp.c_str(); \
+OutputDebugString(sw); } while (0) 
+#else
+#  define DEBUGSL(x) do {} while (0)
+#  define DEBUGST(x) do {} while (0)
+#  define DEBUGCONT(x) do {} while (0)
+#  define DEBUGEND(x) do {} while (0)
+#endif
+#else
+#ifdef DEBUG_BUILD
+#  define DEBUGSL(x) do { \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::cout << stime << " :: "; \
+std::cout << x << std::endl ;} while (0)
+
+#  define DEBUGST(x) do { \
+time_t now = time(0); \
+tm* localtm = localtime(&now); \
+char *stime = asctime(localtm); \
+stime[strlen(stime) - 1 ] = 0; \
+std::cout << stime << " :: " ; \
+std::cout << x; } while (0)
+
+#  define DEBUGCONT(x) do { \
+std::cout << x ; } while (0)
+
+#  define DEBUGEND(x) do { \
+std::cout << x  << std::endl ; } while (0)
+#else
+#  define DEBUGSL(x) do {} while (0)
+#  define DEBUGST(x) do {} while (0)
+#  define DEBUGCONT(x) do {} while (0)
+#  define DEBUGEND(x) do {} while (0)
+#endif
+#endif
+
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
@@ -33,7 +122,7 @@
 #endif //precompiled headers
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    13
+#define     MY_API_VERSION_MINOR    16
 
 #include "version.h"
 #include "squiddio_pi_thread.h"
@@ -56,6 +145,10 @@
 #include "squiddioPrefsDialogBase.h"
 #include "nmea0183/nmea0183.h"
 #include "logs.h"
+#include "ODAPI.h"
+
+#define OCPN_WAYPOINTS true
+#define OD_TEXTPOINTS false
 
 class logsWindow;
 class Layer;
@@ -63,6 +156,7 @@ class Poi;
 class PoiMan;
 class NavObjectCollection1;
 class wxFileConfig;
+class wxFontDialog;
 
 extern PoiMan *pPoiMan;
 
@@ -76,7 +170,7 @@ int period_secs(int period);
 
 typedef void (wxEvtHandler::*myEventFunction)(SquiddioEvent&);
 
-class squiddio_pi : public opencpn_plugin_113, public wxEvtHandler
+class squiddio_pi : public opencpn_plugin_116, public wxEvtHandler
 {
 public:
       squiddio_pi(void *ppimgr);
@@ -98,7 +192,7 @@ public:
 
 //    The optional method overrides
 
-      void RenderLayerContentsOnChart(Layer *layer, bool save_config = false);
+      void RenderLayerContentsOnChart(Layer *layer, bool save_config = false, bool hidePOI = false);
 
       void OnContextMenuItemCallback(int id);
       void UpdateAuiStatus(void);
@@ -124,24 +218,34 @@ public:
       bool ShowPOI(Poi* wp);
       bool HidePOI(Poi* wp);
 
-      void RenderLayers();
+      void RenderLayers(bool hidePOI = false);
 
       void SetNMEASentence(wxString &sentence);
       void SetLogsWindow();
       void LateInit(void);
+      
+      void ResetODAPI(void);
 
+      
       wxString   layerdir;
       LayerList  *pLayerList;
       wxString   g_Email;
       wxString   g_ApiKey;
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
-
+      bool       g_OCPN;
+      
+      bool  m_bODAPIOK;
+      int   m_iODAPIVersionMajor;
+      int   m_iODAPIVersionMinor;
+      
       double    m_cursor_lat, m_cursor_lon;
       Layer     *local_sq_layer;
       int       g_PostPeriod;
       int       g_RetrievePeriod;
       bool      last_online;
+
+      wxFont      g_fontODDisplayTextFont;
       
       void OnThreadActionFinished(SquiddioEvent& event);
       void SetThreadRunning( bool state ) { m_bThreadRuning = state; }
@@ -157,7 +261,10 @@ private:
       bool SaveConfig(void);
       bool ShowType(Poi * wp);
       void PreferencesDialog(wxWindow* parent);
-
+      void GetODAPI(void);
+      void AddODIcons(void);
+      void SwitchPointType(bool bPointType);
+      
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
@@ -186,6 +293,13 @@ private:
       bool        g_ViewFuelStations;
       bool        g_ViewOthers;
       bool        g_ViewAIS;
+      
+      bool        g_bODTextPointShowName;
+      int         g_iODTextPointTextPosition;
+      wxColour    g_colourODDefaultTextColour;
+      wxColour    g_colourODDefaultTextBackgroundColour;
+      int         g_iODTextBackgroundTransparency;
+      int         g_iTextPointDisplayTextWhen;
 
       logsWindow  *m_plogs_window;
       int         m_squiddio_dialog_x, m_squiddio_dialog_y;
@@ -193,7 +307,32 @@ private:
       int         m_demohide_id;
       int         m_leftclick_tool_id;
       
-      bool m_bThreadRuning;
+      bool  m_bThreadRuning;
+      
+      int   m_iODVersionMajor;
+      int   m_iODVersionMinor;
+      int   m_iODVersionPatch;
+      bool  m_bDoneODVersionCall;
+      bool  m_bDoneODAPIVersionCall;
+      bool  m_bODAPIMessageShown;
+      bool  m_bODFindPointInAnyBoundary;
+      bool  m_bODFindClosestBoundaryLineCrossing;
+      bool  m_bODFindFirstBoundaryLineCrossing;
+      bool  m_bODCreateBoundary;
+      bool  m_bODCreateBoundaryPoint;
+      bool  m_bODCreateTextPoint;
+      bool  m_bODDeleteTextPoint;
+      bool  m_bODAddPointIcon;
+      bool  m_bODDeletePointIcon;
+      OD_FindPointInAnyBoundary             m_pOD_FindPointInAnyBoundary;
+      OD_FindClosestBoundaryLineCrossing    m_pODFindClosestBoundaryLineCrossing;
+      OD_FindFirstBoundaryLineCrossing      m_pODFindFirstBoundaryLineCrossing;
+      OD_CreateBoundary                     m_pODCreateBoundary;
+      OD_CreateBoundaryPoint                m_pODCreateBoundaryPoint;
+      OD_CreateTextPoint                    m_pODCreateTextPoint;
+      OD_DeleteTextPoint                    m_pODDeleteTextPoint;
+      OD_AddPointIcon                       m_pODAddPointIcon;
+      OD_DeletePointIcon                    m_pODDeletePointIcon;
       
       DECLARE_EVENT_TABLE()
 };
@@ -207,9 +346,12 @@ public:
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
     void OnShareChoice( wxCommandEvent& event );
+    void OnButtonClickFonts( wxCommandEvent& event );
     void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
-    void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
+    void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxOK); }
 
+    wxFontDialog  *m_pfdDialog;
+    
 protected:
     squiddio_pi &m_sq_pi;
 };
