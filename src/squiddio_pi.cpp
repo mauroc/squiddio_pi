@@ -33,6 +33,7 @@
 #include <wx/fileconf.h>
 #include <wx/fontdlg.h>
 #include "sJSON.h"
+#include "version.h"
 
 #include "wxJSON/jsonwriter.h"
 
