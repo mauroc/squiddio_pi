@@ -84,7 +84,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>Resources/cs.lproj/opencpn-${PACKAGE_NAME}.mo</string>
+																	<string>Resources/cs_CZ.lproj/opencpn-${PACKAGE_NAME}.mo</string>
 																	<key>PATH_TYPE</key>
 																	<integer>3</integer>
 																	<key>PERMISSIONS</key>
@@ -98,7 +98,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>cs.lproj</string>
+															<string>cs_CZ.lproj</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -117,7 +117,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>Resources/fr.lproj/opencpn-${PACKAGE_NAME}.mo</string>
+																	<string>Resources/fr_FR.lproj/opencpn-${PACKAGE_NAME}.mo</string>
 																	<key>PATH_TYPE</key>
 																	<integer>3</integer>
 																	<key>PERMISSIONS</key>
@@ -131,7 +131,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>fr.lproj</string>
+															<string>fr_FR.lproj</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -150,7 +150,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>Resources/it.lproj/opencpn-${PACKAGE_NAME}.mo</string>
+																	<string>Resources/it_IT.lproj/opencpn-${PACKAGE_NAME}.mo</string>
 																	<key>PATH_TYPE</key>
 																	<integer>3</integer>
 																	<key>PERMISSIONS</key>
@@ -164,7 +164,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>it.lproj</string>
+															<string>it._ITlproj</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -183,7 +183,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>Resources/nb.lproj/opencpn-${PACKAGE_NAME}.mo</string>
+																	<string>Resources/nb_NO.lproj/opencpn-${PACKAGE_NAME}.mo</string>
 																	<key>PATH_TYPE</key>
 																	<integer>3</integer>
 																	<key>PERMISSIONS</key>
@@ -197,7 +197,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>nb.lproj</string>
+															<string>nb_NO.lproj</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -216,7 +216,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>Resources/pt.lproj/opencpn-${PACKAGE_NAME}.mo</string>
+																	<string>Resources/pt_PT.lproj/opencpn-${PACKAGE_NAME}.mo</string>
 																	<key>PATH_TYPE</key>
 																	<integer>3</integer>
 																	<key>PERMISSIONS</key>
@@ -230,7 +230,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>pt.lproj</string>
+															<string>pt_PT.lproj</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
