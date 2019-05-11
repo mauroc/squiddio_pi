@@ -340,7 +340,7 @@ private:
 class SquiddioPrefsDialog : public SquiddioPrefsDialogBase
 {
 public:
-    SquiddioPrefsDialog( squiddio_pi &_sq_pi, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _T("Squiddio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,495 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL )
+    SquiddioPrefsDialog( squiddio_pi &_sq_pi, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Squiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,495 ), long style = wxCAPTION|wxDEFAULT_DIALOG_STYLE|wxTAB_TRAVERSAL )
         : SquiddioPrefsDialogBase( parent, id, title, pos, size, style ), m_sq_pi(_sq_pi) {}
 
     void OnCheckBoxAll( wxCommandEvent& event );

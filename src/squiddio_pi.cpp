@@ -1261,27 +1261,27 @@ void squiddio_pi::GetODAPI()
     
     wxString l_avail;
     wxString l_notavail;
-    if(m_bODFindPointInAnyBoundary) l_avail.Append(_("OD_FindPointInAnyBoundary\n"));
-    if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
-    if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
-    if(m_bODCreateBoundary) l_avail.Append(_("OD_CreateBoundary\n"));
-    if(m_bODCreateBoundaryPoint) l_avail.Append(_("OD_CreateBoundaryPoint\n"));
-    if(m_bODCreateTextPoint) l_avail.Append(_("OD_CreateTextPoint\n"));
-    if(m_bODDeleteTextPoint) l_avail.Append(_("OD_DeleteTextPoint\n"));
-    if(m_bODAddPointIcon) l_avail.Append(_("OD_AddPointIcon\n"));
-    if(m_bODDeletePointIcon) l_avail.Append(_("OD_DeletePointIcon\n"));
+    if(m_bODFindPointInAnyBoundary) l_avail.Append(_T("OD_FindPointInAnyBoundary\n"));
+    if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_T("OD_FindClosestBoundaryLineCrossing\n"));
+    if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_T("OD_FindFirstBoundaryLineCrossing\n"));
+    if(m_bODCreateBoundary) l_avail.Append(_T("OD_CreateBoundary\n"));
+    if(m_bODCreateBoundaryPoint) l_avail.Append(_T("OD_CreateBoundaryPoint\n"));
+    if(m_bODCreateTextPoint) l_avail.Append(_T("OD_CreateTextPoint\n"));
+    if(m_bODDeleteTextPoint) l_avail.Append(_T("OD_DeleteTextPoint\n"));
+    if(m_bODAddPointIcon) l_avail.Append(_T("OD_AddPointIcon\n"));
+    if(m_bODDeletePointIcon) l_avail.Append(_T("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are available:\n");
     DEBUGEND(l_avail);
     
-    if(!m_bODFindPointInAnyBoundary) l_notavail.Append(_("OD_FindPointInAnyBoundary\n"));
-    if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
-    if(!m_bODFindFirstBoundaryLineCrossing) l_notavail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
-    if(!m_bODCreateBoundary) l_notavail.Append(_("OD_CreateBoundary\n"));
-    if(!m_bODCreateBoundaryPoint) l_notavail.Append(_("OD_CreateBoundaryPoint\n"));
-    if(!m_bODCreateTextPoint) l_notavail.Append(_("OD_CreateTextPoint\n"));
-    if(!m_bODDeleteTextPoint) l_notavail.Append(_("OD_DeleteTextPoint\n"));
-    if(m_bODAddPointIcon) l_notavail.Append(_("OD_AddPointIcon\n"));
-    if(m_bODDeletePointIcon) l_notavail.Append(_("OD_DeletePointIcon\n"));
+    if(!m_bODFindPointInAnyBoundary) l_notavail.Append(_T("OD_FindPointInAnyBoundary\n"));
+    if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_T("OD_FindClosestBoundaryLineCrossing\n"));
+    if(!m_bODFindFirstBoundaryLineCrossing) l_notavail.Append(_T("OD_FindFirstBoundaryLineCrossing\n"));
+    if(!m_bODCreateBoundary) l_notavail.Append(_T("OD_CreateBoundary\n"));
+    if(!m_bODCreateBoundaryPoint) l_notavail.Append(_T("OD_CreateBoundaryPoint\n"));
+    if(!m_bODCreateTextPoint) l_notavail.Append(_T("OD_CreateTextPoint\n"));
+    if(!m_bODDeleteTextPoint) l_notavail.Append(_T("OD_DeleteTextPoint\n"));
+    if(m_bODAddPointIcon) l_notavail.Append(_T("OD_AddPointIcon\n"));
+    if(m_bODDeletePointIcon) l_notavail.Append(_T("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are not available:\n");
     DEBUGEND(l_notavail);
 #endif    
