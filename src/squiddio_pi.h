@@ -263,7 +263,7 @@ private:
       void PreferencesDialog(wxWindow* parent);
       void GetODAPI(void);
       void AddODIcons(void);
-      void SwitchPointType(bool bPointType);
+      void SwitchPointType(bool bPointType, bool Changed);
       
       wxWindow      *m_parent_window;
       int           m_show_id;
