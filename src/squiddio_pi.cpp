@@ -788,17 +788,21 @@ void squiddio_pi::RefreshLayer()
     }
 }
 
-void squiddio_pi::SwitchPointType(bool bPointType) {
+void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
     if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
-        if(g_OCPN != bPointType) {
-            if(bPointType == OCPN_WAYPOINTS)
-                wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
-            else
-                wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
+        if(g_OCPN == bPointType && Changed) {
             RenderLayers(true);
-            g_OCPN = bPointType;
             RenderLayers();
-        }
+        } else
+            if(g_OCPN != bPointType) {
+                if(bPointType == OCPN_WAYPOINTS)
+                    wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
+                else
+                    wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
+                RenderLayers(true);
+                g_OCPN = bPointType;
+                RenderLayers();
+            }
     } else
         g_OCPN = bPointType;
 }
@@ -1042,27 +1046,85 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         wxColour cl;
         GetGlobalColor(_T("DILG1"), &cl);
         dialog->SetBackgroundColour(cl);
-        
+
+        bool l_bChanged = false;
         if (dialog->ShowModal() == wxOK) {
-            g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
-            g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
-            g_Email = dialog->m_textSquiddioID->GetValue().Trim();
-            g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
-            g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
-            g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
-            g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
-            g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
-            g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
-            g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
-            g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
-            g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
-            g_bODTextPointShowName = dialog->m_checkBoxShowName->GetValue();
-            g_iODTextPointTextPosition = dialog->m_choicePosition->GetSelection();
-            g_colourODDefaultTextColour = dialog->m_colourPickerText->GetColour();
-            g_colourODDefaultTextBackgroundColour = dialog->m_colourPickerBackgroundColour->GetColour();
-            g_iODTextBackgroundTransparency = dialog->m_sliderBackgroundTransparency->GetValue();
-            g_fontODDisplayTextFont = dialog->m_staticTextFontFaceExample->GetFont();
-            g_iTextPointDisplayTextWhen = dialog->m_radioBoxShowDisplayText->GetSelection();
+            if(g_PostPeriod != dialog->m_choiceHowOften->GetSelection()) {
+                g_PostPeriod = dialog->m_choiceHowOften->GetSelection();
+                l_bChanged = true;
+            }
+            if(g_RetrievePeriod != dialog->m_choiceReceive->GetSelection()) {
+                g_RetrievePeriod = dialog->m_choiceReceive->GetSelection();
+                l_bChanged = true;
+            }
+            if(g_Email != dialog->m_textSquiddioID->GetValue().Trim()) {
+                g_Email = dialog->m_textSquiddioID->GetValue().Trim();
+                l_bChanged = true;
+            }
+            if(g_ApiKey != dialog->m_textApiKey->GetValue().Trim()) {
+                g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
+                l_bChanged = true;
+            }
+            if(g_ViewMarinas != dialog->m_checkBoxMarinas->GetValue()) {
+                g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewAnchorages != dialog->m_checkBoxAnchorages->GetValue()) {
+                g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewYachtClubs != dialog->m_checkBoxYachtClubs->GetValue()) {
+                g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewDocks != dialog->m_checkBoxDocks->GetValue()) {
+                g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewRamps != dialog->m_checkBoxRamps->GetValue()) {
+                g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewFuelStations != dialog->m_checkBoxFuelStations->GetValue()) {
+                g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
+                g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewAIS != dialog->m_checkBoxAIS->GetValue()) {
+                g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
+                l_bChanged = true;
+            }
+            if(g_bODTextPointShowName != dialog->m_checkBoxShowName->GetValue()) {
+                g_bODTextPointShowName = dialog->m_checkBoxShowName->GetValue();
+                l_bChanged = true;
+            }
+            if(g_iODTextPointTextPosition != dialog->m_choicePosition->GetSelection()) {
+                g_iODTextPointTextPosition = dialog->m_choicePosition->GetSelection();
+                l_bChanged = true;
+            }
+            if(g_colourODDefaultTextColour != dialog->m_colourPickerText->GetColour()) {
+                g_colourODDefaultTextColour = dialog->m_colourPickerText->GetColour();
+                l_bChanged = true;
+            }
+            if(g_colourODDefaultTextBackgroundColour != dialog->m_colourPickerBackgroundColour->GetColour()) {
+                g_colourODDefaultTextBackgroundColour = dialog->m_colourPickerBackgroundColour->GetColour();
+                l_bChanged = true;
+            }
+            if(g_iODTextBackgroundTransparency != dialog->m_sliderBackgroundTransparency->GetValue()) {
+                g_iODTextBackgroundTransparency = dialog->m_sliderBackgroundTransparency->GetValue();
+                l_bChanged = true;
+            }
+            if(g_fontODDisplayTextFont != dialog->m_staticTextFontFaceExample->GetFont()) {
+                g_fontODDisplayTextFont = dialog->m_staticTextFontFaceExample->GetFont();
+                l_bChanged = true;
+            }
+            if(g_iTextPointDisplayTextWhen != dialog->m_radioBoxShowDisplayText->GetSelection()) {
+                g_iTextPointDisplayTextWhen = dialog->m_radioBoxShowDisplayText->GetSelection();
+                l_bChanged = true;
+            }
             
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
@@ -1094,8 +1156,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
             SaveConfig();
 
-            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) SwitchPointType(OCPN_WAYPOINTS);
-            else SwitchPointType(OD_TEXTPOINTS);
+            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) SwitchPointType(OCPN_WAYPOINTS, l_bChanged);
+            else SwitchPointType(OD_TEXTPOINTS, l_bChanged);
         }
         dialog->Destroy();
         delete dialog;
@@ -1261,27 +1323,27 @@ void squiddio_pi::GetODAPI()
     
     wxString l_avail;
     wxString l_notavail;
-    if(m_bODFindPointInAnyBoundary) l_avail.Append(_("OD_FindPointInAnyBoundary\n"));
-    if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
-    if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
-    if(m_bODCreateBoundary) l_avail.Append(_("OD_CreateBoundary\n"));
-    if(m_bODCreateBoundaryPoint) l_avail.Append(_("OD_CreateBoundaryPoint\n"));
-    if(m_bODCreateTextPoint) l_avail.Append(_("OD_CreateTextPoint\n"));
-    if(m_bODDeleteTextPoint) l_avail.Append(_("OD_DeleteTextPoint\n"));
-    if(m_bODAddPointIcon) l_avail.Append(_("OD_AddPointIcon\n"));
-    if(m_bODDeletePointIcon) l_avail.Append(_("OD_DeletePointIcon\n"));
+    if(m_bODFindPointInAnyBoundary) l_avail.Append(_T("OD_FindPointInAnyBoundary\n"));
+    if(m_bODFindClosestBoundaryLineCrossing) l_avail.Append(_T("OD_FindClosestBoundaryLineCrossing\n"));
+    if(m_bODFindFirstBoundaryLineCrossing) l_avail.Append(_T("OD_FindFirstBoundaryLineCrossing\n"));
+    if(m_bODCreateBoundary) l_avail.Append(_T("OD_CreateBoundary\n"));
+    if(m_bODCreateBoundaryPoint) l_avail.Append(_T("OD_CreateBoundaryPoint\n"));
+    if(m_bODCreateTextPoint) l_avail.Append(_T("OD_CreateTextPoint\n"));
+    if(m_bODDeleteTextPoint) l_avail.Append(_T("OD_DeleteTextPoint\n"));
+    if(m_bODAddPointIcon) l_avail.Append(_T("OD_AddPointIcon\n"));
+    if(m_bODDeletePointIcon) l_avail.Append(_T("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are available:\n");
     DEBUGEND(l_avail);
     
-    if(!m_bODFindPointInAnyBoundary) l_notavail.Append(_("OD_FindPointInAnyBoundary\n"));
-    if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_("OD_FindClosestBoundaryLineCrossing\n"));
-    if(!m_bODFindFirstBoundaryLineCrossing) l_notavail.Append(_("OD_FindFirstBoundaryLineCrossing\n"));
-    if(!m_bODCreateBoundary) l_notavail.Append(_("OD_CreateBoundary\n"));
-    if(!m_bODCreateBoundaryPoint) l_notavail.Append(_("OD_CreateBoundaryPoint\n"));
-    if(!m_bODCreateTextPoint) l_notavail.Append(_("OD_CreateTextPoint\n"));
-    if(!m_bODDeleteTextPoint) l_notavail.Append(_("OD_DeleteTextPoint\n"));
-    if(m_bODAddPointIcon) l_notavail.Append(_("OD_AddPointIcon\n"));
-    if(m_bODDeletePointIcon) l_notavail.Append(_("OD_DeletePointIcon\n"));
+    if(!m_bODFindPointInAnyBoundary) l_notavail.Append(_T("OD_FindPointInAnyBoundary\n"));
+    if(!m_bODFindClosestBoundaryLineCrossing) l_notavail.Append(_T("OD_FindClosestBoundaryLineCrossing\n"));
+    if(!m_bODFindFirstBoundaryLineCrossing) l_notavail.Append(_T("OD_FindFirstBoundaryLineCrossing\n"));
+    if(!m_bODCreateBoundary) l_notavail.Append(_T("OD_CreateBoundary\n"));
+    if(!m_bODCreateBoundaryPoint) l_notavail.Append(_T("OD_CreateBoundaryPoint\n"));
+    if(!m_bODCreateTextPoint) l_notavail.Append(_T("OD_CreateTextPoint\n"));
+    if(!m_bODDeleteTextPoint) l_notavail.Append(_T("OD_DeleteTextPoint\n"));
+    if(m_bODAddPointIcon) l_notavail.Append(_T("OD_AddPointIcon\n"));
+    if(m_bODDeletePointIcon) l_notavail.Append(_T("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are not available:\n");
     DEBUGEND(l_notavail);
 #endif    
