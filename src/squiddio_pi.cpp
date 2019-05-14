@@ -1379,7 +1379,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconDescription = _("Marina");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_anchor_blu;
-    pAPI->PointIconName = _T("aton_gry");
+    pAPI->PointIconName = _T("anchor_blu");
     pAPI->PointIconDescription = _("Anchorage/Buoys");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_aton_gry;
