@@ -1342,8 +1342,8 @@ void squiddio_pi::GetODAPI()
     if(!m_bODCreateBoundaryPoint) l_notavail.Append(_T("OD_CreateBoundaryPoint\n"));
     if(!m_bODCreateTextPoint) l_notavail.Append(_T("OD_CreateTextPoint\n"));
     if(!m_bODDeleteTextPoint) l_notavail.Append(_T("OD_DeleteTextPoint\n"));
-    if(m_bODAddPointIcon) l_notavail.Append(_T("OD_AddPointIcon\n"));
-    if(m_bODDeletePointIcon) l_notavail.Append(_T("OD_DeletePointIcon\n"));
+    if(!m_bODAddPointIcon) l_notavail.Append(_T("OD_AddPointIcon\n"));
+    if(!m_bODDeletePointIcon) l_notavail.Append(_T("OD_DeletePointIcon\n"));
     DEBUGST("The following ODAPI's are not available:\n");
     DEBUGEND(l_notavail);
 #endif    
