@@ -6,6 +6,7 @@ License: GPLv2+
 
 BuildRequires: bzip2-devel
 BuildRequires: cmake
+BuildRequires: curl
 BuildRequires: desktop-file-utils
 BuildRequires: elfutils-libelf-devel
 BuildRequires: expat-devel

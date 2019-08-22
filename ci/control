@@ -1,6 +1,7 @@
 Source: opencpn
 Build-Depends: debhelper (>= 9),
  cmake,
+ curl,
  libarchive-dev,
  libbz2-dev,
  libcairo2-dev,

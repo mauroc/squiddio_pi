@@ -20,7 +20,7 @@ Android comes with sQuiddio built in.
   <target>${PKG_TARGET}</target>
   <target-version>${PKG_TARGET_VERSION}</target-version>
   <tarball-url>
-    https://bintray.com/leamas/OpenCPN/download_file?file_path=${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+      https://dl.bintray.com/leamas/OpenCPN/${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
   </tarball-url>
   <info-url> https://opencpn.org/OpenCPN/plugins/sQuiddio.html </info-url>
 </opencpn-plugin>

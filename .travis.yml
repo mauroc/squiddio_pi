@@ -23,12 +23,16 @@ notifications:
   email: false
 git:
   depth: 10
-deploy:
-  provider: bintray
-  file: ci/bintray.js
   user: leamas
   skip_cleanup: true
   on:
     all_branches: true
-  key:
-    secure: Mp9p6Y1lpkRqMnSvm6ibjiOnwT1GpvsoKRYGftO1dHptQSNn+Z0XiZElw9B47Pni5cR20Dq9ozRXrkNenIk2uYtv0PxTCtlEfDaHxgZBjdtnlvDT09LR5wlISmtZXLu9LU5Lp4WwNjWrVqt5qpTOwleDIjrpbhmGhGt7Y5oXzIwGYx3mnFb9/x+9DKsoYsi0uUppO91BWREhxJN3W/prRvK0iO78gu1OGbILz9jGPIjqpPOeFsiQci1+cwBseSbahCj/1kGuvujV8IqYJeMf9oIIae3Jyu2ewnxTmcRCimk8iI0xa+StS5ouaTi2yXR3BPCWvrvjSLmE/1gRiwv0US1KlbAkNAHIvKu+tuxQ6NPhOAPfwTBHtyAEYOn3SzxJBZD4NjKrcX0RTvTpLykFnbYwY705Hx5hphUgZtncEkPAThlUGK2EOnreAcG91KBybbF3aTbUGfhXoyt/iNoGNKbDnKjh6TF8T8BvgzG1gRXxhLv73t/+a2X/miENaQKWo9YGFYcVzuKFEKqhbFsriq2pNW4+wM85CgJS6XiDJg3+kvu2VJnNeWVarEmUyySPQzIlfQWYyYP5YD8fQZRFDzi0elF8nNyMYthe5lftQJUAeZEs+73WI00FLerhDOJZVyQg2oRe1zJM9LibaPa8UmjdBMyUyoc0ubcMhnUgiSQ=
+  key: $BINTRAY_API_KEY
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: ci/travis-upload.sh
+  on:
+    branch: master
+    tags: false
+
