@@ -178,3 +178,8 @@ INCLUDE("cmake/PluginSetup.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
+set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+configure_file(
+  ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+)
