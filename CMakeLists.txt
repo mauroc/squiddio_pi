@@ -48,6 +48,7 @@ SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
 set(OpenGL_GL_PREFERENCE "LEGACY")
 
 INCLUDE("cmake/PluginConfigure.cmake")
+set(CMAKE_CXX_STANDARD 11)
 
 SET(SRC_SQUIDDIO
     src/squiddio_pi.h
