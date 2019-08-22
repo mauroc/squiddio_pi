@@ -37,6 +37,9 @@ SET(OCPN_MIN_VERSION "ov50")
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")
+
 INCLUDE("cmake/PluginConfigure.cmake")
 
 SET(SRC_SQUIDDIO
