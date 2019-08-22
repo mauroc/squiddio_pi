@@ -8,6 +8,7 @@
 set -xe
 
 brew install cairo libexif xz libarchive
+curl --version >/dev/null || brew install curl
 wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
 tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp
 export PATH="/usr/local/opt/gettext/bin:$PATH"
