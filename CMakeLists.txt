@@ -41,6 +41,36 @@ SET(PKG_API_VERSION "1.16")
 SET(PKG_AUTHOR "Mauro Calvi")
 SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
 
+INCLUDE("cmake/PluginSetup.cmake")
+set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+
+if (OCPN_FLATPAK)
+    find_program(TAR NAMES gtar tar)
+    if (NOT TAR)
+        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
+    endif ()
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+    )
+    add_custom_target(flatpak-build ALL
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
+        COMMAND /usr/bin/flatpak-builder --force-clean
+            ${CMAKE_CURRENT_BINARY_DIR}/app
+            org.opencpn.OpenCPN.Plugin.squiddio.yaml
+    )
+    add_custom_target("flatpak-pkg")
+    add_custom_command(
+        TARGET flatpak-pkg
+        COMMAND ${TAR}
+            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+            --transform 's|.*/files/|squiddio-flatpak-${PACKAGE_VERSION}/|'
+            ${CMAKE_CURRENT_BINARY_DIR}/app/files
+    )
+    return ()
+endif()
+
+
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
@@ -174,11 +204,9 @@ ELSE(TINYXML_FOUND)
 ENDIF(TINYXML_FOUND)
 
 INCLUDE("cmake/PluginInstall.cmake")
-INCLUDE("cmake/PluginSetup.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
-set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 configure_file(
   ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
   ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
