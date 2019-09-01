@@ -57,17 +57,19 @@ build_script:
   - bash ../ci/appveyor-upload.sh
 
 artifacts:
-  - path: 'build\*gz'
-    name: plugin_archive
-  - path: '**\*msvc*xml'
-    name: plugin_xml
+  -  path: 'build\*.exe'
+     name: installer
 
 deploy:
-  - provider: BinTray
-    username: leamas
-    repo: OpenCPN
-    package: plugins
-    version: 1.15-0.beta2
-    publish: true
-    override: true
-    explode: false
+-  provider: GitHub
+-  auth_token: 
+-    secure: VYYxNSdoxzJai29K/HmfO+VHsJ2QDvkYk2oa2pb4WrIRad+8/HANZ0lCn3GbgfHd
+-  artifact: installer,portable
+-  draft: true
+-  prerelease: true
+-  tag: $(APPVEYOR_REPO_TAG_NAME) # insert version name
+-  on:
+-    configuration: Release    # Debug contains non-redist MS DLLs
+-    APPVEYOR_REPO_TAG: true   # deploy on tag push only
+-#   branch: master   # release from master branch only
+    

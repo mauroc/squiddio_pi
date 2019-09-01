@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 language: cpp
 matrix:
   include:
@@ -25,10 +26,62 @@ matrix:
     compiler: clang
     script:
     - "./ci/travis-build-osx.sh"
+=======
+# ov50 Linux/OSX build - courtesy to https://github.com/seandepagnier
+language: cpp
+
+matrix:
+  include:
+    - dist: trusty
+      compiler: gcc
+    - os: osx
+      compiler: clang
+
+install:
+
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+      then
+        sudo apt-get -qq update;
+        sudo apt-get install libwxgtk3.0-dev libwxgtk3.0-0 libgps-dev libglu1-mesa-dev libgtk2.0-dev libbz2-dev libtinyxml-dev;
+        sudo apt-get install libexpat1-dev libcairo2-dev;
+        sudo apt-get install rpm;
+      fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+      then
+        brew install cairo libexif xz libarchive;
+        wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz;
+        tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp;
+        export PATH="/usr/local/opt/gettext/bin:$PATH";
+        echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.bash_profile;
+        wget http://opencpn.navnux.org/build_deps/Packages.dmg;
+        hdiutil attach Packages.dmg;
+        sudo installer -pkg "/Volumes/Packages 1.2.5/Install Packages.pkg" -target "/";
+      fi
+
+script:
+  - if [[ "${COVERITY_SCAN_BRANCH}" == 1 ]];
+    then
+      echo "Don't build on coverty_scan branch.";
+      exit 0;
+    fi
+#  - mkdir build
+  - cd build
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+    then
+       cmake -DCMAKE_BUILD_TYPE=Release ../ && make -sj2 package;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        cmake -DwxWidgets_CONFIG_EXECUTABLE=/tmp/wx312_opencpn50_macos109/bin/wx-config -DwxWidgets_CONFIG_OPTIONS="--prefix=/tmp/wx312_opencpn50_macos109" -DCMAKE_INSTALL_PREFIX=/tmp/opencpn -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 .. && make -sj2 && make create-pkg;
+     fi
+  - ls -l;
+
+>>>>>>> add travis & encrypt token
 notifications:
   email: false
 git:
   depth: 10
+<<<<<<< HEAD
   user: leamas
   skip_cleanup: true
   on:
@@ -42,3 +95,26 @@ deploy:
     branch: master
     tags: false
 
+=======
+before_install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
+deploy:
+- provider: releases
+  api_key:
+    secure: "ITY5bfgEHsABqkzibS60y9W3so4eht4ociqAE7H0gnFA/3h3aVXyaZZvUhSQF8XwaWgTDfgxJOvPvOsY+mYNN5GOOSFd0YwRxKA8ys8TPqB2T2MkQ5lt9+5pJ52VkJ8cR1Ro688k5NEZmavke29QHVuzOfaNWPqAx1Xfkp/Vnbw1ApB5mQiNwQKtfkI8dZDtP/IFYHSF8+2gRuCe9i/Ed+yUfpojRSb15X/qs2+l57VOKrR//J21iqZ+hYRQKzfqs6QOyb2B822ABJuI6kESzVWg2vtO1mI4XD3dv6BIaWnzHiwIk8nbI0TAuYTR/Yze4jACqSa6ud9I1KLT3trbw9ZFRODiFniSGIjqEpZG5S1FMK7TLK0+a8Lk5GHqDJn5T+mVxljSPO3rcMtWqa51uar4FFyUVgPL1bBd5FgsRkRNulV5O6I89rDmtgoc0UzUBy7WrO/JrT2AEoe4WiYM7BYxjRHTcW1+dHGr/y1CU3sIvcR/0BdZuTDfET5NV5zl6AabJUcyi5M7p2wmW0In2OAJzCWuRGthTmAx9xeUiXAbNzSCpkozKSZDRJnTLpvyBm4RzsqiWZKoKgFRP2AFpkh6E23e9REdKih5nTkD19aEKj7uXFViEojAQ13RqcchksQyzZ33u0mgJ2i2aX0x8eFG8qbYXMgB6t7pMrmq9tY="
+  file_glob: true
+  file: "$TRAVIS_BUILD_DIR/build/*.{deb,rpm,dmg,txz,pkg,pkg.tar.xz}"
+  skip_cleanup: true
+  on:
+    repo: rgleason/squiddio_pi
+    tags: true
+    all_branches: true
+    
+>>>>>>> add travis & encrypt token
