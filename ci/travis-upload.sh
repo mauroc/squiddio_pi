@@ -1,24 +1,36 @@
 #!/bin/sh
-PKG="plugins"
-VERSION=1.15-0.beta2
+PLUGIN="squiddio"
+
+VERSION="unstable"
 OPTS="override=1;publish=1"
+PKG="plugins"
 
-set -x
-
-if [ -z "$BINTRAY_API_KEY" ]; then
-    echo 'Cannot deploy: missing $BINTRAY_API_KEY'
-    exit 0
-fi
+API_BASE="https://api.bintray.com/content/leamas/OpenCPN/$PKG/$VERSION"
 
 cd build
-tarball=$(echo squiddio*.tar.gz)
-xml=$(echo squiddio-plugin*.xml)
+tarball=$(echo ${PLUGIN}*.tar.gz)
+xml=$(echo ${PLUGIN}-plugin*.xml)
 
-echo "Uploading $tarball"
-curl -T $tarball  -uleamas:$BINTRAY_API_KEY \
-    "https://api.bintray.com/content/leamas/OpenCPN/$PKG/$VERSION/$tarball;$OPTS"
-echo
-echo "Uploading $xml"
-curl -T $xml  -uleamas:$BINTRAY_API_KEY \
-    "https://api.bintray.com/content/leamas/OpenCPN/$PKG/$VERSION/$xml;$OPTS"
-echo
+if [ -z "$BINTRAY_API_KEY" ]; then
+    echo 'Cannot deploy to bintray:: missing $BINTRAY_API_KEY'
+else
+    echo "Deploying to bintray"
+    set -x
+    curl -T $tarball --user leamas:$BINTRAY_API_KEY "$API_BASE/$tarball;$OPTS"
+    curl -T $xml --user leamas:$BINTRAY_API_KEY "$API_BASE/$xml;$OPTS"
+    set +x
+fi
+
+
+if [ -z "$CLOUDSMITH_API_KEY" ]; then
+    echo 'Cannot deploy to cloudsmith: missing $CLOUDSMITH_API_KEY'
+else
+    echo "Deploying to cloudsmith"
+    set -x
+    sudo python3 -m pip install cloudsmith-cli
+    cloudsmith push raw --republish --no-wait-for-sync \
+        alec-leamas/opencpn-plugins-unstable $tarball
+    cloudsmith push raw --republish --no-wait-for-sync \
+        alec-leamas/opencpn-plugins-unstable $xml
+    set +x
+fi
