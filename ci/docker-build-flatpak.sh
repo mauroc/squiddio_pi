@@ -7,7 +7,7 @@ cd $(dirname $(readlink -fn $0))
 set -xe
 
 df -h
-cd /opencpn-ci
+cd $TOPDIR
 su -c "dnf install -y sudo cmake gcc-c++ flatpak-builder flatpak make tar"
 flatpak remote-add --user --if-not-exists flathub \
     https://flathub.org/repo/flathub.flatpakrepo
