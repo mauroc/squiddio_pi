@@ -159,7 +159,6 @@ ENDIF(TWIN32 AND NOT UNIX)
 
 INCLUDE(CPack)
 
-IF(NOT STANDALONE MATCHES "BUNDLED")
 IF(APPLE)
   MESSAGE (STATUS "*** Staging to build PlugIn OSX Package the new way ***")
 # -- Run the BundleUtilities cmake code
@@ -186,7 +185,7 @@ IF(APPLE)
     COMMAND chmod +x ${CMAKE_SOURCE_DIR}/buildosx/create-dmg
     COMMAND
       ${CMAKE_SOURCE_DIR}/buildosx/create-dmg 
-      --volname "ocpn_draw_pi Installer" 
+      --volname "squiddio_pi Installer" 
       --background ${CMAKE_SOURCE_DIR}/buildosx/background.png
         ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
         ${CMAKE_INSTALL_PREFIX}/bin/
@@ -224,5 +223,4 @@ IF(APPLE)
 
 ENDIF(APPLE)
 
-ENDIF(NOT STANDALONE MATCHES "BUNDLED")
 
