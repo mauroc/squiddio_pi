@@ -10,6 +10,7 @@
 SET(CPACK_PACKAGE_NAME "${PACKAGE_NAME}")
 SET(CPACK_PACKAGE_VENDOR "opencpn.org")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${CPACK_PACKAGE_NAME} ${PACKAGE_VERSION})
+SET(PACKAGE_VERSION "${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH}" )
 SET(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}-${OCPN_MIN_VERSION}")
 SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
@@ -73,7 +74,7 @@ IF(UNIX AND NOT APPLE)
 
 # need apt-get install rpm, for rpmbuild
     SET(PACKAGE_DEPS "opencpn, bzip2, gzip")
-    SET(PACKAGE_RELEASE 1)
+    SET(PACKAGE_RELEASE ${OCPN_MIN_VERSION})
 
 
   IF (CMAKE_SYSTEM_PROCESSOR MATCHES "arm*")
@@ -114,7 +115,8 @@ IF(UNIX AND NOT APPLE)
     SET(CPACK_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
 
-    SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}_${PACKAGE_VERSION}-${OCPN_MIN_VERSION}-${PACKAGE_RELEASE}_${ARCH}" )
+    SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_NAME}_${PACKAGE_VERSION}-${OCPN_MIN_VERSION}_${ARCH}" )
+
 ENDIF(UNIX AND NOT APPLE)
 
 IF(TWIN32 AND NOT UNIX)
@@ -147,36 +149,65 @@ INCLUDE(CPack)
 
 IF(NOT STANDALONE MATCHES "BUNDLED")
 IF(APPLE)
-MESSAGE (STATUS "*** Staging to build PlugIn OSX Package ***")
+  MESSAGE (STATUS "*** Staging to build PlugIn OSX Package the new way ***")
+# -- Run the BundleUtilities cmake code
+  set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/buildosx/Info.plist.in")
 
- #  Copy a bunch of files so the Packages installer builder can find them
- #  relative to ${CMAKE_CURRENT_BINARY_DIR}
- #  This avoids absolute paths in the chartdldr_pi.pkgproj file
+  SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_NAME}_${PACKAGE_VERSION}-${OCPN_MIN_VERSION}" )
 
-configure_file(${PROJECT_SOURCE_DIR}/cmake/gpl.txt
+#  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app")
+  set(APPS "")
+  set(DIRS "")
+
+  # INSTALL(DIRECTORY DESTINATION "bin/OpenCPN.app/Contents/PlugIns")
+  install(
+    FILES ${PREFIX_PARENTLIB}/libsquiddio_pi.dylib
+    DESTINATION "bin/OpenCPN.app/Contents/PlugIns"
+  )
+  set(
+    LIBS
+    "\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/libsquiddio_pi.dylib"
+  )
+  MESSAGE(STATUS "osX package: ${CPACK_PACKAGE_FILE_NAME}, package_version: ${PACKAGE_VERSION}, package_release: ${OCPN_MIN_VERSION}")
+  add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
+    COMMAND chmod +x ${CMAKE_SOURCE_DIR}/buildosx/create-dmg
+    COMMAND
+      ${CMAKE_SOURCE_DIR}/buildosx/create-dmg 
+      --volname "ocpn_draw_pi Installer" 
+      --background ${CMAKE_SOURCE_DIR}/buildosx/background.png
+        ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
+        ${CMAKE_INSTALL_PREFIX}/bin/
+    DEPENDS ${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/libsquiddio_pi.dylib
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "create-dmg [${CPACK_PACKAGE_FILE_NAME}]: Generated dmg file."
+  )
+  add_custom_target(
+    create-dmg
+    COMMENT "create-dmg: Done."
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
+  )
+
+  MESSAGE (STATUS "*** Staging to build PlugIn OSX Package the old way ***")
+  configure_file(${PROJECT_SOURCE_DIR}/cmake/gpl.txt
             ${CMAKE_CURRENT_BINARY_DIR}/license.txt COPYONLY)
-
-configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
+	    
+  configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
             ${CMAKE_CURRENT_BINARY_DIR}/pkg_background.jpg COPYONLY)
 
- # Patch the pkgproj.in file to make the output package name conform to Xxx-Plugin_x.x.pkg format
- #  Key is:
- #  <key>NAME</key>
- #  <string>${VERBOSE_NAME}-Plugin_${VERSION_MAJOR}.${VERSION_MINOR}</string>
-
- configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/${PACKAGE_NAME}.pkgproj.in
+  configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/${PACKAGE_NAME}.pkgproj.in
             ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}.pkgproj)
 
- ADD_CUSTOM_COMMAND(
-   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin.pkg
+  ADD_CUSTOM_COMMAND(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin_${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}_${OCPN_MIN_VERSION}.pkg
    COMMAND /usr/local/bin/packagesbuild -F ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}.pkgproj
    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
    DEPENDS ${PACKAGE_NAME}
    COMMENT "create-pkg [${PACKAGE_NAME}]: Generating pkg file."
-)
+  )
 
- ADD_CUSTOM_TARGET(create-pkg COMMENT "create-pkg: Done."
- DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin.pkg )
+  ADD_CUSTOM_TARGET(create-pkg COMMENT "create-pkg: Done."
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin_${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}_${OCPN_MIN_VERSION}.pkg )
 
 
 ENDIF(APPLE)
