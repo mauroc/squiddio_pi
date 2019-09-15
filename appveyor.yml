@@ -65,9 +65,6 @@ artifacts:
 deploy:
   - provider: BinTray
     username: leamas
-    api_key: 
-       secure: XleVzEPm+/uKCbcKlN9iMz7ueZPhqGlfNc4NgfJm4chdDOPUo4/S3iwVtTDz0QVC
-    subject: leamas
     repo: OpenCPN
     package: plugins
     version: 1.15-0.beta2
