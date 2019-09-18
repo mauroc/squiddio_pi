@@ -1,0 +1,13 @@
+app
+repo
+.flatpak-builder
+*.log
+
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+Resources/
+cmake_install.cmake
+*.so
+*.xml
+
