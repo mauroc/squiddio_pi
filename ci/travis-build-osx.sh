@@ -42,7 +42,7 @@ chmod 644 /usr/local/lib/lib*.dylib
 make install
 #make install # Dunno why the second is needed but it is, otherwise
              # plugin data is not included in the bundle
-make create-dmg
+# make create-dmg
 
 wget http://opencpn.navnux.org/build_deps/Packages.dmg;
 hdiutil attach Packages.dmg;
