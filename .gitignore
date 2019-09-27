@@ -2,7 +2,7 @@ cscope.files
 tags
 index.sh
 include/version.h
-build/
+#build/
 Debug
 cmake
 CMakeFiles
