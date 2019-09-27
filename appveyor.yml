@@ -51,15 +51,15 @@ artifacts:
     name: plugin_xml
  
 deploy:
-  - description: 'release created by AppVeyor CI'
-  - provider: GitHub
-    auth_token:
+   description: 'release created by AppVeyor CI'
+   provider: GitHub
+   auth_token:
       secure: 98713727e826f28c7902b32bd20d5b4f11752df5
-    artifact: installer
-    draft: true
-    prerelease: true
+   artifact: installer
+   draft: true
+   prerelease: true
 #  tag: $(APPVEYOR_REPO_TAG_NAME)
-    on:
+   on:
       appveyor_repo_tag: false # deploy on tag push only
       configuration: Release  # Debug contains non-redist MS DLLs
 
