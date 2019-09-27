@@ -1,0 +1,73 @@
+# ov50 Linux/OSX build - courtesy to https://github.com/seandepagnier
+language: cpp
+
+matrix:
+  include:
+    - dist: trusty
+      compiler: gcc
+    - os: osx
+      compiler: clang
+
+install:
+
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+      then
+        sudo apt-get -qq update;
+        sudo apt-get install libwxgtk3.0-dev libwxgtk3.0-0 libgps-dev libglu1-mesa-dev libgtk2.0-dev libbz2-dev libtinyxml-dev;
+        sudo apt-get install libexpat1-dev libcairo2-dev;
+        sudo apt-get install rpm;
+      fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+      then
+        brew install cairo libexif xz libarchive;
+        wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz;
+        tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp;
+        export PATH="/usr/local/opt/gettext/bin:$PATH";
+        echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.bash_profile;
+        wget http://opencpn.navnux.org/build_deps/Packages.dmg;
+        hdiutil attach Packages.dmg;
+        sudo installer -pkg "/Volumes/Packages 1.2.5/Install Packages.pkg" -target "/";
+      fi
+
+script:
+  - if [[ "${COVERITY_SCAN_BRANCH}" == 1 ]];
+    then
+      echo "Don't build on coverty_scan branch.";
+      exit 0;
+    fi
+  - mkdir build && cd build
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+    then
+       cmake -DCMAKE_BUILD_TYPE=Release ../ && make -sj2 package;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        cmake -DwxWidgets_CONFIG_EXECUTABLE=/tmp/wx312_opencpn50_macos109/bin/wx-config -DwxWidgets_CONFIG_OPTIONS="--prefix=/tmp/wx312_opencpn50_macos109" -DCMAKE_INSTALL_PREFIX=/tmp/opencpn -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 .. && make -sj2 && make create-pkg;
+     fi
+  - ls -l;
+
+notifications:
+  email: false
+git:
+  depth: 10
+before_install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
+deploy:
+- provider: releases
+  api_key:
+    secure: "PQN01yYRfr3JQrvpz7smxDRRiHWdvt7/3nlpgQua9Dttr0XYnnKbjIxiuOeiafGZs69tAyvo+ZT2y9Trutb6Bo0h97Q1BlkXxg3Gi021VGPQkook3XALX1rOl7SmFyhbJ4vkLrm1E9fXMR/Y6/5gBt4sKGXF7DPZppVbosfcIdOQ1Oxn5F2d9Q5FmbTJ7mFAJ/00Q7qCKTp2kBP0yrHayva+AMf5XkVWSmbWrEgfdcebmItoNLYJob/gehw4kweUQgM3odLcNvP/fzhVmQkRLlyEumjaaXYugSxOqrzplPDGJmiw1VAWI3BtZXlJmS0vZT3XUg113qjz1Phu2ToyOqECTz3Q8m3cjW/XB8RMJG4DLKdVqjzQl6cW9RfFPHj1dsDBmk6IyMjQosw00j3M05ybS5oz049DNJO21jJVlIxH2qA+7ZEZlO5Wv1tf/CSLY4vGHipJA1fH0O+MrRaTKDTfVqzM1Z5SrcT7axCpWWtdSyeUB1/fpx+G+g3AZhtvnul+co0a3JgTmMr1FQBF3ms5P9zqho+eqGhF8aR05tfvCT0cgd5qZbD5gWAnHK8wiIPzcFl5whmEL1vCDWT2jeEyAOuFT23DzRbvWnw1IotGQq9Jz5AApLRJU2inOceUNA+HcAxO46dsJ7qLgCsLmxuZmpg8SLf6Cr/aFvMHfv0="
+  file_glob: true
+  file: "$TRAVIS_BUILD_DIR/build/*.{deb,rpm,dmg,txz,pkg,pkg.tar.xz}"
+  skip_cleanup: true
+  on:
+    repo: mauroc/squiddio_pi
+    tags: true
+    all_branches: true
+ 
