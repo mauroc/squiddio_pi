@@ -49,15 +49,11 @@ artifacts:
   name: installer
 # Deploy to GitHub Releases
 deploy:
-
-  provider: GitHub
-  auth_token: 
-    secure: 4l9NTrQyvKVqzBPAT3ejCSZhllJXWaI/QcFWTBHueU3YEqLRAZM3+LinoOBnMcf2
-  artifact: installer,portable
-  draft: true
-  prerelease: true
-#  tag: v1.0.6 # insert version name
-  on:
-    configuration: Release    # Debug contains non-redist MS DLLs
-    APPVEYOR_REPO_TAG: true  # deploy on tag push only
-#   branch: master   # release from master branch only
+  - provider: BinTray
+    username: mauroc
+    repo: squiddio_win
+    package: plugins
+    version: 1.0.5
+    publish: true
+    override: true
+    explode: false
