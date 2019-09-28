@@ -9,7 +9,7 @@ platform:
 # - x64
 - Win32
 
-configuration: RelWithDebInfo
+configuration: Release
 test: OFF
 
 install:
@@ -48,8 +48,8 @@ before_build:
 
 build_script:
   - cmake -G "Visual Studio 15 2017"   ..
-  - cmake --build . --target install --config RelWithDebInfo
-  - cmake --build . --target package --config RelWithDebInfo
+  - cmake --build . --target install --config Release
+  - cmake --build . --target package --config Release
   - choco install git
   - python -m ensurepip
   - python -m pip install -q setuptools
@@ -62,14 +62,14 @@ artifacts:
 
 deploy:
 -  provider: GitHub
--  auth_token: 
--    secure: VYYxNSdoxzJai29K/HmfO+VHsJ2QDvkYk2oa2pb4WrIRad+8/HANZ0lCn3GbgfHd
--  artifact: installer,portable
--  draft: true
--  prerelease: true
--  tag: $(APPVEYOR_REPO_TAG_NAME) # insert version name
--  on:
--    configuration: Release    # Debug contains non-redist MS DLLs
--    APPVEYOR_REPO_TAG: true   # deploy on tag push only
--#   branch: master   # release from master branch only
-    
+   auth_token: 
+     secure: VYYxNSdoxzJai29K/HmfO+VHsJ2QDvkYk2oa2pb4WrIRad+8/HANZ0lCn3GbgfHd
+   artifact: installer,portable
+   draft: true
+   prerelease: true
+   tag: $(APPVEYOR_REPO_TAG_NAME) # insert version name
+   on:
+     configuration: Release    # Debug contains non-redist MS DLLs
+     APPVEYOR_REPO_TAG: true   # deploy on tag push only
+   #   branch: master   # release from master branch only
+     
