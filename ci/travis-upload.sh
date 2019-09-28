@@ -11,15 +11,13 @@ cd build
 tarball=$(echo ${PLUGIN}*.tar.gz)
 xml=$(echo ${PLUGIN}-plugin*.xml)
 
-BINTRAY_API_KEY="50a571aa02e1a7dd0ff1439efd0b3b3f4681b74f"
-
 if [ -z "$BINTRAY_API_KEY" ]; then
     echo 'Cannot deploy to bintray:: missing $BINTRAY_API_KEY'
 else
     echo "Deploying to bintray"
     set -x
-    curl -T $tarball --user mauroc:$BINTRAY_API_KEY "$API_BASE/$tarball;$OPTS"
-    curl -T $xml --user mauroc:$BINTRAY_API_KEY "$API_BASE/$xml;$OPTS"
+    curl -T $tarball --user leamas:$BINTRAY_API_KEY "$API_BASE/$tarball;$OPTS"
+    curl -T $xml --user leamas:$BINTRAY_API_KEY "$API_BASE/$xml;$OPTS"
     set +x
 fi
 
