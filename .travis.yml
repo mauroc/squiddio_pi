@@ -1,44 +1,75 @@
+# ov50 Linux/OSX build - courtesy to https://github.com/seandepagnier
 language: cpp
+
 matrix:
   include:
-  - env:
-    - OCPN_TARGET=xenial
-    dist: xenial
-    compiler: gcc
-    script:
-    - "./ci/travis-build-debian.sh"
-  - env:
-    - OCPN_TARGET=flatpak
-    services:
-    - docker
-    script:
-    - "./ci/travis-build-flatpak.sh"
-  - env:
-    - OCPN_TARGET=fedora
-    services:
-    - docker
-    script:
-    - "./ci/travis-build-fedora.sh"
-  - env:
-    - OCPN_TARGET=osx
-    os: osx
-    compiler: clang
-    script:
-    - "./ci/travis-build-osx.sh"
+    - dist: trusty
+      compiler: gcc
+    - os: osx
+      compiler: clang
+#
+
+install:
+
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+      then
+        sudo apt-get -qq update;
+        sudo apt-get install libwxgtk3.0-dev libwxgtk3.0-0 libgps-dev libglu1-mesa-dev libgtk2.0-dev libbz2-dev libtinyxml-dev;
+        sudo apt-get install libexpat1-dev libcairo2-dev;
+        sudo apt-get install rpm;
+      fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+      then
+        brew install cairo libexif xz libarchive;
+        wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz;
+        tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp;
+        export PATH="/usr/local/opt/gettext/bin:$PATH";
+        echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.bash_profile;
+        wget http://opencpn.navnux.org/build_deps/Packages.dmg;
+        hdiutil attach Packages.dmg;
+        sudo installer -pkg "/Volumes/Packages 1.2.5/Install Packages.pkg" -target "/";
+      fi
+
+script:
+  - if [[ "${COVERITY_SCAN_BRANCH}" == 1 ]];
+    then
+      echo "Don't build on coverty_scan branch.";
+      exit 0;
+    fi
+  - mkdir build
+  - cd build
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]];
+    then
+       cmake -DCMAKE_BUILD_TYPE=Release ../ && make -sj2 package;
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+        cmake -DwxWidgets_CONFIG_EXECUTABLE=/tmp/wx312_opencpn50_macos109/bin/wx-config -DwxWidgets_CONFIG_OPTIONS="--prefix=/tmp/wx312_opencpn50_macos109" -DCMAKE_INSTALL_PREFIX=/tmp/opencpn -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 .. && make -sj2 && make create-pkg;
+     fi
+  - ls -l;
+
 notifications:
   email: false
 git:
   depth: 10
-  user: leamas
-  skip_cleanup: true
-  on:
-    all_branches: true
-  key: $BINTRAY_API_KEY
+before_install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-6" CC="gcc-6"; fi
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-6
+    - g++-6
 deploy:
-  provider: script
+- provider: releases
+  api_key:
+    secure: "fAXQOEZd83GYDVDw+KOHEJwKWAD/ILVlT9vWl6FNQkjltIBVp0PpbkgRr/fQcGrQno7UMUZdPm+OIbWAq+0d675SoeZ8NFjGd884SzjslWauB8kRG7iK72Y0EAYqRHl83XqdspuCcBE24fU95C87DbQdhp/zmKi+NB8n3m0X4ifw2G6CNpUdaj9Oxq7dDIQikUTynmmIlTMXtNLr8aQRBihLVpMoIuWLyjskyxPuRU+jFkM0xAeyqy246ZFg0eK2HTIqhlSA/HJHlPHF0gBDxnjca5ZIGYC7s5rr03ghSIMAr6nLHCmAelWPp3+znwTzJ5mGv+4vKwOvOi3EMpCDtsDbh0ybMkSr3tdJzJ9TEsgZ6MIqC2X9bwKtQcW/cmSeJmmpUVhaIZ7KjYS3cIxlQ+jU0aIZupsf0P73rovTfNWuC919H9Ggu/Mc3rELwBUZ1FctxDFZ13cM1gnpbAZXA0xZGGK0AV3Y9M1BQ/RBcnez2OT7DAwYofYe2VAnvMJbYkJUKVVMsKZqPF+9fXGYhtVTpKw3j89nE98xRkIKiWQBmUE6x5XPSgxsI1CaDBIuZiXDO/IMh2v3HGiFlOC8qAuV6Z1vdHbaIFtzPkVEZ1miMBbD3XPki3Crl4kVXtGrCPAl6uH3YVrats9CL6shfgwzsS52zBacQxQu7RCrT6U="
+  file_glob: true
+  file: "$TRAVIS_BUILD_DIR/build/*.{deb,rpm,dmg,txz,pkg,pkg.tar.xz}"
   skip_cleanup: true
-  script: ci/travis-upload.sh
   on:
-    branch: master
-    tags: false
-
+    repo: mauroc/squiddio_pi
+    tags: true
+    all_branches: true
+    
