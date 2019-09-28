@@ -56,8 +56,8 @@ deploy:
   artifact: installer,portable
   draft: true
   prerelease: true
-  tag: v1.0.6 # insert version name
+#  tag: v1.0.6 # insert version name
   on:
     configuration: Release    # Debug contains non-redist MS DLLs
-    APPVEYOR_REPO_TAG: false  # deploy on tag push only
+    APPVEYOR_REPO_TAG: true  # deploy on tag push only
 #   branch: master   # release from master branch only
