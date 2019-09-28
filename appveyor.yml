@@ -63,25 +63,14 @@ deploy:
       appveyor_repo_tag: false # deploy on tag push only
       configuration: Release  # Debug contains non-redist MS DLLs
 
-deploy:
-  - provider: BinTray
-    username: leamas
-    repo: OpenCPN
-    package: plugins
-    version: 1.15-0.beta2
-    publish: true
-    override: true
-    explode: false
-    
-deploy:
-  - description: 'release created by AppVeyor CI'
-  - provider: GitHub
-    auth_token:
-      secure: 98713727e826f28c7902b32bd20d5b4f11752df5
-    artifact: installer
-    draft: true
-    prerelease: true
-#  tag: $(APPVEYOR_REPO_TAG_NAME)
-    on:
-      appveyor_repo_tag: false # deploy on tag push only
-      configuration: Release  # Debug contains non-redist MS DLLs
+  provider: GitHub
+  auth_token: 
+    secure: 4l9NTrQyvKVqzBPAT3ejCSZhllJXWaI/QcFWTBHueU3YEqLRAZM3+LinoOBnMcf2
+  artifact: installer,portable
+  draft: true
+  prerelease: true
+  tag: $(v1.0.6) # insert version name
+  on:
+    configuration: Release    # Debug contains non-redist MS DLLs
+    APPVEYOR_REPO_TAG: false  # deploy on tag push only
+#   branch: master   # release from master branch only
