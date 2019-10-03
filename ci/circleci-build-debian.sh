@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
 #
-# Build the Travis Debian artifacts
+# Build the Debian artifacts
 #
 set -xe
 sudo apt-get -qq update
 sudo apt-get install devscripts equivs
+
+pwd
+ls -R
 
 mkdir  build
 cd build

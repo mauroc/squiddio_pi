@@ -7,14 +7,16 @@
 # bailout on errors and echo commands
 set -xe
 
-brew install cairo libexif xz libarchive python3
+for pkg in cairo libexif xz libarchive python3 wget cmake; do
+    brew list $pkg 2>&1 >/dev/null || brew install $pkg
+done
+
 wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
 tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp
 export PATH="/usr/local/opt/gettext/bin:$PATH"
 echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.bash_profile
  
-mkdir  build
-cd build
+rm -rf build && mkdir build && cd build
 test -z "$TRAVIS_TAG" && CI_BUILD=OFF || CI_BUILD=ON
 cmake -DOCPN_CI_BUILD=$CI_BUILD \
   -DOCPN_USE_LIBCPP=ON \
@@ -24,4 +26,3 @@ cmake -DOCPN_CI_BUILD=$CI_BUILD \
   ..
 make -sj2
 make package
-chmod 644 /usr/local/lib/lib*.dylib
