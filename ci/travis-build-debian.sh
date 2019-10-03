@@ -3,7 +3,7 @@
 #
 # Build the Travis Debian artifacts
 #
-set -xe
+#set -xe
 sudo apt-get -qq update
 sudo apt-get install devscripts equivs
 
