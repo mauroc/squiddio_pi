@@ -6,7 +6,7 @@
 
 set -xe
 
-REPO='mauro-calvi/squiddio_pi'
+REPO='mauro-calvi/squiddio-pi'
 
 if [ -z "$CIRCLECI" ]; then
     exit 0;
