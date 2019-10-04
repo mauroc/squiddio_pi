@@ -7,7 +7,7 @@
 #
 
 # bailout on errors and echo commands.
-set -xe
+#set -xe
 sudo apt-get -qq update
 
 DOCKER_SOCK="unix:///var/run/docker.sock"
