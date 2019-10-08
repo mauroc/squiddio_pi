@@ -1405,6 +1405,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_ramp_azu;
     pAPI->PointIconName = _T("ramp_azu"); 
     pAPI->PointIconDescription = _("Boat Ramp");
+    m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_ramp_grn;
     pAPI->PointIconName = _T("ramp_grn");
     pAPI->PointIconDescription = _("Boat Yard");
