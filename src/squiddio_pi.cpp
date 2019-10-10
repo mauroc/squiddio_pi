@@ -250,7 +250,7 @@ int squiddio_pi::Init(void) {
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_plugin_logo,
-            _img_plugin_logo, wxITEM_NORMAL, _("sQuiddio"), _T(""), NULL,
+            _img_plugin_logo, wxITEM_CHECK, _("sQuiddio"), _T(""), NULL,
             SQUIDDIO_TOOL_POSITION, 0, this);
             
     m_pThread = new SquiddioThread(this);
@@ -1204,7 +1204,9 @@ void squiddio_pi::SetLogsWindow() {
 }
 
 void squiddio_pi::OnToolbarToolCallback(int id) {
+    SetToolbarItemState( m_leftclick_tool_id, true );
     PreferencesDialog(m_parent_window);
+    SetToolbarItemState( m_leftclick_tool_id, false );
 }
 void squiddio_pi::SetPluginMessage(wxString &message_id, wxString &message_body) {
     g_psJSON->ProcessMessage(message_id, message_body);
