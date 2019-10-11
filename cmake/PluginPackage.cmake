@@ -171,12 +171,12 @@ IF(APPLE)
 
   # INSTALL(DIRECTORY DESTINATION "bin/OpenCPN.app/Contents/PlugIns")
   install(
-    FILES ${PREFIX_PARENTLIB}/libsquiddio_pi.dylib
+    FILES ${PREFIX_PARENTLIB}/lib${PACKAGE_NAME}.dylib
     DESTINATION "bin/OpenCPN.app/Contents/PlugIns"
   )
   set(
     LIBS
-    "\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/libsquiddio_pi.dylib"
+    "\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/lib${PACKAGE_NAME}.dylib"
   )
   MESSAGE(STATUS "osX package: ${CPACK_PACKAGE_FILE_NAME}, package_version: ${PACKAGE_VERSION}, package_release: ${OCPN_MIN_VERSION}")
   add_custom_command(
@@ -184,11 +184,11 @@ IF(APPLE)
     COMMAND chmod +x ${CMAKE_SOURCE_DIR}/buildosx/create-dmg
     COMMAND
       ${CMAKE_SOURCE_DIR}/buildosx/create-dmg 
-      --volname "squiddio_pi Installer" 
+      --volname "${PACKAGE_NAME} Installer" 
       --background ${CMAKE_SOURCE_DIR}/buildosx/background.png
         ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
         ${CMAKE_INSTALL_PREFIX}/bin/
-    DEPENDS ${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/libsquiddio_pi.dylib
+    DEPENDS ${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/lib${PACKAGE_NAME}.dylib
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "create-dmg [${CPACK_PACKAGE_FILE_NAME}]: Generated dmg file."
   )
