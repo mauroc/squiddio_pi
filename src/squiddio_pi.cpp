@@ -126,7 +126,7 @@ squiddio_pi::~squiddio_pi(void) {
 
 int squiddio_pi::Init(void) {
 
-    wxLogMessage(_T("squiddio_pi: Init()"));
+    wxLogMessage(_T("squiddio_pi: Init( )"));
 
     m_plogs_window = NULL;
     g_PostPeriod = 0;
@@ -643,15 +643,28 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
                 m_GUID);
         pPoint->m_MarkDescription = wp->m_MarkDescription;
+		pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
 
-        wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-        wp_link = linknode->GetData();
-        link->Link = wp_link->Link;
-        link->DescrText = wp_link->DescrText;
-        link->Type = wxEmptyString;
+        int NbrOfLinks = wp->m_HyperlinkList->GetCount();
+		wxString sMsg;
+		sMsg.Printf("nbrOfLinks %i", NbrOfLinks);
+		wxLogMessage(_(sMsg));
 
-        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
-        pPoint->m_HyperlinkList->Insert(link);
+        if( NbrOfLinks > 0 ) {
+			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+			while( linknode ) {
+				wp_link = linknode->GetData();
+				link->Link = wp_link->Link;
+				link->DescrText = wp_link->DescrText;
+				link->Type = wxEmptyString;
+
+				pPoint->m_HyperlinkList->Insert(link);
+
+//				pPoint->m_HyperlinkList->Append( link );
+
+                linknode = linknode->GetNext();
+			}
+        }
 
         bool added = AddSingleWaypoint(pPoint, false);
         return added;
@@ -678,14 +691,21 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->Visible = true;
         pCTP->temporary = true;
         
-        wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-        wp_link = linknode->GetData();
         pCTP->TextPointHyperLinkList.clear();
         HyperLinkList_t *l_list = new HyperLinkList_t;
-        l_list->sLink = wp_link->Link;
-        l_list->sDescription = wp_link->DescrText;
-        pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
         
+        int NbrOfLinks = wp->m_HyperlinkList->GetCount();
+        if( NbrOfLinks > 0 ) {
+			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+			while( linknode ) {
+				wp_link = linknode->GetData();
+				l_list->sLink = wp_link->Link;
+				l_list->sDescription = wp_link->DescrText;
+				pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
+	            linknode = linknode->GetNext();
+			}
+        }
+
         bool added = false;
         
         if(m_bODCreateTextPoint) added = (*m_pODCreateTextPoint)(pCTP);
