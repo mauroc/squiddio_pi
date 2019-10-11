@@ -6,7 +6,7 @@
 
 set -xe
 
-REPO='alec-leamas/opencpn-plugins-unstable'
+REPO='mauro-calvi/squiddio-pi'
 
 if [ -z "$CIRCLECI" ]; then
     exit 0;
