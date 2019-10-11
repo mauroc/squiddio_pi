@@ -63,20 +63,20 @@ workflows:
       - build-debian:
           filters:
             branches:
-              only: master
+              only: work
       - build-flatpak:
           filters:
             branches:
-              only: master
+              only: work
       - build-fedora:
           filters:
             branches:
-              only: master
+              only: work
       - build-macos:
           filters:
             branches:
-              only: master
+              only: work
       - build-mingw:
           filters:
             branches:
-              only: master
+              only: work
