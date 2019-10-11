@@ -646,9 +646,9 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
 		pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
 
         int NbrOfLinks = wp->m_HyperlinkList->GetCount();
-		wxString sMsg;
+/*		wxString sMsg;
 		sMsg.Printf("nbrOfLinks %i", NbrOfLinks);
-		wxLogMessage(_(sMsg));
+		wxLogMessage(_(sMsg));*/
 
         if( NbrOfLinks > 0 ) {
 			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
@@ -692,8 +692,8 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->temporary = true;
         
         pCTP->TextPointHyperLinkList.clear();
+
         HyperLinkList_t *l_list = new HyperLinkList_t;
-        
         int NbrOfLinks = wp->m_HyperlinkList->GetCount();
         if( NbrOfLinks > 0 ) {
 			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
