@@ -4,14 +4,14 @@
 # Upload the .tar.gz and .xml artifacts to cloudsmith
 #
 
-set -xe
-
-REPO='alec-leamas/opencpn-plugins-unstable'
+REPO='mauro-calvi/squiddio-pi'
 
 if [ -z "$CLOUDSMITH_API_KEY" ]; then
     echo 'Cannot deploy to cloudsmith, missing $CLOUDSMITH_API_KEY'
     exit 0
 fi
+
+set -xe
 
 python -m ensurepip
 python -m pip install -q setuptools

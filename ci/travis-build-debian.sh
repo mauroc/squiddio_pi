@@ -9,11 +9,10 @@ sudo apt-get install devscripts equivs
 
 mkdir  build
 cd build
-ln -s ../ci/control.${OCPN_TARGET} ../ci/control
 mk-build-deps ../ci/control
 sudo apt-get install  ./*all.deb  || :
 sudo apt-get --allow-unauthenticated install -f
 
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -sj2
 make package

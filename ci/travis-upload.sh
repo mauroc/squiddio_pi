@@ -1,5 +1,5 @@
 #!/bin/sh
-PLUGIN="oesenc"
+PLUGIN="squiddio"
 
 VERSION="unstable"
 OPTS="override=1;publish=1"

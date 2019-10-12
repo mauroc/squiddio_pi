@@ -1,6 +1,7 @@
-Source: opencpn-plugin-squiddio
+Source: opencpn
 Build-Depends: debhelper (>= 9),
  cmake,
+ curl,
  libarchive-dev,
  libbz2-dev,
  libcairo2-dev,
@@ -17,16 +18,15 @@ Build-Depends: debhelper (>= 9),
  libunarr-dev | base-files,
  libwxgtk3.0-dev,
  libwxgtk3.0-0v5 | libwxgtk3.0-0,
- libwxgtk-webview3.0-0v5 | libwxgtk3.0-libwxgtk3.0-0,
- libwxgtk-webview3.0-dev | libwxgtk3.0-dev,
  libwxsvg-dev | base-files,
  portaudio19-dev,
- rpm
+ python3-pip,
+ python3-setuptools
 Standards-Version: 4.3.0
 Homepage: https://opencpn.org
 
-Description: Packages needed to build squiddio_pi on debian.
+Description: Packages needed to build opencpn on debian.
  The Build-Depends field can be used to install dependencies
  using mk-build-deps.
  .
- These packages are available in xenial+.
+ These packages are available in trusty+.

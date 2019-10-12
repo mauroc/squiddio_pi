@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 #
-# Upload the .tar.gz and .xml artifacts.
+# Upload the .tar.gz and .xml artifacts to cloudsmith.
 #
 
-set -xe
 
 REPO='mauro-calvi/squiddio-pi'
 
@@ -16,6 +15,8 @@ if [ -z "$CLOUDSMITH_API_KEY" ]; then
     echo 'Cannot deploy to cloudsmith, missing $CLOUDSMITH_API_KEY'
     exit 0
 fi
+
+set -xe
 
 if pyenv versions 2>&1 >/dev/null; then
     pyenv global 3.7.0

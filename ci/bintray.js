@@ -3,10 +3,10 @@
         "name": "plugins",
         "repo": "OpenCPN",
         "subject": "leamas",
-        "desc": "oesenc plugin automatic push",
+        "desc": "squiddio plugin automatic push",
         "website_url": "www.jfrog.com",
-        "issue_tracker_url": "https://github.com/leamas/oesenc_pi/issues",
-        "vcs_url": "https://github.com/leamas/oesenc_pi.git",
+        "issue_tracker_url": "https://github.com/leamas/squiddio_pi/issues",
+        "vcs_url": "https://github.com/leamas/squiddio_pi.git",
         "github_use_tag_release_notes": false,
         "licenses": ["GPL2"],
         "labels": [],
@@ -39,17 +39,17 @@
     "files":
         [
             {
-                "includePattern": "build/(oesenc.*\\.tar.gz)",
+                "includePattern": "build/(squiddio.*\\.tar.gz)",
+                "uploadPattern": "$1",
+                "matrixParams": {"override": 1}
+            },
+             {
+                "includePattern": "build/(squiddio-plugin\\.xml)",
                 "uploadPattern": "$1",
                 "matrixParams": {"override": 1}
             },
             {
-                "includePattern": "build/(oesenc-plugin\\.xml)",
-                "uploadPattern": "$1",
-                "matrixParams": {"override": 1}
-            },
-            {
-                "includePattern": "build/(oesenc-plugin-.*\\.xml)",
+                "includePattern": "build/(squiddio-plugin-.*\\.xml)",
                 "uploadPattern": "$1",
                 "matrixParams": {"override": 1}
             }

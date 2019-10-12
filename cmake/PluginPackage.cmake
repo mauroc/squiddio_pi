@@ -10,19 +10,16 @@
 SET(CPACK_PACKAGE_NAME "${PACKAGE_NAME}")
 SET(CPACK_PACKAGE_VENDOR "opencpn.org")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${CPACK_PACKAGE_NAME} ${PACKAGE_VERSION})
-SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}" )
-SET(CPACK_PACKAGE_VERSION ${PACKAGE_VERSION})
+SET(CPACK_PACKAGE_VERSION "${PACKAGE_VERSION}-${OCPN_MIN_VERSION}")
 SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
-MESSAGE(STATUS "CPACK_PACKAGE_VERSION: ${CPACK_PACKAGE_VERSION}, PACKAGE_VERSION ${PACKAGE_VERSION}")
 SET(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_CURRENT_BINARY_DIR};${PACKAGE_NAME};ALL;/")
 SET(CPACK_PACKAGE_EXECUTABLES OpenCPN ${PACKAGE_NAME})
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER ${CPACK_PACKAGE_CONTACT})
 
 IF(WIN32)
-# to protect against confusable windows users, let us _not_ generate zip packages
-#  SET(CPACK_GENERATOR "NSIS;ZIP")
+  # The TGZ (tar.gz) is used by experimental plugin manager,
+  SET(CPACK_GENERATOR "NSIS;TGZ")
 
   # override install directory to put package files in the opencpn directory
   SET(CPACK_PACKAGE_INSTALL_DIRECTORY "OpenCPN")
@@ -38,22 +35,10 @@ IF(WIN32)
 
 #  These lines set the name of the Windows Start Menu shortcut and the icon that goes with it
 #  SET(CPACK_NSIS_INSTALLED_ICON_NAME "${PACKAGE_NAME}")
-  SET(CPACK_NSIS_DISPLAY_NAME "OpenCPN ${PACKAGE_NAME}")
-
-  SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_NAME}_${CPACK_PACKAGE_VERSION}-${OCPN_MIN_VERSION}_win32" )
-  MESSAGE(STATUS "CPACK_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION}")
+SET(CPACK_NSIS_DISPLAY_NAME "OpenCPN ${PACKAGE_NAME}")
 
   SET(CPACK_NSIS_DIR "${PROJECT_SOURCE_DIR}/buildwin/NSIS_Unicode")  #Gunther
   SET(CPACK_BUILDWIN_DIR "${PROJECT_SOURCE_DIR}/buildwin")  #Gunther
-
-  MESSAGE(STATUS "FILE: ${CPACK_PACKAGE_FILE_NAME}")
-  add_custom_command(OUTPUT ${CPACK_PACKAGE_FILE_NAME}
-	  COMMAND signtool sign /v /f \\cert\\OpenCPNSPC.pfx /d http://www.opencpn.org /t http://timestamp.verisign.com/scripts/timstamp.dll ${CPACK_PACKAGE_FILE_NAME}
-	  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-	  DEPENDS ${PACKAGE_NAME}
-	  COMMENT "Code-Signing: ${CPACK_PACKAGE_FILE_NAME}")
-  ADD_CUSTOM_TARGET(codesign COMMENT "code signing: Done."
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME} )
 
 ELSE(WIN32)
   SET(CPACK_PACKAGE_INSTALL_DIRECTORY ${PACKAGE_NAME})
@@ -88,14 +73,15 @@ IF(UNIX AND NOT APPLE)
 
 # need apt-get install rpm, for rpmbuild
     SET(PACKAGE_DEPS "opencpn, bzip2, gzip")
+    SET(PACKAGE_RELEASE 1)
 
 
   IF (CMAKE_SYSTEM_PROCESSOR MATCHES "arm*")
     SET (ARCH "armhf")
     # don't bother with rpm on armhf
-    SET(CPACK_GENERATOR "DEB;RPM;TBZ2")
+    SET(CPACK_GENERATOR "DEB;TGZ")
   ELSE ()
-    SET(CPACK_GENERATOR "DEB;RPM;TBZ2")
+    SET(CPACK_GENERATOR "DEB;TGZ")
 
     IF (CMAKE_SIZEOF_VOID_P MATCHES "8")
       SET (ARCH "amd64")
@@ -114,20 +100,12 @@ IF(UNIX AND NOT APPLE)
     SET(CPACK_DEBIAN_PACKAGE_SECTION "misc")
     SET(CPACK_DEBIAN_COMPRESSION_TYPE "xz") # requires my patches to cmake
 
-    SET(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
-    SET(CPACK_RPM_PACKAGE_REQUIRES  ${PACKAGE_DEPS})
-#    SET(CPACK_RPM_PACKAGE_GROUP "Applications/Engineering")
-    SET(CPACK_RPM_PACKAGE_LICENSE "gplv3+")
-
-    SET(CPACK_RPM_COMPRESSION_TYPE "xz")
-#    SET(CPACK_RPM_USER_BINARY_SPECFILE "${PROJECT_SOURCE_DIR}/opencpn.spec.in")
-
     SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PACKAGE_NAME} PlugIn for OpenCPN")
     SET(CPACK_PACKAGE_DESCRIPTION "${PACKAGE_NAME} PlugIn for OpenCPN")
-    SET(CPACK_SET_DESTDIR ON)
+    SET(CPACK_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
-    SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_NAME}_${PACKAGE_VERSION}-${OCPN_MIN_VERSION}_${ARCH}" )
 
+    SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}_${PACKAGE_VERSION}-${PACKAGE_RELEASE}_${ARCH}" )
 ENDIF(UNIX AND NOT APPLE)
 
 IF(TWIN32 AND NOT UNIX)
@@ -156,68 +134,60 @@ ENDIF(TWIN32 AND NOT UNIX)
 #ADD_CUSTOM_TARGET(dummy COMMENT "dummy: Done." DEPENDS ${PACKAGE_NAME})
 
 
-INCLUDE(CPack)
-
+IF(NOT STANDALONE MATCHES "BUNDLED")
 IF(APPLE)
-  MESSAGE (STATUS "*** Staging to build PlugIn OSX Package the new way ***")
-# -- Run the BundleUtilities cmake code
-  set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/buildosx/Info.plist.in")
+MESSAGE (STATUS "*** Staging to build PlugIn OSX Package ***")
 
-  SET(CPACK_PACKAGE_FILE_NAME "${PACKAGE_FILE_NAME}_${PACKAGE_VERSION}-${OCPN_MIN_VERSION}" )
+ #  Copy a bunch of files so the Packages installer builder can find them
+ #  relative to ${CMAKE_CURRENT_BINARY_DIR}
+ #  This avoids absolute paths in the chartdldr_pi.pkgproj file
 
-#  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app")
-  set(APPS "")
-  set(DIRS "")
-
-  # INSTALL(DIRECTORY DESTINATION "bin/OpenCPN.app/Contents/PlugIns")
-  install(
-    FILES ${PREFIX_PARENTLIB}/lib${PACKAGE_NAME}.dylib
-    DESTINATION "bin/OpenCPN.app/Contents/PlugIns"
-  )
-  set(
-    LIBS
-    "\${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/lib${PACKAGE_NAME}.dylib"
-  )
-  MESSAGE(STATUS "osX package: ${CPACK_PACKAGE_FILE_NAME}, package_version: ${PACKAGE_VERSION}, package_release: ${OCPN_MIN_VERSION}")
-  add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
-    COMMAND chmod +x ${CMAKE_SOURCE_DIR}/buildosx/create-dmg
-    COMMAND
-      ${CMAKE_SOURCE_DIR}/buildosx/create-dmg 
-      --volname "${PACKAGE_NAME} Installer" 
-      --background ${CMAKE_SOURCE_DIR}/buildosx/background.png
-        ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
-        ${CMAKE_INSTALL_PREFIX}/bin/
-    DEPENDS ${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/PlugIns/lib${PACKAGE_NAME}.dylib
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "create-dmg [${CPACK_PACKAGE_FILE_NAME}]: Generated dmg file."
-  )
-  add_custom_target(
-    create-dmg
-    COMMENT "create-dmg: Done."
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME}.dmg
-  )
-
-  MESSAGE (STATUS "*** Staging to build PlugIn OSX Package the old way ***")
-  configure_file(${PROJECT_SOURCE_DIR}/cmake/gpl.txt
+configure_file(${PROJECT_SOURCE_DIR}/cmake/gpl.txt
             ${CMAKE_CURRENT_BINARY_DIR}/license.txt COPYONLY)
-	    
-  configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
+
+configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/pkg_background.jpg
             ${CMAKE_CURRENT_BINARY_DIR}/pkg_background.jpg COPYONLY)
 
-  configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/${PACKAGE_NAME}.pkgproj.in
+ # Patch the pkgproj.in file to make the output package name conform to Xxx-Plugin_x.x.pkg format
+ #  Key is:
+ #  <key>NAME</key>
+ #  <string>${VERBOSE_NAME}-Plugin_${VERSION_MAJOR}.${VERSION_MINOR}</string>
+
+ configure_file(${PROJECT_SOURCE_DIR}/buildosx/InstallOSX/${PACKAGE_NAME}.pkgproj.in
             ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}.pkgproj)
 
-  ADD_CUSTOM_COMMAND(
-   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin_${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH}_${OCPN_MIN_VERSION}.pkg
+ ADD_CUSTOM_COMMAND(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin.pkg
    COMMAND /usr/local/bin/packagesbuild -F ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}.pkgproj
    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
    DEPENDS ${PACKAGE_NAME}
    COMMENT "create-pkg [${PACKAGE_NAME}]: Generating pkg file."
-  )
+)
 
-  ADD_CUSTOM_TARGET(create-pkg COMMENT "create-pkg: Done."
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin_${PLUGIN_VERSION_MAJOR}.${PLUGIN_VERSION_MINOR}.${PLUGIN_VERSION_PATCH}_${OCPN_MIN_VERSION}.pkg )
+ ADD_CUSTOM_TARGET(create-pkg COMMENT "create-pkg: Done."
+ DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${VERBOSE_NAME}-Plugin.pkg )
 
+ SET(CPACK_GENERATOR "TGZ")
 ENDIF(APPLE)
+
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PACKAGE_NAME} S63 chart PlugIn for OpenCPN")
+SET(CPACK_PACKAGE_DESCRIPTION "${PACKAGE_NAME} S63 chart PlugIn for OpenCPN")
+SET(CPACK_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+SET(CPACK_PACKAGE_FILE_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}")
+
+IF(WIN32)
+  MESSAGE(STATUS "FILE: ${CPACK_PACKAGE_FILE_NAME}")
+  add_custom_command(OUTPUT ${CPACK_PACKAGE_FILE_NAME}
+	  COMMAND signtool sign /v /f \\cert\\OpenCPNSPC.pfx /d http://www.opencpn.org /t http://timestamp.verisign.com/scripts/timstamp.dll ${CPACK_PACKAGE_FILE_NAME}
+	  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+	  DEPENDS ${PACKAGE_NAME}
+	  COMMENT "Code-Signing: ${CPACK_PACKAGE_FILE_NAME}")
+  ADD_CUSTOM_TARGET(codesign COMMENT "code signing: Done."
+  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CPACK_PACKAGE_FILE_NAME} )
+ENDIF(WIN32)
+
+INCLUDE(CPack)
+
+
+ENDIF(NOT STANDALONE MATCHES "BUNDLED")
 
