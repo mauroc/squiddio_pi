@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 #
-# Build the Travis OSX artifacts 
+# Build the  MacOS artifacts 
 #
 
-# bailout on errors and echo commands
 set -xe
 
 for pkg in cairo libexif xz libarchive python3 wget cmake; do

@@ -23,23 +23,65 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
 
 PROJECT(squiddio_pi)
-SET(PARENT "opencpn")
 
 SET(PACKAGE_NAME squiddio_pi)
-SET(PACKAGE_FILE_NAME "opencpn-plugin-squiddio")
 SET(VERBOSE_NAME Squiddio)
 SET(TITLE_NAME SQUIDDIO)
 SET(CPACK_PACKAGE_CONTACT "Mauro Calvi")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "0")
-SET(VERSION_PATCH "12")
-SET(PLUGIN_VERSION_DATE "2019/10/10")
+SET(VERSION_PATCH "4")
+SET(VERSION_DATE "19/05/2019")
 SET(OCPN_MIN_VERSION "ov50")
+
+SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+SET(PKG_RELEASE "1")
+SET(PKG_API_VERSION "1.16")
+SET(PKG_AUTHOR "Mauro Calvi")
+SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
+SET(PKG_BASE_URL
+  "https://dl.cloudsmith.io/public/mauro-calvi/squiddio-pi/raw/files")
+
+
+INCLUDE("cmake/PluginSetup.cmake")
+set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+
+if (OCPN_FLATPAK)
+    find_program(TAR NAMES gtar tar)
+    if (NOT TAR)
+        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
+    endif ()
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+    )
+    add_custom_target(flatpak-build ALL
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
+        COMMAND /usr/bin/flatpak-builder --force-clean
+            ${CMAKE_CURRENT_BINARY_DIR}/app
+            org.opencpn.OpenCPN.Plugin.squiddio.yaml
+    )
+    add_custom_target("flatpak-pkg")
+    add_custom_command(
+        TARGET flatpak-pkg
+        COMMAND ${TAR}
+            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+            --transform 's|.*/files/|squiddio-flatpak-${PACKAGE_VERSION}/|'
+            ${CMAKE_CURRENT_BINARY_DIR}/app/files
+    )
+    return ()
+endif()
+
+
 
 #SET(CMAKE_BUILD_TYPE Debug)
 
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")
+
 INCLUDE("cmake/PluginConfigure.cmake")
+set(CMAKE_CXX_STANDARD 11)
 
 SET(SRC_SQUIDDIO
     src/squiddio_pi.h
@@ -142,6 +184,7 @@ SET(SRC_NMEA0183
     )
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
+INCLUDE_DIRECTORIES(api-16)
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 IF(UNIX)
@@ -167,3 +210,7 @@ INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
+configure_file(
+  ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+)
