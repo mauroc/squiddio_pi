@@ -16,6 +16,8 @@ if [ -z "$CLOUDSMITH_API_KEY" ]; then
     exit 0
 fi
 
+echo "Using \$CLOUDSMITH_API_KEY: ${CLOUDSMITH_API_KEY:0:4}..."
+
 set -xe
 
 if pyenv versions 2>&1 >/dev/null; then
