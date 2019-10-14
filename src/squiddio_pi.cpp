@@ -642,26 +642,20 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
     if(g_OCPN) {
         PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
                 m_GUID);
-        pPoint->m_MarkDescription = wp->m_MarkDescription;
 		pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
+        pPoint->m_MarkDescription = wp->m_MarkDescription;
 
         int NbrOfLinks = wp->m_HyperlinkList->GetCount();
-/*		wxString sMsg;
-		sMsg.Printf("nbrOfLinks %i", NbrOfLinks);
-		wxLogMessage(_(sMsg));*/
 
         if( NbrOfLinks > 0 ) {
 			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
 			while( linknode ) {
 				wp_link = linknode->GetData();
-				link->Link = wp_link->Link;
-				link->DescrText = wp_link->DescrText;
-				link->Type = wxEmptyString;
-
-				pPoint->m_HyperlinkList->Insert(link);
-
-//				pPoint->m_HyperlinkList->Append( link );
-
+			    Plugin_Hyperlink *sq_link = new Plugin_Hyperlink;
+				sq_link->Link = wp_link->Link;
+				sq_link->DescrText = wp_link->DescrText;
+				sq_link->Type = wxEmptyString;
+				pPoint->m_HyperlinkList->Append(sq_link);
                 linknode = linknode->GetNext();
 			}
         }
@@ -693,11 +687,11 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         
         pCTP->TextPointHyperLinkList.clear();
 
-        HyperLinkList_t *l_list = new HyperLinkList_t;
         int NbrOfLinks = wp->m_HyperlinkList->GetCount();
         if( NbrOfLinks > 0 ) {
 			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
 			while( linknode ) {
+				HyperLinkList_t *l_list = new HyperLinkList_t;
 				wp_link = linknode->GetData();
 				l_list->sLink = wp_link->Link;
 				l_list->sDescription = wp_link->DescrText;
