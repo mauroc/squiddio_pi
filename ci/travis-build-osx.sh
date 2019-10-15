@@ -5,8 +5,12 @@
 #
 
 # bailout on errors and echo commands
-set -xe
+curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > uninstall
+chmod 755 uninstall
+./uninstall -f
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 
 
+set -xe
 brew install cairo libexif xz libarchive python3
 curl --version >/dev/null || brew install curl
 wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
