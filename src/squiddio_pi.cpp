@@ -248,7 +248,7 @@ int squiddio_pi::Init(void) {
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_plugin_logo,
-            _img_plugin_logo, wxITEM_NORMAL, _("sQuiddio"), _T(""), NULL,
+            _img_plugin_logo, wxITEM_CHECK, _("sQuiddio"), _T(""), NULL,
             SQUIDDIO_TOOL_POSITION, 0, this);
             
     m_pThread = new SquiddioThread(this);
