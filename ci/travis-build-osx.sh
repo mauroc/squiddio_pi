@@ -32,4 +32,5 @@ cmake -DOCPN_CI_BUILD=$CI_BUILD \
   ..
 make -sj2
 make package
+rm -rf /usr/local/lib/ruby/gems/ && brew reinstall ruby
 chmod 644 /usr/local/lib/lib*.dylib
