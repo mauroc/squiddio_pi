@@ -6,15 +6,20 @@
 
 # As of travis-ci-macos-10.13-xcode9.4.1-1529955246, the travis osx image
 # contains a broken homebrew. Walk-around by reinstalling:
-curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall > uninstall
-chmod 755 uninstall
-./uninstall -f
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 
+if [ -n "$TRAVIS" ]; then
+    curl -fsSL \
+        https://raw.githubusercontent.com/Homebrew/install/master/uninstall \
+        > uninstall
+    chmod 755 uninstall
+    ./uninstall -f
+    inst="https://raw.githubusercontent.com/Homebrew/install/master/install"
+    /usr/bin/ruby -e "$(curl -fsSL $inst)"
+fi
 
 # bailout on errors and echo commands
 set -xe
-set -o pipefail
 
+set -o pipefail
 for pkg in cairo cmake libarchive libexif python3 wget xz; do
     brew list $pkg 2>/dev/null | head -10 || brew install $pkg
 done
@@ -47,4 +52,6 @@ ls -l *.pkg *.tar.gz *.xml
 # As of travis-ci-macos-10.13-xcode9.4.1-1529955246, the travis osx image
 # contains a broken ruby setup used by deployment code. Walk around by
 # reinstalling:
-rm -rf /usr/local/lib/ruby/gems/ && brew reinstall ruby
+if [ -n "$TRAVIS" ]; then
+    rm -rf /usr/local/lib/ruby/gems/ && brew reinstall ruby
+fi
