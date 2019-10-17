@@ -13,9 +13,10 @@ chmod 755 uninstall
 
 # bailout on errors and echo commands
 set -xe
+set -o pipefail
 
 for pkg in cairo cmake libarchive libexif python3 wget xz; do
-    brew list $pkg || brew install $pkg
+    brew list $pkg 2>/dev/null | head -10 || brew install $pkg
 done
 curl --version >/dev/null || brew install curl
 wget http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
