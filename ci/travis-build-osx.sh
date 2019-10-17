@@ -32,5 +32,12 @@ cmake -DOCPN_CI_BUILD=$CI_BUILD \
   ..
 make -sj2
 make package
+
+make install
+wget http://opencpn.navnux.org/build_deps/Packages.dmg;
+hdiutil attach Packages.dmg;
+sudo installer -pkg "/Volumes/Packages 1.2.5/Install Packages.pkg" -target "/"
+make create-pkg
+
+ls -l *.pkg *.tar.gz *.xml
 rm -rf /usr/local/lib/ruby/gems/ && brew reinstall ruby
-chmod 644 /usr/local/lib/lib*.dylib
