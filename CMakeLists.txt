@@ -74,7 +74,7 @@ SET(PKG_BASE_URL "https://dl.cloudsmith.io/public/${CLOUDSMITH_USER}/${PACKAGE}-
 
 
 INCLUDE("cmake/PluginSetup.cmake")
-set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR})
+set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
 if (OCPN_FLATPAK)
     find_program(TAR NAMES gtar tar)
