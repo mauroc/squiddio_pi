@@ -20,32 +20,61 @@
  
 
 # define minimum cmake version
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1.1)
+IF (COMMAND cmake_policy)
+  if (POLICY CMP0043)
+    CMAKE_POLICY(SET CMP0043 NEW)
+  endif (POLICY CMP0043)
+  if (POLICY CMP0077)
+    CMAKE_POLICY(SET CMP0077 NEW)
+  endif (POLICY CMP0077)
+ENDIF (COMMAND cmake_policy)
 
-PROJECT(squiddio_pi)
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")
 
-SET(PACKAGE_NAME squiddio_pi)
+SET(PARENT "opencpn")
+SET(PACKAGE squiddio)
 SET(VERBOSE_NAME Squiddio)
-SET(TITLE_NAME SQUIDDIO)
 SET(CPACK_PACKAGE_CONTACT "Mauro Calvi")
+SET(CLOUDSMITH_USER "mauro-calvi")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "0")
-SET(VERSION_PATCH "14")
-SET(VERSION_DATE "15/10/2019")
+SET(VERSION_PATCH "15")
+SET(VERSION_DATE "17/10/2019")
 SET(OCPN_MIN_VERSION "ov50")
+SET(OCPN_API_VERSION_MAJOR "1")
+SET(OCPN_API_VERSION_MINOR "16")
+
+SET(PACKAGE_NAME ${PACKAGE}_pi)
+SET(PACKAGE_FILE_NAME "${PARENT}-plugin-${PACKAGE}")
+STRING(TOUPPER "${PACKAGE}" TITLE_NAME)
+
+PROJECT(${PACKAGE_NAME} VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-SET(PKG_RELEASE "1")
-SET(PKG_API_VERSION "1.16")
-SET(PKG_AUTHOR "Mauro Calvi")
-SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
-SET(PKG_BASE_URL
-  "https://dl.cloudsmith.io/public/mauro-calvi/squiddio-pi/raw/files")
+SET( CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" )
+SET_PROPERTY( CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "None" "Debug" "Release" "RelWithDebInfo" "MinSizeRel" )
+
+MESSAGE(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+MESSAGE(STATUS "OCPN API Verson: ${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR}")
+MESSAGE(STATUS "OCPN Min Verson: ${OCPN_MIN_VERSION}")
+
+# Don't use local version of GLU library
+SET(USE_LOCAL_GLU FALSE)
+
+MESSAGE (STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+#SET(PKG_RELEASE "1")
+#SET(PKG_API_VERSION "1.16")
+#SET(PKG_AUTHOR "Mauro Calvi")
+#SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
+SET(PKG_BASE_URL "https://dl.cloudsmith.io/public/${CLOUDSMITH_USER}/${PACKAGE}-pi/raw/files")
 
 
 INCLUDE("cmake/PluginSetup.cmake")
-set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR})
 
 if (OCPN_FLATPAK)
     find_program(TAR NAMES gtar tar)
@@ -53,21 +82,21 @@ if (OCPN_FLATPAK)
         message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
     endif ()
     configure_file(
-        ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
+        ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
         ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
     )
     add_custom_target(flatpak-build ALL
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
         COMMAND /usr/bin/flatpak-builder --force-clean
             ${CMAKE_CURRENT_BINARY_DIR}/app
-            org.opencpn.OpenCPN.Plugin.squiddio.yaml
+            org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml
     )
     add_custom_target("flatpak-pkg")
     add_custom_command(
         TARGET flatpak-pkg
         COMMAND ${TAR}
             -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
-            --transform 's|.*/files/|squiddio-flatpak-${PACKAGE_VERSION}/|'
+            --transform 's|.*/files/|${PACKAGE}-flatpak-${PACKAGE_VERSION}/|'
             ${CMAKE_CURRENT_BINARY_DIR}/app/files
     )
     return ()
@@ -211,6 +240,6 @@ INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
 configure_file(
-  ${CMAKE_SOURCE_DIR}/squiddio-plugin.xml.in
+  ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
   ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
 )
