@@ -30,6 +30,8 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 
+#include "wxWTranslateCatalog.h"
+
 ///////////////////////////////////////////////////////////////////////////
 
 #define ID_CB_ALL 1000

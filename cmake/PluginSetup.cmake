@@ -45,6 +45,8 @@ elseif (UNIX)
                     OUTPUT_VARIABLE PKG_TARGET)
     execute_process(COMMAND "lsb_release" "-rs"
                     OUTPUT_VARIABLE PKG_TARGET_VERSION)
+    string(REPLACE "_pi" "" PKG_NVR ${PKG_NVR})
+    SET(PKG_NVR "opencpn-plugin-${PKG_NVR}")
 else ()
     set(PKG_TARGET "unknown")
     set(PKG_TARGET_VERSION 1)
