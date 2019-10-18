@@ -1416,7 +1416,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconName = _T("ramp_azu"); 
     pAPI->PointIconDescription = _("Boat Ramp");
     m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_logimg_N;
+/*    pAPI->PointIcon = *_img_logimg_N;
     pAPI->PointIconName = _T("logimg_N"); 
     pAPI->PointIconDescription = _("North");
     m_pODAddPointIcon(pAPI);
@@ -1455,7 +1455,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_logimg_U;
     pAPI->PointIconName = _T("logimg_U"); 
     pAPI->PointIconDescription = _("Unknown heading");
-    m_pODAddPointIcon(pAPI);
+    m_pODAddPointIcon(pAPI);*/
 }
 
 
