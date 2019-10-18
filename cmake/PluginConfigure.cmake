@@ -107,7 +107,7 @@ IF(WIN32)
   ENDIF(MSVC)
 ENDIF(WIN32)
 
-SET(wxWidgets_USE_LIBS base core net xml html adv)
+SET(wxWidgets_USE_LIBS base core net xml html adv aui)
 
 OPTION (USE_GL "Enable OpenGL support" ON)
 
