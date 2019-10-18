@@ -33,6 +33,8 @@ SET(OCPN_MIN_VERSION "ov50")
 SET(OCPN_API_VERSION_MAJOR "1")
 SET(OCPN_API_VERSION_MINOR "16")
 
+SET(CMAKE_CXX_STANDARD 11)
+
 # define minimum cmake version
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1.1)
 IF (COMMAND cmake_policy)
@@ -45,7 +47,7 @@ IF (COMMAND cmake_policy)
 ENDIF (COMMAND cmake_policy)
 
 # Prefer libGL.so to libOpenGL.so, see CMP0072
-set(OpenGL_GL_PREFERENCE "LEGACY")
+SET(OpenGL_GL_PREFERENCE "LEGACY")
 
 SET(PACKAGE_NAME ${PACKAGE}_pi)
 SET(PACKAGE_FILE_NAME "${PARENT}-plugin-${PACKAGE}")
@@ -98,15 +100,7 @@ if (OCPN_FLATPAK)
     return ()
 endif()
 
-
-
-#SET(CMAKE_BUILD_TYPE Debug)
-
-# Prefer libGL.so to libOpenGL.so, see CMP0072
-set(OpenGL_GL_PREFERENCE "LEGACY")
-
 INCLUDE("cmake/PluginConfigure.cmake")
-set(CMAKE_CXX_STANDARD 11)
 
 SET(SRC_SQUIDDIO
     src/squiddio_pi.h
