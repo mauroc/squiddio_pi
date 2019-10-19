@@ -125,7 +125,7 @@ squiddio_pi::~squiddio_pi(void) {
 
 int squiddio_pi::Init(void) {
 
-    wxLogMessage(_T("squiddio_pi: Init()"));
+    wxLogMessage(_T("squiddio_pi: Init( )"));
 
     m_plogs_window = NULL;
     g_PostPeriod = 0;
@@ -248,7 +248,7 @@ int squiddio_pi::Init(void) {
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_plugin_logo,
-            _img_plugin_logo, wxITEM_NORMAL, _("sQuiddio"), _T(""), NULL,
+            _img_plugin_logo, wxITEM_CHECK, _("sQuiddio"), _T(""), NULL,
             SQUIDDIO_TOOL_POSITION, 0, this);
             
     m_pThread = new SquiddioThread(this);
@@ -638,16 +638,23 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
     if(g_OCPN) {
         PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
                 m_GUID);
+		pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
         pPoint->m_MarkDescription = wp->m_MarkDescription;
 
-        wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-        wp_link = linknode->GetData();
-        link->Link = wp_link->Link;
-        link->DescrText = wp_link->DescrText;
-        link->Type = wxEmptyString;
+        int NbrOfLinks = wp->m_HyperlinkList->GetCount();
 
-        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
-        pPoint->m_HyperlinkList->Insert(link);
+        if( NbrOfLinks > 0 ) {
+			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+			while( linknode ) {
+				wp_link = linknode->GetData();
+			    Plugin_Hyperlink *sq_link = new Plugin_Hyperlink;
+				sq_link->Link = wp_link->Link;
+				sq_link->DescrText = wp_link->DescrText;
+				sq_link->Type = wxEmptyString;
+				pPoint->m_HyperlinkList->Append(sq_link);
+                linknode = linknode->GetNext();
+			}
+        }
 
         bool added = AddSingleWaypoint(pPoint, false);
         return added;
@@ -674,14 +681,21 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->Visible = true;
         pCTP->temporary = true;
         
-        wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-        wp_link = linknode->GetData();
         pCTP->TextPointHyperLinkList.clear();
-        HyperLinkList_t *l_list = new HyperLinkList_t;
-        l_list->sLink = wp_link->Link;
-        l_list->sDescription = wp_link->DescrText;
-        pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
-        
+
+        int NbrOfLinks = wp->m_HyperlinkList->GetCount();
+        if( NbrOfLinks > 0 ) {
+			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+			while( linknode ) {
+				HyperLinkList_t *l_list = new HyperLinkList_t;
+				wp_link = linknode->GetData();
+				l_list->sLink = wp_link->Link;
+				l_list->sDescription = wp_link->DescrText;
+				pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
+	            linknode = linknode->GetNext();
+			}
+        }
+
         bool added = false;
         
         if(m_bODCreateTextPoint) added = (*m_pODCreateTextPoint)(pCTP);
@@ -1402,7 +1416,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconName = _T("ramp_azu"); 
     pAPI->PointIconDescription = _("Boat Ramp");
     m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_logimg_N;
+/*    pAPI->PointIcon = *_img_logimg_N;
     pAPI->PointIconName = _T("logimg_N"); 
     pAPI->PointIconDescription = _("North");
     m_pODAddPointIcon(pAPI);
@@ -1441,7 +1455,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_logimg_U;
     pAPI->PointIconName = _T("logimg_U"); 
     pAPI->PointIconDescription = _("Unknown heading");
-    m_pODAddPointIcon(pAPI);
+    m_pODAddPointIcon(pAPI);*/
 }
 
 
