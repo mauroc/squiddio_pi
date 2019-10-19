@@ -6,8 +6,7 @@
 
 REPO='mauro-calvi/squiddio-pi'
 
-branch=$(git symbolic-ref --short HEAD)
-if [ "$branch" != 'master' ]; then
+if [ "$(git rev-parse master)" != "$(git rev-parse HEAD)" ]; then
     echo "Not on master branch, skipping deployment."
     exit 0
 fi
