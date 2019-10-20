@@ -13,12 +13,13 @@ MESSAGE (STATUS "*** Staging to build ${PACKAGE_NAME} ***")
 # The removes are to get rid of old copies - this can be removed at next release version, i.e. > 1.1.0
 FILE(REMOVE ${PROJECT_SOURCE_DIR}/include/version.h)
 FILE(REMOVE ${PROJECT_SOURCE_DIR}/include/wxWTranslateCatalog.h)
-IF(NOT SKIP_VERSION_CONFIG)
-    SET(BUILD_INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
-    configure_file(cmake/version.h.in ${BUILD_INCLUDE_PATH}/include/version.h)
-    configure_file(cmake/wxWTranslateCatalog.h.in ${BUILD_INCLUDE_PATH}/include/wxWTranslateCatalog.h)
-    INCLUDE_DIRECTORIES(${BUILD_INCLUDE_PATH}/include)
-ENDIF(NOT SKIP_VERSION_CONFIG)
+
+SET(BUILD_INCLUDE_PATH ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
+configure_file(cmake/version.h.in ${BUILD_INCLUDE_PATH}/include/version.h)
+configure_file(cmake/wxWTranslateCatalog.h.in ${BUILD_INCLUDE_PATH}/include/wxWTranslateCatalog.h)
+INCLUDE_DIRECTORIES(${BUILD_INCLUDE_PATH}/include)
+
+configure_file(${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
