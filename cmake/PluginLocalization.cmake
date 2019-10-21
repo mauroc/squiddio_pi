@@ -4,6 +4,12 @@
 ## License:     GPLv3+
 ##---------------------------------------------------------------------------
 
+# Do not run this file if it is a flatpak build
+IF(OCPN_FLATPAK)
+   return()
+ENDIF(OCPM_FLATPAK)
+
+
 FIND_PROGRAM(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
 string(REPLACE "_pi" "" I18N_NAME ${PACKAGE_NAME})
 IF (GETTEXT_XGETTEXT_EXECUTABLE)

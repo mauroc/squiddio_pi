@@ -4,6 +4,11 @@
 ## License:     GPLv3+
 ##---------------------------------------------------------------------------
 
+# Do not run this file if it is a flatpak build
+IF(OCPN_FLATPAK)
+   return()
+ENDIF(OCPM_FLATPAK)
+
 # configure curl library
 
 INCLUDE_DIRECTORIES(src/wxcurl)
