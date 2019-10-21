@@ -7,7 +7,7 @@
 # Do not run this file if it is a flatpak build
 IF(OCPN_FLATPAK)
    return()
-ENDIF(OCPM_FLATPAK)
+ENDIF(OCPN_FLATPAK)
 
 
 FIND_PROGRAM(GETTEXT_XGETTEXT_EXECUTABLE xgettext)

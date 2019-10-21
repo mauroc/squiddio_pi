@@ -7,7 +7,7 @@
 # Do not run this file if it is a flatpak build
 IF(OCPN_FLATPAK)
    return()
-ENDIF(OCPM_FLATPAK)
+ENDIF(OCPN_FLATPAK)
 
 # configure curl library
 
