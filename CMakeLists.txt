@@ -92,6 +92,10 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/pkg_version.sh
 )
 if (OCPN_FLATPAK)
+    # On a flatpak build lib libraries such as LibGL and wxWidgets are only
+    # available in the flatpak sandbox. Thus, building flatpak must be done
+    # before attempts to locate these non-existing libraries in the host i. e.,
+    # before any FindLibrary(), FindWxWidgets(), etc.
     find_program(TAR NAMES gtar tar)
     if (NOT TAR)
         message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
