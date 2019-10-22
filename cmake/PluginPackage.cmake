@@ -31,7 +31,6 @@ if (OCPN_FLATPAK)
     )
     return ()
 endif()
-
 # build a CPack driven installer package
 
 SET(CPACK_PACKAGE_VENDOR "opencpn.org")

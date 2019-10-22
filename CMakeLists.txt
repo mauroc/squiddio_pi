@@ -82,6 +82,41 @@ SET(PKG_BASE_URL "https://dl.cloudsmith.io/public/mauro-calvi/squiddio-pi/raw/fi
 INCLUDE("cmake/PluginSetup.cmake")
 set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
+configure_file(
+  # Used by flatpak, do this early.
+  ${CMAKE_SOURCE_DIR}/pkg_version.sh.in
+  ${CMAKE_CURRENT_BINARY_DIR}/pkg_version.sh
+)
+if (OCPN_FLATPAK)
+    # On a flatpak build lib libraries such as LibGL and wxWidgets are only
+    # available in the flatpak sandbox. Thus, building flatpak must be done
+    # before attempts to locate these non-existing libraries in the host i. e.,
+    # before any FindLibrary(), FindWxWidgets(), etc.
+    find_program(TAR NAMES gtar tar)
+    if (NOT TAR)
+        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
+    endif ()
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+    )
+    add_custom_target(flatpak-build ALL
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
+        COMMAND /usr/bin/flatpak-builder --force-clean
+            ${CMAKE_CURRENT_BINARY_DIR}/app
+            org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml
+    )
+    add_custom_target("flatpak-pkg")
+    add_custom_command(
+        TARGET flatpak-pkg
+        COMMAND ${TAR}
+            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+            --transform 's|.*/files/|${PACKAGE}-flatpak-${PACKAGE_VERSION}/|'
+            ${CMAKE_CURRENT_BINARY_DIR}/app/files
+    )
+    return ()
+endif()
+
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
 
