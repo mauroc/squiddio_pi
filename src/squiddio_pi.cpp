@@ -110,6 +110,7 @@ squiddio_pi::~squiddio_pi(void) {
     delete _img_fuelpump_red;
     delete _img_pier_yel;
     delete _img_ramp_azu;
+    delete _img_ramp_grn;
     delete _img_logimg_N;
     delete _img_logimg_NE;
     delete _img_logimg_E;
@@ -199,6 +200,7 @@ int squiddio_pi::Init(void) {
             _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
     AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_azu"), _T("Boat Ramp"));
+    AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_grn"), _T("Boat Yard"));
 
     AddCustomWaypointIcon(_img_logimg_N, _T("logimg_N"), _T("North"));
     AddCustomWaypointIcon(_img_logimg_NE, _T("logimg_NE"), _T("North East"));
@@ -570,6 +572,8 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewDocks;
     else if (wp->m_IconName == _T("ramp_azu"))
         return g_ViewRamps;
+    else if (wp->m_IconName == _T("ramp_grn"))
+        return g_ViewOthers;
     else if (wp->m_IconName == _T("others"))
         return g_ViewOthers;
     else if (wp->m_IconName == _T("aton_gry"))
@@ -1415,6 +1419,10 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_ramp_azu;
     pAPI->PointIconName = _T("ramp_azu"); 
     pAPI->PointIconDescription = _("Boat Ramp");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_ramp_grn;
+    pAPI->PointIconName = _T("ramp_grn");
+    pAPI->PointIconDescription = _("Boat Yard");
     m_pODAddPointIcon(pAPI);
 /*    pAPI->PointIcon = *_img_logimg_N;
     pAPI->PointIconName = _T("logimg_N"); 

@@ -27,5 +27,6 @@ extern wxBitmap *_img_marina_grn;
 extern wxBitmap *_img_pier_yel;
 extern wxBitmap *_img_plugin_logo;
 extern wxBitmap *_img_ramp_azu;
+extern wxBitmap *_img_ramp_grn;
 
 #endif /* ICONS_H */
