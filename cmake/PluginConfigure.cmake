@@ -24,7 +24,7 @@ configure_file(cmake/version.h.in ${BUILD_INCLUDE_PATH}/include/version.h)
 configure_file(cmake/wxWTranslateCatalog.h.in ${BUILD_INCLUDE_PATH}/include/wxWTranslateCatalog.h)
 INCLUDE_DIRECTORIES(${BUILD_INCLUDE_PATH}/include)
 
-configure_file(${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml)
+configure_file(${CMAKE_SOURCE_DIR}/cmake/${PACKAGE}-plugin.xml.in ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
