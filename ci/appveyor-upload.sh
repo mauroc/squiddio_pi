@@ -4,7 +4,8 @@
 # Upload the .tar.gz and .xml artifacts to cloudsmith
 #
 
-REPO='mauro-calvi/squiddio-pi'
+STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
+UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
 
 if [ "$(git rev-parse master)" != "$(git rev-parse HEAD)" ]; then
     echo "Not on master branch, skipping deployment."
@@ -27,9 +28,36 @@ python -m pip install -q cloudsmith-cli
 commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
 now=$(date --rfc-3339=seconds) || now=$(date)
 
+
+BUILD_ID=${APPVEYOR_BUILD_NUMBER:-1}
+commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
+tag=$(git tag --contains HEAD)
+
 tarball=$(ls *.tar.gz)
 xml=$(ls *.xml)
-echo '<!--'" Date: $now Commit: $commit Build nr: $BUILD_ID -->" >> $xml
 
-cloudsmith push raw --republish --no-wait-for-sync $REPO $tarball
-cloudsmith push raw --republish --no-wait-for-sync $REPO $xml
+source ../build/pkg_version.sh
+test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}+${BUILD_ID}.${commit}"
+test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
+
+# There is no sed available in git bash. This is nasty, but seems
+# to work:
+while read line; do
+    echo ${line/squiddio-pi/squiddo-stable}
+done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
+
+cloudsmith push raw \
+    --republish \
+    --no-wait-for-sync \
+    --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \
+    --version ${VERSION} \
+    --summary "squiddio opencpn plugin metadata for automatic installation" \
+    $REPO $xml
+
+cloudsmith push raw  \
+    --republish \
+    --no-wait-for-sync \
+    --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball \
+    --version ${VERSION} \
+    --summary "squiddio opencpn plugin tarball for automatic installation" \
+    $REPO $tarball
