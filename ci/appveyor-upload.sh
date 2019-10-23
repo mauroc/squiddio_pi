@@ -40,11 +40,13 @@ source ../build/pkg_version.sh
 test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}+${BUILD_ID}.${commit}"
 test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
 
-# There is no sed available in git bash. This is nasty, but seems
-# to work:
-while read line; do
-    echo ${line/squiddio-pi/squiddo-stable}
-done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
+if [ -n "$tag" ]; then
+    # There is no sed available in git bash. This is nasty, but seems
+    # to work:
+    while read line; do
+        echo ${line/squiddio-pi/squiddo-stable}
+    done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
+fi
 
 cloudsmith push raw \
     --republish \
