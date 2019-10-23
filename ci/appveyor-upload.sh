@@ -44,7 +44,7 @@ if [ -n "$tag" ]; then
     # There is no sed available in git bash. This is nasty, but seems
     # to work:
     while read line; do
-        echo ${line/squiddio-pi/squiddo-stable}
+        echo ${line/squiddio-pi/squiddio-stable}
     done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
 fi
 
