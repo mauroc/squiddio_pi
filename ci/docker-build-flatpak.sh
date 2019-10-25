@@ -8,6 +8,8 @@ set -xe
 
 df -h
 cd $TOPDIR
+su -c 'echo proxy=http://192.168.1.1:3142 >> /etc/dnf/dnf.conf'
+su -c "cat /etc/dnf/dnf.conf"
 su -c "dnf install -y sudo cmake gcc-c++ flatpak-builder flatpak make tar"
 su -c "dnf install -y sudo dnf-plugins-core"
 sudo dnf builddep  -y ci/opencpn-fedora.spec
