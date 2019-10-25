@@ -20,6 +20,18 @@ IF(NOT SKIP_VERSION_CONFIG)
     INCLUDE_DIRECTORIES(${BUILD_INCLUDE_PATH}/include)
 ENDIF(NOT SKIP_VERSION_CONFIG)
 
+IF(OCPN_FLATPAK)
+  configure_file(
+    # Used by flatpak, do this early.
+    ${CMAKE_SOURCE_DIR}/cmake/pkg_version.sh.in
+    ${CMAKE_CURRENT_BINARY_DIR}/pkg_version.sh
+  )
+ENDIF(OCPN_FLATPAK)
+
+configure_file(
+  ${CMAKE_SOURCE_DIR}/cmake/${PACKAGE}-plugin.xml.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 

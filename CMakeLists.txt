@@ -26,8 +26,8 @@ SET(CLOUDSMITH_USER "mauro-calvi")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "0")
-SET(VERSION_PATCH "17")
-SET(VERSION_TWEAK "5")
+SET(VERSION_PATCH "18")
+SET(VERSION_TWEAK "0")
 SET(VERSION_DATE "24/10/2019")
 SET(OCPN_MIN_VERSION "ov50")
 SET(OCPN_API_VERSION_MAJOR "1")
@@ -86,11 +86,6 @@ SET(PKG_BASE_URL "https://dl.cloudsmith.io/public/mauro-calvi/squiddio-pi/raw/fi
 INCLUDE("cmake/PluginSetup.cmake")
 set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
-configure_file(
-  # Used by flatpak, do this early.
-  ${CMAKE_SOURCE_DIR}/pkg_version.sh.in
-  ${CMAKE_CURRENT_BINARY_DIR}/pkg_version.sh
-)
 if (OCPN_FLATPAK)
     # On a flatpak build lib libraries such as LibGL and wxWidgets are only
     # available in the flatpak sandbox. Thus, building flatpak must be done
@@ -253,7 +248,3 @@ INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
-configure_file(
-  ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
-)
