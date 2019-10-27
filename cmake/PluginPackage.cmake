@@ -6,32 +6,6 @@
 
 # build a FLATPAK installer package
 
-if (OCPN_FLATPAK)
-    find_program(TAR NAMES gtar tar)
-    if (NOT TAR)
-        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
-    endif ()
-    configure_file(
-        ${CMAKE_SOURCE_DIR}/cmake/${PACKAGE}-plugin.xml.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
-    )
-    add_custom_target(flatpak-build ALL
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
-        COMMAND /usr/bin/flatpak-builder --force-clean
-            ${CMAKE_CURRENT_BINARY_DIR}/app
-            org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml
-    )
-    add_custom_target("flatpak-pkg")
-    add_custom_command(
-        TARGET flatpak-pkg
-        COMMAND ${TAR}
-            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
-            --transform 's|.*/files/|${PACKAGE}-flatpak-${PACKAGE_VERSION}/|'
-            ${CMAKE_CURRENT_BINARY_DIR}/app/files
-    )
-    return ()
-endif()
-
 # build a CPack driven installer package
 
 SET(CPACK_PACKAGE_VENDOR "opencpn.org")
