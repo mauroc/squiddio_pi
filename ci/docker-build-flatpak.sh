@@ -9,8 +9,6 @@ set -xe
 df -h
 cd $TOPDIR
 su -c "dnf install -y sudo cmake gcc-c++ flatpak-builder flatpak make tar"
-su -c "dnf install -y sudo dnf-plugins-core"
-sudo dnf builddep  -y ci/opencpn-fedora.spec
 flatpak remote-add --user --if-not-exists flathub \
     https://flathub.org/repo/flathub.flatpakrepo
 flatpak install --user  -y \
