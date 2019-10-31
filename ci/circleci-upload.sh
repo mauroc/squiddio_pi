@@ -16,6 +16,8 @@ set -xe
 
 STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
 UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
+STABLE_PKG_REPO=${CLOUDSMITH_PKG_REPO:-'mauro-calvi/manual'}
+PKG_EXT=${CLOUDSMITH_PKG_EXT:-'deb'}
 
 if [ -z "$CIRCLECI" ]; then
     exit 0;
@@ -51,9 +53,19 @@ tarball=$(ls $HOME/project/build/*.tar.gz)
 tarball_basename=${tarball##*/}
 
 source $HOME/project/build/pkg_version.sh
-test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}+${BUILD_ID}.${commit}"
-test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
 tarball_name=squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
+pkg=$(ls $HOME/project/build/*.${PKG_EXT})
+
+source $HOME/project/build/pkg_version.sh
+if [ -n "$tag" ]; then
+    VERSION="$tag"
+    REPO="$STABLE_REPO"
+    PKG_REPO="$STABLE_PKG_REPO"
+else
+    VERSION="${VERSION}+${BUILD_ID}.${commit}"
+    REPO="$UNSTABLE_REPO"
+    PKG_REPO="$UNSTABLE_REPO"
+fi
 
 sudo sed -i -e "s|@pkg_repo@|$REPO|"  $xml
 sudo sed -i -e "s|@name@|$tarball_name|" $xml
@@ -71,3 +83,9 @@ cloudsmith push raw --republish --no-wait-for-sync \
     --version ${VERSION} \
     --summary "squiddio opencpn plugin tarball for automatic installation" \
     $REPO $tarball
+
+cloudsmith push raw --republish --no-wait-for-sync \
+    --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}.${PKG_EXT} \
+    --version ${VERSION} \
+    --summary "squiddio .${PKG_EXT} installation package" \
+    $PKG_REPO $pkg
