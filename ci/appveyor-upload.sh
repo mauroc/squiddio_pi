@@ -7,7 +7,8 @@
 STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
 UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
 
-if [ "$(git rev-parse master)" != "$(git rev-parse HEAD)" ]; then
+git_head=$(git rev-parse master) || git_head="unknown"
+if [ "$git_head" != "$(git rev-parse HEAD)" ]; then
     echo "Not on master branch, skipping deployment."
     exit 0
 fi
