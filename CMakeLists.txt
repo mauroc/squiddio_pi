@@ -77,7 +77,7 @@ SET(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION}-${OCPN_MIN_VERSION}-${OCPN_API_VE
 INCLUDE("cmake/PluginSetup.cmake")
 set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
-SET(PKG_RELEASE "1")
+SET(PKG_RELEASE "6")
 SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}.${PKG_RELEASE})
 
 # The @keyword@ references are patched to actual values by upload script.
