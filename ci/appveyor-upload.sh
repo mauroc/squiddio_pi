@@ -7,7 +7,8 @@
 STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
 UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
 
-if [ "$(git rev-parse master)" != "$(git rev-parse HEAD)" ]; then
+git_head=$(git rev-parse master) || git_head="unknown"
+if [ "$git_head" != "$(git rev-parse HEAD)" ]; then
     echo "Not on master branch, skipping deployment."
     exit 0
 fi
@@ -33,33 +34,33 @@ BUILD_ID=${APPVEYOR_BUILD_NUMBER:-1}
 commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
 tag=$(git tag --contains HEAD)
 
-tarball=$(ls *.tar.gz)
 xml=$(ls *.xml)
+tarball=$(ls *.tar.gz)
+tarball_basename=${tarball##*/}
 
 source ../build/pkg_version.sh
 test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}+${BUILD_ID}.${commit}"
 test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
+tarball_name=squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 
-if [ -n "$tag" ]; then
-    # There is no sed available in git bash. This is nasty, but seems
-    # to work:
-    while read line; do
-        echo ${line/squiddio-pi/squiddio-stable}
-    done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
-fi
+# There is no sed available in git bash. This is nasty, but seems
+# to work:
+while read line; do
+    line=${line/@pkg_repo@/$REPO}
+    line=${line/@name@/$tarball_name}
+    line=${line/@version@/$VERSION}
+    line=${line/@filename@/$tarball_basename}
+    echo $line
+done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
 
-cloudsmith push raw \
-    --republish \
-    --no-wait-for-sync \
+cloudsmith push raw --republish --no-wait-for-sync \
     --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \
     --version ${VERSION} \
     --summary "squiddio opencpn plugin metadata for automatic installation" \
     $REPO $xml
 
-cloudsmith push raw  \
-    --republish \
-    --no-wait-for-sync \
-    --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball \
+cloudsmith push raw --republish --no-wait-for-sync \
+    --name $tarball_name \
     --version ${VERSION} \
     --summary "squiddio opencpn plugin tarball for automatic installation" \
     $REPO $tarball
