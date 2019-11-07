@@ -1,4 +1,4 @@
-id: org.opencpn.OpenCPN.Plugin.squiddio
+id: org.opencpn.OpenCPN.Plugin.${PACKAGE}
 runtime: org.opencpn.OpenCPN
 runtime-version: master
 sdk: org.freedesktop.Sdk//18.08
@@ -6,17 +6,17 @@ build-extension: true
 separate-locales: false
 appstream-compose: false
 modules:
-  - name: squiddio
+  - name: ${PACKAGE}
     no-autogen: true
     buildsystem: cmake
     builddir: true
     config-opts:
-        - -DCMAKE_INSTALL_PREFIX=/app/extensions/squiddio
+        - -DCMAKE_INSTALL_PREFIX=/app/extensions/${PACKAGE}
         - -DOCPN_FLATPAK=ON
     build-options:
         cflags: -fPIC
         cxxflags: -fPIC
     sources:
        - type: git
-         url: https://github.com/mauroc/squiddio_pi.git
-         commit: d474c8ffa3c4addbaf724d55b1b464e894b1934d
+         url: https://github.com/mauroc/${PACKAGE}_pi.git
+#         commit: d474c8ffa3c4addbaf724d55b1b464e894b1934d
