@@ -6,6 +6,7 @@ jobs:
        - image: circleci/buildpack-deps:xenial-scm
      environment:
        - OCPN_TARGET:  xenial
+       - CLOUDSMITH_PKG_EXT: deb
      steps:
        - checkout
        - run: >
@@ -22,6 +23,7 @@ jobs:
        image: circleci/classic:201808-01
      environment:
        - OCPN_TARGET:  flatpak
+       - CLOUDSMITH_PKG_EXT: gz
      steps:
        - checkout
        - run: ci/circleci-build-flatpak.sh
@@ -31,6 +33,7 @@ jobs:
          - image: fedora:29
      environment:
        - OCPN_TARGET:  mingw
+       - CLOUDSMITH_PKG_EXT: exe
      steps:
        - run: su -c "dnf install -q -y git openssh-clients openssh-server"
        - checkout
@@ -41,6 +44,7 @@ jobs:
        xcode: "10.0.0"
      environment:
        - OCPN_TARGET:  macos
+       - CLOUDSMITH_PKG_EXT: pkg
      steps:
        - checkout
        - run: ci/circleci-build-macos.sh

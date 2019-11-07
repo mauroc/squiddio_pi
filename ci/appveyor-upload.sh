@@ -6,6 +6,7 @@
 
 STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
 UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
+STABLE_PKG__REPO=${CLOUDSMITH_STABLE_PKG_REPO:-'mauro-calvi/manual'}
 
 git_head=$(git rev-parse master) || git_head="unknown"
 if [ "$git_head" != "$(git rev-parse HEAD)" ]; then
@@ -35,12 +36,20 @@ commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
 tag=$(git tag --contains HEAD)
 
 xml=$(ls *.xml)
+exe=$(ls *.exe)
 tarball=$(ls *.tar.gz)
 tarball_basename=${tarball##*/}
 
 source ../build/pkg_version.sh
-test -n "$tag" && VERSION="$tag" || VERSION="${VERSION}+${BUILD_ID}.${commit}"
-test -n "$tag" && REPO="$STABLE_REPO" || REPO="$UNSTABLE_REPO"
+if [ -n "$tag" ]; then
+    VERSION="$tag"
+    REPO="$STABLE_REPO"
+    PKG_REPO="$STABLE_PKG_REPO"
+else
+    VERSION="${VERSION}+${BUILD_ID}.${commit}"
+    REPO="$UNSTABLE_REPO"
+    PKG_REPO="$UNSTABLE_REPO"
+fi
 tarball_name=squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 
 # There is no sed available in git bash. This is nasty, but seems
@@ -64,3 +73,9 @@ cloudsmith push raw --republish --no-wait-for-sync \
     --version ${VERSION} \
     --summary "squiddio opencpn plugin tarball for automatic installation" \
     $REPO $tarball
+
+cloudsmith push raw --republish --no-wait-for-sync \
+    --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-installer \
+    --version ${VERSION} \
+    --summary "squiddio installer for manual installation" \
+    $PKG_REPO $exe
