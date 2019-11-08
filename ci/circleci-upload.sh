@@ -9,14 +9,12 @@
 #
 # If the environment variable CLOUDSMITH_STABLE_REPO exists it is
 # used as the stable repo, defaulting to the hardcoded STABLE_REPO
-# value. Likewise for CLOUDSMITH_UNSTABLE_REPO and UNSTABLE_REPO.
+# value. Likewise for CLOUDSMITH_UNSTABLE_REPO/UNSTABLE_REPO
+# and CLOUDSMITH_STABLE_PKG_REPO/STABLE_PKG_REPO.
 #
 
 set -xe
 
-STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
-UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
-STABLE_PKG_REPO=${CLOUDSMITH_PKG_REPO:-'mauro-calvi/manual'}
 PKG_EXT=${CLOUDSMITH_PKG_EXT:-'deb'}
 
 if [ -z "$CIRCLECI" ]; then
@@ -53,6 +51,7 @@ tarball=$(ls $HOME/project/build/*.tar.gz)
 tarball_basename=${tarball##*/}
 
 source $HOME/project/build/pkg_version.sh
+
 tarball_name=squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 pkg=$(ls $HOME/project/build/*.${PKG_EXT})
 

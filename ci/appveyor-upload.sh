@@ -4,10 +4,6 @@
 # Upload the .tar.gz and .xml artifacts to cloudsmith
 #
 
-STABLE_REPO=${CLOUDSMITH_STABLE_REPO:-'mauro-calvi/squiddio-stable'}
-UNSTABLE_REPO=${CLOUDSMITH_UNSTABLE_REPO:-'mauro-calvi/squiddio-pi'}
-STABLE_PKG__REPO=${CLOUDSMITH_STABLE_PKG_REPO:-'mauro-calvi/manual'}
-
 git_head=$(git rev-parse master) || git_head="unknown"
 if [ "$git_head" != "$(git rev-parse HEAD)" ]; then
     echo "Not on master branch, skipping deployment."
@@ -41,6 +37,12 @@ tarball=$(ls *.tar.gz)
 tarball_basename=${tarball##*/}
 
 source ../build/pkg_version.sh
+
+oldexe=$exe
+exe=${exe/-${PKG_TARGET_VERSION}/}
+exe=${exe/_${PKG_TARGET}/-pi${OCPN_API_VERSION}-${PKG_TARGET}-win32}
+mv $oldexe $exe
+
 if [ -n "$tag" ]; then
     VERSION="$tag"
     REPO="$STABLE_REPO"

@@ -33,6 +33,18 @@ SET(OCPN_MIN_VERSION "ov50")
 SET(OCPN_API_VERSION_MAJOR "1")
 SET(OCPN_API_VERSION_MINOR "16")
 
+# Stable plugins artifacts repository url
+set(STABLE_REPO "mauro-calvi/squiddio-stable")
+
+# Scratch builds repository url
+set(UNSTABLE_REPO "mauro-calvi/squiddio-pi")
+
+# Stable manual installation packages repository url
+set(STABLE_PKG_REPO "mauro-calvi/manual")
+
+# Opencpn api version, part of win32 installer name (major * 100 + minor).
+set(OCPN_API_VERSION ${OCPN_API_VERSION_MAJOR}${OCPN_API_VERSION_MINOR})
+
 SET(CMAKE_CXX_STANDARD 11)
 
 # define minimum cmake version
@@ -77,7 +89,7 @@ SET(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION}-${OCPN_MIN_VERSION}-${OCPN_API_VE
 INCLUDE("cmake/PluginSetup.cmake")
 set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
-SET(PKG_RELEASE "6")
+SET(PKG_RELEASE "1")
 SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}.${PKG_RELEASE})
 
 # The @keyword@ references are patched to actual values by upload script.
@@ -93,6 +105,7 @@ configure_file(
   # Used by flatpak, do this early.
   ${CMAKE_SOURCE_DIR}/pkg_version.sh.in
   ${CMAKE_CURRENT_BINARY_DIR}/pkg_version.sh
+  @ONLY
 )
 if (OCPN_FLATPAK)
     # On a flatpak build lib libraries such as LibGL and wxWidgets are only
