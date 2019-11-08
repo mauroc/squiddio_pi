@@ -103,8 +103,8 @@ set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
 configure_file(
   # Used by flatpak, do this early.
-  ${CMAKE_SOURCE_DIR}/pkg_version.sh.in
-  ${CMAKE_CURRENT_BINARY_DIR}/pkg_version.sh
+  ${CMAKE_SOURCE_DIR}/upload-conf.sh.in
+  ${CMAKE_CURRENT_BINARY_DIR}/upload-conf.sh
   @ONLY
 )
 if (OCPN_FLATPAK)

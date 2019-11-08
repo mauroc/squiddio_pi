@@ -45,3 +45,7 @@ docker exec -ti $DOCKER_CONTAINER_ID /bin/bash -xec \
 docker ps -a
 docker stop $DOCKER_CONTAINER_ID
 docker rm -v $DOCKER_CONTAINER_ID
+
+# Install cloudsmith-cli, used in upload.
+sudo apt-get install python3-pip python3-setuptools
+sudo python3 -m pip install -q cloudsmith-cli

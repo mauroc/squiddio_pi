@@ -19,13 +19,8 @@ echo "Using \$CLOUDSMITH_API_KEY: ${CLOUDSMITH_API_KEY:0:4}..."
 
 set -xe
 
-python -m ensurepip
-python -m pip install -q setuptools
-python -m pip install -q cloudsmith-cli
-
 commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
 now=$(date --rfc-3339=seconds) || now=$(date)
-
 
 BUILD_ID=${APPVEYOR_BUILD_NUMBER:-1}
 commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
@@ -36,7 +31,7 @@ exe=$(ls *.exe)
 tarball=$(ls *.tar.gz)
 tarball_basename=${tarball##*/}
 
-source ../build/pkg_version.sh
+source ../build/upload-conf.sh
 
 oldexe=$exe
 exe=${exe/-${PKG_TARGET_VERSION}/}
@@ -56,6 +51,7 @@ tarball_name=squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 
 # There is no sed available in git bash. This is nasty, but seems
 # to work:
+set +x
 while read line; do
     line=${line/@pkg_repo@/$REPO}
     line=${line/@name@/$tarball_name}
@@ -63,6 +59,7 @@ while read line; do
     line=${line/@filename@/$tarball_basename}
     echo $line
 done < $xml > xml.tmp && cp xml.tmp $xml && rm xml.tmp
+set -x
 
 cloudsmith push raw --republish --no-wait-for-sync \
     --name squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-metadata \

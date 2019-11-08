@@ -26,22 +26,6 @@ if [ -z "$CLOUDSMITH_API_KEY" ]; then
     exit 0
 fi
 
-if pyenv versions 2>&1 >/dev/null; then
-    pyenv global 3.7.0
-    python -m pip install cloudsmith-cli
-    pyenv rehash
-elif dnf --version 2>&1 >/dev/null; then
-    sudo dnf install python3-pip python3-setuptools
-    sudo python3 -m pip install -q cloudsmith-cli
-elif apt-get --version 2>&1 >/dev/null; then
-    sudo apt-get install python3-pip python3-setuptools
-    sudo python3 -m pip install -q cloudsmith-cli
-else
-    sudo -H python3 -m ensurepip
-    sudo -H python3 -m pip install -q setuptools
-    sudo -H python3 -m pip install -q cloudsmith-cli
-fi
-
 BUILD_ID=${CIRCLE_BUILD_NUM:-1}
 commit=$(git rev-parse --short=7 HEAD) || commit="unknown"
 tag=$(git tag --contains HEAD)
@@ -50,12 +34,11 @@ xml=$(ls $HOME/project/build/*.xml)
 tarball=$(ls $HOME/project/build/*.tar.gz)
 tarball_basename=${tarball##*/}
 
-source $HOME/project/build/pkg_version.sh
+source $HOME/project/build/upload-conf.sh
 
 tarball_name=squiddio-${PKG_TARGET}-${PKG_TARGET_VERSION}-tarball
 pkg=$(ls $HOME/project/build/*.${PKG_EXT})
 
-source $HOME/project/build/pkg_version.sh
 if [ -n "$tag" ]; then
     VERSION="$tag"
     REPO="$STABLE_REPO"
