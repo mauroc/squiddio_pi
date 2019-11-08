@@ -20,7 +20,7 @@ jobs:
        - run: ci/circleci-upload.sh
    build-flatpak:
      machine:
-       image: circleci/classic:201808-01
+       image: ubuntu-1604:201903-01
      environment:
        - OCPN_TARGET:  flatpak
        - CLOUDSMITH_PKG_EXT: gz
