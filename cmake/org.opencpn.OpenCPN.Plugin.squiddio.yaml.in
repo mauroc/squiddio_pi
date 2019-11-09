@@ -19,4 +19,4 @@ modules:
     sources:
        - type: git
          url: https://github.com/mauroc/${PACKAGE}_pi.git
-#         commit: d474c8ffa3c4addbaf724d55b1b464e894b1934d
+         commit: d474c8ffa3c4addbaf724d55b1b464e894b1934d
