@@ -17,7 +17,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***************************************************************************
- 
+
 SET(PARENT "opencpn")
 SET(PACKAGE squiddio)
 SET(VERBOSE_NAME Squiddio)
@@ -107,6 +107,10 @@ if (OCPN_FLATPAK)
         ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
         ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
     )
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/cmake/org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml.in
+        ${CMAKE_SOURCE_DIR}/flatpak/org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml
+    )
     add_custom_target(flatpak-build ALL
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
         COMMAND /usr/bin/flatpak-builder --force-clean
@@ -156,14 +160,14 @@ SET(SRC_SQUIDDIO
     src/Hyperlink.h
     src/gpxdocument.h
     src/wxJSON/jsonval.cpp
-    src/wxJSON/jsonreader.cpp    
+    src/wxJSON/jsonreader.cpp
     src/wxJSON/json_defs.h
     src/wxJSON/jsonreader.h
     src/wxJSON/jsonval.h
     src/wxJSON/jsonwriter.cpp
     src/wxJSON/jsonwriter.h
      )
-     
+
 SET(SRC_NMEA0183
     src/nmea0183/LatLong.hpp
     src/nmea0183/latlong.cpp
