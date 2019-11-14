@@ -12,18 +12,16 @@
 
 # bailout on errors and echo commands.
 set -xe
-##sudo apt-get -qq update
 
 PLUGIN=bsb4
 
 DOCKER_SOCK="unix:///var/run/docker.sock"
-if [-n "$TRAVIS" ]; then
-    TOPDIR=/opencpn-ci
-fi
+TOPDIR=/root/project
 
-if [ -n "$CIRCLECI" ]; then
-   TOPDIR=/root/project
-fi
+# Install cloudsmith-cli, used in upload.
+sudo apt-get update
+sudo apt-get install python3-pip python3-setuptools
+sudo python3 -m pip install -q cloudsmith-cli
 
 echo "DOCKER_OPTS=\"-H tcp://127.0.0.1:2375 -H $DOCKER_SOCK -s devicemapper\"" \
     | sudo tee /etc/default/docker > /dev/null
@@ -45,3 +43,4 @@ docker exec -ti $DOCKER_CONTAINER_ID /bin/bash -xec \
 docker ps -a
 docker stop $DOCKER_CONTAINER_ID
 docker rm -v $DOCKER_CONTAINER_ID
+
