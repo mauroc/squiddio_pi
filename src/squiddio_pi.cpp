@@ -189,6 +189,12 @@ int squiddio_pi::Init(void) {
             _("Report a Destination at this location"));
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
+    
+    wxMenuItem *repd = new wxMenuItem(&dummy_menu, -1,
+            _("Download Satellite Image"));
+    m_download_id = AddCanvasContextMenuItem(repd, this);
+    SetCanvasContextMenuItemViz(m_download_id, true);
+    
 
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"),
@@ -362,6 +368,9 @@ bool squiddio_pi::LoadConfig(void) {
     if (!pConf)
         return false;
 
+    pConf->SetPath ( _T ( "/Settings/ChartDnldr" ) );
+    pConf->Read(_T("BaseChartDir"), &g_BaseChartDir);
+
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
     pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
     pConf->Read(_T("InvisibleSqLayers"), &g_InvisibleLayers);
@@ -379,8 +388,11 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewFuelStations"), &g_ViewFuelStations, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
+    
+
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
     pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
+    
     wxString  l_wxsDefautlTextColour;
     pConf->Read( wxS( "TextDefaultColour" ), &l_wxsDefautlTextColour, wxS( "BLACK" ) );
     g_colourODDefaultTextColour.Set( l_wxsDefautlTextColour );
@@ -825,6 +837,12 @@ void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
         g_OCPN = bPointType;
 }
 
+
+void squiddio_pi::DownloadSatImage(wxString url_path) {
+    wxLogMessage(_T("squiddio_pi: download sat. image: ") + url_path );
+    
+}
+
 void squiddio_pi::OnContextMenuItemCallback(int id) {
     //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
@@ -850,6 +868,12 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
                         << wxString::Format(wxT("%f"), m_cursor_lon));
         if (!CheckIsOnline() || !wxLaunchDefaultBrowser(url_path))
             wxMessageBox( _("Could not launch default browser. Check your Internet connection") );
+    } else if (id == m_download_id) {
+        wxString url_path = _T("http://localhost:3000/locations/download_sat_image?lat=");
+        url_path.Append(
+                wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
+                        << wxString::Format(wxT("%f"), m_cursor_lon));
+        DownloadSatImage(url_path);
     }
 }
 

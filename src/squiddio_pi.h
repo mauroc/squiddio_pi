@@ -264,17 +264,20 @@ private:
       void GetODAPI(void);
       void AddODIcons(void);
       void SwitchPointType(bool bPointType, bool Changed);
+      void DownloadSatImage(wxString url_path);
       
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
       int           m_update_id;
       int           m_report_id;
+      int           m_download_id;
       bool          isLayerUpdate;
       wxString      local_region;
       wxString      m_rgn_to_dld;
       wxString      g_VisibleLayers;
       wxString      g_InvisibleLayers;
+      wxString      g_BaseChartDir;
       int           g_LayerIdx;
       bool          g_bShowLayers;
 
