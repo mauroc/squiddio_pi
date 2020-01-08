@@ -608,8 +608,6 @@ void squiddio_pi::RenderLayers(bool hidePOI) {
 void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config, bool hidePOI) {
 
     // Process POIs in this layer
-    //if (layer->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod ==0 )
-    //    return;
 
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
 
@@ -654,22 +652,22 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
     if(g_OCPN) {
         PlugIn_Waypoint * pPoint = new PlugIn_Waypoint(lat, lon, m_iconname, name,
                 m_GUID);
-		pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
+        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
         pPoint->m_MarkDescription = wp->m_MarkDescription;
 
         int NbrOfLinks = wp->m_HyperlinkList->GetCount();
 
         if( NbrOfLinks > 0 ) {
-			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-			while( linknode ) {
-				wp_link = linknode->GetData();
-			    Plugin_Hyperlink *sq_link = new Plugin_Hyperlink;
-				sq_link->Link = wp_link->Link;
-				sq_link->DescrText = wp_link->DescrText;
-				sq_link->Type = wxEmptyString;
-				pPoint->m_HyperlinkList->Append(sq_link);
+            wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+            while( linknode ) {
+                wp_link = linknode->GetData();
+                Plugin_Hyperlink *sq_link = new Plugin_Hyperlink;
+                sq_link->Link = wp_link->Link;
+                sq_link->DescrText = wp_link->DescrText;
+                sq_link->Type = wxEmptyString;
+                pPoint->m_HyperlinkList->Append(sq_link);
                 linknode = linknode->GetNext();
-			}
+            }
         }
 
         bool added = AddSingleWaypoint(pPoint, false);
@@ -701,15 +699,15 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
 
         int NbrOfLinks = wp->m_HyperlinkList->GetCount();
         if( NbrOfLinks > 0 ) {
-			wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
-			while( linknode ) {
-				HyperLinkList_t *l_list = new HyperLinkList_t;
-				wp_link = linknode->GetData();
-				l_list->sLink = wp_link->Link;
-				l_list->sDescription = wp_link->DescrText;
-				pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
-	            linknode = linknode->GetNext();
-			}
+            wxHyperlinkListNode *linknode = wp->m_HyperlinkList->GetFirst();
+            while( linknode ) {
+                HyperLinkList_t *l_list = new HyperLinkList_t;
+                wp_link = linknode->GetData();
+                l_list->sLink = wp_link->Link;
+                l_list->sDescription = wp_link->DescrText;
+                pCTP->TextPointHyperLinkList.insert(pCTP->TextPointHyperLinkList.end(), l_list);
+                linknode = linknode->GetNext();
+            }
         }
 
         bool added = false;
@@ -782,6 +780,61 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
     }
 }
 
+
+void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
+    if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
+        if(g_OCPN == bPointType && Changed) {
+            RenderLayers(true);
+            RenderLayers();
+        } else
+            if(g_OCPN != bPointType) {
+                if(bPointType == OCPN_WAYPOINTS)
+                    wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
+                else
+                    wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
+                RenderLayers(true);
+                g_OCPN = bPointType;
+                RenderLayers();
+            }
+    } else
+        g_OCPN = bPointType;
+}
+
+
+void squiddio_pi::OnContextMenuItemCallback(int id) {
+    //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
+
+    if (id == m_show_id || id == m_hide_id) {
+        local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
+        RenderLayerContentsOnChart(local_sq_layer, true);
+        wxLogMessage(
+                _T("squiddio_pi: toggled layer: ")
+                        + local_sq_layer->m_LayerName);
+    } else if (id == m_update_id) {
+        if (local_sq_layer != NULL) {
+            // hide and delete the current layer
+            local_sq_layer->SetVisibleOnChart(false);
+            RenderLayerContentsOnChart(local_sq_layer, true);
+            pLayerList->DeleteObject(local_sq_layer);
+        }
+        m_rgn_to_dld = local_region;
+        RefreshLayer();
+    } else if (id == m_report_id) {
+        wxString url_path = _T("http://squidd.io/locations/new?lat=");
+        url_path.Append(
+                wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
+                        << wxString::Format(wxT("%f"), m_cursor_lon));
+        if (!CheckIsOnline() || !wxLaunchDefaultBrowser(url_path))
+            wxMessageBox( _("Could not launch default browser. Check your Internet connection") );
+    } else if (id == m_download_id) {
+        wxString url_path = _T("/places/0/download_kap_file?lat=");
+        url_path.Append(
+                wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
+                        << wxString::Format(wxT("%f"), m_cursor_lon));
+        DownloadSatImage(url_path);
+    }
+}
+
 void squiddio_pi::RefreshLayer()
 {
     wxString layerContents;
@@ -818,72 +871,14 @@ void squiddio_pi::RefreshLayer()
     }
 }
 
-void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
-    if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
-        if(g_OCPN == bPointType && Changed) {
-            RenderLayers(true);
-            RenderLayers();
-        } else
-            if(g_OCPN != bPointType) {
-                if(bPointType == OCPN_WAYPOINTS)
-                    wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
-                else
-                    wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
-                RenderLayers(true);
-                g_OCPN = bPointType;
-                RenderLayers();
-            }
-    } else
-        g_OCPN = bPointType;
-}
-
-
-void squiddio_pi::DownloadSatImage(wxString url_path) {
-    wxLogMessage(_T("squiddio_pi: download sat. image: ") + url_path );
-    
-}
-
-void squiddio_pi::OnContextMenuItemCallback(int id) {
-    //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
-
-    if (id == m_show_id || id == m_hide_id) {
-        local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
-        RenderLayerContentsOnChart(local_sq_layer, true);
-        wxLogMessage(
-                _T("squiddio_pi: toggled layer: ")
-                        + local_sq_layer->m_LayerName);
-    } else if (id == m_update_id) {
-        if (local_sq_layer != NULL) {
-            // hide and delete the current layer
-            local_sq_layer->SetVisibleOnChart(false);
-            RenderLayerContentsOnChart(local_sq_layer, true);
-            pLayerList->DeleteObject(local_sq_layer);
-        }
-        m_rgn_to_dld = local_region;
-        RefreshLayer();
-    } else if (id == m_report_id) {
-        wxString url_path = _T("http://squidd.io/locations/new?lat=");
-        url_path.Append(
-                wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
-                        << wxString::Format(wxT("%f"), m_cursor_lon));
-        if (!CheckIsOnline() || !wxLaunchDefaultBrowser(url_path))
-            wxMessageBox( _("Could not launch default browser. Check your Internet connection") );
-    } else if (id == m_download_id) {
-        wxString url_path = _T("http://localhost:3000/locations/download_sat_image?lat=");
-        url_path.Append(
-                wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
-                        << wxString::Format(wxT("%f"), m_cursor_lon));
-        DownloadSatImage(url_path);
-    }
-}
-
 wxString squiddio_pi::DownloadLayer(wxString url_path) {
     wxString res = wxEmptyString;
-    //size_t result = http.Get( response, _T("https://squidd.io") + url_path );
-    //size_t result = http.Get( response, _T("http://squidd.io") + url_path );
 
-    wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
-    _OCPN_DLStatus result = OCPN_downloadFile( _T("http://squidd.io") + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
+
+    wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );    
+//     _OCPN_DLStatus result = OCPN_downloadFile( _T("http://squidd.io") + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
+    
+    _OCPN_DLStatus result = OCPN_downloadFile( _T("http://localhost:3000") + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
 
 
     if( result == OCPN_DL_NO_ERROR )
@@ -899,6 +894,37 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     }
     
     return res;
+}
+
+void squiddio_pi::DownloadSatImage(wxString url_path) {
+    wxLogMessage(_T("squiddio_pi: download sat. image: ") + url_path );
+    
+    wxString res = wxEmptyString;
+    
+    wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
+    wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+
+    wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
+    wxString compl_url_path =  _T("http://localhost:3000") + url_path + _T("&source=ocpn_plugin&version=")  +versionMajor + "." + versionMinor ;
+    OCPN_DLStatus result = OCPN_downloadFile(compl_url_path , fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
+    );
+
+
+    if( result == OCPN_DL_NO_ERROR )
+    {
+        wxFile f( fn );
+        f.ReadAll( &res );
+        f.Close();
+        wxRemoveFile( fn );
+    }
+    else
+    {
+        wxLogMessage(_("Squiddio_pi: unable to connect to host"));
+    }
+    
+    
+//     return res;
+    
 }
 
 bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path) {
@@ -1490,7 +1516,6 @@ void squiddio_pi::AddODIcons()
     m_pODAddPointIcon(pAPI);*/
 }
 
-
 //---------------------------------------------- preferences dialog event handlers
 void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
     wxCheckBox *checkbox = (wxCheckBox*) event.GetEventObject();
@@ -1527,6 +1552,7 @@ void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
                 _("Could not launch default browser. Check your Internet connection"));
     event.Skip();
 }
+
 void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
     if (m_choiceHowOften->GetSelection() == 0
             && m_choiceReceive->GetSelection() == 0) {
