@@ -827,11 +827,11 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
         if (!CheckIsOnline() || !wxLaunchDefaultBrowser(url_path))
             wxMessageBox( _("Could not launch default browser. Check your Internet connection") );
     } else if (id == m_download_id) {
-        wxString url_path = _T("/places/0/download_kap_file?lat=");
+        wxString url_path = _T("/places/1492/download_kap_files?lat=");
         url_path.Append(
                 wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
-                        << wxString::Format(wxT("%f"), m_cursor_lon));
-        DownloadSatImage(url_path);
+                        << wxString::Format(wxT("%f"), m_cursor_lon) << _T("&zooms=15_16"));
+        DownloadSatImages(url_path);
     }
 }
 
@@ -896,44 +896,6 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     return res;
 }
 
-void squiddio_pi::DownloadSatImage(wxString url_path) {
-    wxLogMessage(_T("squiddio_pi: download sat. image: ") + url_path );
-    
-    wxString res = wxEmptyString;
-    
-    wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
-    wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
-
-//     wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
-    g_BaseChartDir = _T("/home/mauro/opencpn_data/charts/raster/gmaps");
-    appendOSDirSlash(&g_BaseChartDir);
-    wxString fn = g_BaseChartDir.Append(_T("test_file.kap"));
-    
-    wxString compl_url_path =  _T("http://localhost:3000") + url_path + _T("&source=ocpn_plugin&version=")  +versionMajor + "." + versionMinor ;
-    OCPN_DLStatus result = OCPN_downloadFile(compl_url_path , fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
-    );
-
-
-    if( result == OCPN_DL_NO_ERROR )
-    {
-//         wxFile f( fn );
-//         f.ReadAll( &res );
-//         f.Close();
-//         wxRemoveFile( fn );
-        // for whatever reason, this doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
-        bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
-        if (!updated) wxMessageBox(_("Unable to update the chart database"));
-        wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + fn);
-    }
-    else
-    {
-        wxLogMessage(_("Squiddio_pi: unable to connect to host"));
-    }
-    
-    
-//     return res;
-    
-}
 
 bool squiddio_pi::SaveLayer(wxString layerStr, wxString file_path) {
     // write file to the squiddio directory

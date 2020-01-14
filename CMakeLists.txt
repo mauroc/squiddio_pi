@@ -153,6 +153,7 @@ SET(SRC_SQUIDDIO
     src/squiddioPrefsDialogBase.h
     src/squiddio_pi_thread.h
     src/squiddio_pi_thread.cpp
+    src/squiddioKaps.cpp
     src/sJSON.cpp
     src/sJSON.h
     src/icons.h

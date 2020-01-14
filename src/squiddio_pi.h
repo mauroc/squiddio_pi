@@ -264,7 +264,10 @@ private:
       void GetODAPI(void);
       void AddODIcons(void);
       void SwitchPointType(bool bPointType, bool Changed);
-      void DownloadSatImage(wxString url_path);
+      void DownloadSatImages(wxString url_path);
+      void ProcessZipFile(wxString filename);
+      bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
+      
       
       wxWindow      *m_parent_window;
       int           m_show_id;
@@ -315,6 +318,8 @@ private:
       int   m_iODVersionMajor;
       int   m_iODVersionMinor;
       int   m_iODVersionPatch;
+      int   m_display_width, m_display_height;
+
       bool  m_bDoneODVersionCall;
       bool  m_bDoneODAPIVersionCall;
       bool  m_bODAPIMessageShown;
