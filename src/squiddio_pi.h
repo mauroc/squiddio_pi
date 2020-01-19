@@ -199,8 +199,11 @@ public:
 
 //    The override PlugIn Methods
       bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
-      void SetCursorLatLon(double lat, double lon);
       bool RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp);
+      bool RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex);
+      bool RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex);
+      
+      void SetCursorLatLon(double lat, double lon);
       int GetToolbarToolCount(void);
       bool LoadConfig(void);
 
@@ -225,7 +228,6 @@ public:
       void LateInit(void);
       
       void ResetODAPI(void);
-
       
       wxString   layerdir;
       LayerList  *pLayerList;
@@ -267,8 +269,9 @@ private:
       void DownloadSatImages(wxString url_path);
       void ProcessZipFile(wxString filename);
       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
-      
-      
+
+      PlugIn_ViewPort  *m_vp;
+
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;

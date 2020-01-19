@@ -48,6 +48,7 @@ WX_DEFINE_LIST (Plugin_HyperlinkList);
 PoiMan *pPoiMan;
 class logsWindow;
 
+
 sJSON   *g_psJSON;
 wxString                g_ReceivedODAPIMessage;
 wxJSONValue             g_ReceivedODAPIJSONMsg;
@@ -160,8 +161,6 @@ int squiddio_pi::Init(void) {
     m_pODAddPointIcon = NULL;
     m_pODDeletePointIcon = NULL;
     
-    
-    
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
 
@@ -269,6 +268,8 @@ int squiddio_pi::Init(void) {
     }
 
     return (
+    WANTS_OVERLAY_CALLBACK |
+    WANTS_OPENGL_OVERLAY_CALLBACK |
     INSTALLS_CONTEXTMENU_ITEMS |
     WANTS_CURSOR_LATLON |
     WANTS_NMEA_SENTENCES |
@@ -802,7 +803,6 @@ void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
 
 
 void squiddio_pi::OnContextMenuItemCallback(int id) {
-    //wxLogMessage(_T("squiddio_pi: OnContextMenuCallBack()"));
 
     if (id == m_show_id || id == m_hide_id) {
         local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
@@ -989,13 +989,25 @@ and Conditions, available at http://squidd.io/enduser_agreement");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
+    m_vp = vp;
     return false;
 }
 
 bool squiddio_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
+    m_vp = vp;
     return false;
-
 }
+
+bool squiddio_pi::RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex) {
+    m_vp = vp;
+    return false;
+}
+
+bool squiddio_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex) {
+    m_vp = vp;
+    return false;
+}
+
 int squiddio_pi::GetToolbarToolCount(void) {
     return 1;
 }

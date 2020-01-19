@@ -39,6 +39,9 @@
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
 
+extern squiddio_pi        *g_squiddio_pi;
+
+
 void squiddio_pi::ProcessZipFile(wxString filename)
 {
     wxString zpath = g_BaseChartDir;
@@ -118,7 +121,21 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
     wxLogMessage(_T("squiddio_pi: download sat. image: ") + url_path );
 
     ::wxDisplaySize(&m_display_width, &m_display_height);
-    
+
+    double centreLat, centreLon;
+    centreLat = m_vp->clat;
+    centreLon = m_vp->clon;
+
+    double chartscale = m_vp->view_scale_ppm;
+
+    double lon_min = wxRound(m_vp->lon_min) - 1;
+//     double lon_max = wxRound(m_vp->lon_max) + 1;
+//     double lat_min = wxRound(m_vp->lat_min) - 1;
+//     double lat_max = wxRound(m_vp->lat_max) + 1;
+
+
+
+
     wxString res = wxEmptyString;
     
     wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
