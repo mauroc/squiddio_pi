@@ -170,27 +170,27 @@ int squiddio_pi::Init(void) {
     wxMenu dummy_menu;
 
     wxMenuItem *pmi = new wxMenuItem(&dummy_menu, -1,
-            _("Show local sQuiddio destinations"));
+            _("sQuiddio: Show local destinations"));
     m_show_id = AddCanvasContextMenuItem(pmi, this);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
     wxMenuItem *pmih = new wxMenuItem(&dummy_menu, -1,
-            _("Hide local sQuiddio destinations"));
+            _("sQuiddio: Hide local destinations"));
     m_hide_id = AddCanvasContextMenuItem(pmih, this);
     SetCanvasContextMenuItemViz(m_hide_id, false);
 
     wxMenuItem *updi = new wxMenuItem(&dummy_menu, -1,
-            _("Download local sQuiddio destinations"));
+            _("sQuiddio: Download local destinations"));
     m_update_id = AddCanvasContextMenuItem(updi, this);
     SetCanvasContextMenuItemViz(m_update_id, true);
 
     wxMenuItem *repi = new wxMenuItem(&dummy_menu, -1,
-            _("Report a Destination at this location"));
+            _("sQuiddio: Report a destination at this location"));
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
     
     wxMenuItem *repd = new wxMenuItem(&dummy_menu, -1,
-            _("Download Satellite Image"));
+            _("sQuiddio: Download satellite images for destinations"));
     m_download_id = AddCanvasContextMenuItem(repd, this);
     SetCanvasContextMenuItemViz(m_download_id, true);
     
@@ -753,7 +753,7 @@ void squiddio_pi::UpdateAuiStatus(void) {
 void squiddio_pi::LateInit(void){
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
-
+            
 //    CheckIsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
     SetLogsWindow();
     
@@ -803,7 +803,8 @@ void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
 
 
 void squiddio_pi::OnContextMenuItemCallback(int id) {
-
+        
+        
     if (id == m_show_id || id == m_hide_id) {
         local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
         RenderLayerContentsOnChart(local_sq_layer, true);
@@ -990,22 +991,27 @@ and Conditions, available at http://squidd.io/enduser_agreement");
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
     m_vp = vp;
-    return false;
+    return true;
 }
 
 bool squiddio_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
     m_vp = vp;
-    return false;
+    return true;
 }
 
 bool squiddio_pi::RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex) {
     m_vp = vp;
-    return false;
+    return true;
 }
 
 bool squiddio_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex) {
-    m_vp = vp;
-    return false;
+    
+    if ( !vp || m_vp == vp)  return false;
+
+//     m_vp = vp;
+//     if (m_vp) delete m_vp;
+    m_vp = new PlugIn_ViewPort(*vp);
+    return true;
 }
 
 int squiddio_pi::GetToolbarToolCount(void) {

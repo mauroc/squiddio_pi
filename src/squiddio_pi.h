@@ -229,6 +229,8 @@ public:
       
       void ResetODAPI(void);
       
+      PlugIn_ViewPort  *m_vp;
+      
       wxString   layerdir;
       LayerList  *pLayerList;
       wxString   g_Email;
@@ -270,7 +272,6 @@ private:
       void ProcessZipFile(wxString filename);
       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
 
-      PlugIn_ViewPort  *m_vp;
 
       wxWindow      *m_parent_window;
       int           m_show_id;

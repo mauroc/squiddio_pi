@@ -128,13 +128,26 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
 
     double chartscale = m_vp->view_scale_ppm;
 
-    double lon_min = wxRound(m_vp->lon_min) - 1;
-//     double lon_max = wxRound(m_vp->lon_max) + 1;
-//     double lat_min = wxRound(m_vp->lat_min) - 1;
-//     double lat_max = wxRound(m_vp->lat_max) + 1;
+//     double lat_max = m_vp->lat_max;
+
+//     Layer l = GetLocalLayer();
 
 
+    wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
 
+    double poi_lat, poi_lon;
+    int poi_count = 0;
+    while (node) {
+        Poi *rp = node->GetData();
+
+        poi_lat = rp->GetLatitude();
+        poi_lon = rp->GetLongitude();
+
+        if ( poi_lat > m_vp->lat_min && poi_lat < m_vp->lat_max && poi_lon > m_vp->lon_min && poi_lon < m_vp->lon_max) {
+          poi_count += 1;
+        }
+        node = node->GetNext();
+    }
 
     wxString res = wxEmptyString;
     
