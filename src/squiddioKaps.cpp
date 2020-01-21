@@ -116,13 +116,37 @@ bool squiddio_pi::UnzipFile(const wxString& aZipFile, const wxString& aTargetDir
 }
 
 
-void squiddio_pi::DownloadSatImages(wxString url_path) {
 
-    wxLogMessage(_T("squiddio_pi: download sat. image: ") + url_path );
+bool squiddio_pi::IsPOIinLayer(int layer_id) 
+{
+    // POI belongs to visible layer?
+    Layer * l;
+    LayerList::iterator it;
+    int index = 0;
+    bool visible_layer = false;
+    for (it = (*pLayerList).begin(); it != (*pLayerList).end();
+            ++it, ++index) {
+        l = (Layer *) (*it);
+        if (l->m_LayerID == layer_id) {
+            visible_layer = true;
+            break;
+        }
+    }
+    return visible_layer;
+}
 
-    ::wxDisplaySize(&m_display_width, &m_display_height);
 
-    double chartscale = m_vp->view_scale_ppm;
+void squiddio_pi::DownloadSatImages() {
+
+    wxLogMessage(_T("squiddio_pi: download sat. image: "));
+
+//     ::wxDisplaySize(&m_display_width, &m_display_height);
+//     double chartscale = m_vp->view_scale_ppm;
+
+    double center_lat = m_vp->clat;
+    double center_lon = m_vp->clon;
+    double max_lat    = m_vp->lat_max;
+    double max_lon    = m_vp->lon_max;
 
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
     PoiList temp_list;
@@ -132,16 +156,16 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
     wxString m_GUID;
     wxArrayString guid_array;
     const wxChar * sep = _T("-");
-
-
     int poi_count = 0;
-    while (node) {
-        Poi *rp = node->GetData();
 
+    while (node) {
+        // is POI candidate for download?
+        Poi *rp = node->GetData();
         poi_lat = rp->GetLatitude();
         poi_lon = rp->GetLongitude();
 
-        if ( poi_lat > m_vp->lat_min && poi_lat < m_vp->lat_max && poi_lon > m_vp->lon_min && poi_lon < m_vp->lon_max) {
+        if ( poi_lat > m_vp->lat_min && poi_lat < m_vp->lat_max && poi_lon > m_vp->lon_min && poi_lon < m_vp->lon_max 
+            && ShowType(rp) && IsPOIinLayer(rp->m_LayerID) ) {
           temp_list.Append( rp );
           m_GUID = rp->m_GUID;
           guid_array = wxSplit(m_GUID, * sep);
@@ -161,30 +185,29 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
         wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
         wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
-    //     wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
         g_BaseChartDir = _T("/home/mauro/opencpn_data/charts/gmaps");
-    //     appendOSDirSlash(&g_BaseChartDir);
-    //     wxString fn = g_BaseChartDir.Append(_T("test_file.zip"));
         wxString fn = g_BaseChartDir + wxFileName::GetPathSeparator() + _T("test_file.zip");
         wxString zoom_levels = "15_17";
-        wxString compl_url_path =  _T("http://localhost:3000") +
-            url_path + _T("&source=ocpn_plugin&version=")  + versionMajor + "." + versionMinor +
-            _T("&zooms=") + zoom_levels;
 
-        OCPN_DLStatus result = OCPN_downloadFile(compl_url_path , fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
+        wxString url_path = _T("http://localhost:3000/places/") + id_str + _T("/download_kap_files");
+        url_path.Append(_T("?lat=") + wxString::Format(wxT("%f"), center_lat) );
+        url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );
+        url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat)); 
+        url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon)); 
+        url_path.Append(_T("&zooms=") + zoom_levels );
+        url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor);
+        // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&source=ocpn_plugin&version=1.0"
+
+        wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * 2);
+        OCPN_DLStatus result = OCPN_downloadFile(url_path , fn, _("Downloading"), download_message, wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
         );
-
 
         if( result == OCPN_DL_NO_ERROR )
         {
-    //         wxFile f( fn );
-    //         f.ReadAll( &res );
-    //         f.Close();
-    //         wxRemoveFile( fn );
-            // for whatever reason, this doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
             wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + fn);        
             ProcessZipFile(fn);
 
+            // for whatever reason, UpdateChartDBInplace doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
             bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
             if (!updated) wxMessageBox(_("Unable to update the chart database"));
             wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + fn);        
@@ -195,6 +218,6 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
         }
     }
 //     return res;
-    
+
 }
 

@@ -828,11 +828,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
         if (!CheckIsOnline() || !wxLaunchDefaultBrowser(url_path))
             wxMessageBox( _("Could not launch default browser. Check your Internet connection") );
     } else if (id == m_download_id) {
-        wxString url_path = _T("/places/1492_1493_1495/download_kap_files?lat=");
-        url_path.Append(
-                wxString::Format(wxT("%f"), m_cursor_lat) << _T("&lon=")
-                        << wxString::Format(wxT("%f"), m_cursor_lon) << _T("&zooms=15_16"));
-        DownloadSatImages(url_path);
+        DownloadSatImages();
     }
 }
 

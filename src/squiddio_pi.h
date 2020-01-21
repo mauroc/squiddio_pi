@@ -268,10 +268,10 @@ private:
       void GetODAPI(void);
       void AddODIcons(void);
       void SwitchPointType(bool bPointType, bool Changed);
-      void DownloadSatImages(wxString url_path);
+      void DownloadSatImages();
       void ProcessZipFile(wxString filename);
       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
-
+      bool IsPOIinLayer(int layer_id);
 
       wxWindow      *m_parent_window;
       int           m_show_id;
