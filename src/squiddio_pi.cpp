@@ -990,22 +990,22 @@ and Conditions, available at http://squidd.io/enduser_agreement");
 }
 
 bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
-    m_vp = vp;
-    return true;
+    // supperseded by RenderOverlayMultiCanvas in API v. 116?
+    return false;
 }
 
 bool squiddio_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
-    m_vp = vp;
-    return true;
+    // supperseded by RenderglOverlayMultiCanvas in API v 116?
+    return false;
 }
 
 bool squiddio_pi::RenderOverlayMultiCanvas(wxDC &dc, PlugIn_ViewPort *vp, int canvasIndex) {
-    m_vp = vp;
+    if ( !vp || m_vp == vp)  return false;
+    m_vp = new PlugIn_ViewPort(*vp);
     return true;
 }
 
 bool squiddio_pi::RenderGLOverlayMultiCanvas(wxGLContext *pcontext, PlugIn_ViewPort *vp, int canvasIndex) {
-    
     if ( !vp || m_vp == vp)  return false;
 
 //     m_vp = vp;

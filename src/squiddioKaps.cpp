@@ -122,20 +122,18 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
 
     ::wxDisplaySize(&m_display_width, &m_display_height);
 
-    double centreLat, centreLon;
-    centreLat = m_vp->clat;
-    centreLon = m_vp->clon;
-
     double chartscale = m_vp->view_scale_ppm;
 
-//     double lat_max = m_vp->lat_max;
-
-//     Layer l = GetLocalLayer();
-
-
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
+    PoiList temp_list;
+    wxString id_str;
 
     double poi_lat, poi_lon;
+    wxString m_GUID;
+    wxArrayString guid_array;
+    const wxChar * sep = _T("-");
+
+
     int poi_count = 0;
     while (node) {
         Poi *rp = node->GetData();
@@ -144,50 +142,58 @@ void squiddio_pi::DownloadSatImages(wxString url_path) {
         poi_lon = rp->GetLongitude();
 
         if ( poi_lat > m_vp->lat_min && poi_lat < m_vp->lat_max && poi_lon > m_vp->lon_min && poi_lon < m_vp->lon_max) {
+          temp_list.Append( rp );
+          m_GUID = rp->m_GUID;
+          guid_array = wxSplit(m_GUID, * sep);
+          id_str += ((poi_count >0 )?_T("_"):wxEmptyString) + guid_array[3] ; 
           poi_count += 1;
         }
         node = node->GetNext();
     }
 
-    wxString res = wxEmptyString;
-    
-    wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
-    wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+    if (poi_count <= 0) 
+        wxMessageBox(_("No sQuiddio POIs in viewport. Zoom out or pan to a different area."));
+    else if (poi_count > 20)
+        wxMessageBox(_("Too many sQuiddio POIs in viewport. Zoom in to reduce # of POIs to less than 20"));
+    else {
+        wxString res = wxEmptyString;
+        
+        wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
+        wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
-//     wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
-    g_BaseChartDir = _T("/home/mauro/opencpn_data/charts/gmaps");
-//     appendOSDirSlash(&g_BaseChartDir);
-//     wxString fn = g_BaseChartDir.Append(_T("test_file.zip"));
-    wxString fn = g_BaseChartDir + wxFileName::GetPathSeparator() + _T("test_file.zip");
-    wxString zoom_levels = "15_17";
-    wxString compl_url_path =  _T("http://localhost:3000") +
-        url_path + _T("&source=ocpn_plugin&version=")  + versionMajor + "." + versionMinor +
-        _T("&zooms=") + zoom_levels;
+    //     wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );
+        g_BaseChartDir = _T("/home/mauro/opencpn_data/charts/gmaps");
+    //     appendOSDirSlash(&g_BaseChartDir);
+    //     wxString fn = g_BaseChartDir.Append(_T("test_file.zip"));
+        wxString fn = g_BaseChartDir + wxFileName::GetPathSeparator() + _T("test_file.zip");
+        wxString zoom_levels = "15_17";
+        wxString compl_url_path =  _T("http://localhost:3000") +
+            url_path + _T("&source=ocpn_plugin&version=")  + versionMajor + "." + versionMinor +
+            _T("&zooms=") + zoom_levels;
 
-    OCPN_DLStatus result = OCPN_downloadFile(compl_url_path , fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
-    );
+        OCPN_DLStatus result = OCPN_downloadFile(compl_url_path , fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
+        );
 
 
-    if( result == OCPN_DL_NO_ERROR )
-    {
-//         wxFile f( fn );
-//         f.ReadAll( &res );
-//         f.Close();
-//         wxRemoveFile( fn );
-        // for whatever reason, this doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
-        wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + fn);        
-        ProcessZipFile(fn);
+        if( result == OCPN_DL_NO_ERROR )
+        {
+    //         wxFile f( fn );
+    //         f.ReadAll( &res );
+    //         f.Close();
+    //         wxRemoveFile( fn );
+            // for whatever reason, this doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
+            wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + fn);        
+            ProcessZipFile(fn);
 
-        bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
-        if (!updated) wxMessageBox(_("Unable to update the chart database"));
-        wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + fn);        
+            bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
+            if (!updated) wxMessageBox(_("Unable to update the chart database"));
+            wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + fn);        
+        }
+        else
+        {
+            wxLogMessage(_("Squiddio_pi: unable to connect to host"));
+        }
     }
-    else
-    {
-        wxLogMessage(_("Squiddio_pi: unable to connect to host"));
-    }
-    
-    
 //     return res;
     
 }
