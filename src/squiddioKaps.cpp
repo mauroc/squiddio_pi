@@ -42,25 +42,7 @@
 extern squiddio_pi        *g_squiddio_pi;
 
 
-void squiddio_pi::ProcessZipFile(wxString filename)
-{
-    wxString zpath = g_BaseChartDir;
-
-    bool unzip;
-    unzip = UnzipFile(filename, zpath);
-
-    if (unzip == true) {
-        wxLogMessage(wxString::Format(_("Squiddio_pi: extracted charts to: %s"), zpath));
-        wxRemoveFile(filename); //remove the zip file
-
-    }
-    else {
-        wxLogMessage(wxString::Format(_("Squiddio_pi: unable to extract charts to: %s"), zpath));
-    }
-}
-
-
-bool squiddio_pi::UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
+bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
     
 //     https://wiki.wxwidgets.org/WxZipInputStream
     bool ret = true;
@@ -116,6 +98,22 @@ bool squiddio_pi::UnzipFile(const wxString& aZipFile, const wxString& aTargetDir
 }
 
 
+void squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
+{
+//     wxString zpath = g_BaseChartDir;
+
+    bool unzip;
+    unzip = UnzipFile(tmp_file, chart_dir);
+
+    if (unzip == true) {
+        wxLogMessage(wxString::Format(_("Squiddio_pi: extracted charts to: %s"), chart_dir));
+        wxRemoveFile(tmp_file); //remove the zip file
+
+    }
+    else {
+        wxLogMessage(wxString::Format(_("Squiddio_pi: unable to extract charts to: %s"), chart_dir));
+    }
+}
 
 bool squiddio_pi::IsPOIinLayer(int layer_id) 
 {
@@ -185,32 +183,32 @@ void squiddio_pi::DownloadSatImages() {
         wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
         wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
-        g_BaseChartDir = _T("/home/mauro/opencpn_data/charts/gmaps");
-        wxString fn = g_BaseChartDir + wxFileName::GetPathSeparator() + _T("test_file.zip");
-        wxString zoom_levels = "15_17";
-
+        wxString tmp_file = wxFileName::CreateTempFileName(_T("squiddio_pi"));
+        wxString chart_dir = g_BaseChartDir + wxFileName::GetPathSeparator();
+        
         wxString url_path = _T("http://localhost:3000/places/") + id_str + _T("/download_kap_files");
         url_path.Append(_T("?lat=") + wxString::Format(wxT("%f"), center_lat) );
         url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );
         url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat)); 
         url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon)); 
-        url_path.Append(_T("&zooms=") + zoom_levels );
+        url_path.Append(_T("&zooms=") + g_ZoomLevels );
         url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor);
         // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&source=ocpn_plugin&version=1.0"
 
-        wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * 2);
-        OCPN_DLStatus result = OCPN_downloadFile(url_path , fn, _("Downloading"), download_message, wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
+        int num_zooms = wxSplit(g_ZoomLevels, * sep).GetCount();
+        wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * num_zooms);
+        OCPN_DLStatus result = OCPN_downloadFile(url_path , tmp_file, _("Downloading"), download_message, wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
         );
 
         if( result == OCPN_DL_NO_ERROR )
         {
-            wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + fn);        
-            ProcessZipFile(fn);
+            wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + tmp_file);        
+            ProcessZipFile(chart_dir, tmp_file);
 
             // for whatever reason, UpdateChartDBInplace doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
             bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
             if (!updated) wxMessageBox(_("Unable to update the chart database"));
-            wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + fn);        
+            wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + tmp_file);    
         }
         else
         {

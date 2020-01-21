@@ -269,8 +269,8 @@ private:
       void AddODIcons(void);
       void SwitchPointType(bool bPointType, bool Changed);
       void DownloadSatImages();
-      void ProcessZipFile(wxString filename);
-      bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
+      void ProcessZipFile(wxString chart_dir, wxString tmp_file);
+//       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
       bool IsPOIinLayer(int layer_id);
 
       wxWindow      *m_parent_window;
@@ -284,7 +284,7 @@ private:
       wxString      m_rgn_to_dld;
       wxString      g_VisibleLayers;
       wxString      g_InvisibleLayers;
-      wxString      g_BaseChartDir;
+      wxString      g_BaseChartDir, g_InitChartDir,g_ZoomLevels;
       int           g_LayerIdx;
       bool          g_bShowLayers;
 

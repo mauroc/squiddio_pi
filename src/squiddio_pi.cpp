@@ -224,6 +224,8 @@ int squiddio_pi::Init(void) {
 
     m_pconfig = GetOCPNConfigObject();
     LoadConfig();
+    g_BaseChartDir =  (g_BaseChartDir == wxEmptyString) ? g_InitChartDir : g_BaseChartDir;
+    g_ZoomLevels = (g_ZoomLevels == wxEmptyString) ? _T("15_17") : g_ZoomLevels;
 
     if(!m_bDoneODAPIVersionCall) GetODAPI();
     
@@ -369,8 +371,8 @@ bool squiddio_pi::LoadConfig(void) {
     if (!pConf)
         return false;
 
-    pConf->SetPath ( _T ( "/Settings/ChartDnldr" ) );
-    pConf->Read(_T("BaseChartDir"), &g_BaseChartDir);
+    pConf->SetPath ( _T ( "/Directories" ) );
+    pConf->Read(_T("InitChartDir"), &g_InitChartDir);
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
     pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
@@ -389,6 +391,8 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewFuelStations"), &g_ViewFuelStations, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
+    pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
+    pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
     
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
@@ -451,6 +455,8 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ViewRamps"), g_ViewRamps);
     pConf->Write(_T("ViewFuelStations"), g_ViewFuelStations);
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
+    pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
+    pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
     pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
     pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
     pConf->Write(_T("TextDefaultColour"), g_colourODDefaultTextColour.GetAsString( wxC2S_CSS_SYNTAX ));
