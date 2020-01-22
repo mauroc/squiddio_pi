@@ -153,7 +153,7 @@ void squiddio_pi::DownloadSatImages() {
     double poi_lat, poi_lon;
     wxString m_GUID;
     wxArrayString guid_array;
-    const wxChar * sep = _T("-");
+    const wxChar * sep1 = _T("-"), * sep2 = _T("_");
     int poi_count = 0;
 
     while (node) {
@@ -166,8 +166,8 @@ void squiddio_pi::DownloadSatImages() {
             && ShowType(rp) && IsPOIinLayer(rp->m_LayerID) ) {
           temp_list.Append( rp );
           m_GUID = rp->m_GUID;
-          guid_array = wxSplit(m_GUID, * sep);
-          id_str += ((poi_count >0 )?_T("_"):wxEmptyString) + guid_array[3] ; 
+          guid_array = wxSplit(m_GUID, * sep1);
+          id_str += ((poi_count >0 ) ? sep2 : wxEmptyString) + guid_array[3] ; 
           poi_count += 1;
         }
         node = node->GetNext();
@@ -178,7 +178,7 @@ void squiddio_pi::DownloadSatImages() {
     else if (poi_count > 20)
         wxMessageBox(_("Too many sQuiddio POIs in viewport. Zoom in to reduce # of POIs to less than 20"));
     else {
-        wxString res = wxEmptyString;
+//         wxString res = wxEmptyString;
         
         wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
         wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
@@ -187,15 +187,15 @@ void squiddio_pi::DownloadSatImages() {
         wxString chart_dir = g_BaseChartDir + wxFileName::GetPathSeparator();
         
         wxString url_path = _T("http://localhost:3000/places/") + id_str + _T("/download_kap_files");
-        url_path.Append(_T("?lat=") + wxString::Format(wxT("%f"), center_lat) );
-        url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );
-        url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat)); 
-        url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon)); 
-        url_path.Append(_T("&zooms=") + g_ZoomLevels );
-        url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor);
+        url_path.Append(_T("?lat=") + wxString::Format(wxT("%f"), center_lat) );  // center latitude
+        url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );  // center longitude
+        url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat));    // max latitude of viewport
+        url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon));    // max longitude of viewport
+        url_path.Append(_T("&zooms=") + g_ZoomLevels );  // gmaps zoom levels 
+        url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor); // plugin identifiers
         // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&source=ocpn_plugin&version=1.0"
 
-        int num_zooms = wxSplit(g_ZoomLevels, * sep).GetCount();
+        int num_zooms = wxSplit(g_ZoomLevels, * sep2).GetCount();
         wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * num_zooms);
         OCPN_DLStatus result = OCPN_downloadFile(url_path , tmp_file, _("Downloading"), download_message, wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
         );
