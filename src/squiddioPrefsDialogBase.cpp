@@ -194,7 +194,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer6->Add( m_staticText14, 0, wxALL, 5 );
 
 	m_checkBoxVPMap = new wxCheckBox( downloads->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxVPMap->SetValue(true);
 	m_checkBoxVPMap->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
 
 	fgSizer6->Add( m_checkBoxVPMap, 0, wxALL, 5 );

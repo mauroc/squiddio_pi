@@ -225,7 +225,7 @@ int squiddio_pi::Init(void) {
     m_pconfig = GetOCPNConfigObject();
     LoadConfig();
     g_BaseChartDir =  (g_BaseChartDir == wxEmptyString) ? g_InitChartDir : g_BaseChartDir;
-    g_ZoomLevels = (g_ZoomLevels == wxEmptyString) ? _T("15_17") : g_ZoomLevels;
+    g_ZoomLevels = (g_ZoomLevels == wxEmptyString) ? _T("15,17") : g_ZoomLevels;
 
     if(!m_bDoneODAPIVersionCall) GetODAPI();
     
@@ -1220,6 +1220,20 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ZoomLevels = dialog->m_textZoomLevels->GetValue();
                 l_bChanged = true;
             }
+            
+            if (g_ZoomLevels == wxEmptyString) {
+               wxMessageBox(_("Please specify at least one zoom level")); 
+            }
+            
+            const wxChar * sep2 = _T(",");
+            wxArrayString zooms = wxSplit(g_ZoomLevels, * sep2);
+            for (size_t i=0; i < zooms.GetCount(); i++ ) {
+                if (zooms[i] == wxEmptyString || wxAtoi(zooms[i]) < 10 || wxAtoi(zooms[i]) > 18) {
+                    wxMessageBox(_("Zoom Levels must be betweeen 10 and 18"));
+                    break;
+                }
+            }
+            
 
             if( g_BaseChartDir != dialog->m_dirPickerDownload->GetPath()) {
                 g_BaseChartDir = dialog->m_dirPickerDownload->GetPath();
