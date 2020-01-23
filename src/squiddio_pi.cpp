@@ -393,6 +393,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
+    pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap);
     
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
@@ -457,6 +458,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
     pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
     pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
+    pConf->Write(_T("DownloadVPMap"), g_DownloadVPMap);
     pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
     pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
     pConf->Write(_T("TextDefaultColour"), g_colourODDefaultTextColour.GetAsString( wxC2S_CSS_SYNTAX ));
@@ -1063,8 +1065,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_sliderBackgroundTransparency->SetValue(g_iODTextBackgroundTransparency);
         dialog->m_staticTextFontFaceExample->SetFont(g_fontODDisplayTextFont);
         dialog->m_radioBoxShowDisplayText->SetSelection(g_iTextPointDisplayTextWhen);
-        
-        
+        dialog->m_textZoomLevels->SetValue(g_ZoomLevels); 
+        dialog->m_dirPickerDownload->SetPath(g_BaseChartDir);
+        dialog->m_checkBoxVPMap->SetValue(g_DownloadVPMap);
+
         if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
             dialog->m_textSquiddioID->Enable(true);
             dialog->m_textApiKey->Enable(true);
@@ -1210,6 +1214,21 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 l = (Layer *) (*it);
                 if (l->m_LayerName.Contains(_T("logs")))
                     l->m_bIsVisibleOnChart = g_RetrievePeriod > 0;
+            }
+
+            if( g_ZoomLevels != dialog->m_textZoomLevels->GetValue()) {
+                g_ZoomLevels = dialog->m_textZoomLevels->GetValue();
+                l_bChanged = true;
+            }
+
+            if( g_BaseChartDir != dialog->m_dirPickerDownload->GetPath()) {
+                g_BaseChartDir = dialog->m_dirPickerDownload->GetPath();
+                l_bChanged = true;
+            }
+
+            if( g_DownloadVPMap != dialog->m_checkBoxVPMap->GetValue()) {
+                g_DownloadVPMap = dialog->m_checkBoxVPMap->GetValue();
+                l_bChanged = true;
             }
 
             SaveConfig();

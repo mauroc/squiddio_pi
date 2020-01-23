@@ -22,49 +22,194 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_fgSubSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	m_fgSubSizer->SetMinSize( wxSize( -1,380 ) );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel1 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbDestSizer;
-	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("View Destinations") ), wxVERTICAL );
+	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( m_panel1, wxID_ANY, _("View Destinations") ), wxVERTICAL );
 
-	wxFlexGridSizer* fgSizer5;
-	fgSizer5 = new wxFlexGridSizer( 3, 3, 0, 0 );
-	fgSizer5->SetFlexibleDirection( wxBOTH );
-	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxFlexGridSizer* viewDestinations;
+	viewDestinations = new wxFlexGridSizer( 3, 3, 0, 0 );
+	viewDestinations->SetFlexibleDirection( wxBOTH );
+	viewDestinations->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	m_checkBoxAll = new wxCheckBox( sbDestSizer->GetStaticBox(), ID_CB_ALL, _("All"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxAll, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxAll, 0, wxALL, 5 );
 
 	m_checkBoxMarinas = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Marinas"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxMarinas, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxMarinas, 0, wxALL, 5 );
 
 	m_checkBoxAnchorages = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Anchorages"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxAnchorages, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxAnchorages, 0, wxALL, 5 );
 
 	m_checkBoxYachtClubs = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Yacht clubs"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxYachtClubs, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxYachtClubs, 0, wxALL, 5 );
 
 	m_checkBoxDocks = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Docks/piers"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxDocks, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxDocks, 0, wxALL, 5 );
 
 	m_checkBoxRamps = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Boat ramps"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxRamps, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxRamps, 0, wxALL, 5 );
 
 	m_checkBoxFuelStations = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Fuel Stations"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxFuelStations, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxFuelStations, 0, wxALL, 5 );
 
 	m_checkBoxOthers = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Other"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxOthers, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxOthers, 0, wxALL, 5 );
 
 	m_checkBoxAIS = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("AIS marker"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( m_checkBoxAIS, 0, wxALL, 5 );
+	viewDestinations->Add( m_checkBoxAIS, 0, wxALL, 5 );
 
 
-	sbDestSizer->Add( fgSizer5, 1, wxEXPAND, 5 );
+	sbDestSizer->Add( viewDestinations, 1, wxEXPAND, 5 );
 
 
-	m_fgSubSizer->Add( sbDestSizer, 0, wxALL|wxEXPAND, 5 );
+	m_panel1->SetSizer( sbDestSizer );
+	m_panel1->Layout();
+	sbDestSizer->Fit( m_panel1 );
+	m_notebook1->AddPage( m_panel1, _("View"), false );
+	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxStaticBoxSizer* sbODSettings;
+	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
+	wxString m_radioBoxOCPNorODChoices[] = { _("OpenCPN Waypoint"), _("ODraw TextPoint") };
+	int m_radioBoxOCPNorODNChoices = sizeof( m_radioBoxOCPNorODChoices ) / sizeof( wxString );
+	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("OCPN or ODraw"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
+	m_radioBoxOCPNorOD->SetSelection( 0 );
+	m_radioBoxOCPNorOD->SetToolTip( _("Render sQuiddio POIs as legacy OpenCPN waypoints or  ODraw Textpoints (recommended, provided ODraw plugin is enabled).") );
+
+	sbODSettings->Add( m_radioBoxOCPNorOD, 0, wxALL, 5 );
+
+	m_staticline2 = new wxStaticLine( sbODSettings->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	sbODSettings->Add( m_staticline2, 0, wxEXPAND | wxALL, 5 );
+
+	wxStaticBoxSizer* sbSizer6;
+	sbSizer6 = new wxStaticBoxSizer( new wxStaticBox( sbODSettings->GetStaticBox(), wxID_ANY, _("ODraw Settings") ), wxVERTICAL );
+
+	m_fgSizerODSettings = new wxFlexGridSizer( 0, 2, 0, 0 );
+	m_fgSizerODSettings->AddGrowableCol( 0 );
+	m_fgSizerODSettings->SetFlexibleDirection( wxBOTH );
+	m_fgSizerODSettings->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_checkBoxShowName = new wxCheckBox( sbSizer6->GetStaticBox(), wxID_ANY, _("Show Name"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_checkBoxShowName->SetValue(true);
+	m_fgSizerODSettings->Add( m_checkBoxShowName, 0, wxALL, 5 );
+
+
+	m_fgSizerODSettings->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText5 = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Text position relative to point"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText5->Wrap( -1 );
+	m_fgSizerODSettings->Add( m_staticText5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+	wxString m_choicePositionChoices[] = { _("Top"), _("Top Centre"), _("Bottom"), _("Bottom Centre"), _("Centre"), _("Right"), _("Left") };
+	int m_choicePositionNChoices = sizeof( m_choicePositionChoices ) / sizeof( wxString );
+	m_choicePosition = new wxChoice( sbSizer6->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choicePositionNChoices, m_choicePositionChoices, 0 );
+	m_choicePosition->SetSelection( 0 );
+	m_fgSizerODSettings->Add( m_choicePosition, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
+
+	m_staticTextTextColour = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Text Colour"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextTextColour->Wrap( -1 );
+	m_fgSizerODSettings->Add( m_staticTextTextColour, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+	m_colourPickerText = new wxColourPickerCtrl( sbSizer6->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	m_fgSizerODSettings->Add( m_colourPickerText, 0, wxALIGN_RIGHT|wxALL, 5 );
+
+	m_staticTextBackgroundColour = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Baackground Colour"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBackgroundColour->Wrap( -1 );
+	m_fgSizerODSettings->Add( m_staticTextBackgroundColour, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+	m_colourPickerBackgroundColour = new wxColourPickerCtrl( sbSizer6->GetStaticBox(), wxID_ANY, wxColour( 255, 255, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	m_fgSizerODSettings->Add( m_colourPickerBackgroundColour, 0, wxALIGN_RIGHT|wxALL, 5 );
+
+	m_staticTextBackgroundTransparency = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Background Transparency"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBackgroundTransparency->Wrap( -1 );
+	m_fgSizerODSettings->Add( m_staticTextBackgroundTransparency, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+	m_sliderBackgroundTransparency = new wxSlider( sbSizer6->GetStaticBox(), wxID_ANY, 100, 0, 255, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
+	m_fgSizerODSettings->Add( m_sliderBackgroundTransparency, 0, wxALL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizerFontFace;
+	bSizerFontFace = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticTextFont = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Text Font"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextFont->Wrap( -1 );
+	bSizerFontFace->Add( m_staticTextFont, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+	m_staticTextFontFaceExample = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Example"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextFontFaceExample->Wrap( -1 );
+	bSizerFontFace->Add( m_staticTextFontFaceExample, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+
+	m_fgSizerODSettings->Add( bSizerFontFace, 1, wxEXPAND, 5 );
+
+	m_buttonTextFont = new wxButton( sbSizer6->GetStaticBox(), wxID_ANY, _("Fonts"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_fgSizerODSettings->Add( m_buttonTextFont, 0, wxALIGN_RIGHT|wxALL, 5 );
+
+
+	sbSizer6->Add( m_fgSizerODSettings, 1, wxEXPAND, 5 );
+
+	wxString m_radioBoxShowDisplayTextChoices[] = { _("Always"), _("On Rollover Only"), _("Never") };
+	int m_radioBoxShowDisplayTextNChoices = sizeof( m_radioBoxShowDisplayTextChoices ) / sizeof( wxString );
+	m_radioBoxShowDisplayText = new wxRadioBox( sbSizer6->GetStaticBox(), wxID_ANY, _("Show Display Text"), wxDefaultPosition, wxDefaultSize, m_radioBoxShowDisplayTextNChoices, m_radioBoxShowDisplayTextChoices, 1, wxRA_SPECIFY_ROWS );
+	m_radioBoxShowDisplayText->SetSelection( 0 );
+	sbSizer6->Add( m_radioBoxShowDisplayText, 0, wxALL, 5 );
+
+
+	sbODSettings->Add( sbSizer6, 1, wxEXPAND, 5 );
+
+
+	rendering->SetSizer( sbODSettings );
+	rendering->Layout();
+	sbODSettings->Fit( rendering );
+	m_notebook1->AddPage( rendering, _("Rendering"), false );
+	m_panel3 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxStaticBoxSizer* downloads;
+	downloads = new wxStaticBoxSizer( new wxStaticBox( m_panel3, wxID_ANY, _("Google Maps") ), wxVERTICAL );
+
+	wxFlexGridSizer* fgSizer6;
+	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer6->SetFlexibleDirection( wxBOTH );
+	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_staticText11 = new wxStaticText( downloads->GetStaticBox(), wxID_ANY, _("Zoom Levels"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText11->Wrap( -1 );
+	fgSizer6->Add( m_staticText11, 0, wxALL, 5 );
+
+	m_textZoomLevels = new wxTextCtrl( downloads->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textZoomLevels->SetToolTip( _("Download one satellite map for each destination and for each of these zoom levels. Separate values with a comma. Minimum zoom level is 10, maximum 18. Example: 15,17. 15 is typically suitable approaching a destination, 17 for detailed map of marina or anchorage. Keep zoom levels to a minimum to reduce download times. ") );
+
+	fgSizer6->Add( m_textZoomLevels, 0, wxALL, 5 );
+
+	m_staticText12 = new wxStaticText( downloads->GetStaticBox(), wxID_ANY, _("Download .kap files to:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText12->Wrap( -1 );
+	fgSizer6->Add( m_staticText12, 0, wxALL, 5 );
+
+	m_dirPickerDownload = new wxDirPickerCtrl( downloads->GetStaticBox(), wxID_ANY, wxEmptyString, _("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+	m_dirPickerDownload->SetToolTip( _("Select directory where you want to save downloaded maps. Must be one of your OpenCPN chart directories.") );
+
+	fgSizer6->Add( m_dirPickerDownload, 0, wxALL, 5 );
+
+	m_staticText14 = new wxStaticText( downloads->GetStaticBox(), wxID_ANY, _("Include viewport map"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText14->Wrap( -1 );
+	fgSizer6->Add( m_staticText14, 0, wxALL, 5 );
+
+	m_checkBoxVPMap = new wxCheckBox( downloads->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxVPMap->SetValue(true);
+	m_checkBoxVPMap->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
+
+	fgSizer6->Add( m_checkBoxVPMap, 0, wxALL, 5 );
+
+
+	downloads->Add( fgSizer6, 1, wxEXPAND, 5 );
+
+
+	m_panel3->SetSizer( downloads );
+	m_panel3->Layout();
+	downloads->Fit( m_panel3 );
+	m_notebook1->AddPage( m_panel3, _("Downloads"), true );
+	logSharing = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbLogSizer;
-	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Share logs with friends") ), wxVERTICAL );
+	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( logSharing, wxID_ANY, _("Share logs with friends") ), wxVERTICAL );
 
 	wxFlexGridSizer* fgSizerLogs;
 	fgSizerLogs = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -119,94 +264,12 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbLogSizer->Add( fgSizerLogs, 1, wxEXPAND, 5 );
 
 
-	m_fgSubSizer->Add( sbLogSizer, 0, wxALL|wxEXPAND, 5 );
+	logSharing->SetSizer( sbLogSizer );
+	logSharing->Layout();
+	sbLogSizer->Fit( logSharing );
+	m_notebook1->AddPage( logSharing, _("Log Sharing"), false );
 
-	wxStaticBoxSizer* sbSizerRenderer;
-	sbSizerRenderer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Renderer") ), wxVERTICAL );
-
-	wxString m_radioBoxOCPNorODChoices[] = { _("OpenCPN Waypoint"), _("ODraw TextPoint") };
-	int m_radioBoxOCPNorODNChoices = sizeof( m_radioBoxOCPNorODChoices ) / sizeof( wxString );
-	m_radioBoxOCPNorOD = new wxRadioBox( sbSizerRenderer->GetStaticBox(), wxID_ANY, _("OCPN or ODraw"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
-	m_radioBoxOCPNorOD->SetSelection( 0 );
-	sbSizerRenderer->Add( m_radioBoxOCPNorOD, 0, wxALL, 5 );
-
-
-	m_fgSubSizer->Add( sbSizerRenderer, 0, wxALL|wxEXPAND, 5 );
-
-	wxStaticBoxSizer* sbODSettings;
-	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Ocpn Draw settings") ), wxVERTICAL );
-
-	m_fgSizerODSettings = new wxFlexGridSizer( 0, 2, 0, 0 );
-	m_fgSizerODSettings->AddGrowableCol( 0 );
-	m_fgSizerODSettings->SetFlexibleDirection( wxBOTH );
-	m_fgSizerODSettings->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-
-	m_checkBoxShowName = new wxCheckBox( sbODSettings->GetStaticBox(), wxID_ANY, _("Show Name"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-	m_checkBoxShowName->SetValue(true);
-	m_fgSizerODSettings->Add( m_checkBoxShowName, 0, wxALL, 5 );
-
-
-	m_fgSizerODSettings->Add( 0, 0, 1, wxEXPAND, 5 );
-
-	m_staticText5 = new wxStaticText( sbODSettings->GetStaticBox(), wxID_ANY, _("Text position relative to point"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText5->Wrap( -1 );
-	m_fgSizerODSettings->Add( m_staticText5, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-	wxString m_choicePositionChoices[] = { _("Top"), _("Top Centre"), _("Bottom"), _("Bottom Centre"), _("Centre"), _("Right"), _("Left") };
-	int m_choicePositionNChoices = sizeof( m_choicePositionChoices ) / sizeof( wxString );
-	m_choicePosition = new wxChoice( sbODSettings->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choicePositionNChoices, m_choicePositionChoices, 0 );
-	m_choicePosition->SetSelection( 0 );
-	m_fgSizerODSettings->Add( m_choicePosition, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxALL, 5 );
-
-	m_staticTextTextColour = new wxStaticText( sbODSettings->GetStaticBox(), wxID_ANY, _("Text Colour"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticTextTextColour->Wrap( -1 );
-	m_fgSizerODSettings->Add( m_staticTextTextColour, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-	m_colourPickerText = new wxColourPickerCtrl( sbODSettings->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	m_fgSizerODSettings->Add( m_colourPickerText, 0, wxALIGN_RIGHT|wxALL, 5 );
-
-	m_staticTextBackgroundColour = new wxStaticText( sbODSettings->GetStaticBox(), wxID_ANY, _("Baackground Colour"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticTextBackgroundColour->Wrap( -1 );
-	m_fgSizerODSettings->Add( m_staticTextBackgroundColour, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-	m_colourPickerBackgroundColour = new wxColourPickerCtrl( sbODSettings->GetStaticBox(), wxID_ANY, wxColour( 255, 255, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	m_fgSizerODSettings->Add( m_colourPickerBackgroundColour, 0, wxALIGN_RIGHT|wxALL, 5 );
-
-	m_staticTextBackgroundTransparency = new wxStaticText( sbODSettings->GetStaticBox(), wxID_ANY, _("Background Transparency"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticTextBackgroundTransparency->Wrap( -1 );
-	m_fgSizerODSettings->Add( m_staticTextBackgroundTransparency, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-	m_sliderBackgroundTransparency = new wxSlider( sbODSettings->GetStaticBox(), wxID_ANY, 100, 0, 255, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
-	m_fgSizerODSettings->Add( m_sliderBackgroundTransparency, 0, wxALL|wxEXPAND, 5 );
-
-	wxBoxSizer* bSizerFontFace;
-	bSizerFontFace = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticTextFont = new wxStaticText( sbODSettings->GetStaticBox(), wxID_ANY, _("Text Font"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticTextFont->Wrap( -1 );
-	bSizerFontFace->Add( m_staticTextFont, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-	m_staticTextFontFaceExample = new wxStaticText( sbODSettings->GetStaticBox(), wxID_ANY, _("Example"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticTextFontFaceExample->Wrap( -1 );
-	bSizerFontFace->Add( m_staticTextFontFaceExample, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
-
-
-	m_fgSizerODSettings->Add( bSizerFontFace, 1, wxEXPAND, 5 );
-
-	m_buttonTextFont = new wxButton( sbODSettings->GetStaticBox(), wxID_ANY, _("Fonts"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_fgSizerODSettings->Add( m_buttonTextFont, 0, wxALIGN_RIGHT|wxALL, 5 );
-
-
-	sbODSettings->Add( m_fgSizerODSettings, 1, wxEXPAND, 5 );
-
-	wxString m_radioBoxShowDisplayTextChoices[] = { _("Always"), _("On Rollover Only"), _("Never") };
-	int m_radioBoxShowDisplayTextNChoices = sizeof( m_radioBoxShowDisplayTextChoices ) / sizeof( wxString );
-	m_radioBoxShowDisplayText = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("Show Display Text"), wxDefaultPosition, wxDefaultSize, m_radioBoxShowDisplayTextNChoices, m_radioBoxShowDisplayTextChoices, 1, wxRA_SPECIFY_ROWS );
-	m_radioBoxShowDisplayText->SetSelection( 0 );
-	sbODSettings->Add( m_radioBoxShowDisplayText, 0, wxALL, 5 );
-
-
-	m_fgSubSizer->Add( sbODSettings, 0, wxALL|wxEXPAND, 5 );
+	m_fgSubSizer->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 
 
 	m_fgMainSizer->Add( m_fgSubSizer, 0, wxEXPAND, 5 );
@@ -230,9 +293,9 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	// Connect Events
 	m_checkBoxAll->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
+	m_buttonTextFont->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
 	m_choiceHowOften->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
 	m_choiceReceive->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
-	m_buttonTextFont->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
 	m_sdbButtonSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );
@@ -242,9 +305,9 @@ SquiddioPrefsDialogBase::~SquiddioPrefsDialogBase()
 {
 	// Disconnect Events
 	m_checkBoxAll->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
+	m_buttonTextFont->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
 	m_choiceHowOften->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
 	m_choiceReceive->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
-	m_buttonTextFont->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
 	m_sdbButtonSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );
