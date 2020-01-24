@@ -170,27 +170,27 @@ int squiddio_pi::Init(void) {
     wxMenu dummy_menu;
 
     wxMenuItem *pmi = new wxMenuItem(&dummy_menu, -1,
-            _("sQuiddio: Show local destinations"));
+            _("sQuiddio: Show local POIs"));
     m_show_id = AddCanvasContextMenuItem(pmi, this);
     SetCanvasContextMenuItemViz(m_show_id, false);
 
     wxMenuItem *pmih = new wxMenuItem(&dummy_menu, -1,
-            _("sQuiddio: Hide local destinations"));
+            _("sQuiddio: Hide local POIs"));
     m_hide_id = AddCanvasContextMenuItem(pmih, this);
     SetCanvasContextMenuItemViz(m_hide_id, false);
 
     wxMenuItem *updi = new wxMenuItem(&dummy_menu, -1,
-            _("sQuiddio: Download local destinations"));
+            _("sQuiddio: Download local Points of Interest"));
     m_update_id = AddCanvasContextMenuItem(updi, this);
     SetCanvasContextMenuItemViz(m_update_id, true);
 
     wxMenuItem *repi = new wxMenuItem(&dummy_menu, -1,
-            _("sQuiddio: Report a destination at this location"));
+            _("sQuiddio: Report a POI at this location"));
     m_report_id = AddCanvasContextMenuItem(repi, this);
     SetCanvasContextMenuItemViz(m_report_id, true);
     
     wxMenuItem *repd = new wxMenuItem(&dummy_menu, -1,
-            _("sQuiddio: Download satellite images for destinations"));
+            _("sQuiddio: Download satellite images for POIs"));
     m_download_id = AddCanvasContextMenuItem(repd, this);
     SetCanvasContextMenuItemViz(m_download_id, true);
     
@@ -881,9 +881,8 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
 
 
     wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );    
-//     _OCPN_DLStatus result = OCPN_downloadFile( _T("http://squidd.io") + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
     
-    _OCPN_DLStatus result = OCPN_downloadFile( _T("http://localhost:3000") + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
+    _OCPN_DLStatus result = OCPN_downloadFile( g_DomainName + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
 
 
     if( result == OCPN_DL_NO_ERROR )

@@ -58,8 +58,8 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
             ret = false;
             break;
         }
-        wxZipInputStream zip(in);
 
+        wxZipInputStream zip(in);
 
         while (entry.reset(zip.GetNextEntry()), entry.get() != NULL) {
             // access meta-data
@@ -102,16 +102,24 @@ void squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
 {
 //     wxString zpath = g_BaseChartDir;
 
-    bool unzip;
-    unzip = UnzipFile(tmp_file, chart_dir);
+    wxFile f( tmp_file );
+    wxFileOffset zipped_file_length = f.Length();
+    if (zipped_file_length < 10**3) {
+        // not a valid zipped file, i.e. squiddio returned error condition 
+        wxString res = wxEmptyString;
+        f.ReadAll( &res );
+        wxLogMessage(_("Squiddio_pi: error in response file: ") + res) ;    
+    } else {
+        bool unzip;
+        unzip = UnzipFile(tmp_file, chart_dir);
 
-    if (unzip == true) {
-        wxLogMessage(wxString::Format(_("Squiddio_pi: extracted charts to: %s"), chart_dir));
-        wxRemoveFile(tmp_file); //remove the zip file
-
-    }
-    else {
-        wxLogMessage(wxString::Format(_("Squiddio_pi: unable to extract charts to: %s"), chart_dir));
+        if (unzip == true) {
+            wxLogMessage(wxString::Format(_("Squiddio_pi: extracted charts to: %s"), chart_dir));
+            wxRemoveFile(tmp_file); //remove the zip file
+        }
+        else {
+            wxLogMessage(wxString::Format(_("Squiddio_pi: unable to extract charts to: %s"), chart_dir));
+        }
     }
 }
 
@@ -191,14 +199,15 @@ void squiddio_pi::DownloadSatImages() {
         wxString zoom_param = g_ZoomLevels;
         zoom_param.Replace(sep_comma, sep_undersc);
         
-        wxString url_path = _T("http://localhost:3000/places/") + id_str + _T("/download_kap_files");
+        wxString url_path = g_DomainName + _T("/places/") + id_str + _T("/download_kap_files");
         url_path.Append(_T("?lat=") + wxString::Format(wxT("%f"), center_lat) );  // center latitude
         url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );  // center longitude
         url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat));    // max latitude of viewport
         url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon));    // max longitude of viewport
         url_path.Append(_T("&zooms=") + zoom_param );  // gmaps zoom levels 
+        url_path.Append(_T("&compressed=true")); 
         url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor); // plugin identifiers
-        // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&source=ocpn_plugin&version=1.0"
+        // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&compressed=true&source=ocpn_plugin&version=1.5"
 
         int num_zooms = wxSplit(g_ZoomLevels, * sep_comma).GetCount();
         wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * num_zooms);
@@ -210,7 +219,7 @@ void squiddio_pi::DownloadSatImages() {
             wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + tmp_file);        
             ProcessZipFile(chart_dir, tmp_file);
 
-            // for whatever reason, UpdateChartDBInplace doesn't seem to update the chart in the chart group - both with force at true and false. A bug in the OCPN implementation of the function?
+            // UpdateChartDBInplace doesn't seem to update the chart group - both with force at true or false. A bug in the OCPN implementation of the function?
             bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
             if (!updated) wxMessageBox(_("Unable to update the chart database"));
             wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + tmp_file);    

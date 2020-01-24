@@ -114,3 +114,4 @@ class SquiddioPrefsDialogBase : public wxDialog
 		~SquiddioPrefsDialogBase();
 
 };
+

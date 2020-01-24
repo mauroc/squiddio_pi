@@ -66,7 +66,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View"), false );
+	m_notebook1->AddPage( m_panel1, _("View"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
@@ -194,6 +194,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer6->Add( m_staticText14, 0, wxALL, 5 );
 
 	m_checkBoxVPMap = new wxCheckBox( downloads->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxVPMap->SetValue(true);
 	m_checkBoxVPMap->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
 
 	fgSizer6->Add( m_checkBoxVPMap, 0, wxALL, 5 );
@@ -205,7 +206,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel3->SetSizer( downloads );
 	m_panel3->Layout();
 	downloads->Fit( m_panel3 );
-	m_notebook1->AddPage( m_panel3, _("Downloads"), true );
+	m_notebook1->AddPage( m_panel3, _("Downloads"), false );
 	logSharing = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbLogSizer;
 	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( logSharing, wxID_ANY, _("Share logs with friends") ), wxVERTICAL );

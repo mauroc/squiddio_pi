@@ -235,6 +235,8 @@ public:
       LayerList  *pLayerList;
       wxString   g_Email;
       wxString   g_ApiKey;
+      wxString   g_DomainName = _T("http://localhost:3000");
+//       wxString   g_DomainName = _T("http://squidd.io");
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
       bool       g_OCPN;
