@@ -851,8 +851,10 @@ void squiddio_pi::RefreshLayer()
 
     if (CheckIsOnline())
         layerContents = DownloadLayer(
-        _T("/places/download_xml_layers.xml?src=ocpn_plugin&version=")+versionMajor+versionMinor+_T("&region=")
-        + m_rgn_to_dld);
+        _T("/places/download_xml_layers.xml?src=ocpn_plugin&version=")+versionMajor+versionMinor+
+        _T("&region=")+ m_rgn_to_dld +
+        _T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey)  
+        );
 
     wxString gpxFilePath = layerdir;
     appendOSDirSlash(&gpxFilePath);
@@ -889,6 +891,9 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     {
         wxFile f( fn );
         f.ReadAll( &res );
+        if (f.Length() < 400) {
+            wxMessageBox(res);
+        }    
         f.Close();
         wxRemoveFile( fn );
     }
