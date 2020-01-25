@@ -98,17 +98,21 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
 }
 
 
-void squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
+bool squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
 {
 //     wxString zpath = g_BaseChartDir;
 
+    bool ret;
+    
     wxFile f( tmp_file );
     wxFileOffset zipped_file_length = f.Length();
-    if (zipped_file_length < 10**3) {
+    if (zipped_file_length < 1000 ) {
         // not a valid zipped file, i.e. squiddio returned error condition 
         wxString res = wxEmptyString;
         f.ReadAll( &res );
-        wxLogMessage(_("Squiddio_pi: error in response file: ") + res) ;    
+        wxLogMessage(_("Squiddio_pi: error in response file: ") + res) ;  
+        wxMessageBox(res);
+        ret = false;
     } else {
         bool unzip;
         unzip = UnzipFile(tmp_file, chart_dir);
@@ -116,11 +120,14 @@ void squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
         if (unzip == true) {
             wxLogMessage(wxString::Format(_("Squiddio_pi: extracted charts to: %s"), chart_dir));
             wxRemoveFile(tmp_file); //remove the zip file
+            ret = true;
         }
         else {
             wxLogMessage(wxString::Format(_("Squiddio_pi: unable to extract charts to: %s"), chart_dir));
+            ret = false;
         }
     }
+    return ret;
 }
 
 bool squiddio_pi::IsPOIinLayer(int layer_id) 
@@ -154,7 +161,7 @@ void squiddio_pi::DownloadSatImages() {
     double max_lat    = m_vp->lat_max;
     double max_lon    = m_vp->lon_max;
 
-    
+
     wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
     PoiList temp_list;
     wxString id_str;
@@ -206,6 +213,7 @@ void squiddio_pi::DownloadSatImages() {
         url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon));    // max longitude of viewport
         url_path.Append(_T("&zooms=") + zoom_param );  // gmaps zoom levels 
         url_path.Append(_T("&compressed=true")); 
+        url_path.Append(_T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey)); 
         url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor); // plugin identifiers
         // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&compressed=true&source=ocpn_plugin&version=1.5"
 
@@ -216,13 +224,16 @@ void squiddio_pi::DownloadSatImages() {
 
         if( result == OCPN_DL_NO_ERROR )
         {
-            wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + tmp_file);        
-            ProcessZipFile(chart_dir, tmp_file);
+//          wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + tmp_file);        
+            if (ProcessZipFile(chart_dir, tmp_file)) {
 
-            // UpdateChartDBInplace doesn't seem to update the chart group - both with force at true or false. A bug in the OCPN implementation of the function?
-            bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
-            if (!updated) wxMessageBox(_("Unable to update the chart database"));
-            wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + tmp_file);    
+                // UpdateChartDBInplace doesn't seem to update the chart group - both with force at true or false. A bug in the OCPN implementation of the function?
+                bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
+                if (!updated) 
+                    wxMessageBox(_("Unable to update the chart database"));
+                else 
+                    wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + tmp_file);    
+            }    
         }
         else
         {
@@ -230,6 +241,5 @@ void squiddio_pi::DownloadSatImages() {
         }
     }
 //     return res;
-
 }
 

@@ -22,10 +22,10 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_fgSubSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 	m_fgSubSizer->SetMinSize( wxSize( -1,380 ) );
-	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxSize( 480,-1 ), 0 );
 	m_panel1 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbDestSizer;
-	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( m_panel1, wxID_ANY, _("View Destinations") ), wxVERTICAL );
+	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( m_panel1, wxID_ANY, _("Destinations") ), wxVERTICAL );
 
 	wxFlexGridSizer* viewDestinations;
 	viewDestinations = new wxFlexGridSizer( 3, 3, 0, 0 );
@@ -56,17 +56,23 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_checkBoxOthers = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Other"), wxDefaultPosition, wxDefaultSize, 0 );
 	viewDestinations->Add( m_checkBoxOthers, 0, wxALL, 5 );
 
-	m_checkBoxAIS = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("AIS marker"), wxDefaultPosition, wxDefaultSize, 0 );
-	viewDestinations->Add( m_checkBoxAIS, 0, wxALL, 5 );
-
 
 	sbDestSizer->Add( viewDestinations, 1, wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer61;
+	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Other Points of Interest") ), wxVERTICAL );
+
+	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS markers"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer61->Add( m_checkBoxAIS, 0, wxALL, 5 );
+
+
+	sbDestSizer->Add( sbSizer61, 1, wxEXPAND, 5 );
 
 
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View"), true );
+	m_notebook1->AddPage( m_panel1, _("View POIs"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
@@ -176,7 +182,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	fgSizer6->Add( m_staticText11, 0, wxALL, 5 );
 
 	m_textZoomLevels = new wxTextCtrl( downloads->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_textZoomLevels->SetToolTip( _("Download one satellite map for each destination and for each of these zoom levels. Separate values with a comma. Minimum zoom level is 10, maximum 18. Example: 15,17. 15 is typically suitable approaching a destination, 17 for detailed map of marina or anchorage. Keep zoom levels to a minimum to reduce download times. ") );
+	m_textZoomLevels->SetToolTip( _("Download one satellite map for each destination and for each of these zoom levels. Separate values with a comma. Minimum zoom level is 10, maximum 18. \n\nExample: 15,17. \n\n15 is typically suitable approaching a destination, 17 for detailed map of marina or anchorage. Keep zoom levels to a minimum to reduce download times. ") );
 
 	fgSizer6->Add( m_textZoomLevels, 0, wxALL, 5 );
 
@@ -209,7 +215,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_notebook1->AddPage( m_panel3, _("Downloads"), false );
 	logSharing = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbLogSizer;
-	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( logSharing, wxID_ANY, _("Share logs with friends") ), wxVERTICAL );
+	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( logSharing, wxID_ANY, _("Share logs with sQuiddio") ), wxVERTICAL );
 
 	wxFlexGridSizer* fgSizerLogs;
 	fgSizerLogs = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -240,26 +246,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	fgSizerLogs->Add( m_choiceReceive, 0, wxALL, 5 );
 
-	m_staticText7 = new wxStaticText( sbLogSizer->GetStaticBox(), wxID_ANY, _("sQuiddio ID"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText7->Wrap( -1 );
-	fgSizerLogs->Add( m_staticText7, 0, wxALL, 5 );
-
-	m_textSquiddioID = new wxTextCtrl( sbLogSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_textSquiddioID->Enable( false );
-	m_textSquiddioID->SetToolTip( _("The email address you use to log into sQuidd.io") );
-
-	fgSizerLogs->Add( m_textSquiddioID, 0, wxALL|wxEXPAND, 5 );
-
-	m_staticText8 = new wxStaticText( sbLogSizer->GetStaticBox(), wxID_ANY, _("API Key"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText8->Wrap( -1 );
-	fgSizerLogs->Add( m_staticText8, 0, wxALL, 5 );
-
-	m_textApiKey = new wxTextCtrl( sbLogSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_textApiKey->Enable( false );
-	m_textApiKey->SetToolTip( _("Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\nIMPORTANT! Do not use your sQuiddio Password as your API Key! ") );
-
-	fgSizerLogs->Add( m_textApiKey, 0, wxALL|wxEXPAND, 5 );
-
 
 	sbLogSizer->Add( fgSizerLogs, 1, wxEXPAND, 5 );
 
@@ -268,6 +254,41 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	logSharing->Layout();
 	sbLogSizer->Fit( logSharing );
 	m_notebook1->AddPage( logSharing, _("Log Sharing"), false );
+	m_panel5 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxStaticBoxSizer* sbSizer7;
+	sbSizer7 = new wxStaticBoxSizer( new wxStaticBox( m_panel5, wxID_ANY, _("label") ), wxVERTICAL );
+
+	m_staticText7 = new wxStaticText( sbSizer7->GetStaticBox(), wxID_ANY, _("sQuiddio ID"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText7->Wrap( -1 );
+	sbSizer7->Add( m_staticText7, 0, wxALL, 5 );
+
+	m_textSquiddioID = new wxTextCtrl( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textSquiddioID->SetToolTip( _("The email address you use to log into sQuidd.io") );
+
+	sbSizer7->Add( m_textSquiddioID, 0, wxALL|wxEXPAND, 5 );
+
+	m_staticText8 = new wxStaticText( sbSizer7->GetStaticBox(), wxID_ANY, _("API Key"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8->Wrap( -1 );
+	sbSizer7->Add( m_staticText8, 0, wxALL, 5 );
+
+	m_textApiKey = new wxTextCtrl( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_textApiKey->SetToolTip( _("Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io, click Preferences in the top bar, then select the Numbers and Keys tab. Click Help for more information. \n\nIMPORTANT! Do not use your sQuiddio Password as your API Key! ") );
+
+	sbSizer7->Add( m_textApiKey, 0, wxALL|wxEXPAND, 5 );
+
+	wxFlexGridSizer* fgSizer7;
+	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer7->SetFlexibleDirection( wxBOTH );
+	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+
+	sbSizer7->Add( fgSizer7, 1, wxEXPAND, 5 );
+
+
+	m_panel5->SetSizer( sbSizer7 );
+	m_panel5->Layout();
+	sbSizer7->Fit( m_panel5 );
+	m_notebook1->AddPage( m_panel5, _("Authentication"), false );
 
 	m_fgSubSizer->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 

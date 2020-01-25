@@ -271,7 +271,7 @@ private:
       void AddODIcons(void);
       void SwitchPointType(bool bPointType, bool Changed);
       void DownloadSatImages();
-      void ProcessZipFile(wxString chart_dir, wxString tmp_file);
+      bool ProcessZipFile(wxString chart_dir, wxString tmp_file);
 //       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
       bool IsPOIinLayer(int layer_id);
 
