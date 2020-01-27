@@ -207,11 +207,13 @@ void squiddio_pi::DownloadSatImages() {
         zoom_param.Replace(sep_comma, sep_undersc);
         
         wxString url_path = g_DomainName + _T("/places/") + id_str + _T("/download_kap_files");
-        url_path.Append(_T("?lat=") + wxString::Format(wxT("%f"), center_lat) );  // center latitude
-        url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );  // center longitude
-        url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat));    // max latitude of viewport
-        url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon));    // max longitude of viewport
-        url_path.Append(_T("&zooms=") + zoom_param );  // gmaps zoom levels 
+        url_path.Append(_T("?zooms=") + zoom_param );  // gmaps zoom levels 
+        if (g_DownloadVPMap) {
+            url_path.Append(_T("&lat=") + wxString::Format(wxT("%f"), center_lat) );  // center latitude
+            url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );  // center longitude
+            url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat));    // max latitude of viewport
+            url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon));    // max longitude of viewport
+        }    
         url_path.Append(_T("&compressed=true")); 
         url_path.Append(_T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey)); 
         url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor); // plugin identifiers
