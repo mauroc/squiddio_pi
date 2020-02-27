@@ -54,7 +54,7 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
         wxFileInputStream in(aZipFile);
 
         if (!in) {
-            wxLogMessage(_("Cannot open file '") + aZipFile + _T("'."));
+            wxLogMessage(_("Squiddio_pi: Cannot open ZIP file '") + aZipFile + _T("'."));
             ret = false;
             break;
         }
@@ -74,7 +74,7 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
             else {
                 zip.OpenEntry(*entry.get());
                 if (!zip.CanRead()) {
-                    wxLogError(_("Cannot read zip entry '") + entry->GetName() + _T("'."));
+                    wxLogError(_("Squiddio_pi: Cannot read ZIPped entry '") + entry->GetName() + _T("'."));
                     ret = false;
                     break;
                 }
@@ -82,7 +82,7 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
                 wxFileOutputStream file(name);
 
                 if (!file) {
-                    wxLogError(_("Cannot create file '") + name + _T("'."));
+                    wxLogError(_("Squiddio_pi: Cannot create file '") + name + _T("'."));
                     ret = false;
                     break;
                 }
@@ -151,7 +151,7 @@ bool squiddio_pi::IsPOIinLayer(int layer_id)
 
 void squiddio_pi::DownloadSatImages() {
 
-    wxLogMessage(_T("squiddio_pi: download sat. image: "));
+    wxLogMessage(_T("Squiddio_pi: download sat. image: "));
 
 //     ::wxDisplaySize(&m_display_width, &m_display_height);
 //     double chartscale = m_vp->view_scale_ppm;
@@ -234,7 +234,7 @@ void squiddio_pi::DownloadSatImages() {
                 if (!updated) 
                     wxMessageBox(_("Unable to update the chart database"));
                 else 
-                    wxLogMessage(_("Squiddio_pi: downloaded KAP file:") + tmp_file);    
+                    wxLogMessage(_("Squiddio_pi: added KAP files to database:") + tmp_file);    
             }    
         }
         else
