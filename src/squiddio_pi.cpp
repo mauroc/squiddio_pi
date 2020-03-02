@@ -395,7 +395,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewFuelStations"), &g_ViewFuelStations, true);
     pConf->Read(_T("ViewBoatYards"), &g_ViewBoatYards, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
-    pConf->Read(_T("ViewAIS"), &g_ViewAIS, true);
+    pConf->Read(_T("ViewAIS"), &g_ViewAIS, false);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
     
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
@@ -1057,7 +1057,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             dialog->m_checkBoxFuelStations->Enable(false);
             dialog->m_checkBoxBoatYards->Enable(false);
             dialog->m_checkBoxRamps->Enable(false);
-//             dialog->m_checkBoxAIS->Enable(false);
             dialog->m_checkBoxOthers->Enable(false);
 
         } else {
