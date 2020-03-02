@@ -196,13 +196,10 @@ int squiddio_pi::Init(void) {
     
 
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
-    AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"),
-            _T("Anchorage/Buoys"));
-    AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"),
-            _T("AIS ATON Marker"));
+    AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage/Buoys"));
+    AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"), _T("AIS ATON Marker"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
-    AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"),
-            _T("Fuel Station"));
+    AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
     AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_azu"), _T("Boat Ramp"));
     AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_grn"), _T("Boat Yard"));
