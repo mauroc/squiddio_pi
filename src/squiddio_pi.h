@@ -299,13 +299,15 @@ private:
 
       bool        g_ViewMarinas;
       bool        g_ViewAnchorages;
-      bool        g_ViewYachtClubs;
       bool        g_ViewDocks;
-      bool        g_ViewRamps;
+      bool        g_ViewYachtClubs;
+      bool        g_ViewMoorings;
       bool        g_ViewFuelStations;
-      bool        g_ViewOthers;
+      bool        g_ViewBoatYards;
+      bool        g_ViewRamps;
       bool        g_ViewAIS;
-      
+      bool        g_ViewOthers;
+
       bool        g_bODTextPointShowName;
       int         g_iODTextPointTextPosition;
       wxColour    g_colourODDefaultTextColour;

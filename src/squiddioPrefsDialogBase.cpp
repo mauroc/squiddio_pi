@@ -41,17 +41,23 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_checkBoxAnchorages = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Anchorages"), wxDefaultPosition, wxDefaultSize, 0 );
 	viewDestinations->Add( m_checkBoxAnchorages, 0, wxALL, 5 );
 
-	m_checkBoxYachtClubs = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Yacht clubs"), wxDefaultPosition, wxDefaultSize, 0 );
-	viewDestinations->Add( m_checkBoxYachtClubs, 0, wxALL, 5 );
-
-	m_checkBoxDocks = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Docks/piers"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxDocks = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Docks/Piers"), wxDefaultPosition, wxDefaultSize, 0 );
 	viewDestinations->Add( m_checkBoxDocks, 0, wxALL, 5 );
 
-	m_checkBoxRamps = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Boat ramps"), wxDefaultPosition, wxDefaultSize, 0 );
-	viewDestinations->Add( m_checkBoxRamps, 0, wxALL, 5 );
+	m_checkBoxYachtClubs = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Yacht Clubs"), wxDefaultPosition, wxDefaultSize, 0 );
+	viewDestinations->Add( m_checkBoxYachtClubs, 0, wxALL, 5 );
+
+	m_checkBoxMoorings = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Mooring Buoys"), wxDefaultPosition, wxDefaultSize, 0 );
+	viewDestinations->Add( m_checkBoxMoorings, 0, wxALL, 5 );
 
 	m_checkBoxFuelStations = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Fuel Stations"), wxDefaultPosition, wxDefaultSize, 0 );
 	viewDestinations->Add( m_checkBoxFuelStations, 0, wxALL, 5 );
+
+	m_checkBoxBoatYards = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Boat Yards"), wxDefaultPosition, wxDefaultSize, 0 );
+	viewDestinations->Add( m_checkBoxBoatYards, 0, wxALL, 5 );
+
+	m_checkBoxRamps = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Boat Ramps"), wxDefaultPosition, wxDefaultSize, 0 );
+	viewDestinations->Add( m_checkBoxRamps, 0, wxALL, 5 );
 
 	m_checkBoxOthers = new wxCheckBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Other"), wxDefaultPosition, wxDefaultSize, 0 );
 	viewDestinations->Add( m_checkBoxOthers, 0, wxALL, 5 );
@@ -72,7 +78,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View POIs"), false );
+	m_notebook1->AddPage( m_panel1, _("View POIs"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
@@ -288,7 +294,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel5->SetSizer( sbSizer7 );
 	m_panel5->Layout();
 	sbSizer7->Fit( m_panel5 );
-	m_notebook1->AddPage( m_panel5, _("Authentication"), true );
+	m_notebook1->AddPage( m_panel5, _("Authentication"), false );
 
 	m_fgSubSizer->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 

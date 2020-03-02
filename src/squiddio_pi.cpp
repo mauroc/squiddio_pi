@@ -112,6 +112,9 @@ squiddio_pi::~squiddio_pi(void) {
     delete _img_pier_yel;
     delete _img_ramp_azu;
     delete _img_ramp_grn;
+    delete _img_generic_grn;
+    delete _img_moorings_blu;
+    
     delete _img_logimg_N;
     delete _img_logimg_NE;
     delete _img_logimg_E;
@@ -203,6 +206,8 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
     AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_azu"), _T("Boat Ramp"));
     AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_grn"), _T("Boat Yard"));
+    AddCustomWaypointIcon(_img_moorings_blu, _T("moorings_blu"), _T("Moorings Buoys"));
+    AddCustomWaypointIcon(_img_generic_grn, _T("generic_grn"), _T("General POI"));
 
     AddCustomWaypointIcon(_img_logimg_N, _T("logimg_N"), _T("North"));
     AddCustomWaypointIcon(_img_logimg_NE, _T("logimg_NE"), _T("North East"));
@@ -381,17 +386,21 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("Email"), &g_Email);
     pConf->Read(_T("ApiKey"), &g_ApiKey);
     pConf->Read(_T("OCPN"), &g_OCPN, true);
+    
     pConf->Read(_T("ViewMarinas"), &g_ViewMarinas, true);
     pConf->Read(_T("ViewAnchorages"), &g_ViewAnchorages, true);
     pConf->Read(_T("ViewDocks"), &g_ViewDocks, true);
     pConf->Read(_T("ViewYachtClubs"), &g_ViewYachtClubs, true);
+    pConf->Read(_T("ViewMoorings"), &g_ViewMoorings, true);
     pConf->Read(_T("ViewFuelStations"), &g_ViewFuelStations, true);
+    pConf->Read(_T("ViewBoatYards"), &g_ViewBoatYards, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
+    pConf->Read(_T("ViewAIS"), &g_ViewAIS, true);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
+    
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
     pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap);
-    
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
     pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
@@ -446,13 +455,19 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("Email"), g_Email);
     pConf->Write(_T("ApiKey"), g_ApiKey);
     pConf->Write(_T("OCPN"), g_OCPN);
+    
+    
     pConf->Write(_T("ViewMarinas"), g_ViewMarinas);
     pConf->Write(_T("ViewAnchorages"), g_ViewAnchorages);
     pConf->Write(_T("ViewDocks"), g_ViewDocks);
     pConf->Write(_T("ViewYachtClubs"), g_ViewYachtClubs);
-    pConf->Write(_T("ViewRamps"), g_ViewRamps);
+    pConf->Write(_T("ViewMoorings"), g_ViewMoorings);
     pConf->Write(_T("ViewFuelStations"), g_ViewFuelStations);
+    pConf->Write(_T("ViewBoatYards"), g_ViewBoatYards);
+    pConf->Write(_T("ViewRamps"), g_ViewRamps);
+    pConf->Write(_T("ViewAIS"), g_ViewAIS);
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
+    
     pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
     pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
     pConf->Write(_T("DownloadVPMap"), g_DownloadVPMap);
@@ -582,20 +597,22 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewMarinas;
     else if (wp->m_IconName == _T("anchor_blu"))
         return g_ViewAnchorages;
-    else if (wp->m_IconName == _T("club_pur"))
-        return g_ViewYachtClubs;
-    else if (wp->m_IconName == _T("fuelpump_red"))
-        return g_ViewFuelStations;
     else if (wp->m_IconName == _T("pier_yel"))
         return g_ViewDocks;
+    else if (wp->m_IconName == _T("club_pur"))
+        return g_ViewYachtClubs;
+    else if (wp->m_IconName == _T("moorings_blu"))
+        return g_ViewMoorings;
+    else if (wp->m_IconName == _T("fuelpump_red"))
+        return g_ViewFuelStations;
+    else if (wp->m_IconName == _T("ramp_grn"))
+        return g_ViewBoatYards;
     else if (wp->m_IconName == _T("ramp_azu"))
         return g_ViewRamps;
-    else if (wp->m_IconName == _T("ramp_grn"))
-        return g_ViewOthers;
-    else if (wp->m_IconName == _T("others"))
-        return g_ViewOthers;
     else if (wp->m_IconName == _T("aton_gry"))
         return g_ViewAIS;
+    else if (wp->m_IconName == _T("generic_grn"))
+        return g_ViewOthers;
     else
         return true;
 }
@@ -1028,17 +1045,19 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         SquiddioPrefsDialog * dialog = new SquiddioPrefsDialog(*this,
                 m_parent_window);
         dialog->m_pfdDialog = NULL;
-        if (g_ViewMarinas && g_ViewAnchorages == true
-                && g_ViewYachtClubs == true && g_ViewDocks == true
-                && g_ViewRamps == true && g_ViewFuelStations == true
-                && g_ViewOthers == true) {
+        if (   g_ViewMarinas == true && g_ViewAnchorages == true && g_ViewDocks == true 
+            && g_ViewYachtClubs == true && g_ViewMoorings == true && g_ViewFuelStations == true 
+            && g_ViewBoatYards == true && g_ViewRamps == true && g_ViewOthers == true) {
             dialog->m_checkBoxAll->SetValue(true);
             dialog->m_checkBoxMarinas->Enable(false);
             dialog->m_checkBoxAnchorages->Enable(false);
-            dialog->m_checkBoxYachtClubs->Enable(false);
             dialog->m_checkBoxDocks->Enable(false);
-            dialog->m_checkBoxRamps->Enable(false);
+            dialog->m_checkBoxYachtClubs->Enable(false);
+            dialog->m_checkBoxMoorings->Enable(false);
             dialog->m_checkBoxFuelStations->Enable(false);
+            dialog->m_checkBoxBoatYards->Enable(false);
+            dialog->m_checkBoxRamps->Enable(false);
+            dialog->m_checkBoxAIS->Enable(false);
             dialog->m_checkBoxOthers->Enable(false);
 
         } else {
@@ -1051,14 +1070,18 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_textApiKey->SetValue(g_ApiKey);
         if(g_OCPN) dialog->m_radioBoxOCPNorOD->SetSelection(0);
         else dialog->m_radioBoxOCPNorOD->SetSelection(1);
+        
         dialog->m_checkBoxMarinas->SetValue(g_ViewMarinas);
         dialog->m_checkBoxAnchorages->SetValue(g_ViewAnchorages);
-        dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
         dialog->m_checkBoxDocks->SetValue(g_ViewDocks);
-        dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
+        dialog->m_checkBoxYachtClubs->SetValue(g_ViewYachtClubs);
+        dialog->m_checkBoxMoorings->SetValue(g_ViewMoorings);
         dialog->m_checkBoxFuelStations->SetValue(g_ViewFuelStations);
-        dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+        dialog->m_checkBoxBoatYards->SetValue(g_ViewBoatYards);
+        dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
         dialog->m_checkBoxAIS->SetValue(g_ViewAIS);
+        dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
+        
         dialog->m_checkBoxShowName->SetValue(g_bODTextPointShowName);
         dialog->m_choicePosition->SetSelection(g_iODTextPointTextPosition);
         dialog->m_colourPickerText->SetColour(g_colourODDefaultTextColour);
@@ -1128,6 +1151,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
                 l_bChanged = true;
             }
+
+            
             if(g_ViewMarinas != dialog->m_checkBoxMarinas->GetValue()) {
                 g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
                 l_bChanged = true;
@@ -1136,30 +1161,39 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ViewAnchorages = dialog->m_checkBoxAnchorages->GetValue();
                 l_bChanged = true;
             }
-            if(g_ViewYachtClubs != dialog->m_checkBoxYachtClubs->GetValue()) {
-                g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
-                l_bChanged = true;
-            }
             if(g_ViewDocks != dialog->m_checkBoxDocks->GetValue()) {
                 g_ViewDocks = dialog->m_checkBoxDocks->GetValue();
                 l_bChanged = true;
             }
-            if(g_ViewRamps != dialog->m_checkBoxRamps->GetValue()) {
-                g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
+            if(g_ViewYachtClubs != dialog->m_checkBoxYachtClubs->GetValue()) {
+                g_ViewYachtClubs = dialog->m_checkBoxYachtClubs->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewMoorings != dialog->m_checkBoxMoorings->GetValue()) {
+                g_ViewMoorings = dialog->m_checkBoxMoorings->GetValue();
                 l_bChanged = true;
             }
             if(g_ViewFuelStations != dialog->m_checkBoxFuelStations->GetValue()) {
                 g_ViewFuelStations = dialog->m_checkBoxFuelStations->GetValue();
                 l_bChanged = true;
             }
-            if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
-                g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+            if(g_ViewBoatYards != dialog->m_checkBoxBoatYards->GetValue()) {
+                g_ViewBoatYards = dialog->m_checkBoxBoatYards->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewRamps != dialog->m_checkBoxRamps->GetValue()) {
+                g_ViewRamps = dialog->m_checkBoxRamps->GetValue();
                 l_bChanged = true;
             }
             if(g_ViewAIS != dialog->m_checkBoxAIS->GetValue()) {
                 g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
                 l_bChanged = true;
             }
+            if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
+                g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
+                l_bChanged = true;
+            }
+
             if(g_bODTextPointShowName != dialog->m_checkBoxShowName->GetValue()) {
                 g_bODTextPointShowName = dialog->m_checkBoxShowName->GetValue();
                 l_bChanged = true;
@@ -1498,6 +1532,15 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconName = _T("ramp_grn");
     pAPI->PointIconDescription = _("Boat Yard");
     m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_moorings_blu;
+    pAPI->PointIconName = _T("moorings_blu");
+    pAPI->PointIconDescription = _("Mooring Buoys");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_generic_grn;
+    pAPI->PointIconName = _T("generic_grn");
+    pAPI->PointIconDescription = _("General POI");
+    m_pODAddPointIcon(pAPI);
+    
 /*    pAPI->PointIcon = *_img_logimg_N;
     pAPI->PointIconName = _T("logimg_N"); 
     pAPI->PointIconDescription = _("North");
