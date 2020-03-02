@@ -199,15 +199,15 @@ int squiddio_pi::Init(void) {
     
 
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
-    AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage/Buoys"));
+    AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage"));
     AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"), _T("AIS ATON Marker"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
     AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_azu"), _T("Boat Ramp"));
-    AddCustomWaypointIcon(_img_ramp_azu, _T("ramp_grn"), _T("Boat Yard"));
+    AddCustomWaypointIcon(_img_ramp_grn, _T("ramp_grn"), _T("Boat Yard"));
     AddCustomWaypointIcon(_img_moorings_blu, _T("moorings_blu"), _T("Moorings Buoys"));
-    AddCustomWaypointIcon(_img_generic_grn, _T("generic_grn"), _T("General POI"));
+    AddCustomWaypointIcon(_img_generic_grn, _T("generic_grn"), _T("Generic POI"));
 
     AddCustomWaypointIcon(_img_logimg_N, _T("logimg_N"), _T("North"));
     AddCustomWaypointIcon(_img_logimg_NE, _T("logimg_NE"), _T("North East"));
@@ -1057,7 +1057,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             dialog->m_checkBoxFuelStations->Enable(false);
             dialog->m_checkBoxBoatYards->Enable(false);
             dialog->m_checkBoxRamps->Enable(false);
-            dialog->m_checkBoxAIS->Enable(false);
+//             dialog->m_checkBoxAIS->Enable(false);
             dialog->m_checkBoxOthers->Enable(false);
 
         } else {
@@ -1506,39 +1506,39 @@ void squiddio_pi::AddODIcons()
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_anchor_blu;
     pAPI->PointIconName = _T("anchor_blu");
-    pAPI->PointIconDescription = _("Anchorage/Buoys");
-    m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_aton_gry;
-    pAPI->PointIconName = _T("aton_gry"); 
-    pAPI->PointIconDescription = _("AIS ATON Marker");
-    m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_club_pur;
-    pAPI->PointIconName = _T("club_pur"); 
-    pAPI->PointIconDescription = _("Yacht Club");
-    m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_fuelpump_red;
-    pAPI->PointIconName = _T("fuelpump_red"); 
-    pAPI->PointIconDescription = _("Fuel Station");
+    pAPI->PointIconDescription = _("Anchorage");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_pier_yel;
     pAPI->PointIconName = _T("pier_yel"); 
     pAPI->PointIconDescription = _("Dock/Pier");
     m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_ramp_azu;
-    pAPI->PointIconName = _T("ramp_azu"); 
-    pAPI->PointIconDescription = _("Boat Ramp");
-    m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_ramp_grn;
-    pAPI->PointIconName = _T("ramp_grn");
-    pAPI->PointIconDescription = _("Boat Yard");
+    pAPI->PointIcon = *_img_club_pur;
+    pAPI->PointIconName = _T("club_pur"); 
+    pAPI->PointIconDescription = _("Yacht Club");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_moorings_blu;
     pAPI->PointIconName = _T("moorings_blu");
     pAPI->PointIconDescription = _("Mooring Buoys");
     m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_fuelpump_red;
+    pAPI->PointIconName = _T("fuelpump_red"); 
+    pAPI->PointIconDescription = _("Fuel Station");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_ramp_grn;
+    pAPI->PointIconName = _T("ramp_grn");
+    pAPI->PointIconDescription = _("Boat Yard");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_ramp_azu;
+    pAPI->PointIconName = _T("ramp_azu"); 
+    pAPI->PointIconDescription = _("Boat Ramp");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_aton_gry;
+    pAPI->PointIconName = _T("aton_gry"); 
+    pAPI->PointIconDescription = _("AIS ATON Marker");
+    m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_generic_grn;
     pAPI->PointIconName = _T("generic_grn");
-    pAPI->PointIconDescription = _("General POI");
+    pAPI->PointIconDescription = _("Generic POI");
     m_pODAddPointIcon(pAPI);
     
 /*    pAPI->PointIcon = *_img_logimg_N;
@@ -1589,26 +1589,32 @@ void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
     if (checkbox->IsChecked()) {
         m_checkBoxMarinas->SetValue(true);
         m_checkBoxAnchorages->SetValue(true);
-        m_checkBoxYachtClubs->SetValue(true);
         m_checkBoxDocks->SetValue(true);
-        m_checkBoxRamps->SetValue(true);
+        m_checkBoxYachtClubs->SetValue(true);
+        m_checkBoxMoorings->SetValue(true);
         m_checkBoxFuelStations->SetValue(true);
+        m_checkBoxBoatYards->SetValue(true);
+        m_checkBoxRamps->SetValue(true);
         m_checkBoxOthers->SetValue(true);
 
         m_checkBoxMarinas->Enable(false);
         m_checkBoxAnchorages->Enable(false);
-        m_checkBoxYachtClubs->Enable(false);
         m_checkBoxDocks->Enable(false);
-        m_checkBoxRamps->Enable(false);
+        m_checkBoxYachtClubs->Enable(false);
+        m_checkBoxMoorings->Enable(false);
         m_checkBoxFuelStations->Enable(false);
+        m_checkBoxBoatYards->Enable(false);
+        m_checkBoxRamps->Enable(false);
         m_checkBoxOthers->Enable(false);
     } else {
         m_checkBoxMarinas->Enable(true);
         m_checkBoxAnchorages->Enable(true);
-        m_checkBoxYachtClubs->Enable(true);
         m_checkBoxDocks->Enable(true);
-        m_checkBoxRamps->Enable(true);
+        m_checkBoxYachtClubs->Enable(true);
+        m_checkBoxMoorings->Enable(true);
         m_checkBoxFuelStations->Enable(true);
+        m_checkBoxBoatYards->Enable(true);
+        m_checkBoxRamps->Enable(true);
         m_checkBoxOthers->Enable(true);
     }
 }
