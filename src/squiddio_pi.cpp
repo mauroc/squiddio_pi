@@ -386,6 +386,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("Email"), &g_Email);
     pConf->Read(_T("ApiKey"), &g_ApiKey);
     pConf->Read(_T("OCPN"), &g_OCPN, true);
+    pConf->Read(_T("DomainName"), &g_DomainName, _T("http://squidd.io"));
     
     pConf->Read(_T("ViewMarinas"), &g_ViewMarinas, true);
     pConf->Read(_T("ViewAnchorages"), &g_ViewAnchorages, true);
@@ -455,6 +456,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("Email"), g_Email);
     pConf->Write(_T("ApiKey"), g_ApiKey);
     pConf->Write(_T("OCPN"), g_OCPN);
+    pConf->Write(_T("DomainName"), g_DomainName);
     
     
     pConf->Write(_T("ViewMarinas"), g_ViewMarinas);
