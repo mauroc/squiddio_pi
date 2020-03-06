@@ -66,10 +66,13 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbDestSizer->Add( viewDestinations, 1, wxEXPAND, 5 );
 
 	wxStaticBoxSizer* sbSizer61;
-	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Other Points of Interest") ), wxVERTICAL );
+	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Cruising Aids") ), wxVERTICAL );
 
 	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS marker"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer61->Add( m_checkBoxAIS, 0, wxALL, 5 );
+
+	m_checkBoxNDBC = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Buoy Reports"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer61->Add( m_checkBoxNDBC, 0, wxALL, 5 );
 
 
 	sbDestSizer->Add( sbSizer61, 1, wxEXPAND, 5 );

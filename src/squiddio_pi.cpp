@@ -107,6 +107,7 @@ squiddio_pi::~squiddio_pi(void) {
     delete _img_marina_grn;
     delete _img_anchor_blu;
     delete _img_aton_gry;
+    delete _img_aton_blu;
     delete _img_club_pur;
     delete _img_fuelpump_red;
     delete _img_pier_yel;
@@ -201,6 +202,7 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage"));
     AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"), _T("AIS ATON Marker"));
+    AddCustomWaypointIcon(_img_aton_blu, _T("aton_blu"), _T("NDBC Buoy"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
@@ -397,6 +399,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewBoatYards"), &g_ViewBoatYards, true);
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewAIS"), &g_ViewAIS, false);
+    pConf->Read(_T("ViewNDBC"), &g_ViewNDBC, false);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
     
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
@@ -468,6 +471,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ViewBoatYards"), g_ViewBoatYards);
     pConf->Write(_T("ViewRamps"), g_ViewRamps);
     pConf->Write(_T("ViewAIS"), g_ViewAIS);
+    pConf->Write(_T("ViewNDBC"), g_ViewNDBC);
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
     
     pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
@@ -613,6 +617,8 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewRamps;
     else if (wp->m_IconName == _T("aton_gry"))
         return g_ViewAIS;
+    else if (wp->m_IconName == _T("aton_blu"))
+        return g_ViewNDBC;
     else if (wp->m_IconName == _T("generic_grn"))
         return g_ViewOthers;
     else
@@ -1081,6 +1087,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxBoatYards->SetValue(g_ViewBoatYards);
         dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
         dialog->m_checkBoxAIS->SetValue(g_ViewAIS);
+        dialog->m_checkBoxNDBC->SetValue(g_ViewNDBC);
         dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
         
         dialog->m_checkBoxShowName->SetValue(g_bODTextPointShowName);
@@ -1188,6 +1195,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
             if(g_ViewAIS != dialog->m_checkBoxAIS->GetValue()) {
                 g_ViewAIS = dialog->m_checkBoxAIS->GetValue();
+                l_bChanged = true;
+            }
+            if(g_ViewNDBC != dialog->m_checkBoxNDBC->GetValue()) {
+                g_ViewNDBC = dialog->m_checkBoxNDBC->GetValue();
                 l_bChanged = true;
             }
             if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
@@ -1536,6 +1547,10 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_aton_gry;
     pAPI->PointIconName = _T("aton_gry"); 
     pAPI->PointIconDescription = _("AIS ATON Marker");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_aton_blu;
+    pAPI->PointIconName = _T("aton_blu");
+    pAPI->PointIconDescription = _("NDBC Buoy");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_generic_grn;
     pAPI->PointIconName = _T("generic_grn");
