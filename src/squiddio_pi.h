@@ -284,7 +284,7 @@ private:
       bool          isLayerUpdate;
       wxString      local_region;
       wxString      m_rgn_to_dld;
-      wxString      g_VisibleLayers;
+//       wxString      g_VisibleLayers;
       wxString      g_InvisibleLayers;
       wxString      g_BaseChartDir, g_InitChartDir,g_ZoomLevels;
       int           g_LayerIdx;

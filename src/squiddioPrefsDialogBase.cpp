@@ -84,7 +84,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View POIs"), false );
+	m_notebook1->AddPage( m_panel1, _("View POIs"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
@@ -236,7 +236,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel3->SetSizer( downloads );
 	m_panel3->Layout();
 	downloads->Fit( m_panel3 );
-	m_notebook1->AddPage( m_panel3, _("Downloads"), true );
+	m_notebook1->AddPage( m_panel3, _("Downloads"), false );
 	logSharing = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbLogSizer;
 	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( logSharing, wxID_ANY, _("Share logs with sQuiddio") ), wxVERTICAL );

@@ -249,8 +249,7 @@ int squiddio_pi::Init(void) {
 
     if (wxDir::Exists(layerdir)) {
         wxString laymsg;
-        laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"),
-                layerdir.c_str());
+        laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
         wxLogMessage(laymsg);
 
         LoadLayers(layerdir);
@@ -258,8 +257,7 @@ int squiddio_pi::Init(void) {
         Layer * l;
         LayerList::iterator it;
         int index = 0;
-        for (it = (*pLayerList).begin(); it != (*pLayerList).end();
-                ++it, ++index) {
+        for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
             l = (Layer *) (*it);
             l->SetVisibleNames(false);
             RenderLayerContentsOnChart(l);
@@ -393,7 +391,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("InitChartDir"), &g_InitChartDir);
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-    pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
+//     pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
     pConf->Read(_T("InvisibleSqLayers"), &g_InvisibleLayers);
     pConf->Read(_T("PostPeriod"), &g_PostPeriod);
     pConf->Read(_T("RetrievePeriod"), &g_RetrievePeriod);
@@ -466,7 +464,7 @@ bool squiddio_pi::SaveConfig(void) {
         return false;
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-    pConf->Write(_T("VisibleSqLayers"), g_VisibleLayers);
+//     pConf->Write(_T("VisibleSqLayers"), g_VisibleLayers);
     pConf->Write(_T("InvisibleSqLayers"), g_InvisibleLayers);
     pConf->Write(_T("PostPeriod"), g_PostPeriod);
     pConf->Write(_T("RetrievePeriod"), g_RetrievePeriod);
@@ -555,14 +553,13 @@ bool squiddio_pi::LoadLayers(wxString &path) {
 
                 bool bLayerViz = false;
 
-                if ((g_VisibleLayers.Contains(l->m_LayerName)) || (l->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod > 0))
+                if ((!g_InvisibleLayers.Contains(l->m_LayerName)) || (l->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod > 0))
                     bLayerViz = true;
 
                 l->m_bIsVisibleOnChart = bLayerViz;
 
                 wxString laymsg;
-                laymsg.Printf(wxT("squiddio_pi: new layer %d: %s"),
-                        l->m_LayerID, l->m_LayerName.c_str());
+                laymsg.Printf(wxT("squiddio_pi: new layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str());
                 wxLogMessage(laymsg);
 
                 pLayerList->Insert(l);
@@ -591,8 +588,7 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show) {
     l->m_NoOfItems += nItems;
 
     wxString objmsg;
-    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."),
-            file_path.c_str(), nItems);
+    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."), file_path.c_str(), nItems);
     wxLogMessage(objmsg);
     delete pSet;
     return nItems > 0;
@@ -677,13 +673,14 @@ void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config, boo
     }
 
     if (layer->IsVisibleOnChart()) {
-        if (!g_VisibleLayers.Contains(layer->m_LayerName))
-            g_VisibleLayers.Append(layer->m_LayerName + _T(";"));
-        g_InvisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
+//         if (!g_VisibleLayers.Contains(layer->m_LayerName))
+//             g_VisibleLayers.Append(layer->m_LayerName + _T(";"));
+        if (g_InvisibleLayers.Contains(layer->m_LayerName))
+            g_InvisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
     } else {
         if (!g_InvisibleLayers.Contains(layer->m_LayerName))
             g_InvisibleLayers.Append(layer->m_LayerName + _T(";"));
-        g_VisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
+//         g_VisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
     }
     RequestRefresh(m_parent_window);
     if (save_config)
@@ -858,9 +855,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
     if (id == m_show_id || id == m_hide_id) {
         local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
         RenderLayerContentsOnChart(local_sq_layer, true);
-        wxLogMessage(
-                _T("squiddio_pi: toggled layer: ")
-                        + local_sq_layer->m_LayerName);
+        wxLogMessage(_T("squiddio_pi: toggled layer: ") + local_sq_layer->m_LayerName);
     } else if (id == m_retrieve_id || id == m_update_id) {
         if (local_sq_layer != NULL) {
             // hide and delete the current layer
