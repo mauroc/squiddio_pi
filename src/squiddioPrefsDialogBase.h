@@ -110,6 +110,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_textZoomLevels;
 		wxDirPickerCtrl* m_dirPickerDownload;
 		wxCheckBox* m_checkBoxVPMap;
+		wxCheckBox* m_checkBoxDelGpxs;
 		wxChoice* m_choiceHowOften;
 		wxChoice* m_choiceReceive;
 		wxTextCtrl* m_textSquiddioID;

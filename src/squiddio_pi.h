@@ -288,7 +288,7 @@ private:
       wxString      g_InvisibleLayers;
       wxString      g_BaseChartDir, g_InitChartDir,g_ZoomLevels;
       int           g_LayerIdx;
-      bool          g_bShowLayers, g_DownloadVPMap;
+      bool          g_bShowLayers, g_DownloadVPMap, g_DelGpxs;
 
       wxAuiManager     *m_AUImgr;
       wxFileConfig     *m_pconfig;

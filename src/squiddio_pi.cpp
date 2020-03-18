@@ -326,6 +326,12 @@ bool squiddio_pi::DeInit(void) {
         Layer * l = (Layer *) (*it);
         ++it;
         pLayerList->DeleteObject(l);
+        if (g_DelGpxs && !l->IsVisibleOnChart()) {
+            wxRemoveFile(l->m_LayerFileName);
+            if (g_InvisibleLayers.Contains(l->m_LayerName))
+                g_InvisibleLayers.Replace(l->m_LayerName + _T(";"), wxEmptyString);
+            wxLogMessage(_T("Deleting .gpx file (per user setting): ") + l->m_LayerFileName );
+        }
     }
     SaveConfig();
     RequestRefresh(m_parent_window);
@@ -414,6 +420,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
     pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap);
+    pConf->Read(_T("DelGpxs"), &g_DelGpxs, false);
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
     pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
@@ -487,6 +494,8 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
     pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
     pConf->Write(_T("DownloadVPMap"), g_DownloadVPMap);
+    pConf->Write(_T("DelGpxs"), g_DelGpxs);
+
     pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
     pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
     pConf->Write(_T("TextDefaultColour"), g_colourODDefaultTextColour.GetAsString( wxC2S_CSS_SYNTAX ));
@@ -1112,6 +1121,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_textZoomLevels->SetValue(g_ZoomLevels); 
         dialog->m_dirPickerDownload->SetPath(g_BaseChartDir);
         dialog->m_checkBoxVPMap->SetValue(g_DownloadVPMap);
+        dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
 
         if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
             dialog->m_textSquiddioID->Enable(true);
@@ -1213,6 +1223,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             }
             if(g_ViewShipRep != dialog->m_checkBoxShipRep->GetValue()) {
                 g_ViewShipRep = dialog->m_checkBoxShipRep->GetValue();
+                l_bChanged = true;
+            }
+            if(g_DelGpxs != dialog->m_checkBoxDelGpxs->GetValue()) {
+                g_DelGpxs = dialog->m_checkBoxDelGpxs->GetValue();
                 l_bChanged = true;
             }
             if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
