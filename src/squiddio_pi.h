@@ -306,6 +306,7 @@ private:
       bool        g_ViewRamps;
       bool        g_ViewAIS;
       bool        g_ViewNDBC;
+      bool        g_ViewShipRep;
       bool        g_ViewOthers;
 
       bool        g_bODTextPointShowName;

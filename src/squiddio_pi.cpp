@@ -108,6 +108,7 @@ squiddio_pi::~squiddio_pi(void) {
     delete _img_anchor_blu;
     delete _img_aton_gry;
     delete _img_aton_blu;
+    delete _img_aton_yel;
     delete _img_club_pur;
     delete _img_fuelpump_red;
     delete _img_pier_yel;
@@ -203,6 +204,7 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage"));
     AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"), _T("AIS ATON Marker"));
     AddCustomWaypointIcon(_img_aton_blu, _T("aton_blu"), _T("NDBC Buoy"));
+    AddCustomWaypointIcon(_img_aton_yel, _T("aton_yel"), _T("NDBC Ship"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
@@ -400,6 +402,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewAIS"), &g_ViewAIS, false);
     pConf->Read(_T("ViewNDBC"), &g_ViewNDBC, false);
+    pConf->Read(_T("ViewShipRep"), &g_ViewShipRep, false);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
     
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
@@ -472,6 +475,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ViewRamps"), g_ViewRamps);
     pConf->Write(_T("ViewAIS"), g_ViewAIS);
     pConf->Write(_T("ViewNDBC"), g_ViewNDBC);
+    pConf->Write(_T("ViewShipRep"), g_ViewShipRep);
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
     
     pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
@@ -619,6 +623,8 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewAIS;
     else if (wp->m_IconName == _T("aton_blu"))
         return g_ViewNDBC;
+    else if (wp->m_IconName == _T("aton_yel"))
+        return g_ViewShipRep;
     else if (wp->m_IconName == _T("generic_grn"))
         return g_ViewOthers;
     else
@@ -811,9 +817,8 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
     }
 }
 
-
 void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
-    if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
+//     if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
         if(g_OCPN == bPointType && Changed) {
             RenderLayers(true);
             RenderLayers();
@@ -827,13 +832,11 @@ void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
                 g_OCPN = bPointType;
                 RenderLayers();
             }
-    } else
-        g_OCPN = bPointType;
+//     } else
+//         g_OCPN = bPointType;
 }
 
-
 void squiddio_pi::OnContextMenuItemCallback(int id) {
-        
         
     if (id == m_show_id || id == m_hide_id) {
         local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
@@ -1088,6 +1091,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
         dialog->m_checkBoxAIS->SetValue(g_ViewAIS);
         dialog->m_checkBoxNDBC->SetValue(g_ViewNDBC);
+        dialog->m_checkBoxShipRep->SetValue(g_ViewShipRep);
         dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
         
         dialog->m_checkBoxShowName->SetValue(g_bODTextPointShowName);
@@ -1159,8 +1163,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
                 l_bChanged = true;
             }
-
-            
             if(g_ViewMarinas != dialog->m_checkBoxMarinas->GetValue()) {
                 g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
                 l_bChanged = true;
@@ -1201,11 +1203,14 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ViewNDBC = dialog->m_checkBoxNDBC->GetValue();
                 l_bChanged = true;
             }
+            if(g_ViewShipRep != dialog->m_checkBoxShipRep->GetValue()) {
+                g_ViewShipRep = dialog->m_checkBoxShipRep->GetValue();
+                l_bChanged = true;
+            }
             if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
                 g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
                 l_bChanged = true;
             }
-
             if(g_bODTextPointShowName != dialog->m_checkBoxShowName->GetValue()) {
                 g_bODTextPointShowName = dialog->m_checkBoxShowName->GetValue();
                 l_bChanged = true;
@@ -1281,7 +1286,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 }
             }
             
-
             if( g_BaseChartDir != dialog->m_dirPickerDownload->GetPath()) {
                 g_BaseChartDir = dialog->m_dirPickerDownload->GetPath();
                 l_bChanged = true;
@@ -1294,8 +1298,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
             SaveConfig();
 
-            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) SwitchPointType(OCPN_WAYPOINTS, l_bChanged);
-            else SwitchPointType(OD_TEXTPOINTS, l_bChanged);
+            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0)
+                SwitchPointType(OCPN_WAYPOINTS, l_bChanged);
+            else
+                SwitchPointType(OD_TEXTPOINTS, l_bChanged);
         }
         dialog->Destroy();
         delete dialog;
@@ -1551,6 +1557,10 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_aton_blu;
     pAPI->PointIconName = _T("aton_blu");
     pAPI->PointIconDescription = _("NDBC Buoy");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_aton_yel;
+    pAPI->PointIconName = _T("aton_yel");
+    pAPI->PointIconDescription = _("NDBC Ship");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_generic_grn;
     pAPI->PointIconName = _T("generic_grn");
