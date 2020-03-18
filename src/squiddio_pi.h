@@ -277,6 +277,7 @@ private:
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
+      int           m_retrieve_id;
       int           m_update_id;
       int           m_report_id;
       int           m_download_id;

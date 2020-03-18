@@ -184,8 +184,13 @@ int squiddio_pi::Init(void) {
     m_hide_id = AddCanvasContextMenuItem(pmih, this);
     SetCanvasContextMenuItemViz(m_hide_id, false);
 
-    wxMenuItem *updi = new wxMenuItem(&dummy_menu, -1,
+    wxMenuItem *dnld = new wxMenuItem(&dummy_menu, -1,
             _("sQuiddio: Download local Points of Interest"));
+    m_retrieve_id = AddCanvasContextMenuItem(dnld, this);
+    SetCanvasContextMenuItemViz(m_retrieve_id, true);
+
+    wxMenuItem *updi = new wxMenuItem(&dummy_menu, -1,
+            _("sQuiddio: Update local Points of Interest"));
     m_update_id = AddCanvasContextMenuItem(updi, this);
     SetCanvasContextMenuItemViz(m_update_id, true);
 
@@ -303,6 +308,7 @@ bool squiddio_pi::DeInit(void) {
 
     RemoveCanvasContextMenuItem(m_show_id);
     RemoveCanvasContextMenuItem(m_hide_id);
+    RemoveCanvasContextMenuItem(m_retrieve_id);
     RemoveCanvasContextMenuItem(m_update_id);
     RemoveCanvasContextMenuItem(m_report_id);
 
@@ -807,13 +813,15 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 
     local_sq_layer = GetLocalLayer();
     if (local_sq_layer != NULL) {
-        SetCanvasContextMenuItemViz(m_hide_id,
-                local_sq_layer->IsVisibleOnChart());
-        SetCanvasContextMenuItemViz(m_show_id,
-                !local_sq_layer->IsVisibleOnChart());
+        SetCanvasContextMenuItemViz(m_hide_id, local_sq_layer->IsVisibleOnChart());
+        SetCanvasContextMenuItemViz(m_show_id, !local_sq_layer->IsVisibleOnChart());
+        SetCanvasContextMenuItemViz(m_retrieve_id, false);
+        SetCanvasContextMenuItemViz(m_update_id, true);
     } else {
         SetCanvasContextMenuItemViz(m_hide_id, false);
         SetCanvasContextMenuItemViz(m_show_id, false);
+        SetCanvasContextMenuItemViz(m_retrieve_id, true);
+        SetCanvasContextMenuItemViz(m_update_id, false);
     }
 }
 
@@ -844,7 +852,7 @@ void squiddio_pi::OnContextMenuItemCallback(int id) {
         wxLogMessage(
                 _T("squiddio_pi: toggled layer: ")
                         + local_sq_layer->m_LayerName);
-    } else if (id == m_update_id) {
+    } else if (id == m_retrieve_id || id == m_update_id) {
         if (local_sq_layer != NULL) {
             // hide and delete the current layer
             local_sq_layer->SetVisibleOnChart(false);
