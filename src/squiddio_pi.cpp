@@ -634,8 +634,11 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewAIS;
     else if (wp->m_IconName == _T("aton_blu"))
         return g_ViewNDBC;
-    else if (wp->m_IconName == _T("aton_yel"))
+    else if (wp->m_IconName == _T("aton_yel")) {
+//         wxString t = wp->GetCreateTime().FormatISODate().Append(_("T"));
+//         wxDateTime t  = wp->GetCreateTime();
         return g_ViewShipRep;
+    }
     else if (wp->m_IconName == _T("generic_grn"))
         return g_ViewOthers;
     else
@@ -673,14 +676,11 @@ void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config, boo
     }
 
     if (layer->IsVisibleOnChart()) {
-//         if (!g_VisibleLayers.Contains(layer->m_LayerName))
-//             g_VisibleLayers.Append(layer->m_LayerName + _T(";"));
         if (g_InvisibleLayers.Contains(layer->m_LayerName))
             g_InvisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
     } else {
         if (!g_InvisibleLayers.Contains(layer->m_LayerName))
             g_InvisibleLayers.Append(layer->m_LayerName + _T(";"));
-//         g_VisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
     }
     RequestRefresh(m_parent_window);
     if (save_config)
@@ -762,10 +762,7 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         bool added = false;
         
         if(m_bODCreateTextPoint) added = (*m_pODCreateTextPoint)(pCTP);
-        
-//        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
-//        pPoint->m_HyperlinkList->Insert(link);
-        
+
         return added;
     }
 }
@@ -832,22 +829,18 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 }
 
 void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
-//     if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
-        if(g_OCPN == bPointType && Changed) {
-            RenderLayers(true);
-            RenderLayers();
-        } else
-            if(g_OCPN != bPointType) {
-                if(bPointType == OCPN_WAYPOINTS)
-                    wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
-                else
-                    wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
-                RenderLayers(true);
-                g_OCPN = bPointType;
-                RenderLayers();
-            }
-//     } else
-//         g_OCPN = bPointType;
+    if(g_OCPN == bPointType && Changed) {
+        RenderLayers(true);
+        RenderLayers();
+    } else if(g_OCPN != bPointType) {
+        if(bPointType == OCPN_WAYPOINTS)
+            wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
+        else
+            wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
+        RenderLayers(true);
+        g_OCPN = bPointType;
+        RenderLayers();
+    }
 }
 
 void squiddio_pi::OnContextMenuItemCallback(int id) {

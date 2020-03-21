@@ -84,14 +84,14 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View POIs"), true );
+	m_notebook1->AddPage( m_panel1, _("View"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
 	wxString m_radioBoxOCPNorODChoices[] = { _("OpenCPN Waypoint"), _("ODraw TextPoint") };
 	int m_radioBoxOCPNorODNChoices = sizeof( m_radioBoxOCPNorODChoices ) / sizeof( wxString );
-	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("OCPN or ODraw"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
+	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("Use OCPN or ODraw (recommended)"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
 	m_radioBoxOCPNorOD->SetSelection( 0 );
 	m_radioBoxOCPNorOD->SetToolTip( _("Render sQuiddio POIs as legacy OpenCPN waypoints or  ODraw Textpoints (recommended, provided ODraw plugin is enabled).") );
 
@@ -179,7 +179,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	rendering->SetSizer( sbODSettings );
 	rendering->Layout();
 	sbODSettings->Fit( rendering );
-	m_notebook1->AddPage( rendering, _("Rendering"), false );
+	m_notebook1->AddPage( rendering, _("POI Rendering"), false );
 	m_panel3 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* downloads;
 	downloads = new wxStaticBoxSizer( new wxStaticBox( m_panel3, wxID_ANY, _("Google Maps") ), wxVERTICAL );
@@ -223,8 +223,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxStaticBoxSizer* sbSizer8;
 	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( downloads->GetStaticBox(), wxID_ANY, _("House Keeping") ), wxVERTICAL );
 
-	m_checkBoxDelGpxs = new wxCheckBox( sbSizer8->GetStaticBox(), wxID_ANY, _("Delete .gpx files for hidden layers upon exiting"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxDelGpxs->SetValue(true);
+	m_checkBoxDelGpxs = new wxCheckBox( sbSizer8->GetStaticBox(), wxID_ANY, _("Delete .gpx files for hidden layers upon exiting OpenCPN"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_checkBoxDelGpxs->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
 
 	sbSizer8->Add( m_checkBoxDelGpxs, 0, wxALL, 5 );
