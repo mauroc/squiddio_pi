@@ -635,9 +635,11 @@ bool squiddio_pi::ShowType(Poi * wp) {
     else if (wp->m_IconName == _T("aton_blu"))
         return g_ViewNDBC;
     else if (wp->m_IconName == _T("aton_yel")) {
-//         wxString t = wp->GetCreateTime().FormatISODate().Append(_("T"));
-//         wxDateTime t  = wp->GetCreateTime();
-        return g_ViewShipRep;
+        // do not show ship reports that are 'expired' (i.e.  the .gpx file is older than 12 hours ago)
+        if (wp->GetCreateTime().IsLaterThan( wxDateTime::Now() - wxTimeSpan::Hours(12)))
+            return g_ViewShipRep;
+        else
+            return false;
     }
     else if (wp->m_IconName == _T("generic_grn"))
         return g_ViewOthers;
