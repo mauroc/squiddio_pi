@@ -731,8 +731,8 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->lat = wp->m_lat;
         pCTP->lon = wp->m_lon;
         pCTP->GUID = wp->m_GUID;
-        pCTP->description = wp->m_MarkDescription;
-        pCTP->TextToDisplay = wp->m_MarkDescription;
+        pCTP->description =  wp->m_MarkDescription;
+        pCTP->TextToDisplay = ((g_bODTextPointShowName) ? _("") : (wp->GetName() + _("\n")) ) + wp->m_MarkDescription;
         pCTP->TextFont = g_fontODDisplayTextFont;
         pCTP->TextColour = g_colourODDefaultTextColour.GetAsString();
         pCTP->TextPointDisplayTextWhen = g_iTextPointDisplayTextWhen;
