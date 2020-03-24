@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<opencpn-plugin version="1">
+<plugin version="1">
   <name> squiddio </name>
   <version> ${PACKAGE_VERSION} </version>
   <release> ${PKG_RELEASE} </release>
@@ -12,13 +12,14 @@
 
   <description>
 Squiddio Plugin makes its global user-sourced and user-maintained
-repository of sailing destinations (marinas, anchorages, yacht clubs,
-docks, fuel stations etc.) available as waypoints in OpenCPN. OpenCPN
-Android comes with sQuiddio built in.
+repository of sailing Points of Interest (marinas, anchorages, yacht clubs,
+docks, fuel stations, weather buoys, ship weather reports etc.) available as waypoints in OpenCPN.
+Google Satellite maps can be downloaded at different levels of zoom for each POI.
+OpenCPN Android comes with sQuiddio built in.
   </description>
 
   <target>${PKG_TARGET}</target>
   <target-version>${PKG_TARGET_VERSION}</target-version>
   <tarball-url> ${TARBALL_URL} </tarball-url>
   <info-url> https://opencpn.org/OpenCPN/plugins/sQuiddio.html </info-url>
-</opencpn-plugin>
+</plugin>

@@ -107,7 +107,7 @@ squiddio_pi::~squiddio_pi(void) {
     delete _img_marina_grn;
     delete _img_anchor_blu;
     delete _img_aton_gry;
-    delete _img_aton_blu;
+    delete _img_aton_ora;
     delete _img_aton_yel;
     delete _img_club_pur;
     delete _img_fuelpump_red;
@@ -208,7 +208,7 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage"));
     AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"), _T("AIS ATON Marker"));
-    AddCustomWaypointIcon(_img_aton_blu, _T("aton_blu"), _T("NDBC Buoy"));
+    AddCustomWaypointIcon(_img_aton_ora, _T("aton_ora"), _T("NDBC Buoy"));
     AddCustomWaypointIcon(_img_aton_yel, _T("aton_yel"), _T("NDBC Ship"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"), _T("Fuel Station"));
@@ -632,7 +632,7 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewRamps;
     else if (wp->m_IconName == _T("aton_gry"))
         return g_ViewAIS;
-    else if (wp->m_IconName == _T("aton_blu"))
+    else if (wp->m_IconName == _T("aton_ora"))
         return g_ViewNDBC;
     else if (wp->m_IconName == _T("aton_yel")) {
         // do not show ship reports that are 'expired' (i.e.  the .gpx file is older than 12 hours ago)
@@ -1013,16 +1013,18 @@ wxString squiddio_pi::GetShortDescription() {
 wxString squiddio_pi::GetLongDescription() {
     return _(
 "== User-sourced database of sailing destinations ==\n\
-To download destinations for a desired region (requires Internet connection):\n\
-* Position cursor on area where you want to view destinations and right click mouse\n\
-* Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n\
-Destinations appear as OpenCPN waypoints: \n\
+To download (or update) Points of Interest (POIs) for a desired region (requires Internet connection):\n\
+* Position cursor on area where you want to view POIs and right click mouse\n\
+* Select 'sQuiddio: Download (or Update) local Points of Interest' from context-sensitive menu.\n\n\
+Destinations appear as OpenCPN waypoints (default) or Draw Text Points (if the Draw plugin is installed):  \n\
+* Hover on waypoints to view a synopsis of POI information\
 * Right-click on waypoint for link to sQuiddio's destination page. \n\
 * Follow link to rate destination and add comments online.\n\n\
 Other menu options: \n\
-* Toggle visibility for local destinations on/off \n\
+* Toggle visibility for local POIs on/off \n\
 * Submit a new destination (requires Internet connection and free user account)\n\
-\n== In-chart log-sharing for cruisers ==\n\
+* Download Google Maps as OCPN charts for selected POIs\n\n\
+== In-chart log-sharing for cruisers ==\n\
 * Share your GPS coordinates with your cruising friends and visualize their position\n\
 on your OpenCPN charts (requires a free sQuiddio account)\n\n\
 IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
@@ -1254,7 +1256,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
-                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
+                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key.\n\nTo obtain your API Key, log into sQuidd.io (http://squidd.io), click on Preferences in the top blue bar, then select the 'Numbers & Keys' tab."));
                 g_RetrievePeriod=0;
                 g_PostPeriod    =0;
             }
@@ -1566,8 +1568,8 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconName = _T("aton_gry"); 
     pAPI->PointIconDescription = _("AIS ATON Marker");
     m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_aton_blu;
-    pAPI->PointIconName = _T("aton_blu");
+    pAPI->PointIcon = *_img_aton_ora;
+    pAPI->PointIconName = _T("aton_ora");
     pAPI->PointIconDescription = _("NDBC Buoy");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_aton_yel;
