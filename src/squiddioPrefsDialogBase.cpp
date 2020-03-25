@@ -299,13 +299,22 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	sbSizer7->Add( m_textApiKey, 0, wxALL|wxEXPAND, 5 );
 
-	wxFlexGridSizer* fgSizer7;
-	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer7->SetFlexibleDirection( wxBOTH );
-	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxStaticBoxSizer* sbSizer10;
+	sbSizer10 = new wxStaticBoxSizer( new wxStaticBox( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString ), wxVERTICAL );
 
 
-	sbSizer7->Add( fgSizer7, 1, wxEXPAND, 5 );
+	sbSizer7->Add( sbSizer10, 1, wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer9;
+	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( sbSizer7->GetStaticBox(), wxID_ANY, _("About this plugin") ), wxVERTICAL );
+
+	sbSizer9->SetMinSize( wxSize( 12,1 ) );
+	m_version = new wxStaticText( sbSizer9->GetStaticBox(), wxID_ANY, _("version"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_version->Wrap( -1 );
+	sbSizer9->Add( m_version, 0, wxALL, 5 );
+
+
+	sbSizer7->Add( sbSizer9, 1, wxEXPAND, 5 );
 
 
 	m_panel5->SetSizer( sbSizer7 );
@@ -338,8 +347,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	// Connect Events
 	m_checkBoxAll->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
 	m_buttonTextFont->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
-	m_choiceHowOften->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
-	m_choiceReceive->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
 	m_sdbButtonSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );
@@ -350,8 +357,6 @@ SquiddioPrefsDialogBase::~SquiddioPrefsDialogBase()
 	// Disconnect Events
 	m_checkBoxAll->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
 	m_buttonTextFont->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
-	m_choiceHowOften->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
-	m_choiceReceive->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
 	m_sdbButtonSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );

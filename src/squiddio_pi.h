@@ -362,7 +362,7 @@ public:
 
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
-    void OnShareChoice( wxCommandEvent& event );
+//     void OnShareChoice( wxCommandEvent& event );
     void OnButtonClickFonts( wxCommandEvent& event );
     void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
     void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxOK); }

@@ -1115,6 +1115,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxVPMap->SetValue(g_DownloadVPMap);
         dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
 
+        wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+
+        dialog->m_version->SetLabel(version);
+
         if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
             dialog->m_textSquiddioID->Enable(true);
             dialog->m_textApiKey->Enable(true);
@@ -1666,17 +1670,17 @@ void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
     event.Skip();
 }
 
-void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
-    if (m_choiceHowOften->GetSelection() == 0
-            && m_choiceReceive->GetSelection() == 0) {
-        m_textSquiddioID->Enable(false);
-        m_textApiKey->Enable(false);
-    } else {
-        m_textSquiddioID->Enable(true);
-        m_textApiKey->Enable(true);
-    }
-    Refresh(false);
-}
+// void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
+//     if (m_choiceHowOften->GetSelection() == 0
+//             && m_choiceReceive->GetSelection() == 0) {
+//         m_textSquiddioID->Enable(false);
+//         m_textApiKey->Enable(false);
+//     } else {
+//         m_textSquiddioID->Enable(true);
+//         m_textApiKey->Enable(true);
+//     }
+//     Refresh(false);
+// }
 
 void SquiddioPrefsDialog::OnButtonClickFonts( wxCommandEvent& event )
 {
