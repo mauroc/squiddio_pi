@@ -107,7 +107,8 @@ squiddio_pi::~squiddio_pi(void) {
     delete _img_marina_grn;
     delete _img_anchor_blu;
     delete _img_aton_gry;
-    delete _img_aton_blu;
+    delete _img_aton_ora;
+    delete _img_aton_yel;
     delete _img_club_pur;
     delete _img_fuelpump_red;
     delete _img_pier_yel;
@@ -183,8 +184,13 @@ int squiddio_pi::Init(void) {
     m_hide_id = AddCanvasContextMenuItem(pmih, this);
     SetCanvasContextMenuItemViz(m_hide_id, false);
 
-    wxMenuItem *updi = new wxMenuItem(&dummy_menu, -1,
+    wxMenuItem *dnld = new wxMenuItem(&dummy_menu, -1,
             _("sQuiddio: Download local Points of Interest"));
+    m_retrieve_id = AddCanvasContextMenuItem(dnld, this);
+    SetCanvasContextMenuItemViz(m_retrieve_id, true);
+
+    wxMenuItem *updi = new wxMenuItem(&dummy_menu, -1,
+            _("sQuiddio: Update local Points of Interest"));
     m_update_id = AddCanvasContextMenuItem(updi, this);
     SetCanvasContextMenuItemViz(m_update_id, true);
 
@@ -202,7 +208,8 @@ int squiddio_pi::Init(void) {
     AddCustomWaypointIcon(_img_marina_grn, _T("marina_grn"), _T("Marina"));
     AddCustomWaypointIcon(_img_anchor_blu, _T("anchor_blu"), _T("Anchorage"));
     AddCustomWaypointIcon(_img_aton_gry, _T("aton_gry"), _T("AIS ATON Marker"));
-    AddCustomWaypointIcon(_img_aton_blu, _T("aton_blu"), _T("NDBC Buoy"));
+    AddCustomWaypointIcon(_img_aton_ora, _T("aton_ora"), _T("NDBC Buoy"));
+    AddCustomWaypointIcon(_img_aton_yel, _T("aton_yel"), _T("NDBC Ship"));
     AddCustomWaypointIcon(_img_club_pur, _T("club_pur"), _T("Yacht Club"));
     AddCustomWaypointIcon(_img_fuelpump_red, _T("fuelpump_red"), _T("Fuel Station"));
     AddCustomWaypointIcon(_img_pier_yel, _T("pier_yel"), _T("Dock/Pier"));
@@ -242,8 +249,7 @@ int squiddio_pi::Init(void) {
 
     if (wxDir::Exists(layerdir)) {
         wxString laymsg;
-        laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"),
-                layerdir.c_str());
+        laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
         wxLogMessage(laymsg);
 
         LoadLayers(layerdir);
@@ -251,8 +257,7 @@ int squiddio_pi::Init(void) {
         Layer * l;
         LayerList::iterator it;
         int index = 0;
-        for (it = (*pLayerList).begin(); it != (*pLayerList).end();
-                ++it, ++index) {
+        for (it = (*pLayerList).begin(); it != (*pLayerList).end(); ++it, ++index) {
             l = (Layer *) (*it);
             l->SetVisibleNames(false);
             RenderLayerContentsOnChart(l);
@@ -301,6 +306,7 @@ bool squiddio_pi::DeInit(void) {
 
     RemoveCanvasContextMenuItem(m_show_id);
     RemoveCanvasContextMenuItem(m_hide_id);
+    RemoveCanvasContextMenuItem(m_retrieve_id);
     RemoveCanvasContextMenuItem(m_update_id);
     RemoveCanvasContextMenuItem(m_report_id);
 
@@ -318,6 +324,12 @@ bool squiddio_pi::DeInit(void) {
         Layer * l = (Layer *) (*it);
         ++it;
         pLayerList->DeleteObject(l);
+        if (g_DelGpxs && !l->IsVisibleOnChart()) {
+            wxRemoveFile(l->m_LayerFileName);
+            if (g_InvisibleLayers.Contains(l->m_LayerName))
+                g_InvisibleLayers.Replace(l->m_LayerName + _T(";"), wxEmptyString);
+            wxLogMessage(_T("Deleting .gpx file (per user setting): ") + l->m_LayerFileName );
+        }
     }
     SaveConfig();
     RequestRefresh(m_parent_window);
@@ -379,7 +391,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("InitChartDir"), &g_InitChartDir);
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-    pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
+//     pConf->Read(_T("VisibleSqLayers"), &g_VisibleLayers);
     pConf->Read(_T("InvisibleSqLayers"), &g_InvisibleLayers);
     pConf->Read(_T("PostPeriod"), &g_PostPeriod);
     pConf->Read(_T("RetrievePeriod"), &g_RetrievePeriod);
@@ -400,11 +412,13 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ViewRamps"), &g_ViewRamps, true);
     pConf->Read(_T("ViewAIS"), &g_ViewAIS, false);
     pConf->Read(_T("ViewNDBC"), &g_ViewNDBC, false);
+    pConf->Read(_T("ViewShipRep"), &g_ViewShipRep, false);
     pConf->Read(_T("ViewOthers"), &g_ViewOthers, true);
     
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
     pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap);
+    pConf->Read(_T("DelGpxs"), &g_DelGpxs, false);
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
     pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
@@ -450,7 +464,7 @@ bool squiddio_pi::SaveConfig(void) {
         return false;
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-    pConf->Write(_T("VisibleSqLayers"), g_VisibleLayers);
+//     pConf->Write(_T("VisibleSqLayers"), g_VisibleLayers);
     pConf->Write(_T("InvisibleSqLayers"), g_InvisibleLayers);
     pConf->Write(_T("PostPeriod"), g_PostPeriod);
     pConf->Write(_T("RetrievePeriod"), g_RetrievePeriod);
@@ -472,11 +486,14 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ViewRamps"), g_ViewRamps);
     pConf->Write(_T("ViewAIS"), g_ViewAIS);
     pConf->Write(_T("ViewNDBC"), g_ViewNDBC);
+    pConf->Write(_T("ViewShipRep"), g_ViewShipRep);
     pConf->Write(_T("ViewOthers"), g_ViewOthers);
     
     pConf->Write(_T("ChartDnldDir"), g_BaseChartDir);
     pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
     pConf->Write(_T("DownloadVPMap"), g_DownloadVPMap);
+    pConf->Write(_T("DelGpxs"), g_DelGpxs);
+
     pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
     pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
     pConf->Write(_T("TextDefaultColour"), g_colourODDefaultTextColour.GetAsString( wxC2S_CSS_SYNTAX ));
@@ -536,14 +553,13 @@ bool squiddio_pi::LoadLayers(wxString &path) {
 
                 bool bLayerViz = false;
 
-                if ((g_VisibleLayers.Contains(l->m_LayerName)) || (l->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod > 0))
+                if ((!g_InvisibleLayers.Contains(l->m_LayerName)) || (l->m_LayerName.Contains(_T("logs")) && g_RetrievePeriod > 0))
                     bLayerViz = true;
 
                 l->m_bIsVisibleOnChart = bLayerViz;
 
                 wxString laymsg;
-                laymsg.Printf(wxT("squiddio_pi: new layer %d: %s"),
-                        l->m_LayerID, l->m_LayerName.c_str());
+                laymsg.Printf(wxT("squiddio_pi: new layer %d: %s"), l->m_LayerID, l->m_LayerName.c_str());
                 wxLogMessage(laymsg);
 
                 pLayerList->Insert(l);
@@ -572,8 +588,7 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show) {
     l->m_NoOfItems += nItems;
 
     wxString objmsg;
-    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."),
-            file_path.c_str(), nItems);
+    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."), file_path.c_str(), nItems);
     wxLogMessage(objmsg);
     delete pSet;
     return nItems > 0;
@@ -617,8 +632,15 @@ bool squiddio_pi::ShowType(Poi * wp) {
         return g_ViewRamps;
     else if (wp->m_IconName == _T("aton_gry"))
         return g_ViewAIS;
-    else if (wp->m_IconName == _T("aton_blu"))
+    else if (wp->m_IconName == _T("aton_ora"))
         return g_ViewNDBC;
+    else if (wp->m_IconName == _T("aton_yel")) {
+        // do not show ship reports that are 'expired' (i.e.  the .gpx file is older than 12 hours ago)
+        if (wp->GetCreateTime().IsLaterThan( wxDateTime::Now() - wxTimeSpan::Hours(12)))
+            return g_ViewShipRep;
+        else
+            return false;
+    }
     else if (wp->m_IconName == _T("generic_grn"))
         return g_ViewOthers;
     else
@@ -656,13 +678,11 @@ void squiddio_pi::RenderLayerContentsOnChart(Layer *layer, bool save_config, boo
     }
 
     if (layer->IsVisibleOnChart()) {
-        if (!g_VisibleLayers.Contains(layer->m_LayerName))
-            g_VisibleLayers.Append(layer->m_LayerName + _T(";"));
-        g_InvisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
+        if (g_InvisibleLayers.Contains(layer->m_LayerName))
+            g_InvisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
     } else {
         if (!g_InvisibleLayers.Contains(layer->m_LayerName))
             g_InvisibleLayers.Append(layer->m_LayerName + _T(";"));
-        g_VisibleLayers.Replace(layer->m_LayerName + _T(";"), wxEmptyString);
     }
     RequestRefresh(m_parent_window);
     if (save_config)
@@ -711,8 +731,8 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->lat = wp->m_lat;
         pCTP->lon = wp->m_lon;
         pCTP->GUID = wp->m_GUID;
-        pCTP->description = wp->m_MarkDescription;
-        pCTP->TextToDisplay = wp->m_MarkDescription;
+        pCTP->description =  wp->m_MarkDescription;
+        pCTP->TextToDisplay = ((g_bODTextPointShowName) ? _("") : (wp->GetName() + _("\n")) ) + wp->m_MarkDescription;
         pCTP->TextFont = g_fontODDisplayTextFont;
         pCTP->TextColour = g_colourODDefaultTextColour.GetAsString();
         pCTP->TextPointDisplayTextWhen = g_iTextPointDisplayTextWhen;
@@ -744,10 +764,7 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         bool added = false;
         
         if(m_bODCreateTextPoint) added = (*m_pODCreateTextPoint)(pCTP);
-        
-//        pPoint->m_HyperlinkList = new Plugin_HyperlinkList;
-//        pPoint->m_HyperlinkList->Insert(link);
-        
+
         return added;
     }
 }
@@ -801,47 +818,40 @@ void squiddio_pi::SetCursorLatLon(double lat, double lon) {
 
     local_sq_layer = GetLocalLayer();
     if (local_sq_layer != NULL) {
-        SetCanvasContextMenuItemViz(m_hide_id,
-                local_sq_layer->IsVisibleOnChart());
-        SetCanvasContextMenuItemViz(m_show_id,
-                !local_sq_layer->IsVisibleOnChart());
+        SetCanvasContextMenuItemViz(m_hide_id, local_sq_layer->IsVisibleOnChart());
+        SetCanvasContextMenuItemViz(m_show_id, !local_sq_layer->IsVisibleOnChart());
+        SetCanvasContextMenuItemViz(m_retrieve_id, false);
+        SetCanvasContextMenuItemViz(m_update_id, true);
     } else {
         SetCanvasContextMenuItemViz(m_hide_id, false);
         SetCanvasContextMenuItemViz(m_show_id, false);
+        SetCanvasContextMenuItemViz(m_retrieve_id, true);
+        SetCanvasContextMenuItemViz(m_update_id, false);
     }
 }
 
-
 void squiddio_pi::SwitchPointType(bool bPointType, bool Changed) {
-    if(local_sq_layer && local_sq_layer->IsVisibleOnChart()) {
-        if(g_OCPN == bPointType && Changed) {
-            RenderLayers(true);
-            RenderLayers();
-        } else
-            if(g_OCPN != bPointType) {
-                if(bPointType == OCPN_WAYPOINTS)
-                    wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
-                else
-                    wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
-                RenderLayers(true);
-                g_OCPN = bPointType;
-                RenderLayers();
-            }
-    } else
+    if(g_OCPN == bPointType && Changed) {
+        RenderLayers(true);
+        RenderLayers();
+    } else if(g_OCPN != bPointType) {
+        if(bPointType == OCPN_WAYPOINTS)
+            wxLogMessage(_T("squiddio_pi: Switch from OCPN Waypoints to ODText Points"));
+        else
+            wxLogMessage(_T("squiddio_pi: Switch from ODText Points to OCPN Waypoints"));
+        RenderLayers(true);
         g_OCPN = bPointType;
+        RenderLayers();
+    }
 }
 
-
 void squiddio_pi::OnContextMenuItemCallback(int id) {
-        
         
     if (id == m_show_id || id == m_hide_id) {
         local_sq_layer->SetVisibleOnChart(!local_sq_layer->IsVisibleOnChart());
         RenderLayerContentsOnChart(local_sq_layer, true);
-        wxLogMessage(
-                _T("squiddio_pi: toggled layer: ")
-                        + local_sq_layer->m_LayerName);
-    } else if (id == m_update_id) {
+        wxLogMessage(_T("squiddio_pi: toggled layer: ") + local_sq_layer->m_LayerName);
+    } else if (id == m_retrieve_id || id == m_update_id) {
         if (local_sq_layer != NULL) {
             // hide and delete the current layer
             local_sq_layer->SetVisibleOnChart(false);
@@ -1003,16 +1013,18 @@ wxString squiddio_pi::GetShortDescription() {
 wxString squiddio_pi::GetLongDescription() {
     return _(
 "== User-sourced database of sailing destinations ==\n\
-To download destinations for a desired region (requires Internet connection):\n\
-* Position cursor on area where you want to view destinations and right click mouse\n\
-* Select 'Download local sQuiddio destinations' from context-sensitive menu.\n\n\
-Destinations appear as OpenCPN waypoints: \n\
+To download (or update) Points of Interest (POIs) for a desired region (requires Internet connection):\n\
+* Position cursor on area where you want to view POIs and right click mouse\n\
+* Select 'sQuiddio: Download (or Update) local Points of Interest' from context-sensitive menu.\n\n\
+Destinations appear as OpenCPN waypoints (default) or Draw Text Points (if the Draw plugin is installed):  \n\
+* Hover on waypoints to view a synopsis of POI information\
 * Right-click on waypoint for link to sQuiddio's destination page. \n\
 * Follow link to rate destination and add comments online.\n\n\
 Other menu options: \n\
-* Toggle visibility for local destinations on/off \n\
+* Toggle visibility for local POIs on/off \n\
 * Submit a new destination (requires Internet connection and free user account)\n\
-\n== In-chart log-sharing for cruisers ==\n\
+* Download Google Maps as OCPN charts for selected POIs\n\n\
+== In-chart log-sharing for cruisers ==\n\
 * Share your GPS coordinates with your cruising friends and visualize their position\n\
 on your OpenCPN charts (requires a free sQuiddio account)\n\n\
 IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
@@ -1088,6 +1100,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxRamps->SetValue(g_ViewRamps);
         dialog->m_checkBoxAIS->SetValue(g_ViewAIS);
         dialog->m_checkBoxNDBC->SetValue(g_ViewNDBC);
+        dialog->m_checkBoxShipRep->SetValue(g_ViewShipRep);
         dialog->m_checkBoxOthers->SetValue(g_ViewOthers);
         
         dialog->m_checkBoxShowName->SetValue(g_bODTextPointShowName);
@@ -1100,6 +1113,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_textZoomLevels->SetValue(g_ZoomLevels); 
         dialog->m_dirPickerDownload->SetPath(g_BaseChartDir);
         dialog->m_checkBoxVPMap->SetValue(g_DownloadVPMap);
+        dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
 
         if (g_PostPeriod > 0 || g_RetrievePeriod > 0) {
             dialog->m_textSquiddioID->Enable(true);
@@ -1159,8 +1173,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ApiKey = dialog->m_textApiKey->GetValue().Trim();
                 l_bChanged = true;
             }
-
-            
             if(g_ViewMarinas != dialog->m_checkBoxMarinas->GetValue()) {
                 g_ViewMarinas = dialog->m_checkBoxMarinas->GetValue();
                 l_bChanged = true;
@@ -1201,11 +1213,18 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_ViewNDBC = dialog->m_checkBoxNDBC->GetValue();
                 l_bChanged = true;
             }
+            if(g_ViewShipRep != dialog->m_checkBoxShipRep->GetValue()) {
+                g_ViewShipRep = dialog->m_checkBoxShipRep->GetValue();
+                l_bChanged = true;
+            }
+            if(g_DelGpxs != dialog->m_checkBoxDelGpxs->GetValue()) {
+                g_DelGpxs = dialog->m_checkBoxDelGpxs->GetValue();
+                l_bChanged = true;
+            }
             if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
                 g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
                 l_bChanged = true;
             }
-
             if(g_bODTextPointShowName != dialog->m_checkBoxShowName->GetValue()) {
                 g_bODTextPointShowName = dialog->m_checkBoxShowName->GetValue();
                 l_bChanged = true;
@@ -1237,7 +1256,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
-                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key. \n\nTo obtain your API Key, sign up for sQuiddio (http://squidd.io/signup) and visit your online profile page (see Edit Profile link in the Dashboard), 'Numbers & Keys' tab."));
+                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key.\n\nTo obtain your API Key, log into sQuidd.io (http://squidd.io), click on Preferences in the top blue bar, then select the 'Numbers & Keys' tab."));
                 g_RetrievePeriod=0;
                 g_PostPeriod    =0;
             }
@@ -1281,7 +1300,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 }
             }
             
-
             if( g_BaseChartDir != dialog->m_dirPickerDownload->GetPath()) {
                 g_BaseChartDir = dialog->m_dirPickerDownload->GetPath();
                 l_bChanged = true;
@@ -1294,8 +1312,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
             SaveConfig();
 
-            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0) SwitchPointType(OCPN_WAYPOINTS, l_bChanged);
-            else SwitchPointType(OD_TEXTPOINTS, l_bChanged);
+            if(dialog->m_radioBoxOCPNorOD->GetSelection() == 0)
+                SwitchPointType(OCPN_WAYPOINTS, l_bChanged);
+            else
+                SwitchPointType(OD_TEXTPOINTS, l_bChanged);
         }
         dialog->Destroy();
         delete dialog;
@@ -1548,9 +1568,13 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconName = _T("aton_gry"); 
     pAPI->PointIconDescription = _("AIS ATON Marker");
     m_pODAddPointIcon(pAPI);
-    pAPI->PointIcon = *_img_aton_blu;
-    pAPI->PointIconName = _T("aton_blu");
+    pAPI->PointIcon = *_img_aton_ora;
+    pAPI->PointIconName = _T("aton_ora");
     pAPI->PointIconDescription = _("NDBC Buoy");
+    m_pODAddPointIcon(pAPI);
+    pAPI->PointIcon = *_img_aton_yel;
+    pAPI->PointIconName = _T("aton_yel");
+    pAPI->PointIconDescription = _("NDBC Ship");
     m_pODAddPointIcon(pAPI);
     pAPI->PointIcon = *_img_generic_grn;
     pAPI->PointIconName = _T("generic_grn");

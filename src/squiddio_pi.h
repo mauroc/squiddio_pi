@@ -277,17 +277,17 @@ private:
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
+      int           m_retrieve_id;
       int           m_update_id;
       int           m_report_id;
       int           m_download_id;
       bool          isLayerUpdate;
       wxString      local_region;
       wxString      m_rgn_to_dld;
-      wxString      g_VisibleLayers;
       wxString      g_InvisibleLayers;
       wxString      g_BaseChartDir, g_InitChartDir,g_ZoomLevels;
       int           g_LayerIdx;
-      bool          g_bShowLayers, g_DownloadVPMap;
+      bool          g_bShowLayers, g_DownloadVPMap, g_DelGpxs;
 
       wxAuiManager     *m_AUImgr;
       wxFileConfig     *m_pconfig;
@@ -306,6 +306,7 @@ private:
       bool        g_ViewRamps;
       bool        g_ViewAIS;
       bool        g_ViewNDBC;
+      bool        g_ViewShipRep;
       bool        g_ViewOthers;
 
       bool        g_bODTextPointShowName;

@@ -68,11 +68,14 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxStaticBoxSizer* sbSizer61;
 	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Cruising Aids") ), wxVERTICAL );
 
-	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS marker"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer61->Add( m_checkBoxAIS, 0, wxALL, 5 );
-
 	m_checkBoxNDBC = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Buoy Reports"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer61->Add( m_checkBoxNDBC, 0, wxALL, 5 );
+
+	m_checkBoxShipRep = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Ship Reports"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer61->Add( m_checkBoxShipRep, 0, wxALL, 5 );
+
+	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS markers"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer61->Add( m_checkBoxAIS, 0, wxALL, 5 );
 
 
 	sbDestSizer->Add( sbSizer61, 1, wxEXPAND, 5 );
@@ -81,14 +84,14 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View POIs"), true );
+	m_notebook1->AddPage( m_panel1, _("View"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
 	wxString m_radioBoxOCPNorODChoices[] = { _("OpenCPN Waypoint"), _("ODraw TextPoint") };
 	int m_radioBoxOCPNorODNChoices = sizeof( m_radioBoxOCPNorODChoices ) / sizeof( wxString );
-	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("OCPN or ODraw"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
+	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("Use OCPN or ODraw (recommended)"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
 	m_radioBoxOCPNorOD->SetSelection( 0 );
 	m_radioBoxOCPNorOD->SetToolTip( _("Render sQuiddio POIs as legacy OpenCPN waypoints or  ODraw Textpoints (recommended, provided ODraw plugin is enabled).") );
 
@@ -176,7 +179,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	rendering->SetSizer( sbODSettings );
 	rendering->Layout();
 	sbODSettings->Fit( rendering );
-	m_notebook1->AddPage( rendering, _("Rendering"), false );
+	m_notebook1->AddPage( rendering, _("POI Rendering"), false );
 	m_panel3 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* downloads;
 	downloads = new wxStaticBoxSizer( new wxStaticBox( m_panel3, wxID_ANY, _("Google Maps") ), wxVERTICAL );
@@ -216,6 +219,17 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 
 	downloads->Add( fgSizer6, 1, wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer8;
+	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( downloads->GetStaticBox(), wxID_ANY, _("House Keeping") ), wxVERTICAL );
+
+	m_checkBoxDelGpxs = new wxCheckBox( sbSizer8->GetStaticBox(), wxID_ANY, _("Delete .gpx files for hidden layers upon exiting OpenCPN"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxDelGpxs->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
+
+	sbSizer8->Add( m_checkBoxDelGpxs, 0, wxALL, 5 );
+
+
+	downloads->Add( sbSizer8, 1, wxEXPAND, 5 );
 
 
 	m_panel3->SetSizer( downloads );

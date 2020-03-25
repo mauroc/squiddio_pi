@@ -94,8 +94,9 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxCheckBox* m_checkBoxBoatYards;
 		wxCheckBox* m_checkBoxRamps;
 		wxCheckBox* m_checkBoxOthers;
-		wxCheckBox* m_checkBoxAIS;
 		wxCheckBox* m_checkBoxNDBC;
+		wxCheckBox* m_checkBoxShipRep;
+		wxCheckBox* m_checkBoxAIS;
 		wxRadioBox* m_radioBoxOCPNorOD;
 		wxFlexGridSizer* m_fgSizerODSettings;
 		wxCheckBox* m_checkBoxShowName;
@@ -109,6 +110,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_textZoomLevels;
 		wxDirPickerCtrl* m_dirPickerDownload;
 		wxCheckBox* m_checkBoxVPMap;
+		wxCheckBox* m_checkBoxDelGpxs;
 		wxChoice* m_choiceHowOften;
 		wxChoice* m_choiceReceive;
 		wxTextCtrl* m_textSquiddioID;
