@@ -32,8 +32,9 @@
 
 enum
 {
-    TIMER_ID= 10,
-    TIMER_ID1
+    TIMER_ID0= 10,
+    TIMER_ID1,
+    TIMER_ID2
 };
 
 
@@ -45,9 +46,11 @@ public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~logsWindow();
       //~logsWindow(){}
-      void OnTimerTimeout(wxTimerEvent& event);
+      void OnRecTimerTimeout(wxTimerEvent& event);
+      void OnSenTimerTimeout(wxTimerEvent& event);
       void OnRefreshTimeout(wxTimerEvent& event);
-      void SetTimer(int RetrieveSecs);
+      void SetRecTimer(int RetrieveSecs);
+      void SetSenTimer(int SendSecs);
       void OnPaint(wxPaintEvent& event);
       void SetSentence(wxString &sentence);
       wxString PostPosition(double lat, double lon, double sog, double cog);
@@ -62,7 +65,8 @@ public:
 
       Layer       *m_LogsLayer;
 
-      wxTimer      * m_pTimer;
+      wxTimer      * m_pRecTimer;
+      wxTimer      * m_pSenTimer;
       wxTimer      * m_pRefreshTimer;
       wxStaticText * m_pStaticText;
       wxDateTime   m_LastLogsRcvd;
@@ -73,6 +77,7 @@ public:
 
 private:
       int           g_RetrieveSecs;
+      int           g_SendSecs;
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;

@@ -272,6 +272,17 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	sbLogSizer->Add( fgSizerLogs, 1, wxEXPAND, 5 );
 
+	wxStaticBoxSizer* sbSizer11;
+	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( sbLogSizer->GetStaticBox(), wxID_ANY, _("Logs Sharing Options") ), wxVERTICAL );
+
+	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include navobj.xml file with each send"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxSendXml->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
+
+	sbSizer11->Add( m_checkBoxSendXml, 0, wxALL, 5 );
+
+
+	sbLogSizer->Add( sbSizer11, 1, wxEXPAND, 5 );
+
 
 	logSharing->SetSizer( sbLogSizer );
 	logSharing->Layout();
@@ -347,6 +358,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	// Connect Events
 	m_checkBoxAll->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
 	m_buttonTextFont->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
+	m_checkBoxSendXml->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnSendXml ), NULL, this );
 	m_sdbButtonSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );
@@ -357,6 +369,7 @@ SquiddioPrefsDialogBase::~SquiddioPrefsDialogBase()
 	// Disconnect Events
 	m_checkBoxAll->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
 	m_buttonTextFont->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
+	m_checkBoxSendXml->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnSendXml ), NULL, this );
 	m_sdbButtonSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );

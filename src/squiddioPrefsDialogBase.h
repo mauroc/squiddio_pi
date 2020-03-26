@@ -75,6 +75,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCheckBoxAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickFonts( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSendXml( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LaunchHelpPage( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
@@ -112,6 +113,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxCheckBox* m_checkBoxDelGpxs;
 		wxChoice* m_choiceHowOften;
 		wxChoice* m_choiceReceive;
+		wxCheckBox* m_checkBoxSendXml;
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
 		wxStaticText* m_version;

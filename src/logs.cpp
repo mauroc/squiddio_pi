@@ -36,8 +36,9 @@
 #define DAY 86400
 
 BEGIN_EVENT_TABLE(logsWindow, wxWindow)
-EVT_TIMER(TIMER_ID,  logsWindow::OnTimerTimeout)
-EVT_TIMER(TIMER_ID1, logsWindow::OnRefreshTimeout)
+EVT_TIMER(TIMER_ID0,  logsWindow::OnRecTimerTimeout)
+EVT_TIMER(TIMER_ID1,  logsWindow::OnSenTimerTimeout)
+EVT_TIMER(TIMER_ID2,  logsWindow::OnRefreshTimeout)
 EVT_PAINT (logsWindow::OnPaint )
 END_EVENT_TABLE();
 
@@ -48,16 +49,18 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     this->SetTransparent(30);
     p_plugin = plugin;
     m_parent_window = pparent;
-    m_pTimer = new wxTimer(this, TIMER_ID);
-    m_pRefreshTimer = new wxTimer(this, TIMER_ID1);
+    m_pRecTimer = new wxTimer(this, TIMER_ID0);
+    m_pSenTimer = new wxTimer(this, TIMER_ID1);
+    m_pRefreshTimer = new wxTimer(this, TIMER_ID2);
     m_pRefreshTimer->Start(5000);
 
     m_LogsLayer = NULL;
     m_ErrorCondition = wxEmptyString;
     m_Notice = wxEmptyString;
     g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
-    m_LastLogSent = p_plugin->g_LastLogSent;
+    g_SendSecs     = period_secs(p_plugin->g_PostPeriod);
     m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
+    m_LastLogSent  = p_plugin->g_LastLogSent;
 
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
@@ -66,23 +69,35 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     DisplayLogsLayer();
 
     if (g_RetrieveSecs > 0)  // display friends' logs
-            {
+    {
         if (wxDateTime::Now().GetTicks() > m_LastLogsRcvd.GetTicks() + g_RetrieveSecs) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
             if (p_plugin->CheckIsOnline())
-//                 ShowFriendsLogs();
-                PostXml();
+                ShowFriendsLogs();
         }
-        int nextEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - m_LastLogsRcvd.GetTicks());
+        int nextRecEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - m_LastLogsRcvd.GetTicks());
 
         // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch, else schedule it for when it's due
-        SetTimer(wxMax(wxMin(nextEvent, g_RetrieveSecs), 7));
+        SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
+    }
+
+    if (g_SendSecs > 0 && p_plugin->g_SendXml)  // send navobj.xml file
+    {
+        if (wxDateTime::Now().GetTicks() > m_LastLogSent.GetTicks() + g_SendSecs) // overdue request at startup?
+        {
+            RequestRefresh(m_parent_window);
+            if (p_plugin->CheckIsOnline())
+                PostXml();
+        }
+        int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - m_LastLogSent.GetTicks());
+        SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 10));
     }
 }
 
 logsWindow::~logsWindow(){
-    delete m_pTimer;
+    delete m_pRecTimer;
+    delete m_pSenTimer;
     delete m_pRefreshTimer;
 }
 
@@ -126,23 +141,43 @@ wxString logsWindow::timeAgo(wxDateTime currTime) {
     }
 }
 
-void logsWindow::SetTimer(int RetrieveSecs) {
-    m_pTimer->Stop();
+void logsWindow::SetRecTimer(int RetrieveSecs) {
+    m_pRecTimer->Stop();
     if (RetrieveSecs > 0)
-        m_pTimer->Start(RetrieveSecs * 1000);
+        m_pRecTimer->Start(RetrieveSecs * 1000);
     g_RetrieveSecs = RetrieveSecs;
     Refresh(false);
 }
 
-void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
+void logsWindow::SetSenTimer(int SendSecs) {
+    m_pSenTimer->Stop();
+    if (SendSecs > 0)
+        m_pSenTimer->Start(SendSecs * 1000);
+    g_SendSecs = SendSecs;
+    Refresh(false);
+}
+
+void logsWindow::OnRecTimerTimeout(wxTimerEvent& event) {
     if (p_plugin->CheckIsOnline()) {
         RequestRefresh(m_parent_window);
-//         ShowFriendsLogs();
-        PostXml();
-        if (m_pTimer->GetInterval() / 1000 < g_RetrieveSecs) {
+        ShowFriendsLogs();
+        if (m_pRecTimer->GetInterval() / 1000 < g_RetrieveSecs) {
             // after initial friends update, reset the timer to the required interval
-            SetTimer(0);
-            SetTimer(g_RetrieveSecs * 1000);
+            SetRecTimer(0);
+            SetRecTimer(g_RetrieveSecs * 1000);
+        }
+    }
+    Refresh(false);
+}
+
+void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
+    if (p_plugin->CheckIsOnline() && p_plugin->g_SendXml) {
+        RequestRefresh(m_parent_window);
+        PostXml();
+        if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
+            // after initial xml post, reset the timer to the required interval
+            SetSenTimer(0);
+            SetSenTimer(g_SendSecs * 1000);
         }
     }
     Refresh(false);

@@ -419,6 +419,7 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
     pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap);
     pConf->Read(_T("DelGpxs"), &g_DelGpxs, false);
+    pConf->Read(_T("SendXml"), &g_SendXml, false);
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
     pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
@@ -493,6 +494,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
     pConf->Write(_T("DownloadVPMap"), g_DownloadVPMap);
     pConf->Write(_T("DelGpxs"), g_DelGpxs);
+    pConf->Write(_T("SendXml"), g_SendXml);
 
     pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
     pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
@@ -1114,6 +1116,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_dirPickerDownload->SetPath(g_BaseChartDir);
         dialog->m_checkBoxVPMap->SetValue(g_DownloadVPMap);
         dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
+        dialog->m_checkBoxSendXml->SetValue(g_SendXml);
 
         wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
@@ -1125,7 +1128,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         }
 
         int curr_retrieve_period = g_RetrievePeriod;
-        
+        int curr_post_period = g_PostPeriod;
+
         if(!m_bDoneODAPIVersionCall) {
             GetODAPI();
             AddODIcons();
@@ -1225,6 +1229,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_DelGpxs = dialog->m_checkBoxDelGpxs->GetValue();
                 l_bChanged = true;
             }
+            if(g_SendXml != dialog->m_checkBoxSendXml->GetValue()) {
+                g_SendXml = dialog->m_checkBoxSendXml->GetValue();
+                l_bChanged = true;
+            }
             if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
                 g_ViewOthers = dialog->m_checkBoxOthers->GetValue();
                 l_bChanged = true;
@@ -1270,9 +1278,16 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             if (m_plogs_window) {
                 if (g_RetrievePeriod != curr_retrieve_period){
                     if (g_RetrievePeriod > 0){
-                        m_plogs_window->SetTimer(period_secs(g_RetrievePeriod));
+                        m_plogs_window->SetRecTimer(period_secs(g_RetrievePeriod));
                     }else{
-                        m_plogs_window->SetTimer(0);
+                        m_plogs_window->SetRecTimer(0);
+                    }
+                }
+                if (g_PostPeriod != curr_post_period){
+                    if (g_PostPeriod > 0){
+                        m_plogs_window->SetSenTimer(period_secs(g_PostPeriod));
+                    }else{
+                        m_plogs_window->SetSenTimer(0);
                     }
                 }
                 m_plogs_window->m_ErrorCondition = wxEmptyString;
@@ -1347,7 +1362,7 @@ void squiddio_pi::SetLogsWindow() {
             m_AUImgr->GetPane(m_plogs_window).CaptionVisible(false);
             m_AUImgr->GetPane(m_plogs_window).GripperTop(false);
             m_AUImgr->GetPane(m_plogs_window).CloseButton(false);
-            m_AUImgr->GetPane(m_plogs_window).MinimizeButton(true); //doesn't seem to work https://www.kirix.com/forums/viewtopic.php?f=15&t=658
+            m_AUImgr->GetPane(m_plogs_window).MinimizeButton(true);
         }
         // now make it visible
         m_AUImgr->GetPane(m_plogs_window).Show(true);
@@ -1661,6 +1676,12 @@ void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
         m_checkBoxRamps->Enable(true);
         m_checkBoxOthers->Enable(true);
     }
+}
+
+void SquiddioPrefsDialog::OnSendXml(wxCommandEvent& event) {
+    wxCheckBox *checkbox = (wxCheckBox*) event.GetEventObject();
+    if (checkbox->IsChecked())
+        wxMessageBox(_("Your GPS positions and other navigational information will be sent to the server and may be shared with other sQuidd.io users. Check https://squidd.io/privacy for additional information."));
 }
 
 void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
