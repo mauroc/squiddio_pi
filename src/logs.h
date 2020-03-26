@@ -53,6 +53,7 @@ public:
       wxString PostPosition(double lat, double lon, double sog, double cog);
       void ShowFriendsLogs();
       void DisplayLogsLayer(void);
+      wxString PostXml();
       wxString timeAgo(wxDateTime currTime);
 
       NMEA0183     m_NMEA0183;

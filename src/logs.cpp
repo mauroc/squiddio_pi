@@ -71,7 +71,8 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         {
             RequestRefresh(m_parent_window);
             if (p_plugin->CheckIsOnline())
-                ShowFriendsLogs();
+//                 ShowFriendsLogs();
+                PostXml();
         }
         int nextEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - m_LastLogsRcvd.GetTicks());
 
@@ -136,7 +137,8 @@ void logsWindow::SetTimer(int RetrieveSecs) {
 void logsWindow::OnTimerTimeout(wxTimerEvent& event) {
     if (p_plugin->CheckIsOnline()) {
         RequestRefresh(m_parent_window);
-        ShowFriendsLogs();
+//         ShowFriendsLogs();
+        PostXml();
         if (m_pTimer->GetInterval() / 1000 < g_RetrieveSecs) {
             // after initial friends update, reset the timer to the required interval
             SetTimer(0);
@@ -294,7 +296,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     wxString parameters;
 
     parameters.Printf(
-            _T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&source=ocpn"),
+            _T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&source=ocpn&xml=%s"),
             p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), lat, lon,
             sog, cog);
 
@@ -304,6 +306,27 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
     {
         wxLogMessage(_("Created sQuiddio log update:") + reply);
     }
+
+    return reply;
+}
+
+wxString logsWindow::PostXml() {
+
+    wxString filename = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
+    filename += "navobj.xml";
+    wxFile f( filename );
+    wxString xml = wxEmptyString;
+    f.ReadAll( &xml );
+
+    wxString reply = wxEmptyString;
+    wxString parameters;
+    wxString url = p_plugin->g_DomainName+_("/positions.json");
+    parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&xml=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), xml);
+
+    _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
+
+    if( res == OCPN_DL_NO_ERROR )
+        wxLogMessage(_("Sent xml logs update:") + reply);
 
     return reply;
 }
