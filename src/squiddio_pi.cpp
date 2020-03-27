@@ -1387,9 +1387,8 @@ void squiddio_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix) {
 
 }
 void squiddio_pi::SetNMEASentence(wxString &sentence) {
-    if (m_plogs_window && g_PostPeriod > 0 && wxDateTime::GetTimeNow() > g_LastLogSent + period_secs(g_PostPeriod))
-        if (CheckIsOnline())
-            m_plogs_window->SetSentence(sentence);
+    if (m_plogs_window)
+        m_plogs_window->SetSentence(sentence);
 }
 
 void squiddio_pi::OnThreadActionFinished(SquiddioEvent& event)

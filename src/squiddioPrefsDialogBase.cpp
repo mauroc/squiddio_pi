@@ -69,9 +69,13 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Cruising Aids") ), wxVERTICAL );
 
 	m_checkBoxNDBC = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Buoy Reports"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxNDBC->SetToolTip( _("Get quasi-real time wind, wave and pressure report from thousands of NDBC buoys right from your chart.") );
+
 	sbSizer61->Add( m_checkBoxNDBC, 0, wxALL, 5 );
 
 	m_checkBoxShipRep = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Ship Reports"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxShipRep->SetToolTip( _("Get quasi-real time wind, wave and pressure report from participating NDBC ships right from your chart.") );
+
 	sbSizer61->Add( m_checkBoxShipRep, 0, wxALL, 5 );
 
 	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS markers"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -86,6 +90,8 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbDestSizer->Fit( m_panel1 );
 	m_notebook1->AddPage( m_panel1, _("View"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	rendering->SetToolTip( _("Delete downloaded POI files for sectors you have hidden. This limits the proliferation of old unecessary POI files and reduced the computational burden.") );
+
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
@@ -224,7 +230,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( downloads->GetStaticBox(), wxID_ANY, _("House Keeping") ), wxVERTICAL );
 
 	m_checkBoxDelGpxs = new wxCheckBox( sbSizer8->GetStaticBox(), wxID_ANY, _("Delete .gpx files for hidden layers upon exiting OpenCPN"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxDelGpxs->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
+	m_checkBoxDelGpxs->SetToolTip( _("Delete downloaded POI files for sectors you have hidden. This limits the proliferation of unecessary files and reduced OpenCPN's computational burden.") );
 
 	sbSizer8->Add( m_checkBoxDelGpxs, 0, wxALL, 5 );
 
@@ -276,7 +282,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( sbLogSizer->GetStaticBox(), wxID_ANY, _("Logs Sharing Options") ), wxVERTICAL );
 
 	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include navobj.xml file with each send"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxSendXml->SetToolTip( _("In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area") );
+	m_checkBoxSendXml->SetToolTip( _("Include your Navobj.xml file each time you post an automatic update to sQuidd.io. Your navobj.xml file includes your navigation data (positions, tracks, routes etc) and other session information. You can retrieve previous versions of your navobj.xml file online in case of a crash.") );
 
 	sbSizer11->Add( m_checkBoxSendXml, 0, wxALL, 5 );
 

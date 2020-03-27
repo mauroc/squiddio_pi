@@ -61,7 +61,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     g_SendSecs     = period_secs(p_plugin->g_PostPeriod);
     m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
     m_LastLogSent  = p_plugin->g_LastLogSent;
-
+    m_nmea_ready   = false;
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
@@ -171,9 +171,38 @@ void logsWindow::OnRecTimerTimeout(wxTimerEvent& event) {
 }
 
 void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
-    if (p_plugin->CheckIsOnline() && p_plugin->g_SendXml) {
+    if (p_plugin->CheckIsOnline()) {
         RequestRefresh(m_parent_window);
-        PostXml();
+        if (m_nmea_ready) {
+
+            wxString PostResponse;
+            PostResponse = PostPosition(mLat, mLon, mSog, mCog);
+
+            wxJSONReader r;
+            wxJSONValue v;
+            r.Parse(PostResponse, &v);
+
+            if (v[_T("error")].AsString() != _T("null") )
+            {
+                m_ErrorCondition = v[_T("error")].AsString();
+                Refresh(false);
+            } else {
+                if (v[_T("notice")].AsString() != _T("null") )
+                    { m_Notice = v[_T("notice")].AsString();}
+                else
+                    { m_Notice = wxEmptyString;}
+                m_LastLogSent = wxDateTime::Now();
+                p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
+                m_nmea_ready = false;
+                Refresh(false);
+            }
+        }
+        if (p_plugin->g_SendXml){
+            PostXml();
+            m_LastLogSent = wxDateTime::Now();
+            p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
+        }
+
         if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
             // after initial xml post, reset the timer to the required interval
             SetSenTimer(0);
@@ -264,8 +293,6 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 }
 
 void logsWindow::SetSentence(wxString &sentence) {
-    wxString PostResponse;
-    bool bGoodData = false;
 
     m_NMEA0183 << sentence;
 
@@ -296,32 +323,32 @@ void logsWindow::SetSentence(wxString &sentence) {
                         mVar = m_NMEA0183.Rmc.MagneticVariation;
                     else if (m_NMEA0183.Rmc.MagneticVariationDirection == West)
                         mVar = -m_NMEA0183.Rmc.MagneticVariation;
-                    bGoodData = true;
+                    m_nmea_ready = true;
                 }
             }
         }
     }
 
-    if (bGoodData) {
-        PostResponse = PostPosition(mLat, mLon, mSog, mCog);
-        wxJSONReader r;
-        wxJSONValue v;
-        r.Parse(PostResponse, &v);
-
-        if (v[_T("error")].AsString() != _T("null") )
-        {
-            m_ErrorCondition = v[_T("error")].AsString();
-            Refresh(false);
-        }else{
-            if (v[_T("notice")].AsString() != _T("null") )
-                { m_Notice = v[_T("notice")].AsString();}
-            else
-                { m_Notice = wxEmptyString;}
-            m_LastLogSent = wxDateTime::Now();
-            p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
-            Refresh(false);
-        }
-    }
+//     if (bGoodData) {
+//         PostResponse = PostPosition(mLat, mLon, mSog, mCog);
+//         wxJSONReader r;
+//         wxJSONValue v;
+//         r.Parse(PostResponse, &v);
+//
+//         if (v[_T("error")].AsString() != _T("null") )
+//         {
+//             m_ErrorCondition = v[_T("error")].AsString();
+//             Refresh(false);
+//         }else{
+//             if (v[_T("notice")].AsString() != _T("null") )
+//                 { m_Notice = v[_T("notice")].AsString();}
+//             else
+//                 { m_Notice = wxEmptyString;}
+//             m_LastLogSent = wxDateTime::Now();
+//             p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
+//             Refresh(false);
+//         }
+//     }
 
 }
 
@@ -348,22 +375,26 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
 wxString logsWindow::PostXml() {
 
     wxString filename = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
+//     filename += "navobj.xml.changes";
     filename += "navobj.xml";
-    wxFile f( filename );
-    wxString xml = wxEmptyString;
-    f.ReadAll( &xml );
+    if (::wxFileExists(filename)) {
+        wxFile f( filename );
+        wxString xml = wxEmptyString;
+        f.ReadAll( &xml );
 
-    wxString reply = wxEmptyString;
-    wxString parameters;
-    wxString url = p_plugin->g_DomainName+_("/positions.json");
-    parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&xml=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), xml);
+        wxString reply = wxEmptyString;
+        wxString parameters;
+        wxString url = p_plugin->g_DomainName+_("/positions.json");
+        parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&xml=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), xml);
 
-    _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
+        _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
-    if( res == OCPN_DL_NO_ERROR )
-        wxLogMessage(_("Sent xml logs update:") + reply);
+        if( res == OCPN_DL_NO_ERROR )
+            wxLogMessage(_("Sent xml logs update:") + reply);
 
-    return reply;
+        return reply;
+    } else { return wxEmptyString;}
+
 }
 
 void logsWindow::ShowFriendsLogs() {
