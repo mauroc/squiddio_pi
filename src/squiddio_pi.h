@@ -236,6 +236,7 @@ public:
       wxString   g_Email;
       wxString   g_ApiKey;
       wxString   g_DomainName;
+      wxString   g_UrlVersion;
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
       bool       g_SendXml;

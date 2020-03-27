@@ -82,7 +82,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
     }
 
-    if (g_SendSecs > 0 && p_plugin->g_SendXml)  // send navobj.xml file
+    if (g_SendSecs > 0 )  // send navobj.xml file
     {
         if (wxDateTime::Now().GetTicks() > m_LastLogSent.GetTicks() + g_SendSecs) // overdue request at startup?
         {
@@ -296,6 +296,8 @@ void logsWindow::SetSentence(wxString &sentence) {
 
     m_NMEA0183 << sentence;
 
+    wxString tmp = m_NMEA0183.LastSentenceIDReceived;
+
     if (m_NMEA0183.PreParse()) {
         if (m_NMEA0183.LastSentenceIDReceived == _T("RMC")) {
             if (m_NMEA0183.Parse()) {
@@ -354,15 +356,13 @@ void logsWindow::SetSentence(wxString &sentence) {
 
 wxString logsWindow::PostPosition(double lat, double lon, double sog,
         double cog) {
+
     wxString reply = wxEmptyString;
     wxString parameters;
+    wxString url = p_plugin->g_DomainName+_("/positions.json");
+    parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str()),p_plugin->g_UrlVersion;
 
-    parameters.Printf(
-            _T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&source=ocpn&xml=%s"),
-            p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), lat, lon,
-            sog, cog);
-
-    _OCPN_DLStatus res = OCPN_postDataHttp(_T("http://squidd.io/positions.json"), parameters, reply, 5);
+    _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
     if( res == OCPN_DL_NO_ERROR )
     {
@@ -385,7 +385,7 @@ wxString logsWindow::PostXml() {
         wxString reply = wxEmptyString;
         wxString parameters;
         wxString url = p_plugin->g_DomainName+_("/positions.json");
-        parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&xml=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), xml);
+        parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s&xml=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion, xml);
 
         _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 

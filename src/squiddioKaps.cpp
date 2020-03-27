@@ -208,8 +208,8 @@ void squiddio_pi::DownloadSatImages() {
         if( mess.ShowModal() == wxID_CANCEL )
             return;
 
-        wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
-        wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+//         wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
+//         wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
         wxString tmp_file = wxFileName::CreateTempFileName(_T("squiddio_pi"));
         wxString chart_dir = g_BaseChartDir + wxFileName::GetPathSeparator();
@@ -227,7 +227,7 @@ void squiddio_pi::DownloadSatImages() {
         }
         url_path.Append(_T("&compressed=true"));
         url_path.Append(_T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey));
-        url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + versionMinor); // plugin identifiers
+        url_path.Append(_T("&source=ocpn_plugin&version=") + g_UrlVersion); // plugin identifiers
 
         wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * num_zooms);
         OCPN_DLStatus result = OCPN_downloadFile(url_path , tmp_file, _("Downloading"), download_message, wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10

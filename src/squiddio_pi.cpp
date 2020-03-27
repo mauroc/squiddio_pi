@@ -165,6 +165,7 @@ int squiddio_pi::Init(void) {
     m_pODDeleteTextPoint = NULL;
     m_pODAddPointIcon = NULL;
     m_pODDeletePointIcon = NULL;
+    g_UrlVersion =  wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) + wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
     
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
@@ -878,14 +879,14 @@ void squiddio_pi::RefreshLayer()
 {
     wxString layerContents;
     Layer * new_layer = NULL;
-    wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
-    wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+//     wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
+//     wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
     //version << wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
     if (CheckIsOnline())
         layerContents = DownloadLayer(
-        _T("/places/download_xml_layers.xml?src=ocpn_plugin&version=")+versionMajor+versionMinor+
+        _T("/places/download_xml_layers.xml?src=ocpn_plugin&version=")+g_UrlVersion+
         _T("&region=")+ m_rgn_to_dld +
         _T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey)  
         );
