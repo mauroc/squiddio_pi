@@ -26,6 +26,7 @@
 
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
+#include "wx/hashmap.h"
 #endif //precompiled headers
 
 #include "logs.h"
@@ -41,6 +42,8 @@ EVT_TIMER(TIMER_ID1,  logsWindow::OnSenTimerTimeout)
 EVT_TIMER(TIMER_ID2,  logsWindow::OnRefreshTimeout)
 EVT_PAINT (logsWindow::OnPaint )
 END_EVENT_TABLE();
+
+// WX_DECLARE_HASH_MAP(wxString, int, Samples);
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         wxWindow(pparent, id, wxPoint(10, 200), wxSize(1000, 25),
@@ -66,12 +69,13 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
 
+    int pippo = h1[_("pippo")];
 
     m_NmeaFileName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
     m_NmeaFileName += "squiddio/nmea.txt";
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
-    m_NmeaFile.Write(_("peppo\n"));
-    wxTextFile::GetEOL();
+//     m_NmeaFile.Write(_("header\n"));
+//     wxTextFile::GetEOL();
 
     DisplayLogsLayer();
 
@@ -89,13 +93,12 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
     }
 
-    if (g_SendSecs > 0 )  // send navobj.xml file
+    if (g_SendSecs > 0 )
     {
-        if (wxDateTime::Now().GetTicks() > m_LastLogSent.GetTicks() + g_SendSecs) // overdue request at startup?
+        if ((wxDateTime::Now().GetTicks() > m_LastLogSent.GetTicks() + g_SendSecs) && m_nmea_ready) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
-//             if (p_plugin->CheckIsOnline())
-//                 PostNMEA();
+            PostPosition(mLat, mLon, mSog, mCog);
         }
         int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - m_LastLogSent.GetTicks());
         SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 10));
@@ -205,11 +208,6 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
                 Refresh(false);
             }
         }
-//         if (p_plugin->g_SendXml){
-//             PostNMEA();
-//             m_LastLogSent = wxDateTime::Now();
-//             p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
-//         }
 
         if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
             // after initial xml post, reset the timer to the required interval
@@ -302,12 +300,17 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 
 void logsWindow::SetSentence(wxString &sentence) {
 
+    int curr_time = wxDateTime::Now().GetTicks();
+    int down_sample;
+
+//     Samples h1;
     m_NMEA0183 << sentence;
-    m_NmeaFile.Write(sentence);
-    wxTextFile::GetEOL();
 
     if (m_NMEA0183.PreParse()) {
-        if (m_NMEA0183.LastSentenceIDReceived == _T("RMC")) {
+
+        wxString last_id = m_NMEA0183.LastSentenceIDReceived;
+
+        if (last_id == _T("RMC")) {
             if (m_NMEA0183.Parse()) {
                 if (m_NMEA0183.Rmc.IsDataValid == NTrue) {
                     float llt = m_NMEA0183.Rmc.Position.Latitude.Latitude;
@@ -334,26 +337,40 @@ void logsWindow::SetSentence(wxString &sentence) {
                     else if (m_NMEA0183.Rmc.MagneticVariationDirection == West)
                         mVar = -m_NMEA0183.Rmc.MagneticVariation;
                     m_nmea_ready = true;
+                    down_sample = 5;
                 }
             }
+        } else
+            down_sample = 10;
+
+        int tmp = h1[last_id];
+        int rmp = curr_time - h1[last_id];
+
+        if (h1[last_id] == 0 || (curr_time - h1[last_id] > down_sample) ) {
+
+            m_NmeaFile.Write(sentence);
+            wxTextFile::GetEOL();
+            h1[last_id] = curr_time;
         }
     }
 }
 
-wxString logsWindow::PostPosition(double lat, double lon, double sog,
-        double cog) {
+wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog) {
+
+    m_NmeaFile.Close();
 
     wxString nmea_seq = wxEmptyString;
-    m_NmeaFile.Close();
-    wxFile f( m_NmeaFileName );
-    f.ReadAll( &nmea_seq );
-    f.Close();
+    if (p_plugin->g_SendXml) {
+        wxFile f( m_NmeaFileName );
+        f.ReadAll( &nmea_seq );
+        f.Close();
+    }
 
     wxString reply = wxEmptyString;
     wxString parameters;
     wxString url = p_plugin->g_DomainName+_("/positions.json");
-    parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&nmea=%s&source=ocpn&version=%s"),\
-    p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(),lat, lon, sog, cog, nmea_seq, p_plugin->g_UrlVersion);
+    parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&nmea=%s&source=ocpn&version=%s"),
+                        p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(),lat, lon, sog, cog, nmea_seq, p_plugin->g_UrlVersion);
 
     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
@@ -362,38 +379,12 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
 
     ::wxRemoveFile(m_NmeaFileName);
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
-    m_NmeaFile.Write(_("pluto\n"));
-    wxTextFile::GetEOL();
+//     m_NmeaFile.Write(_("header2\n"));
+//     wxTextFile::GetEOL();
 
     return reply;
 }
 
-
-// wxString logsWindow::PostNMEA() {
-//
-//     wxString nmea_seq = wxEmptyString;
-//     m_NmeaFile.Close();
-//     wxFile f( m_NmeaFileName );
-//     f.ReadAll( &nmea_seq );
-//     f.Close();
-//
-//     wxString reply = wxEmptyString;
-//     wxString parameters;
-//     wxString url = p_plugin->g_DomainName+_("/positions.json");
-//     parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s&nmea=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion, nmea_seq);
-//
-//     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
-//
-//     if( res == OCPN_DL_NO_ERROR )
-//         wxLogMessage(_("Sent xml logs update:") + reply);
-//
-//     ::wxRemoveFile(m_NmeaFileName);
-//     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
-//     m_NmeaFile.Write(_("pluto\n"));
-//     wxTextFile::GetEOL();
-//
-//     return reply;
-// }
 
 void logsWindow::ShowFriendsLogs() {
     wxString layerContents;
