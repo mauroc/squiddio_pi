@@ -205,11 +205,11 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
                 Refresh(false);
             }
         }
-        if (p_plugin->g_SendXml){
-            PostNMEA();
-            m_LastLogSent = wxDateTime::Now();
-            p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
-        }
+//         if (p_plugin->g_SendXml){
+//             PostNMEA();
+//             m_LastLogSent = wxDateTime::Now();
+//             p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
+//         }
 
         if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
             // after initial xml post, reset the timer to the required interval
@@ -306,8 +306,6 @@ void logsWindow::SetSentence(wxString &sentence) {
     m_NmeaFile.Write(sentence);
     wxTextFile::GetEOL();
 
-    wxString tmp = m_NMEA0183.LastSentenceIDReceived;
-
     if (m_NMEA0183.PreParse()) {
         if (m_NMEA0183.LastSentenceIDReceived == _T("RMC")) {
             if (m_NMEA0183.Parse()) {
@@ -340,79 +338,13 @@ void logsWindow::SetSentence(wxString &sentence) {
             }
         }
     }
-
-//     if (bGoodData) {
-//         PostResponse = PostPosition(mLat, mLon, mSog, mCog);
-//         wxJSONReader r;
-//         wxJSONValue v;
-//         r.Parse(PostResponse, &v);
-//
-//         if (v[_T("error")].AsString() != _T("null") )
-//         {
-//             m_ErrorCondition = v[_T("error")].AsString();
-//             Refresh(false);
-//         }else{
-//             if (v[_T("notice")].AsString() != _T("null") )
-//                 { m_Notice = v[_T("notice")].AsString();}
-//             else
-//                 { m_Notice = wxEmptyString;}
-//             m_LastLogSent = wxDateTime::Now();
-//             p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
-//             Refresh(false);
-//         }
-//     }
-
 }
 
 wxString logsWindow::PostPosition(double lat, double lon, double sog,
         double cog) {
 
-    wxString reply = wxEmptyString;
-    wxString parameters;
-    wxString url = p_plugin->g_DomainName+_("/positions.json");
-    parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str()),p_plugin->g_UrlVersion;
-
-    _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
-
-    if( res == OCPN_DL_NO_ERROR )
-    {
-        wxLogMessage(_("Created sQuiddio log update:") + reply);
-    }
-
-    return reply;
-}
-
-wxString logsWindow::PostXml() {
-
-    wxString filename = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
-    filename += "navobj.xml";
-    if (::wxFileExists(filename)) {
-        wxFile f( filename );
-        wxString xml = wxEmptyString;
-        f.ReadAll( &xml );
-
-        wxString reply = wxEmptyString;
-        wxString parameters;
-        wxString url = p_plugin->g_DomainName+_("/positions.json");
-        parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s&xml=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion, xml);
-
-        _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
-
-        if( res == OCPN_DL_NO_ERROR )
-            wxLogMessage(_("Sent xml logs update:") + reply);
-
-        return reply;
-    } else { return wxEmptyString;}
-
-}
-
-wxString logsWindow::PostNMEA() {
-
-//     return wxEmptyString;
-
     wxString nmea_seq = wxEmptyString;
-//     m_NmeaFile.Close();
-
+    m_NmeaFile.Close();
     wxFile f( m_NmeaFileName );
     f.ReadAll( &nmea_seq );
     f.Close();
@@ -420,19 +352,48 @@ wxString logsWindow::PostNMEA() {
     wxString reply = wxEmptyString;
     wxString parameters;
     wxString url = p_plugin->g_DomainName+_("/positions.json");
-    parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s&nmea=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion, nmea_seq);
+    parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&nmea=%s&source=ocpn&version=%s"),\
+    p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(),lat, lon, sog, cog, nmea_seq, p_plugin->g_UrlVersion);
 
     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
     if( res == OCPN_DL_NO_ERROR )
-        wxLogMessage(_("Sent xml logs update:") + reply);
+        wxLogMessage(_("Created sQuiddio log update:") + reply);
 
-//     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+    ::wxRemoveFile(m_NmeaFileName);
+    bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
     m_NmeaFile.Write(_("pluto\n"));
     wxTextFile::GetEOL();
-    return reply;
 
+    return reply;
 }
+
+
+// wxString logsWindow::PostNMEA() {
+//
+//     wxString nmea_seq = wxEmptyString;
+//     m_NmeaFile.Close();
+//     wxFile f( m_NmeaFileName );
+//     f.ReadAll( &nmea_seq );
+//     f.Close();
+//
+//     wxString reply = wxEmptyString;
+//     wxString parameters;
+//     wxString url = p_plugin->g_DomainName+_("/positions.json");
+//     parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s&nmea=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion, nmea_seq);
+//
+//     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
+//
+//     if( res == OCPN_DL_NO_ERROR )
+//         wxLogMessage(_("Sent xml logs update:") + reply);
+//
+//     ::wxRemoveFile(m_NmeaFileName);
+//     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+//     m_NmeaFile.Write(_("pluto\n"));
+//     wxTextFile::GetEOL();
+//
+//     return reply;
+// }
 
 void logsWindow::ShowFriendsLogs() {
     wxString layerContents;
