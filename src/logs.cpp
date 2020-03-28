@@ -66,6 +66,13 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
 
+
+    m_NmeaFileName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
+    m_NmeaFileName += "squiddio/nmea.txt";
+    bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+    m_NmeaFile.Write(_("peppo\n"));
+    wxTextFile::GetEOL();
+
     DisplayLogsLayer();
 
     if (g_RetrieveSecs > 0)  // display friends' logs
@@ -87,8 +94,8 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         if (wxDateTime::Now().GetTicks() > m_LastLogSent.GetTicks() + g_SendSecs) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
-            if (p_plugin->CheckIsOnline())
-                PostXml();
+//             if (p_plugin->CheckIsOnline())
+//                 PostNMEA();
         }
         int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - m_LastLogSent.GetTicks());
         SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 10));
@@ -99,6 +106,7 @@ logsWindow::~logsWindow(){
     delete m_pRecTimer;
     delete m_pSenTimer;
     delete m_pRefreshTimer;
+    m_NmeaFile.Close();
 }
 
 wxString logsWindow::timeAgo(wxDateTime currTime) {
@@ -198,7 +206,7 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
             }
         }
         if (p_plugin->g_SendXml){
-            PostXml();
+            PostNMEA();
             m_LastLogSent = wxDateTime::Now();
             p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
         }
@@ -295,6 +303,8 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 void logsWindow::SetSentence(wxString &sentence) {
 
     m_NMEA0183 << sentence;
+    m_NmeaFile.Write(sentence);
+    wxTextFile::GetEOL();
 
     wxString tmp = m_NMEA0183.LastSentenceIDReceived;
 
@@ -375,7 +385,6 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog,
 wxString logsWindow::PostXml() {
 
     wxString filename = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
-//     filename += "navobj.xml.changes";
     filename += "navobj.xml";
     if (::wxFileExists(filename)) {
         wxFile f( filename );
@@ -394,6 +403,34 @@ wxString logsWindow::PostXml() {
 
         return reply;
     } else { return wxEmptyString;}
+
+}
+
+wxString logsWindow::PostNMEA() {
+
+//     return wxEmptyString;
+
+    wxString nmea_seq = wxEmptyString;
+//     m_NmeaFile.Close();
+
+    wxFile f( m_NmeaFileName );
+    f.ReadAll( &nmea_seq );
+    f.Close();
+
+    wxString reply = wxEmptyString;
+    wxString parameters;
+    wxString url = p_plugin->g_DomainName+_("/positions.json");
+    parameters.Printf(_T("api_key=%s&email=%s&source=ocpn&version=%s&nmea=%s"),p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(), p_plugin->g_UrlVersion, nmea_seq);
+
+    _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
+
+    if( res == OCPN_DL_NO_ERROR )
+        wxLogMessage(_("Sent xml logs update:") + reply);
+
+//     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+    m_NmeaFile.Write(_("pluto\n"));
+    wxTextFile::GetEOL();
+    return reply;
 
 }
 

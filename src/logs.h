@@ -57,6 +57,7 @@ public:
       void ShowFriendsLogs();
       void DisplayLogsLayer(void);
       wxString PostXml();
+      wxString PostNMEA();
       wxString timeAgo(wxDateTime currTime);
 
       NMEA0183     m_NMEA0183;
@@ -81,6 +82,9 @@ private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
+      wxFile        m_NmeaFile;
+      wxString      m_NmeaFileName;
+
       //myCurlHTTP    post;
 
 DECLARE_EVENT_TABLE()
