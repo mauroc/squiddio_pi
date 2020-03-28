@@ -28,6 +28,7 @@
 
 #include "squiddio_pi.h"
 #include "wxJSON/jsonreader.h"
+#include <wx/tokenzr.h>
 //#include "wxJSON/jsonwriter.h"
 
 enum
@@ -75,7 +76,7 @@ public:
       wxString     m_Notice;
       double       m_last_lat, m_last_lon;
       bool         m_nmea_ready;
-      Samples      h1;
+      Samples      m_NmeaLog;
 private:
       int           g_RetrieveSecs;
       int           g_SendSecs;

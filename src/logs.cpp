@@ -69,11 +69,11 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
 
-    int pippo = h1[_("pippo")];
-
     m_NmeaFileName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
     m_NmeaFileName += "squiddio/nmea.txt";
-    bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+    bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
+
+//     ssize_t length = m_NmeaFile.Length();
 //     m_NmeaFile.Write(_("header\n"));
 //     wxTextFile::GetEOL();
 
@@ -303,7 +303,6 @@ void logsWindow::SetSentence(wxString &sentence) {
     int curr_time = wxDateTime::Now().GetTicks();
     int down_sample;
 
-//     Samples h1;
     m_NMEA0183 << sentence;
 
     if (m_NMEA0183.PreParse()) {
@@ -337,33 +336,52 @@ void logsWindow::SetSentence(wxString &sentence) {
                     else if (m_NMEA0183.Rmc.MagneticVariationDirection == West)
                         mVar = -m_NMEA0183.Rmc.MagneticVariation;
                     m_nmea_ready = true;
-                    down_sample = 5;
+                    down_sample = 10;
                 }
             }
         } else
-            down_sample = 10;
+            down_sample = 30;
 
-        int tmp = h1[last_id];
-        int rmp = curr_time - h1[last_id];
-
-        if (h1[last_id] == 0 || (curr_time - h1[last_id] > down_sample) ) {
-
+        if (m_NmeaLog[last_id] == 0 || (curr_time - m_NmeaLog[last_id] > down_sample) ) {
             m_NmeaFile.Write(sentence);
             wxTextFile::GetEOL();
-            h1[last_id] = curr_time;
+            m_NmeaLog[last_id] = curr_time;
         }
     }
 }
 
 wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog) {
 
-    m_NmeaFile.Close();
+    ssize_t length = m_NmeaFile.Length();
 
+    m_NmeaFile.Close();
     wxString nmea_seq = wxEmptyString;
+
     if (p_plugin->g_SendXml) {
-        wxFile f( m_NmeaFileName );
-        f.ReadAll( &nmea_seq );
-        f.Close();
+        if (length < 100000) {
+            // file is not too big to be read in memory.
+            wxFile f( m_NmeaFileName );
+            f.ReadAll( &nmea_seq );
+            f.Close();
+            wxStringTokenizer str_arr(nmea_seq, _T("\n"));
+
+            int num_lines = str_arr.CountTokens();
+            int max_lines = 1000;
+            if (num_lines > max_lines) {
+                // file too big to post. Take only last max_lines.
+                nmea_seq = wxEmptyString;
+                int offset = num_lines - max_lines;
+                int i = 0;
+                wxString line;
+                while (str_arr.HasMoreTokens()) {
+                    line = str_arr.GetNextToken();
+                    i+= 1;
+                    if (i > offset)
+                        nmea_seq += line + _("\n");
+                }
+                wxLogMessage(_("Nmea file too large. Truncated before post"));
+            }
+        }
     }
 
     wxString reply = wxEmptyString;
