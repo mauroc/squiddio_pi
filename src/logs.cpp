@@ -69,8 +69,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
     m_LogsFilePath.Append(_T("logs.gpx"));
 
-    m_NmeaFileName = *GetpPrivateApplicationDataLocation() + wxFileName::GetPathSeparator();
-    m_NmeaFileName += "squiddio/nmea.txt";
+    m_NmeaFileName = p_plugin->layerdir + wxFileName::GetPathSeparator() + _("nmea.txt");
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
 
 //     ssize_t length = m_NmeaFile.Length();
@@ -392,13 +391,11 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
 
     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
-    if( res == OCPN_DL_NO_ERROR )
+    if( res == OCPN_DL_NO_ERROR ) {
         wxLogMessage(_("Created sQuiddio log update:") + reply);
-
-    ::wxRemoveFile(m_NmeaFileName);
-    bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
-//     m_NmeaFile.Write(_("header2\n"));
-//     wxTextFile::GetEOL();
+        ::wxRemoveFile(m_NmeaFileName);
+        bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+    }
 
     return reply;
 }

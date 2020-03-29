@@ -281,7 +281,8 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxStaticBoxSizer* sbSizer11;
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( sbLogSizer->GetStaticBox(), wxID_ANY, _("Logs Sharing Options") ), wxVERTICAL );
 
-	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include navobj.xml file with each send"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include NMEA samples with each send"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxSendXml->SetValue(true);
 	m_checkBoxSendXml->SetToolTip( _("Include your Navobj.xml file each time you post an automatic update to sQuidd.io. Your navobj.xml file includes your navigation data (positions, tracks, routes etc) and other session information. You can retrieve previous versions of your navobj.xml file online in case of a crash.") );
 
 	sbSizer11->Add( m_checkBoxSendXml, 0, wxALL, 5 );

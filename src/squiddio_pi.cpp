@@ -241,12 +241,29 @@ int squiddio_pi::Init(void) {
 
     if(!m_bDoneODAPIVersionCall) GetODAPI();
     
-    layerdir = *GetpPrivateApplicationDataLocation();
-    layerdir += wxFileName::GetPathSeparator();
-    layerdir += _T("squiddio");
+    wxString base_dir = *GetpPrivateApplicationDataLocation()+wxFileName::GetPathSeparator();
+    layerdir = base_dir + _("plugins") + wxFileName::GetPathSeparator()+ _T("squiddio");
 
-    if (!wxDir::Exists(layerdir))
+    if (!wxDir::Exists(layerdir)) {
         wxFileName::Mkdir(layerdir);
+        wxString old_dir = base_dir + _T("squiddio");
+        if (wxDir::Exists(old_dir)) {
+            // version upgrade: move old squiddio directory under plugins dir
+            wxDir dir;
+            dir.Open(old_dir);
+            if (dir.IsOpened()) {
+                wxString filename;
+                bool cont = dir.GetFirst(&filename);
+                while (cont) {
+                    filename.Prepend(wxFileName::GetPathSeparator());
+                    wxCopyFile(old_dir + filename , layerdir + filename);
+                    cont = dir.GetNext(&filename);
+                }
+            }
+          wxRmDir(old_dir);
+          wxLogMessage(_T("Moved all squiddio file to directory: ") + layerdir);
+        }
+    }
 
     if (wxDir::Exists(layerdir)) {
         wxString laymsg;
