@@ -75,9 +75,9 @@ public:
       double       m_last_lat, m_last_lon;
       bool         m_nmea_ready;
       Samples      m_NmeaLog;
+      int           g_SendSecs;
 private:
       int           g_RetrieveSecs;
-      int           g_SendSecs;
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;

@@ -91,7 +91,8 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         }
         int nextRecEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogsRcvd);
 
-        // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch, else schedule it for when it's due
+        // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch,
+        // then schedule it for when it's due
         SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
     }
 
@@ -100,10 +101,11 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         if ((wxDateTime::Now().GetTicks() > (p_plugin->g_LastLogSent + g_SendSecs)) && m_nmea_ready) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
-            PostPosition(mLat, mLon, mSog, mCog);
+            if (p_plugin->CheckIsOnline())
+                PostPosition(mLat, mLon, mSog, mCog);
         }
         int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogSent);
-        SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 10));
+        SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 5));
     }
 }
 
@@ -150,15 +152,16 @@ void logsWindow::SetRecTimer(int RetrieveSecs) {
     m_pRecTimer->Stop();
     if (RetrieveSecs > 0)
         m_pRecTimer->Start(RetrieveSecs * 1000);
-    g_RetrieveSecs = RetrieveSecs;
     Refresh(false);
 }
 
 void logsWindow::SetSenTimer(int SendSecs) {
     m_pSenTimer->Stop();
     if (SendSecs > 0)
+    {
+        wxLogMessage(wxString::Format(_T("timer at %d secs. g_SendSec: %d"), SendSecs, g_SendSecs));
         m_pSenTimer->Start(SendSecs * 1000);
-    g_SendSecs = SendSecs;
+    }
     Refresh(false);
 }
 
@@ -168,8 +171,8 @@ void logsWindow::OnRecTimerTimeout(wxTimerEvent& event) {
         ShowFriendsLogs();
         if (m_pRecTimer->GetInterval() / 1000 < g_RetrieveSecs) {
             // after initial friends update, reset the timer to the required interval
-            SetRecTimer(0);
-            SetRecTimer(g_RetrieveSecs * 1000);
+//             SetRecTimer(0);
+            SetRecTimer(g_RetrieveSecs);
         }
     }
     Refresh(false);
@@ -197,16 +200,15 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
                 else
                     { m_Notice = wxEmptyString;}
                 p_plugin->g_LastLogSent = wxDateTime::Now().GetTicks(); //will be saved in config file
-//                 p_plugin->g_LastLogSent = wxDateTime::GetTimeNow();
                 m_nmea_ready = false;
                 Refresh(false);
             }
 
-            if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
-                SetSenTimer(0);
-                SetSenTimer(g_SendSecs * 1000);
-            }
+            if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs)
+                // if timer was set initially by consutrctor for overdue posts, reset at regular interval
+                SetSenTimer(g_SendSecs);
         }
+
     }
     Refresh(false);
 }

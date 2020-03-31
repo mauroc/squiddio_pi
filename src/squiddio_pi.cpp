@@ -1281,6 +1281,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 }
                 if (g_PostPeriod != curr_post_period){
                     if (g_PostPeriod > 0){
+                        m_plogs_window->g_SendSecs = period_secs(g_PostPeriod);
                         m_plogs_window->SetSenTimer(period_secs(g_PostPeriod));
                     }else{
                         m_plogs_window->SetSenTimer(0);
