@@ -47,10 +47,10 @@ class logsWindow : public wxWindow
 public:
       logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id);
       ~logsWindow();
-      //~logsWindow(){}
       void OnRecTimerTimeout(wxTimerEvent& event);
       void OnSenTimerTimeout(wxTimerEvent& event);
       void OnRefreshTimeout(wxTimerEvent& event);
+      void OnClose(wxCloseEvent& event);
       void SetRecTimer(int RetrieveSecs);
       void SetSenTimer(int SendSecs);
       void OnPaint(wxPaintEvent& event);
@@ -70,8 +70,6 @@ public:
       wxTimer      * m_pSenTimer;
       wxTimer      * m_pRefreshTimer;
       wxStaticText * m_pStaticText;
-      wxDateTime   m_LastLogsRcvd;
-      wxDateTime   m_LastLogSent;
       wxString     m_ErrorCondition;
       wxString     m_Notice;
       double       m_last_lat, m_last_lon;
@@ -85,8 +83,9 @@ private:
       squiddio_pi  *p_plugin;
       wxFile        m_NmeaFile;
       wxString      m_NmeaFileName;
+      wxDateTime    lastRcvd;
+      wxDateTime    lastSent;
 
-      //myCurlHTTP    post;
 
 DECLARE_EVENT_TABLE()
 };

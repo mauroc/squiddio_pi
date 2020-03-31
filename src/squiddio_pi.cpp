@@ -170,9 +170,6 @@ int squiddio_pi::Init(void) {
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
 
-    last_online_chk = 0;
-    last_online =false;
-
     wxMenu dummy_menu;
 
     wxMenuItem *pmi = new wxMenuItem(&dummy_menu, -1,
@@ -247,22 +244,8 @@ int squiddio_pi::Init(void) {
     if (!wxDir::Exists(layerdir)) {
         wxFileName::Mkdir(layerdir);
         wxString old_dir = base_dir + _T("squiddio");
-        if (wxDir::Exists(old_dir)) {
-            // version upgrade: move old squiddio directory under plugins dir
-            wxDir dir;
-            dir.Open(old_dir);
-            if (dir.IsOpened()) {
-                wxString filename;
-                bool cont = dir.GetFirst(&filename);
-                while (cont) {
-                    filename.Prepend(wxFileName::GetPathSeparator());
-                    wxCopyFile(old_dir + filename , layerdir + filename);
-                    cont = dir.GetNext(&filename);
-                }
-            }
-          wxRmDir(old_dir);
-          wxLogMessage(_T("Moved all squiddio file to directory: ") + layerdir);
-        }
+        if (wxDir::Exists(old_dir))
+            MoveDataDir(old_dir, layerdir);
     }
 
     if (wxDir::Exists(layerdir)) {
@@ -812,16 +795,11 @@ void squiddio_pi::UpdateAuiStatus(void) {
     //    We use this callback here to keep the context menu selection in sync with the window state
     //SetCanvasContextMenuItemViz(m_hide_id, false);
     //SetCanvasContextMenuItemViz(m_show_id, false);
-
-    //IsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
-    //SetLogsWindow();
-
 }
 void squiddio_pi::LateInit(void){
     SetCanvasContextMenuItemViz(m_hide_id, false);
     SetCanvasContextMenuItemViz(m_show_id, false);
             
-//    CheckIsOnline(); //sets last_online boolean, resets last_online_chk time and sQuiddio options in contextual menu
     SetLogsWindow();
     
 }
@@ -1376,10 +1354,11 @@ void squiddio_pi::SetLogsWindow() {
             m_AUImgr->GetPane(m_plogs_window).Name(_T("Demo Window Name"));
             m_AUImgr->GetPane(m_plogs_window).Float();
             m_AUImgr->GetPane(m_plogs_window).FloatingPosition(300, 600);
-            m_AUImgr->GetPane(m_plogs_window).Caption(_T("sQuiddio log updates"));
+            m_AUImgr->GetPane(m_plogs_window).Caption(_("sQuiddio log updates (drag this to the bottom to minimize)"));
             m_AUImgr->GetPane(m_plogs_window).CaptionVisible(false);
             m_AUImgr->GetPane(m_plogs_window).GripperTop(false);
-            m_AUImgr->GetPane(m_plogs_window).CloseButton(false);
+            m_AUImgr->GetPane(m_plogs_window).CloseButton(true);
+//             m_AUImgr->GetPane(m_plogs_window).CloseButton(false);
             m_AUImgr->GetPane(m_plogs_window).MinimizeButton(true);
         }
         // now make it visible
@@ -1659,6 +1638,26 @@ void squiddio_pi::AddODIcons()
     m_pODAddPointIcon(pAPI);*/
 }
 
+void squiddio_pi::MoveDataDir(wxString old_dir, wxString new_dir )
+{
+    // move previous ( < v 1.2) data directory to plugins subdir
+    wxDir dir;
+    dir.Open(old_dir);
+    if (dir.IsOpened()) {
+        wxString filename;
+        bool cont = dir.GetFirst(&filename);
+        while (cont) {
+            filename.Prepend(wxFileName::GetPathSeparator());
+            wxCopyFile(old_dir + filename , new_dir + filename);
+            wxRemoveFile(old_dir + filename);
+            cont = dir.GetNext(&filename);
+        }
+    }
+    wxRmDir(old_dir);
+    wxLogMessage(_T("Moved all squiddio file to directory: ") + layerdir);
+}
+
+
 //---------------------------------------------- preferences dialog event handlers
 void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
     wxCheckBox *checkbox = (wxCheckBox*) event.GetEventObject();
@@ -1737,5 +1736,4 @@ void SquiddioPrefsDialog::OnButtonClickFonts( wxCommandEvent& event )
         SendSizeEvent();
     }
 }
-
 

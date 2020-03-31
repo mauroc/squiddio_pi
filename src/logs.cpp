@@ -37,13 +37,12 @@
 #define DAY 86400
 
 BEGIN_EVENT_TABLE(logsWindow, wxWindow)
-EVT_TIMER(TIMER_ID0,  logsWindow::OnRecTimerTimeout)
-EVT_TIMER(TIMER_ID1,  logsWindow::OnSenTimerTimeout)
-EVT_TIMER(TIMER_ID2,  logsWindow::OnRefreshTimeout)
-EVT_PAINT (logsWindow::OnPaint )
+    EVT_TIMER(TIMER_ID0,  logsWindow::OnRecTimerTimeout)
+    EVT_TIMER(TIMER_ID1,  logsWindow::OnSenTimerTimeout)
+    EVT_TIMER(TIMER_ID2,  logsWindow::OnRefreshTimeout)
+    EVT_PAINT (logsWindow::OnPaint)
+//     EVT_CLOSE (logsWindow::OnClose)  // can't figure out why this affects the parent window, not this
 END_EVENT_TABLE();
-
-// WX_DECLARE_HASH_MAP(wxString, int, Samples);
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
         wxWindow(pparent, id, wxPoint(10, 200), wxSize(1000, 25),
@@ -61,9 +60,10 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_ErrorCondition = wxEmptyString;
     m_Notice = wxEmptyString;
     g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
+//     g_SendSecs     = 10;  // test
     g_SendSecs     = period_secs(p_plugin->g_PostPeriod);
-    m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
-    m_LastLogSent  = p_plugin->g_LastLogSent;
+//     m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
+//     m_LastLogSent  = p_plugin->g_LastLogSent;
     m_nmea_ready   = false;
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
@@ -71,6 +71,9 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     m_NmeaFileName = p_plugin->layerdir + wxFileName::GetPathSeparator() + _("nmea.txt");
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
+
+
+//     this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
 
 //     ssize_t length = m_NmeaFile.Length();
 //     m_NmeaFile.Write(_("header\n"));
@@ -80,13 +83,13 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     if (g_RetrieveSecs > 0)  // display friends' logs
     {
-        if (wxDateTime::Now().GetTicks() > m_LastLogsRcvd.GetTicks() + g_RetrieveSecs) // overdue request at startup?
+        if (wxDateTime::Now().GetTicks() > (p_plugin->g_LastLogsRcvd + g_RetrieveSecs) ) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
             if (p_plugin->CheckIsOnline())
                 ShowFriendsLogs();
         }
-        int nextRecEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - m_LastLogsRcvd.GetTicks());
+        int nextRecEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogsRcvd);
 
         // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch, else schedule it for when it's due
         SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
@@ -94,12 +97,12 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     if (g_SendSecs > 0 )
     {
-        if ((wxDateTime::Now().GetTicks() > m_LastLogSent.GetTicks() + g_SendSecs) && m_nmea_ready) // overdue request at startup?
+        if ((wxDateTime::Now().GetTicks() > (p_plugin->g_LastLogSent + g_SendSecs)) && m_nmea_ready) // overdue request at startup?
         {
             RequestRefresh(m_parent_window);
             PostPosition(mLat, mLon, mSog, mCog);
         }
-        int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - m_LastLogSent.GetTicks());
+        int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogSent);
         SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 10));
     }
 }
@@ -115,41 +118,33 @@ wxString logsWindow::timeAgo(wxDateTime currTime) {
     int delta = wxDateTime::Now().GetTicks() - currTime.GetTicks();
     wxString timeString;
 
-    if (delta == 0)
-    {
-        return _("Just now");
-    } else if (delta == 1)
-    {
-        return _("One second ago");
-    } else if (delta < MINUTE)
+    if (delta == 0) return _("Just now");
+    else if (delta == 1) return _("One second ago");
+    else if (delta < MINUTE)
     {
         timeString.Printf(_("%i seconds ago"), delta);
         return timeString;
-    } else if (delta < 2 * MINUTE)
-    {
-        return _("About a minute ago");
-    } else if (delta < 45 * MINUTE)
+    }
+    else if (delta < 2 * MINUTE) return _("About a minute ago");
+    else if (delta < 45 * MINUTE)
     {
         timeString.Printf(_("%i minutes ago"), delta/MINUTE);
         return timeString;
-    } else if (delta < 90 * MINUTE)
-    {
-        return _("About an hour ago");
-    } else if (delta < DAY)
+    }
+    else if (delta < 90 * MINUTE) return _("About an hour ago");
+    else if (delta < DAY)
     {
         timeString.Printf(_("%i hours ago"), delta/HOUR);
         return timeString;
-    } else if (delta < 48 * HOUR)
-    {
-        return _("Yesterday");
-    } else if (delta < 365 * DAY)
+    }
+    else if (delta < 48 * HOUR) return _("Yesterday");
+    else if (delta < 365 * DAY)
     {
         timeString.Printf(_("%i days ago"), delta/DAY);
         return timeString;
-    } else {
-        return wxEmptyString;
-    }
+    } else return wxEmptyString;
 }
+
 
 void logsWindow::SetRecTimer(int RetrieveSecs) {
     m_pRecTimer->Stop();
@@ -201,17 +196,16 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
                     { m_Notice = v[_T("notice")].AsString();}
                 else
                     { m_Notice = wxEmptyString;}
-                m_LastLogSent = wxDateTime::Now();
-                p_plugin->g_LastLogSent = wxDateTime::GetTimeNow(); //to be saved in config file
+                p_plugin->g_LastLogSent = wxDateTime::Now().GetTicks(); //will be saved in config file
+//                 p_plugin->g_LastLogSent = wxDateTime::GetTimeNow();
                 m_nmea_ready = false;
                 Refresh(false);
             }
-        }
 
-        if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
-            // after initial xml post, reset the timer to the required interval
-            SetSenTimer(0);
-            SetSenTimer(g_SendSecs * 1000);
+            if (m_pSenTimer->GetInterval() / 1000 < g_SendSecs) {
+                SetSenTimer(0);
+                SetSenTimer(g_SendSecs * 1000);
+            }
         }
     }
     Refresh(false);
@@ -220,7 +214,7 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
 void logsWindow::OnRefreshTimeout(wxTimerEvent& event) {
     // if the last IsOnline() call returned negative (connection lost), check again every n seconds,
     // but only if there has been any mouse activity (to minimize data usage)
-    if (!p_plugin->last_online &&
+    if (!p_plugin->CheckIsOnline() &&
             (m_last_lat != p_plugin->m_cursor_lat || m_last_lon != p_plugin->m_cursor_lon)){
         p_plugin->CheckIsOnline();
         wxBell();
@@ -244,35 +238,39 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     GetGlobalColor(_T("DASHB"), &cb);
     dc.SetBackground(cb);
     dc.SetTextBackground(cb);
-    wxString lastRcvd, lastSent=wxEmptyString;
+    wxString lastRcvdStr, lastSentStr=wxEmptyString;
+//     wxDateTime lastRcvd = p_plugin->g_LastLogsRcvd;
+//     wxDateTime lastSent = p_plugin->g_LastLogSent;
+    lastRcvd = p_plugin->g_LastLogsRcvd;
+    lastSent = p_plugin->g_LastLogSent;
 
     wxFont *g_pFontSmall;
     g_pFontSmall = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     dc.SetFont(*g_pFontSmall);
 
-    if (m_LastLogSent.IsValid() && m_LastLogSent.GetYear() > 1970 ) // can't figure out how to assess if it is NULL
-        lastSent = m_LastLogSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+//     if (p_plugin->g_LastLogSent.IsValid() && p_plugin->g_LastLogSent.GetYear() > 1970 ) // can't figure out how to assess if it is NULL
+        lastSentStr = lastSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
 
-    if (m_LastLogsRcvd.IsValid() && m_LastLogsRcvd.GetYear() > 1970 )
-        lastRcvd = m_LastLogsRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "),wxDateTime::Local);
+//     if (p_plugin->g_LastLogsRcvd.IsValid() && p_plugin->g_LastLogsRcvd.GetYear() > 1970 )
+        lastRcvdStr = lastRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
 
     dc.Clear();
     wxString data;
-    wxString lastSentAv = (lastSent.Length() > 0 ? lastSent : _T("(awaiting NMEA events)"));
+    wxString lastSentAv = (lastSentStr.Length() > 0 ? lastSentStr : _("(awaiting NMEA events)"));
 
-    if (p_plugin->g_PostPeriod > 0 && p_plugin->last_online) {
+    if (p_plugin->g_PostPeriod > 0 && p_plugin->CheckIsOnline() ) {
         dc.SetTextForeground(cs);
     } else {
         dc.SetTextForeground(ci);
     }
 
     // own log postings
-    dc.DrawText(_("Log sent:"), 5, 5);
-    dc.DrawText(timeAgo(m_LastLogSent),100,5);
-    dc.DrawText(_T("(")+lastSent+_T(")"),250,5);
+    dc.DrawText(_("Logs sent:"), 10, 5);
+    dc.DrawText(timeAgo(lastSent),120,5);
+    dc.DrawText(_T("(")+lastSentStr+_T(")"),240,5);
 
     // friends logs
-    if (g_RetrieveSecs > 0 && p_plugin->last_online) {
+    if (g_RetrieveSecs > 0 && p_plugin->CheckIsOnline()) {
         dc.SetTextForeground(cr);
     } else {
         dc.SetTextForeground(ci);
@@ -284,8 +282,8 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     if (p_plugin->g_ApiKey == _T("squiddio_demo_api"))
         demo_msg = _T(" (demo)");
     dc.DrawText(_("Logs received")+demo_msg+_T(":"), 480, 5);
-    dc.DrawText(timeAgo(m_LastLogsRcvd),610,5);
-    dc.DrawText(_T("(")+lastRcvd+_T(")"),750,5);
+    dc.DrawText(timeAgo(lastRcvd),610,5);
+    dc.DrawText(_T("(") + lastRcvdStr +_T(")"),750,5);
 
     dc.SetTextForeground(ca);
     dc.DrawText(m_ErrorCondition ,950, 5);
@@ -424,12 +422,12 @@ void logsWindow::ShowFriendsLogs() {
 
             DisplayLogsLayer();
 
-            m_LastLogsRcvd = wxDateTime::Now();
-            p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
+            p_plugin->g_LastLogsRcvd = wxDateTime::Now().GetTicks();
+//             p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
             //wxBell();
         }
     } else {
-        m_ErrorCondition = _T("Unable to retrieve friends logs: check your credentials and Follow List");
+        m_ErrorCondition = _("Unable to retrieve friends logs: check your credentials and Follow List");
         Refresh(false);
         wxLogMessage(_T("sQuiddio: ")+m_ErrorCondition);
     }
@@ -444,5 +442,9 @@ void logsWindow::DisplayLogsLayer() {
     }
 }
 
-
+void logsWindow::OnClose(wxCloseEvent &event) {
+    wxMessageBox(_("This will deactivate logs sending. To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
+    p_plugin->g_PostPeriod = 0;
+    g_SendSecs = 0;
+}
 

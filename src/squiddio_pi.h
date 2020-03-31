@@ -250,7 +250,6 @@ public:
       Layer     *local_sq_layer;
       int       g_PostPeriod;
       int       g_RetrievePeriod;
-      bool      last_online;
 
       wxFont      g_fontODDisplayTextFont;
       
@@ -273,6 +272,8 @@ private:
       void SwitchPointType(bool bPointType, bool Changed);
       void DownloadSatImages();
       bool ProcessZipFile(wxString chart_dir, wxString tmp_file);
+      void MoveDataDir(wxString old_dir, wxString new_dir);
+
 //       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
       bool IsPOIinLayer(int layer_id);
 
@@ -296,8 +297,6 @@ private:
       Plugin_Hyperlink *link;
       Hyperlink        *wp_link;
       
-      long        last_online_chk;
-
       bool        g_ViewMarinas;
       bool        g_ViewAnchorages;
       bool        g_ViewDocks;
