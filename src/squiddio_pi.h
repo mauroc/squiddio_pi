@@ -272,6 +272,7 @@ private:
       void SwitchPointType(bool bPointType, bool Changed);
       void DownloadSatImages();
       bool ProcessZipFile(wxString chart_dir, wxString tmp_file);
+      bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
       void MoveDataDir(wxString old_dir, wxString new_dir);
 
 //       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);

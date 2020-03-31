@@ -62,8 +62,6 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     g_RetrieveSecs = period_secs(p_plugin->g_RetrievePeriod);
 //     g_SendSecs     = 10;  // test
     g_SendSecs     = period_secs(p_plugin->g_PostPeriod);
-//     m_LastLogsRcvd = p_plugin->g_LastLogsRcvd;
-//     m_LastLogSent  = p_plugin->g_LastLogSent;
     m_nmea_ready   = false;
     m_LogsFilePath = p_plugin->layerdir;
     p_plugin->appendOSDirSlash(&m_LogsFilePath);
@@ -72,38 +70,21 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_NmeaFileName = p_plugin->layerdir + wxFileName::GetPathSeparator() + _("nmea.txt");
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
 
-
 //     this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
-
-//     ssize_t length = m_NmeaFile.Length();
-//     m_NmeaFile.Write(_("header\n"));
-//     wxTextFile::GetEOL();
 
     DisplayLogsLayer();
 
     if (g_RetrieveSecs > 0)  // display friends' logs
     {
-        if (wxDateTime::Now().GetTicks() > (p_plugin->g_LastLogsRcvd + g_RetrieveSecs) ) // overdue request at startup?
-        {
-            RequestRefresh(m_parent_window);
-            if (p_plugin->CheckIsOnline())
-                ShowFriendsLogs();
-        }
+        // At launch, schedule the next update based on elapsed time since last update.
+        // If update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch,
         int nextRecEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogsRcvd);
-
-        // if update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch,
-        // then schedule it for when it's due
         SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
     }
 
     if (g_SendSecs > 0 )
     {
-        if ((wxDateTime::Now().GetTicks() > (p_plugin->g_LastLogSent + g_SendSecs)) && m_nmea_ready) // overdue request at startup?
-        {
-            RequestRefresh(m_parent_window);
-            if (p_plugin->CheckIsOnline())
-                PostPosition(mLat, mLon, mSog, mCog);
-        }
+        // see note above about initial activation
         int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogSent);
         SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 5));
     }
@@ -169,11 +150,8 @@ void logsWindow::OnRecTimerTimeout(wxTimerEvent& event) {
     if (p_plugin->CheckIsOnline()) {
         RequestRefresh(m_parent_window);
         ShowFriendsLogs();
-        if (m_pRecTimer->GetInterval() / 1000 < g_RetrieveSecs) {
-            // after initial friends update, reset the timer to the required interval
-//             SetRecTimer(0);
+        if (m_pRecTimer->GetInterval() / 1000 < g_RetrieveSecs)
             SetRecTimer(g_RetrieveSecs);
-        }
     }
     Refresh(false);
 }
@@ -189,6 +167,7 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
             wxJSONReader r;
             wxJSONValue v;
             r.Parse(PostResponse, &v);
+            wxString dum = v[_T("id")].AsString();
 
             if (v[_T("error")].AsString() != _T("null") )
             {
@@ -227,6 +206,7 @@ void logsWindow::OnRefreshTimeout(wxTimerEvent& event) {
 }
 
 void logsWindow::OnPaint(wxPaintEvent& event) {
+
     wxPaintDC dc(this);
     wxColour cs;
     GetGlobalColor(_T("GREEN2"), &cs);
@@ -240,58 +220,61 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     GetGlobalColor(_T("DASHB"), &cb);
     dc.SetBackground(cb);
     dc.SetTextBackground(cb);
+
     wxString lastRcvdStr, lastSentStr=wxEmptyString;
-//     wxDateTime lastRcvd = p_plugin->g_LastLogsRcvd;
-//     wxDateTime lastSent = p_plugin->g_LastLogSent;
     lastRcvd = p_plugin->g_LastLogsRcvd;
     lastSent = p_plugin->g_LastLogSent;
+
+    lastRcvdStr = lastRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+    if (m_nmea_ready){
+        lastSentStr = lastSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
+    }
+    else {
+        lastSentStr = _("Awaiting NMEA events");
+    }
 
     wxFont *g_pFontSmall;
     g_pFontSmall = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     dc.SetFont(*g_pFontSmall);
 
-//     if (p_plugin->g_LastLogSent.IsValid() && p_plugin->g_LastLogSent.GetYear() > 1970 ) // can't figure out how to assess if it is NULL
-        lastSentStr = lastSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
-
-//     if (p_plugin->g_LastLogsRcvd.IsValid() && p_plugin->g_LastLogsRcvd.GetYear() > 1970 )
-        lastRcvdStr = lastRcvd.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
-
     dc.Clear();
-    wxString data;
-    wxString lastSentAv = (lastSentStr.Length() > 0 ? lastSentStr : _("(awaiting NMEA events)"));
 
-    if (p_plugin->g_PostPeriod > 0 && p_plugin->CheckIsOnline() ) {
-        dc.SetTextForeground(cs);
+    if (p_plugin->CheckIsOnline()) {
+        if (p_plugin->g_PostPeriod > 0)
+            dc.SetTextForeground(cs);
+        if (m_ErrorCondition == _("Offline"))
+            m_ErrorCondition = wxEmptyString;
     } else {
         dc.SetTextForeground(ci);
+        m_ErrorCondition = _("Offline");
     }
 
     // own log postings
-    dc.DrawText(_("Logs sent:"), 10, 5);
+    dc.DrawText(_("sQuiddio logs sent:"), 10, 5);
     dc.DrawText(timeAgo(lastSent),120,5);
     dc.DrawText(_T("(")+lastSentStr+_T(")"),240,5);
 
     // friends logs
-    if (g_RetrieveSecs > 0 && p_plugin->CheckIsOnline()) {
+    if (g_RetrieveSecs > 0 && p_plugin->CheckIsOnline())
         dc.SetTextForeground(cr);
-    } else {
+    else
         dc.SetTextForeground(ci);
-    }
 
-    dc.DrawText(_T("|"),450,5);
+    dc.DrawText(_T("|"),425,5);
 
     wxString demo_msg = _T("");
     if (p_plugin->g_ApiKey == _T("squiddio_demo_api"))
-        demo_msg = _T(" (demo)");
-    dc.DrawText(_("Logs received")+demo_msg+_T(":"), 480, 5);
-    dc.DrawText(timeAgo(lastRcvd),610,5);
-    dc.DrawText(_T("(") + lastRcvdStr +_T(")"),750,5);
+        demo_msg = _(" (demo)");
+    dc.DrawText(_("Received")+demo_msg+_T(":"), 440, 5);
+    dc.DrawText(timeAgo(lastRcvd),500,5);
+    dc.DrawText(_T("(") + lastRcvdStr +_T(")"),640,5);
 
+    dc.DrawText(_T("|"),820,5);
     dc.SetTextForeground(ca);
-    dc.DrawText(m_ErrorCondition ,950, 5);
+    dc.DrawText(m_ErrorCondition ,840, 5);
 
     dc.SetTextForeground(cr);
-    dc.DrawText(m_Notice ,950, 5);
+    dc.DrawText(m_Notice ,840, 5);
 
     m_pRefreshTimer->Stop();
     m_pRefreshTimer->Start(5000);

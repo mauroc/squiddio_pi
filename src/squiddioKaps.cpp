@@ -42,7 +42,7 @@
 extern squiddio_pi        *g_squiddio_pi;
 
 
-bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
+bool squiddio_pi::UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
     
 //     https://wiki.wxwidgets.org/WxZipInputStream
     bool ret = true;
@@ -64,8 +64,15 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
         while (entry.reset(zip.GetNextEntry()), entry.get() != NULL) {
             // access meta-data
             wxString name = entry->GetName();
-            name = aTargetDir + wxFileName::GetPathSeparator() + name;
-            
+
+            int pos = name.Find(".kap");
+            if (pos >0 )
+                name = aTargetDir + wxFileName::GetPathSeparator() + name;
+            else
+                // save non kap files in squiddio directory
+                name = layerdir + wxFileName::GetPathSeparator() + name;
+
+
             // read 'zip' to access the entry's data
             if (entry->IsDir()) {
                 int perm = entry->GetMode();
