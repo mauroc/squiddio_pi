@@ -229,7 +229,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         lastSentStr = lastSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
     }
     else {
-        lastSentStr = _("Awaiting NMEA events");
+        lastSentStr = _("Awaiting NMEA events..");
     }
 
     wxFont *g_pFontSmall;

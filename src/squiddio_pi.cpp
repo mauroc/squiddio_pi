@@ -546,12 +546,11 @@ bool squiddio_pi::LoadLayers(wxString &path) {
                 l = new Layer();
                 l->m_LayerID = ++g_LayerIdx;
                 l->m_LayerFileName = file_array[0];
+
                 if (file_array.GetCount() <= 1)
-                    wxFileName::SplitPath(file_array[0], NULL, NULL,
-                            &(l->m_LayerName), NULL, NULL);
+                    wxFileName::SplitPath(file_array[0], NULL, NULL, &(l->m_LayerName), NULL, NULL);
                 else
-                    wxFileName::SplitPath(filename, NULL, NULL,
-                            &(l->m_LayerName), NULL, NULL);
+                    wxFileName::SplitPath(filename, NULL, NULL, &(l->m_LayerName), NULL, NULL);
 
                 bool bLayerViz = false;
 
@@ -891,21 +890,18 @@ void squiddio_pi::RefreshLayer()
             new_layer->SetVisibleNames(false);
             RenderLayerContentsOnChart(new_layer, true);
 
-            if (isLayerUpdate) {
+            if (isLayerUpdate)
                 wxLogMessage( _T("Local destinations have been updated") );
-            }
-        } else {
+        } else
             wxLogMessage( _T("No destinations available for the region") );
-        }
-    } else {
+    } else
         wxLogMessage( _T("Server not responding. Check your Internet connection") );
-    }
+
 }
 
 wxString squiddio_pi::DownloadLayer(wxString url_path) {
+
     wxString res = wxEmptyString;
-
-
     wxString fn = wxFileName::CreateTempFileName( _T("squiddio_pi") );    
     
     _OCPN_DLStatus result = OCPN_downloadFile( g_DomainName + url_path, fn, _("Downloading"), _("Downloading: "), wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10 );
@@ -922,10 +918,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
         wxRemoveFile( fn );
     }
     else
-    {
         wxLogMessage(_T("Squiddio_pi: unable to connect to host"));
-    }
-    
     return res;
 }
 
@@ -1139,7 +1132,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 dialog->m_radioBoxOCPNorOD->Disable();
             } else
                 dialog->m_radioBoxOCPNorOD->Enable();
-        } else{
+        } else {
             dialog->m_radioBoxOCPNorOD->SetSelection(0);
             dialog->m_radioBoxOCPNorOD->Disable();
         }
