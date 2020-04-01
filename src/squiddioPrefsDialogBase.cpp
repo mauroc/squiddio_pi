@@ -88,7 +88,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View"), false );
+	m_notebook1->AddPage( m_panel1, _("View"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	rendering->SetToolTip( _("Delete downloaded POI files for sectors you have hidden. This limits the proliferation of old unecessary POI files and reduced the computational burden.") );
 
@@ -283,7 +283,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include NMEA samples with each send"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_checkBoxSendXml->SetValue(true);
-	m_checkBoxSendXml->SetToolTip( _("Include a sample of your recent NMEA messages each time a log is sent. View useul stats on wind, depth, temperature etc. online at http://squidd.io.") );
+	m_checkBoxSendXml->SetToolTip( _("Include your Navobj.xml file each time you post an automatic update to sQuidd.io. Your navobj.xml file includes your navigation data (positions, tracks, routes etc) and other session information. You can retrieve previous versions of your navobj.xml file online in case of a crash.") );
 
 	sbSizer11->Add( m_checkBoxSendXml, 0, wxALL, 5 );
 
@@ -294,7 +294,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	logSharing->SetSizer( sbLogSizer );
 	logSharing->Layout();
 	sbLogSizer->Fit( logSharing );
-	m_notebook1->AddPage( logSharing, _("Log Sharing"), true );
+	m_notebook1->AddPage( logSharing, _("Log Sharing"), false );
 	m_panel5 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbSizer7;
 	sbSizer7 = new wxStaticBoxSizer( new wxStaticBox( m_panel5, wxID_ANY, _("Your sQuidd.io credentials") ), wxVERTICAL );

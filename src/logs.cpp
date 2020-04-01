@@ -3,7 +3,7 @@
  * Purpose:  Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Mauro Calvi                                     *
+ *   Copyright (C) 2020 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -167,7 +167,6 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
             wxJSONReader r;
             wxJSONValue v;
             r.Parse(PostResponse, &v);
-            wxString dum = v[_T("id")].AsString();
 
             if (v[_T("error")].AsString() != _T("null") )
             {
@@ -361,7 +360,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
                     if (i > offset)
                         nmea_seq += line + _("\n");
                 }
-                wxLogMessage(_("Nmea file too large. Truncated before post"));
+                wxLogMessage(_T("Nmea file too large. Truncated before post"));
             }
         }
     }

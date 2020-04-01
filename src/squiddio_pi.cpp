@@ -3,7 +3,7 @@
  * Purpose:  Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Mauro Calvi                                     *
+ *   Copyright (C) 2020 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -239,7 +239,7 @@ int squiddio_pi::Init(void) {
     if(!m_bDoneODAPIVersionCall) GetODAPI();
     
     wxString base_dir = *GetpPrivateApplicationDataLocation()+wxFileName::GetPathSeparator();
-    layerdir = base_dir + _("plugins") + wxFileName::GetPathSeparator()+ _T("squiddio");
+    layerdir = base_dir + _T("plugins") + wxFileName::GetPathSeparator()+ _T("squiddio");
 
     if (!wxDir::Exists(layerdir)) {
         wxFileName::Mkdir(layerdir);
@@ -466,7 +466,6 @@ bool squiddio_pi::SaveConfig(void) {
         return false;
 
     pConf->SetPath(_T("/PlugIns/libsquiddio_pi.so"));
-//     pConf->Write(_T("VisibleSqLayers"), g_VisibleLayers);
     pConf->Write(_T("InvisibleSqLayers"), g_InvisibleLayers);
     pConf->Write(_T("PostPeriod"), g_PostPeriod);
     pConf->Write(_T("RetrievePeriod"), g_RetrievePeriod);
@@ -573,7 +572,6 @@ bool squiddio_pi::LoadLayers(wxString &path) {
                     if (::wxFileExists(file_path)) {
                         LoadLayerItems(file_path, l, bLayerViz);
                     }
-                //delete l;
                 }
             }
             cont = dir.GetNext(&filename);
@@ -735,7 +733,7 @@ bool squiddio_pi::ShowPOI(Poi * wp) {
         pCTP->lon = wp->m_lon;
         pCTP->GUID = wp->m_GUID;
         pCTP->description =  wp->m_MarkDescription;
-        pCTP->TextToDisplay = ((g_bODTextPointShowName) ? _("") : (wp->GetName() + _("\n")) ) + wp->m_MarkDescription;
+        pCTP->TextToDisplay = ((g_bODTextPointShowName) ? _T("") : (wp->GetName() + _T("\n")) ) + wp->m_MarkDescription;
         pCTP->TextFont = g_fontODDisplayTextFont;
         pCTP->TextColour = g_colourODDefaultTextColour.GetAsString();
         pCTP->TextPointDisplayTextWhen = g_iTextPointDisplayTextWhen;
@@ -898,13 +896,13 @@ void squiddio_pi::RefreshLayer()
             RenderLayerContentsOnChart(new_layer, true);
 
             if (isLayerUpdate) {
-                wxLogMessage( _("Local destinations have been updated") );
+                wxLogMessage( _T("Local destinations have been updated") );
             }
         } else {
-            wxLogMessage( _("No destinations available for the region") );
+            wxLogMessage( _T("No destinations available for the region") );
         }
     } else {
-        wxLogMessage( _("Server not responding. Check your Internet connection") );
+        wxLogMessage( _T("Server not responding. Check your Internet connection") );
     }
 }
 
@@ -929,7 +927,7 @@ wxString squiddio_pi::DownloadLayer(wxString url_path) {
     }
     else
     {
-        wxLogMessage(_("Squiddio_pi: unable to connect to host"));
+        wxLogMessage(_T("Squiddio_pi: unable to connect to host"));
     }
     
     return res;
@@ -1001,7 +999,7 @@ wxBitmap *squiddio_pi::GetPlugInBitmap() {
 }
 
 wxString squiddio_pi::GetCommonName() {
-    return _("Squiddio");
+    return _T("Squiddio");
 }
 
 wxString squiddio_pi::GetShortDescription() {
@@ -1139,7 +1137,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                     sMsg.Printf(_("OD Text Points not available, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
                     wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
                 }
-                sMsg.Printf(_T("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+                sMsg.Printf(_("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
                 wxLogMessage(sMsg);
                 dialog->m_radioBoxOCPNorOD->SetSelection(0);
                 dialog->m_radioBoxOCPNorOD->Disable();
@@ -1707,18 +1705,6 @@ void SquiddioPrefsDialog::LaunchHelpPage(wxCommandEvent& event) {
                 _("Could not launch default browser. Check your Internet connection"));
     event.Skip();
 }
-
-// void SquiddioPrefsDialog::OnShareChoice(wxCommandEvent& event) {
-//     if (m_choiceHowOften->GetSelection() == 0
-//             && m_choiceReceive->GetSelection() == 0) {
-//         m_textSquiddioID->Enable(false);
-//         m_textApiKey->Enable(false);
-//     } else {
-//         m_textSquiddioID->Enable(true);
-//         m_textApiKey->Enable(true);
-//     }
-//     Refresh(false);
-// }
 
 void SquiddioPrefsDialog::OnButtonClickFonts( wxCommandEvent& event )
 {
