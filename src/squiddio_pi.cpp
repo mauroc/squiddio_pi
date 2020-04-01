@@ -872,10 +872,6 @@ void squiddio_pi::RefreshLayer()
 {
     wxString layerContents;
     Layer * new_layer = NULL;
-//     wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
-//     wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
-
-    //version << wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
     if (CheckIsOnline())
         layerContents = DownloadLayer(
@@ -1019,10 +1015,10 @@ Destinations appear as OpenCPN waypoints (default) or Draw Text Points (if the D
 Other menu options: \n\
 * Toggle visibility for local POIs on/off \n\
 * Submit a new destination (requires Internet connection and free user account)\n\
-* Download Google Maps as OCPN charts for selected POIs\n\n\
+* Download Google Maps as OCPN charts for all POIs in viewport\n\n\
 == In-chart log-sharing for cruisers ==\n\
-* Share your GPS coordinates with your cruising friends and visualize their position\n\
-on your OpenCPN charts (requires a free sQuiddio account)\n\n\
+* Share your GPS coordinates and other navigational information with your cruising friends\n\
+and visualize their position on your OpenCPN charts (requires a free sQuiddio account)\n\n\
 IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
 and Conditions, available at http://squidd.io/enduser_agreement");
 }
@@ -1595,7 +1591,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIconDescription = _("Generic POI");
     m_pODAddPointIcon(pAPI);
     
-/*    pAPI->PointIcon = *_img_logimg_N;
+    pAPI->PointIcon = *_img_logimg_N;
     pAPI->PointIconName = _T("logimg_N"); 
     pAPI->PointIconDescription = _("North");
     m_pODAddPointIcon(pAPI);
@@ -1634,7 +1630,7 @@ void squiddio_pi::AddODIcons()
     pAPI->PointIcon = *_img_logimg_U;
     pAPI->PointIconName = _T("logimg_U"); 
     pAPI->PointIconDescription = _("Unknown heading");
-    m_pODAddPointIcon(pAPI);*/
+    m_pODAddPointIcon(pAPI);
 }
 
 void squiddio_pi::MoveDataDir(wxString old_dir, wxString new_dir )

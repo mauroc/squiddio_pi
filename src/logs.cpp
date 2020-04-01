@@ -84,7 +84,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     if (g_SendSecs > 0 )
     {
-        // see note above about initial activation
+        // see note above
         int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogSent);
         SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 5));
     }
@@ -407,8 +407,6 @@ void logsWindow::ShowFriendsLogs() {
             DisplayLogsLayer();
 
             p_plugin->g_LastLogsRcvd = wxDateTime::Now().GetTicks();
-//             p_plugin->g_LastLogsRcvd = wxDateTime::GetTimeNow(); //to be saved in config file
-            //wxBell();
         }
     } else {
         m_ErrorCondition = _("Unable to retrieve friends logs: check your credentials and Follow List");
