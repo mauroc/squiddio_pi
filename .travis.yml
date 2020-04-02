@@ -1,0 +1,27 @@
+language: cpp
+
+matrix:
+  include:
+  - env:
+    - OCPN_TARGET=stretch-armhf
+    - OCPN_BRANCH=master
+    - DOCKER_IMAGE=raspbian/stretch
+    services:
+    - docker
+    script:
+    - bash ./ci/travis-build-raspbian-armhf.sh
+  - env:
+    - OCPN_TARGET=buster-armhf
+    - OCPN_BRANCH=master
+    - DOCKER_IMAGE=opencpn/raspbian-buster:plugin_build_tooling
+    services:
+    - docker
+    script:
+    - bash ./ci/travis-build-raspbian-armhf.sh
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: bash ./ci/cloudsmith-upload.sh
+  on:
+    tags: false
+    all_branches: true

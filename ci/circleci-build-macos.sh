@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# Build the  MacOS artifacts 
+# Build the  MacOS artifacts
 #
 
 # Fix broken ruby on the CircleCI image:
@@ -27,7 +27,7 @@ wget -q http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
 tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp
 export PATH="/usr/local/opt/gettext/bin:$PATH"
 echo 'export PATH="/usr/local/opt/gettext/bin:$PATH"' >> ~/.bash_profile
- 
+
 rm -rf build && mkdir build && cd build
 test -z "$TRAVIS_TAG" && CI_BUILD=OFF || CI_BUILD=ON
 cmake \
@@ -45,7 +45,3 @@ sudo installer -pkg "/Volumes/Packages 1.2.5/Install Packages.pkg" -target "/"
 make install
 make create-pkg
 
-# Install cludsmith-cli, used in upload.
-sudo -H python3 -m ensurepip
-sudo -H python3 -m pip install -q setuptools
-sudo -H python3 -m pip install -q cloudsmith-cli
