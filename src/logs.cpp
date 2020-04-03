@@ -434,5 +434,8 @@ void logsWindow::OnClose(wxAuiManagerEvent &event) {
     g_RetrieveSecs = 0;
     m_pRecTimer->Stop();
     m_pSenTimer->Stop();
+    m_LogsLayer->m_bIsVisibleOnChart = false;
+    p_plugin->RenderLayerContentsOnChart(m_LogsLayer, false, true);
+
 }
 

@@ -587,9 +587,10 @@ bool squiddio_pi::LoadLayerItems(wxString &file_path, Layer *l, bool show) {
 
     l->m_NoOfItems += nItems;
 
-    wxString objmsg;
-    objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."), file_path.c_str(), nItems);
-    wxLogMessage(objmsg);
+//     wxString objmsg;
+//     objmsg.Printf(wxT("squiddio_pi: loaded GPX file %s with %ld items."), file_path.c_str(), nItems);
+//     wxLogMessage(objmsg);
+    wxLogMessage(wxString::Format(_T("squiddio_pi: loaded GPX file %s with %ld items."), file_path.c_str(), nItems));
     delete pSet;
     return nItems > 0;
 }
@@ -1248,7 +1249,31 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_iTextPointDisplayTextWhen = dialog->m_radioBoxShowDisplayText->GetSelection();
                 l_bChanged = true;
             }
-            
+
+            if( g_ZoomLevels != dialog->m_textZoomLevels->GetValue()) {
+                g_ZoomLevels = dialog->m_textZoomLevels->GetValue();
+                l_bChanged = true;
+            }
+            if (g_ZoomLevels == wxEmptyString) {
+               wxMessageBox(_("Please specify at least one zoom level")); 
+            }
+            const wxChar * sep2 = _T(",");
+            wxArrayString zooms = wxSplit(g_ZoomLevels, * sep2);
+            for (size_t i=0; i < zooms.GetCount(); i++ ) {
+                if (zooms[i] == wxEmptyString || wxAtoi(zooms[i]) < 10 || wxAtoi(zooms[i]) > 18) {
+                    wxMessageBox(_("Zoom Levels must be betweeen 10 and 18"));
+                    break;
+                }
+            }
+            if( g_BaseChartDir != dialog->m_dirPickerDownload->GetPath()) {
+                g_BaseChartDir = dialog->m_dirPickerDownload->GetPath();
+                l_bChanged = true;
+            }
+            if( g_DownloadVPMap != dialog->m_checkBoxVPMap->GetValue()) {
+                g_DownloadVPMap = dialog->m_checkBoxVPMap->GetValue();
+                l_bChanged = true;
+            }
+
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
                 wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key.\n\nTo obtain your API Key, log into sQuidd.io (http://squidd.io), click on Preferences in the top blue bar, then select the 'Numbers & Keys' tab."));
@@ -1284,34 +1309,6 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 l = (Layer *) (*it);
                 if (l->m_LayerName.Contains(_T("logs")))
                     l->m_bIsVisibleOnChart = g_RetrievePeriod > 0;
-            }
-
-            if( g_ZoomLevels != dialog->m_textZoomLevels->GetValue()) {
-                g_ZoomLevels = dialog->m_textZoomLevels->GetValue();
-                l_bChanged = true;
-            }
-            
-            if (g_ZoomLevels == wxEmptyString) {
-               wxMessageBox(_("Please specify at least one zoom level")); 
-            }
-            
-            const wxChar * sep2 = _T(",");
-            wxArrayString zooms = wxSplit(g_ZoomLevels, * sep2);
-            for (size_t i=0; i < zooms.GetCount(); i++ ) {
-                if (zooms[i] == wxEmptyString || wxAtoi(zooms[i]) < 10 || wxAtoi(zooms[i]) > 18) {
-                    wxMessageBox(_("Zoom Levels must be betweeen 10 and 18"));
-                    break;
-                }
-            }
-            
-            if( g_BaseChartDir != dialog->m_dirPickerDownload->GetPath()) {
-                g_BaseChartDir = dialog->m_dirPickerDownload->GetPath();
-                l_bChanged = true;
-            }
-
-            if( g_DownloadVPMap != dialog->m_checkBoxVPMap->GetValue()) {
-                g_DownloadVPMap = dialog->m_checkBoxVPMap->GetValue();
-                l_bChanged = true;
             }
 
             SaveConfig();
