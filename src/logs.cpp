@@ -41,7 +41,6 @@ BEGIN_EVENT_TABLE(logsWindow, wxWindow)
     EVT_TIMER(TIMER_ID1,  logsWindow::OnSenTimerTimeout)
     EVT_TIMER(TIMER_ID2,  logsWindow::OnRefreshTimeout)
     EVT_PAINT (logsWindow::OnPaint)
-//     EVT_CLOSE (logsWindow::OnClose)  // can't figure out why this affects the parent window, not this
 END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
@@ -70,7 +69,9 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_NmeaFileName = p_plugin->layerdir + wxFileName::GetPathSeparator() + _("nmea.txt");
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
 
-//     this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
+    m_pauimgr = GetFrameAuiManager();
+    m_pauimgr->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler( logsWindow::OnClose ),
+            NULL, this );
 
     DisplayLogsLayer();
 
@@ -84,7 +85,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     if (g_SendSecs > 0 )
     {
-        // see note above
+        // see note for g_RetrieveSecs
         int nextSenEvent = g_SendSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogSent);
         SetSenTimer(wxMax(wxMin(nextSenEvent, g_SendSecs), 5));
     }
@@ -192,7 +193,7 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
 }
 
 void logsWindow::OnRefreshTimeout(wxTimerEvent& event) {
-    // if the last IsOnline() call returned negative (connection lost), check again every n seconds,
+    // if the last CheckIsOnline() call returned negative (connection lost), check again every n seconds,
     // but only if there has been any mouse activity (to minimize data usage)
     if (!p_plugin->CheckIsOnline() &&
             (m_last_lat != p_plugin->m_cursor_lat || m_last_lon != p_plugin->m_cursor_lon)){
@@ -229,7 +230,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
         lastSentStr = lastSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
     }
     else {
-        lastSentStr = _("Awaiting NMEA events..");
+        lastSentStr = _("Buffering NMEA events..");
     }
 
     wxFont *g_pFontSmall;
@@ -253,13 +254,13 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     dc.DrawText(timeAgo(lastSent),120,5);
     dc.DrawText(_T("(")+lastSentStr+_T(")"),240,5);
 
+    dc.DrawText(_T("|"),425,5);
+
     // friends logs
     if (g_RetrieveSecs > 0 && p_plugin->CheckIsOnline())
         dc.SetTextForeground(cr);
     else
         dc.SetTextForeground(ci);
-
-    dc.DrawText(_T("|"),425,5);
 
     wxString demo_msg = _T("");
     if (p_plugin->g_ApiKey == _T("squiddio_demo_api"))
@@ -312,10 +313,10 @@ void logsWindow::SetSentence(wxString &sentence) {
                     mSog = m_NMEA0183.Rmc.SpeedOverGroundKnots;
                     mCog = m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue;
 
-                    if (m_NMEA0183.Rmc.MagneticVariationDirection == East)
-                        mVar = m_NMEA0183.Rmc.MagneticVariation;
-                    else if (m_NMEA0183.Rmc.MagneticVariationDirection == West)
-                        mVar = -m_NMEA0183.Rmc.MagneticVariation;
+//                     if (m_NMEA0183.Rmc.MagneticVariationDirection == East)
+//                         mVar = m_NMEA0183.Rmc.MagneticVariation;
+//                     else if (m_NMEA0183.Rmc.MagneticVariationDirection == West)
+//                         mVar = -m_NMEA0183.Rmc.MagneticVariation;
                     m_nmea_ready = true;
                     down_sample = 10;
                 }
@@ -424,9 +425,14 @@ void logsWindow::DisplayLogsLayer() {
     }
 }
 
-void logsWindow::OnClose(wxCloseEvent &event) {
-    wxMessageBox(_("This will deactivate logs sending. To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
+// void logsWindow::OnClose(wxCloseEvent &event) {
+void logsWindow::OnClose(wxAuiManagerEvent &event) {
+    wxMessageBox(_("This will deactivate logs sharing.\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
     p_plugin->g_PostPeriod = 0;
+    p_plugin->g_RetrievePeriod = 0;
     g_SendSecs = 0;
+    g_RetrieveSecs = 0;
+    m_pRecTimer->Stop();
+    m_pSenTimer->Stop();
 }
 

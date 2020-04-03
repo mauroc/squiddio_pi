@@ -50,7 +50,8 @@ public:
       void OnRecTimerTimeout(wxTimerEvent& event);
       void OnSenTimerTimeout(wxTimerEvent& event);
       void OnRefreshTimeout(wxTimerEvent& event);
-      void OnClose(wxCloseEvent& event);
+//       void OnClose(wxCloseEvent& event);
+      void OnClose(wxAuiManagerEvent& event);
       void SetRecTimer(int RetrieveSecs);
       void SetSenTimer(int SendSecs);
       void OnPaint(wxPaintEvent& event);
@@ -62,7 +63,8 @@ public:
 
       NMEA0183     m_NMEA0183;
       wxString     m_NMEASentence;
-      double      mLat, mLon, mSog, mCog, mVar;
+//       double      mLat, mLon, mSog, mCog, mVar;
+      double      mLat, mLon, mSog, mCog;
 
       Layer       *m_LogsLayer;
 
@@ -76,8 +78,8 @@ public:
       bool         m_nmea_ready;
       Samples      m_NmeaLog;
       int           g_SendSecs;
-private:
       int           g_RetrieveSecs;
+private:
       wxString      m_LogsFilePath;
       wxWindow     *m_parent_window;
       squiddio_pi  *p_plugin;
@@ -85,7 +87,7 @@ private:
       wxString      m_NmeaFileName;
       wxDateTime    lastRcvd;
       wxDateTime    lastSent;
-
+      wxAuiManager  *m_pauimgr;
 
 DECLARE_EVENT_TABLE()
 };

@@ -1261,6 +1261,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             if (m_plogs_window) {
                 if (g_RetrievePeriod != curr_retrieve_period){
                     if (g_RetrievePeriod > 0){
+                        m_plogs_window->g_RetrieveSecs = period_secs(g_RetrievePeriod);
                         m_plogs_window->SetRecTimer(period_secs(g_RetrievePeriod));
                     }else{
                         m_plogs_window->SetRecTimer(0);
@@ -1332,9 +1333,9 @@ void squiddio_pi::SetLogsWindow() {
     if (g_Email.Length() > 0 && g_ApiKey.Length() > 0
             && (g_PostPeriod > 0 || g_RetrievePeriod > 0)) {
         // auth info available and either log type requested: open status window
-        if (!m_plogs_window) {
+        if (!m_plogs_window)
+        {
             // open window if not yet open
-
             m_plogs_window = new logsWindow(this, m_parent_window, wxID_ANY);
 
             m_AUImgr = GetFrameAuiManager();
@@ -1346,7 +1347,6 @@ void squiddio_pi::SetLogsWindow() {
             m_AUImgr->GetPane(m_plogs_window).CaptionVisible(false);
             m_AUImgr->GetPane(m_plogs_window).GripperTop(false);
             m_AUImgr->GetPane(m_plogs_window).CloseButton(true);
-//             m_AUImgr->GetPane(m_plogs_window).CloseButton(false);
             m_AUImgr->GetPane(m_plogs_window).MinimizeButton(true);
         }
         // now make it visible
