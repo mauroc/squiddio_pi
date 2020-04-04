@@ -50,9 +50,9 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     this->SetTransparent(30);
     p_plugin = plugin;
     m_parent_window = pparent;
-    m_pRecTimer = new wxTimer(this, TIMER_ID0);
-    m_pSenTimer = new wxTimer(this, TIMER_ID1);
-    m_pRefreshTimer = new wxTimer(this, TIMER_ID2);
+    m_pRecTimer = new wxTimer(this, TIMER_ID0);      // logs receive timer
+    m_pSenTimer = new wxTimer(this, TIMER_ID1);      // logs send timer
+    m_pRefreshTimer = new wxTimer(this, TIMER_ID2);  // provide heartbeat for window refresh and internet connection check
     m_pRefreshTimer->Start(5000);
 
     m_LogsLayer = NULL;
@@ -73,12 +73,11 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_pauimgr->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler( logsWindow::OnClose ),
             NULL, this );
 
-    DisplayLogsLayer();
-
     if (g_RetrieveSecs > 0)  // display friends' logs
     {
         // At launch, schedule the next update based on elapsed time since last update.
         // If update is overdue, delay by a few seconds to prevent get request from interfering with opencpn launch,
+        DisplayLogsLayer();
         int nextRecEvent = g_RetrieveSecs - (wxDateTime::Now().GetTicks() - p_plugin->g_LastLogsRcvd);
         SetRecTimer(wxMax(wxMin(nextRecEvent, g_RetrieveSecs), 7));
     }
@@ -140,10 +139,7 @@ void logsWindow::SetRecTimer(int RetrieveSecs) {
 void logsWindow::SetSenTimer(int SendSecs) {
     m_pSenTimer->Stop();
     if (SendSecs > 0)
-    {
-        wxLogMessage(wxString::Format(_T("timer at %d secs. g_SendSec: %d"), SendSecs, g_SendSecs));
         m_pSenTimer->Start(SendSecs * 1000);
-    }
     Refresh(false);
 }
 
@@ -221,7 +217,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     dc.SetBackground(cb);
     dc.SetTextBackground(cb);
 
-    wxString lastRcvdStr, lastSentStr=wxEmptyString;
+    wxString lastRcvdStr, lastSentStr = wxEmptyString;
     lastRcvd = p_plugin->g_LastLogsRcvd;
     lastSent = p_plugin->g_LastLogSent;
 
@@ -229,7 +225,7 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     if (m_nmea_ready){
         lastSentStr = lastSent.Format(_T(" %a-%d-%b-%Y %H:%M:%S  "), wxDateTime::Local);
     }
-    else {
+    else if (p_plugin->g_PostPeriod > 0) {
         lastSentStr = _("Buffering NMEA events..");
     }
 
@@ -276,8 +272,8 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
     dc.SetTextForeground(cr);
     dc.DrawText(m_Notice ,840, 5);
 
-    m_pRefreshTimer->Stop();
-    m_pRefreshTimer->Start(5000);
+//     m_pRefreshTimer->Stop();
+//     m_pRefreshTimer->Start(5000);
 }
 
 void logsWindow::SetSentence(wxString &sentence) {
@@ -361,7 +357,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
                     if (i > offset)
                         nmea_seq += line + _("\n");
                 }
-                wxLogMessage(_T("Nmea file too large. Truncated before post"));
+                wxLogMessage(_T("squiddio_pi: Nmea file too large. Truncated before post"));
             }
         }
     }
@@ -375,7 +371,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
     if( res == OCPN_DL_NO_ERROR ) {
-        wxLogMessage(_("Created sQuiddio log update:") + reply);
+        wxLogMessage(_("squiddio_pi: Created sQuiddio log update:") + reply);
         ::wxRemoveFile(m_NmeaFileName);
         bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
     }
@@ -412,7 +408,7 @@ void logsWindow::ShowFriendsLogs() {
     } else {
         m_ErrorCondition = _("Unable to retrieve friends logs: check your credentials and Follow List");
         Refresh(false);
-        wxLogMessage(_T("sQuiddio: ")+m_ErrorCondition);
+        wxLogMessage(_T("squiddio_pi: ")+m_ErrorCondition);
     }
 }
 
@@ -425,17 +421,20 @@ void logsWindow::DisplayLogsLayer() {
     }
 }
 
-// void logsWindow::OnClose(wxCloseEvent &event) {
 void logsWindow::OnClose(wxAuiManagerEvent &event) {
-    wxMessageBox(_("This will deactivate logs sharing.\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
+    wxMessageBox(_("This will deactivate logs sharing.\n\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
     p_plugin->g_PostPeriod = 0;
     p_plugin->g_RetrievePeriod = 0;
     g_SendSecs = 0;
     g_RetrieveSecs = 0;
     m_pRecTimer->Stop();
     m_pSenTimer->Stop();
-    m_LogsLayer->m_bIsVisibleOnChart = false;
-    p_plugin->RenderLayerContentsOnChart(m_LogsLayer, false, true);
-
+    m_pRefreshTimer->Stop();
+    if (m_LogsLayer)
+    {
+        m_LogsLayer->m_bIsVisibleOnChart = false;
+        p_plugin->RenderLayerContentsOnChart(m_LogsLayer, false, true);
+    }
+    p_plugin->SetLogsWindow();
 }
 
