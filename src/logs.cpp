@@ -176,6 +176,7 @@ void logsWindow::OnSenTimerTimeout(wxTimerEvent& event) {
                     { m_Notice = wxEmptyString;}
                 p_plugin->g_LastLogSent = wxDateTime::Now().GetTicks(); //will be saved in config file
                 m_nmea_ready = false;
+                m_ErrorCondition = wxEmptyString;
                 Refresh(false);
             }
 
@@ -271,9 +272,6 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 
     dc.SetTextForeground(cr);
     dc.DrawText(m_Notice ,840, 5);
-
-//     m_pRefreshTimer->Stop();
-//     m_pRefreshTimer->Start(5000);
 }
 
 void logsWindow::SetSentence(wxString &sentence) {
@@ -309,16 +307,12 @@ void logsWindow::SetSentence(wxString &sentence) {
                     mSog = m_NMEA0183.Rmc.SpeedOverGroundKnots;
                     mCog = m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue;
 
-//                     if (m_NMEA0183.Rmc.MagneticVariationDirection == East)
-//                         mVar = m_NMEA0183.Rmc.MagneticVariation;
-//                     else if (m_NMEA0183.Rmc.MagneticVariationDirection == West)
-//                         mVar = -m_NMEA0183.Rmc.MagneticVariation;
                     m_nmea_ready = true;
-                    down_sample = 10;
+                    down_sample = 20;
                 }
             }
         } else
-            down_sample = 30;
+            down_sample = 40;
 
         if (m_NmeaLog[last_id] == 0 || (curr_time - m_NmeaLog[last_id] > down_sample) ) {
             m_NmeaFile.Write(sentence);
@@ -397,6 +391,14 @@ void logsWindow::ShowFriendsLogs() {
                 // hide and delete the current logs layer
                 m_LogsLayer->SetVisibleOnChart(false);
                 p_plugin->RenderLayerContentsOnChart(m_LogsLayer);
+
+                wxPoiListNode *node = pPoiMan->GetWaypointList()->GetFirst();
+                while (node) {
+                    Poi *rp = node->GetData();
+                    if (rp->m_LayerID == m_LogsLayer->m_LayerID) // poi belongs to logs layer
+                        p_plugin->HidePOI(rp);
+                    node = node->GetNext();
+                }
                 RequestRefresh(m_parent_window);
                 p_plugin->pLayerList->DeleteObject(m_LogsLayer);
             }
@@ -404,6 +406,7 @@ void logsWindow::ShowFriendsLogs() {
             DisplayLogsLayer();
 
             p_plugin->g_LastLogsRcvd = wxDateTime::Now().GetTicks();
+            m_ErrorCondition = wxEmptyString;
         }
     } else {
         m_ErrorCondition = _("Unable to retrieve friends logs: check your credentials and Follow List");
