@@ -19,18 +19,16 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 set(VERBOSE_NAME "Squiddio")
-set(COMMON_NAME "Squiddio")  #To find search "getcommon" in squiddio_pi.cpp
+set(COMMON_NAME "Squiddio")   #To find search "getcommon" in squiddio_pi.cpp
 set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
 set(PACKAGE "squiddio")
-
-
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "2")
 set(VERSION_PATCH "0")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "1/03/2020")
+set(VERSION_DATE "04/08/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
@@ -66,11 +64,11 @@ message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 #set(CLOUDSMITH_USER "jon-gough")
 set(CLOUDSMITH_USER "rick-gleason")
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  # for RG
+set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
 
-set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/ocpn_draw.html")
-set(XML_SUMMARY "Plugin to test examples of the ODAPI and JSON interface for ODRAW 1234#")
-set(XML_DESCRIPTION "testplugin Plugin is used to test out the ODraw API and demonstrate how to use it successfully from another plugin")
+set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/sQuiddio.html")
+set(XML_SUMMARY "Global user-sourced maintained repository of sailing destination")
+set(XML_DESCRIPTION "Makes its global user-sourced and user-maintained repository of sailing destinations (marinas, anchorages, yacht clubs, docks, fuel stations, NDBD buoy data etc.) available as waypoints in OpenCPN.")
 set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
@@ -297,11 +295,10 @@ SET(SRC_NMEA0183
     )
 	
 INCLUDE_DIRECTORIES(nmea0183)
-
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
 
-##----------Above From Squiddio ------------------								   
+##----------Above From Squiddio ------------------		
 ##
 ## ----- Change below to match project requirements ----- ##
 ##
@@ -347,6 +344,7 @@ add_definitions(-DUSE_S57)
 #    libs/wx/include/jsonreader.h
 #    libs/wx/include/jsonval.h
 #    libs/wx/include/jsonwriter.h)
+
 
 add_definitions(-DPLUGIN_USE_SVG)
 
@@ -411,7 +409,6 @@ add_definitions(-DTIXML_USE_STL)
 #    ENDIF(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
 #  ENDIF(TP_JSON_SCHEMA_VALIDATOR)
 #ENDIF(UNIX AND NOT APPLE)
-
 ##
 ## ----- Change above to match project requirements ----- ##
 ##
