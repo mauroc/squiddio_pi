@@ -28,7 +28,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( m_panel1, wxID_ANY, _("Destinations") ), wxVERTICAL );
 
 	wxFlexGridSizer* viewDestinations;
-	viewDestinations = new wxFlexGridSizer( 3, 3, 0, 0 );
+	viewDestinations = new wxFlexGridSizer( 0, 3, 0, 0 );
 	viewDestinations->SetFlexibleDirection( wxBOTH );
 	viewDestinations->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
