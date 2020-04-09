@@ -293,10 +293,11 @@ SET(SRC_NMEA0183
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
     )
-	
+
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
+
 
 ##----------Above From Squiddio ------------------		
 ##
@@ -410,6 +411,7 @@ add_definitions(-DTIXML_USE_STL)
 #  ENDIF(TP_JSON_SCHEMA_VALIDATOR)
 #ENDIF(UNIX AND NOT APPLE)
 #
+
 
 ##
 ## ----- Change above to match project requirements ----- ##
