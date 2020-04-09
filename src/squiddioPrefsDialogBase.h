@@ -75,7 +75,6 @@ class SquiddioPrefsDialogBase : public wxDialog
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnCheckBoxAll( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClickFonts( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnShareChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void LaunchHelpPage( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { event.Skip(); }
@@ -94,8 +93,9 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxCheckBox* m_checkBoxBoatYards;
 		wxCheckBox* m_checkBoxRamps;
 		wxCheckBox* m_checkBoxOthers;
-		wxCheckBox* m_checkBoxAIS;
 		wxCheckBox* m_checkBoxNDBC;
+		wxCheckBox* m_checkBoxShipRep;
+		wxCheckBox* m_checkBoxAIS;
 		wxRadioBox* m_radioBoxOCPNorOD;
 		wxFlexGridSizer* m_fgSizerODSettings;
 		wxCheckBox* m_checkBoxShowName;
@@ -109,10 +109,13 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxTextCtrl* m_textZoomLevels;
 		wxDirPickerCtrl* m_dirPickerDownload;
 		wxCheckBox* m_checkBoxVPMap;
+		wxCheckBox* m_checkBoxDelGpxs;
 		wxChoice* m_choiceHowOften;
 		wxChoice* m_choiceReceive;
+		wxCheckBox* m_checkBoxSendXml;
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
+		wxStaticText* m_version;
 
 		SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("sQuiddio Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 476,487 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~SquiddioPrefsDialogBase();

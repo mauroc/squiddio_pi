@@ -28,7 +28,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( m_panel1, wxID_ANY, _("Destinations") ), wxVERTICAL );
 
 	wxFlexGridSizer* viewDestinations;
-	viewDestinations = new wxFlexGridSizer( 3, 3, 0, 0 );
+	viewDestinations = new wxFlexGridSizer( 0, 3, 0, 0 );
 	viewDestinations->SetFlexibleDirection( wxBOTH );
 	viewDestinations->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
@@ -68,11 +68,18 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxStaticBoxSizer* sbSizer61;
 	sbSizer61 = new wxStaticBoxSizer( new wxStaticBox( sbDestSizer->GetStaticBox(), wxID_ANY, _("Cruising Aids") ), wxVERTICAL );
 
-	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS marker"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer61->Add( m_checkBoxAIS, 0, wxALL, 5 );
-
 	m_checkBoxNDBC = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Buoy Reports"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxNDBC->SetToolTip( _("Get quasi-real time wind, wave and pressure report from thousands of NDBC buoys right from your chart.") );
+
 	sbSizer61->Add( m_checkBoxNDBC, 0, wxALL, 5 );
+
+	m_checkBoxShipRep = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("NDBC Ship Reports"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxShipRep->SetToolTip( _("Get quasi-real time wind, wave and pressure report from participating NDBC ships right from your chart.") );
+
+	sbSizer61->Add( m_checkBoxShipRep, 0, wxALL, 5 );
+
+	m_checkBoxAIS = new wxCheckBox( sbSizer61->GetStaticBox(), wxID_ANY, _("AIS markers"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer61->Add( m_checkBoxAIS, 0, wxALL, 5 );
 
 
 	sbDestSizer->Add( sbSizer61, 1, wxEXPAND, 5 );
@@ -81,14 +88,16 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View POIs"), true );
+	m_notebook1->AddPage( m_panel1, _("View"), true );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	rendering->SetToolTip( _("Delete downloaded POI files for sectors you have hidden. This limits the proliferation of old unecessary POI files and reduced the computational burden.") );
+
 	wxStaticBoxSizer* sbODSettings;
 	sbODSettings = new wxStaticBoxSizer( new wxStaticBox( rendering, wxID_ANY, wxEmptyString ), wxVERTICAL );
 
 	wxString m_radioBoxOCPNorODChoices[] = { _("OpenCPN Waypoint"), _("ODraw TextPoint") };
 	int m_radioBoxOCPNorODNChoices = sizeof( m_radioBoxOCPNorODChoices ) / sizeof( wxString );
-	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("OCPN or ODraw"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
+	m_radioBoxOCPNorOD = new wxRadioBox( sbODSettings->GetStaticBox(), wxID_ANY, _("Use OCPN or ODraw (recommended)"), wxDefaultPosition, wxDefaultSize, m_radioBoxOCPNorODNChoices, m_radioBoxOCPNorODChoices, 1, wxRA_SPECIFY_ROWS );
 	m_radioBoxOCPNorOD->SetSelection( 0 );
 	m_radioBoxOCPNorOD->SetToolTip( _("Render sQuiddio POIs as legacy OpenCPN waypoints or  ODraw Textpoints (recommended, provided ODraw plugin is enabled).") );
 
@@ -176,7 +185,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	rendering->SetSizer( sbODSettings );
 	rendering->Layout();
 	sbODSettings->Fit( rendering );
-	m_notebook1->AddPage( rendering, _("Rendering"), false );
+	m_notebook1->AddPage( rendering, _("POI Rendering"), false );
 	m_panel3 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* downloads;
 	downloads = new wxStaticBoxSizer( new wxStaticBox( m_panel3, wxID_ANY, _("Google Maps") ), wxVERTICAL );
@@ -216,6 +225,17 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 
 	downloads->Add( fgSizer6, 1, wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer8;
+	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( downloads->GetStaticBox(), wxID_ANY, _("House Keeping") ), wxVERTICAL );
+
+	m_checkBoxDelGpxs = new wxCheckBox( sbSizer8->GetStaticBox(), wxID_ANY, _("Delete .gpx files for hidden layers upon exiting OpenCPN"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxDelGpxs->SetToolTip( _("Delete downloaded POI files for sectors you have hidden. This limits the proliferation of unecessary files and reduced OpenCPN's computational burden.") );
+
+	sbSizer8->Add( m_checkBoxDelGpxs, 0, wxALL, 5 );
+
+
+	downloads->Add( sbSizer8, 1, wxEXPAND, 5 );
 
 
 	m_panel3->SetSizer( downloads );
@@ -258,6 +278,18 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	sbLogSizer->Add( fgSizerLogs, 1, wxEXPAND, 5 );
 
+	wxStaticBoxSizer* sbSizer11;
+	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( sbLogSizer->GetStaticBox(), wxID_ANY, _("Logs Sharing Options") ), wxVERTICAL );
+
+	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include NMEA samples with each send"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxSendXml->SetValue(true);
+	m_checkBoxSendXml->SetToolTip( _("(Beta feature) Include a sample of your recent NMEA messages each time you send a log update. See stats about your wind, depth, temperature,  engine readings etc. online.") );
+
+	sbSizer11->Add( m_checkBoxSendXml, 0, wxALL, 5 );
+
+
+	sbLogSizer->Add( sbSizer11, 1, wxEXPAND, 5 );
+
 
 	logSharing->SetSizer( sbLogSizer );
 	logSharing->Layout();
@@ -285,13 +317,22 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	sbSizer7->Add( m_textApiKey, 0, wxALL|wxEXPAND, 5 );
 
-	wxFlexGridSizer* fgSizer7;
-	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer7->SetFlexibleDirection( wxBOTH );
-	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxStaticBoxSizer* sbSizer10;
+	sbSizer10 = new wxStaticBoxSizer( new wxStaticBox( sbSizer7->GetStaticBox(), wxID_ANY, wxEmptyString ), wxVERTICAL );
 
 
-	sbSizer7->Add( fgSizer7, 1, wxEXPAND, 5 );
+	sbSizer7->Add( sbSizer10, 1, wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer9;
+	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( sbSizer7->GetStaticBox(), wxID_ANY, _("About this plugin") ), wxVERTICAL );
+
+	sbSizer9->SetMinSize( wxSize( 12,1 ) );
+	m_version = new wxStaticText( sbSizer9->GetStaticBox(), wxID_ANY, _("version"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_version->Wrap( -1 );
+	sbSizer9->Add( m_version, 0, wxALL, 5 );
+
+
+	sbSizer7->Add( sbSizer9, 1, wxEXPAND, 5 );
 
 
 	m_panel5->SetSizer( sbSizer7 );
@@ -324,8 +365,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	// Connect Events
 	m_checkBoxAll->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
 	m_buttonTextFont->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
-	m_choiceHowOften->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
-	m_choiceReceive->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
 	m_sdbButtonSizerCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );
@@ -336,8 +375,6 @@ SquiddioPrefsDialogBase::~SquiddioPrefsDialogBase()
 	// Disconnect Events
 	m_checkBoxAll->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnCheckBoxAll ), NULL, this );
 	m_buttonTextFont->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnButtonClickFonts ), NULL, this );
-	m_choiceHowOften->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
-	m_choiceReceive->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( SquiddioPrefsDialogBase::OnShareChoice ), NULL, this );
 	m_sdbButtonSizerCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnCancelButtonClick ), NULL, this );
 	m_sdbButtonSizerHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::LaunchHelpPage ), NULL, this );
 	m_sdbButtonSizerOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SquiddioPrefsDialogBase::m_sdbButtonSizerOnOKButtonClick ), NULL, this );

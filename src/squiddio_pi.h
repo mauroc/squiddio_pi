@@ -4,7 +4,7 @@
  * Purpose   Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2014 by Mauro Calvi   *
+ *   Copyright (C) 2020 by Mauro Calvi   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -236,8 +236,10 @@ public:
       wxString   g_Email;
       wxString   g_ApiKey;
       wxString   g_DomainName;
+      wxString   g_UrlVersion;
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
+      bool       g_SendXml;
       bool       g_OCPN;
       
       bool  m_bODAPIOK;
@@ -248,7 +250,6 @@ public:
       Layer     *local_sq_layer;
       int       g_PostPeriod;
       int       g_RetrievePeriod;
-      bool      last_online;
 
       wxFont      g_fontODDisplayTextFont;
       
@@ -271,31 +272,32 @@ private:
       void SwitchPointType(bool bPointType, bool Changed);
       void DownloadSatImages();
       bool ProcessZipFile(wxString chart_dir, wxString tmp_file);
+      bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
+      void MoveDataDir(wxString old_dir, wxString new_dir);
+
 //       bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir);
       bool IsPOIinLayer(int layer_id);
 
       wxWindow      *m_parent_window;
       int           m_show_id;
       int           m_hide_id;
+      int           m_retrieve_id;
       int           m_update_id;
       int           m_report_id;
       int           m_download_id;
       bool          isLayerUpdate;
       wxString      local_region;
       wxString      m_rgn_to_dld;
-      wxString      g_VisibleLayers;
       wxString      g_InvisibleLayers;
       wxString      g_BaseChartDir, g_InitChartDir,g_ZoomLevels;
       int           g_LayerIdx;
-      bool          g_bShowLayers, g_DownloadVPMap;
+      bool          g_bShowLayers, g_DownloadVPMap, g_DelGpxs;
 
       wxAuiManager     *m_AUImgr;
       wxFileConfig     *m_pconfig;
       Plugin_Hyperlink *link;
       Hyperlink        *wp_link;
       
-      long        last_online_chk;
-
       bool        g_ViewMarinas;
       bool        g_ViewAnchorages;
       bool        g_ViewDocks;
@@ -306,6 +308,7 @@ private:
       bool        g_ViewRamps;
       bool        g_ViewAIS;
       bool        g_ViewNDBC;
+      bool        g_ViewShipRep;
       bool        g_ViewOthers;
 
       bool        g_bODTextPointShowName;
@@ -361,7 +364,7 @@ public:
 
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
-    void OnShareChoice( wxCommandEvent& event );
+    void OnSendXml( wxCommandEvent& event );
     void OnButtonClickFonts( wxCommandEvent& event );
     void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
     void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxOK); }

@@ -3,7 +3,7 @@
  * Purpose:  Squiddio plugin
  *
  ***************************************************************************
- *   Copyright (C) 2019 by Mauro Calvi                                     *
+ *   Copyright (C) 2020 by Mauro Calvi                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,7 +42,7 @@
 extern squiddio_pi        *g_squiddio_pi;
 
 
-bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
+bool squiddio_pi::UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
     
 //     https://wiki.wxwidgets.org/WxZipInputStream
     bool ret = true;
@@ -54,7 +54,7 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
         wxFileInputStream in(aZipFile);
 
         if (!in) {
-            wxLogMessage(_("Squiddio_pi: Cannot open ZIP file '") + aZipFile + _T("'."));
+            wxLogMessage(_T("squiddio_pi: Cannot open ZIP file '") + aZipFile + _T("'."));
             ret = false;
             break;
         }
@@ -64,8 +64,15 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
         while (entry.reset(zip.GetNextEntry()), entry.get() != NULL) {
             // access meta-data
             wxString name = entry->GetName();
-            name = aTargetDir + wxFileName::GetPathSeparator() + name;
-            
+
+            int pos = name.Find(".kap");
+            if (pos >0 )
+                name = aTargetDir + wxFileName::GetPathSeparator() + name;
+            else
+                // save non kap files in squiddio directory
+                name = layerdir + wxFileName::GetPathSeparator() + name;
+
+
             // read 'zip' to access the entry's data
             if (entry->IsDir()) {
                 int perm = entry->GetMode();
@@ -74,21 +81,18 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
             else {
                 zip.OpenEntry(*entry.get());
                 if (!zip.CanRead()) {
-                    wxLogError(_("Squiddio_pi: Cannot read ZIPped entry '") + entry->GetName() + _T("'."));
+                    wxLogError(_T("Squiddio_pi: Cannot read ZIPped entry '") + entry->GetName() + _T("'."));
                     ret = false;
                     break;
                 }
-
                 wxFileOutputStream file(name);
 
                 if (!file) {
-                    wxLogError(_("Squiddio_pi: Cannot create file '") + name + _T("'."));
+                    wxLogError(_T("Squiddio_pi: Cannot create file '") + name + _T("'."));
                     ret = false;
                     break;
                 }
-
                 zip.Read(file);
-
             }
         }
 
@@ -100,8 +104,6 @@ bool UnzipFile(const wxString& aZipFile, const wxString& aTargetDir) {
 
 bool squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
 {
-//     wxString zpath = g_BaseChartDir;
-
     bool ret;
     
     wxFile f( tmp_file );
@@ -110,7 +112,7 @@ bool squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
         // not a valid zipped file, i.e. squiddio returned error condition 
         wxString res = wxEmptyString;
         f.ReadAll( &res );
-        wxLogMessage(_("Squiddio_pi: error in response file: ") + res) ;  
+        wxLogMessage(_T("squiddio_pi: error in response file: ") + res) ;
         wxMessageBox(res);
         ret = false;
     } else {
@@ -118,12 +120,12 @@ bool squiddio_pi::ProcessZipFile(wxString chart_dir, wxString tmp_file)
         unzip = UnzipFile(tmp_file, chart_dir);
 
         if (unzip == true) {
-            wxLogMessage(wxString::Format(_("Squiddio_pi: extracted charts to: %s"), chart_dir));
+            wxLogMessage(wxString::Format(_T("squiddio_pi: extracted charts to: %s"), chart_dir));
             wxRemoveFile(tmp_file); //remove the zip file
             ret = true;
         }
         else {
-            wxLogMessage(wxString::Format(_("Squiddio_pi: unable to extract charts to: %s"), chart_dir));
+            wxLogMessage(wxString::Format(_T("squiddio_pi: unable to extract charts to: %s"), chart_dir));
             ret = false;
         }
     }
@@ -151,10 +153,7 @@ bool squiddio_pi::IsPOIinLayer(int layer_id)
 
 void squiddio_pi::DownloadSatImages() {
 
-    wxLogMessage(_T("Squiddio_pi: download sat. image: "));
-
-//     ::wxDisplaySize(&m_display_width, &m_display_height);
-//     double chartscale = m_vp->view_scale_ppm;
+    wxLogMessage(_T("squiddio_pi: download sat. image: "));
 
     double center_lat = m_vp->clat;
     double center_lon = m_vp->clon;
@@ -193,55 +192,68 @@ void squiddio_pi::DownloadSatImages() {
     if (poi_count <= 0) 
         wxMessageBox(_("No sQuiddio POIs in viewport. Download local POIs, zoom out or pan to a different area."));
     else if (poi_count > 20)
-        wxMessageBox(_("Too many sQuiddio POIs in viewport. Zoom in to reduce # of POIs to less than 20"));
+        wxMessageBox(_("Too many sQuiddio POIs in viewport. Zoom in to reduce the number of POIs to less than 20"));
     else {
-//         wxString res = wxEmptyString;
-        
-        wxString versionMajor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR);
-        wxString versionMinor = wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+        wxString poi_count_str = wxString::Format(wxT("%i"),poi_count);
+//         int zoom_levels = g_ZoomLevels.Freq(* _T(",")) + 1;
+        int num_zooms = wxSplit(g_ZoomLevels, * sep_comma).GetCount();
+
+        wxString mess_prompt = _("You are about to download satellite maps for ")+ poi_count_str + _(" POI") + ((poi_count > 1) ? _("s") : _(""));
+        mess_prompt +=  _(" at zoom level") +  ((num_zooms > 1) ? _("s ") : _(" ")) + g_ZoomLevels;
+        if (g_DownloadVPMap)
+            mess_prompt += _(", plus one map for the entire viewport.");
+        float download_size = (poi_count * num_zooms + ((g_DownloadVPMap) ? 1 : 0) ) * 0.82;
+        wxString download_size_str = wxString::Format(wxT("%.0f"), download_size);
+        mess_prompt += _("\n\nThe estimated compressed file size is approximately ") + download_size_str + " MB. ";
+        if (download_size > 20.0)
+            mess_prompt += _("\nZoom in to a lower number of visible POIs to reduce download time, or reduce the number of zoom levels. ");
+        mess_prompt += _("\n\nSee settings in your squiddio plugin -> Downloads tab");
+        if (g_DownloadVPMap)
+            mess_prompt += _(" or exclude the viewport map.");
+
+        wxMessageDialog mess (NULL, mess_prompt, _("Goodle Maps Downloader"), wxOK | wxCANCEL);
+        if( mess.ShowModal() == wxID_CANCEL )
+            return;
 
         wxString tmp_file = wxFileName::CreateTempFileName(_T("squiddio_pi"));
         wxString chart_dir = g_BaseChartDir + wxFileName::GetPathSeparator();
-        
+
         wxString zoom_param = g_ZoomLevels;
         zoom_param.Replace(sep_comma, sep_undersc);
-        
+
         wxString url_path = g_DomainName + _T("/places/") + id_str + _T("/download_kap_files");
-        url_path.Append(_T("?zooms=") + zoom_param );  // gmaps zoom levels 
+        url_path.Append(_T("?zooms=") + zoom_param );  // gmaps zoom levels
         if (g_DownloadVPMap) {
             url_path.Append(_T("&lat=") + wxString::Format(wxT("%f"), center_lat) );  // center latitude
             url_path.Append(_T("&lon=") + wxString::Format(wxT("%f"), center_lon) );  // center longitude
             url_path.Append(_T("&m_lat=") + wxString::Format(wxT("%f"), max_lat));    // max latitude of viewport
             url_path.Append(_T("&m_lon=") + wxString::Format(wxT("%f"), max_lon));    // max longitude of viewport
-        }    
-        url_path.Append(_T("&compressed=true")); 
-        url_path.Append(_T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey)); 
-        url_path.Append(_T("&source=ocpn_plugin&version=") + versionMajor + _T(".") + versionMinor); // plugin identifiers
-        // L"http://localhost:3000/places/20105_22913_22916/download_kap_files?lat=9.600149&lon=-79.571587&m_lat=9.710066&m_lon=-79.360565&zooms=15_17&compressed=true&source=ocpn_plugin&version=1.5"
+        }
+        url_path.Append(_T("&compressed=true"));
+        url_path.Append(_T("&squiddio_id=")+g_Email+_T("&api_key="+g_ApiKey));
+        url_path.Append(_T("&source=ocpn_plugin&version=") + g_UrlVersion); // plugin identifiers
 
-        int num_zooms = wxSplit(g_ZoomLevels, * sep_comma).GetCount();
         wxString download_message = wxString::Format(wxT("Downloading %i images... "), poi_count * num_zooms);
         OCPN_DLStatus result = OCPN_downloadFile(url_path , tmp_file, _("Downloading"), download_message, wxNullBitmap, m_parent_window, OCPN_DLDS_ELAPSED_TIME|OCPN_DLDS_AUTO_CLOSE|OCPN_DLDS_SIZE|OCPN_DLDS_SPEED|OCPN_DLDS_REMAINING_TIME, 10
         );
 
         if( result == OCPN_DL_NO_ERROR )
         {
-//          wxLogMessage(_("Squiddio_pi: downloaded ZIP file:") + tmp_file);        
             if (ProcessZipFile(chart_dir, tmp_file)) {
-
-                // UpdateChartDBInplace doesn't seem to update the chart group - both with force at true or false. A bug in the OCPN implementation of the function?
+                // UpdateChartDBInplace doesn't seem to update the chart group (with force param set to true or false.)
+                // The downloaded gmaps will not appear if the chart group is currently selected, unless user performs a manual
+                // chart database update. They will, however, appear if "All Active Charts" is selected under Chart Groups
                 bool updated = UpdateChartDBInplace(GetChartDBDirArrayString(), false, true);
                 if (!updated) 
                     wxMessageBox(_("Unable to update the chart database"));
                 else 
-                    wxLogMessage(_("Squiddio_pi: added KAP files to database:") + tmp_file);    
+                    wxLogMessage(_T("squiddio_pi: added KAP files to database:") + tmp_file);
             }    
         }
         else
         {
-            wxLogMessage(_("Squiddio_pi: unable to connect to host"));
+            wxLogMessage(_T("squiddio_pi: unable to connect to host"));
         }
     }
-//     return res;
 }
 

@@ -1,7 +1,25 @@
 # ---------------------------------------------------------------------------
-# Author:      jongough aka. Jon Gough Copyright: License:     wxWidgets License
+# Author Frontend:      jongough aka. Jon Gough Copyright: License:     wxWidgets License
 # ---------------------------------------------------------------------------
-
+##---------------------------------------------------------------------------
+## Author:      Mauro Calvi
+##***************************************************************************
+## *   Copyright (C) 2010 by Mauro Calvi                               *
+## *   This program is free software; you can redistribute it and/or modify  *
+## *   it under the terms of the GNU General Public License as published by  *
+## *   the Free Software Foundation; either version 2 of the License, or     *
+## *   (at your option) any later version.                                   *
+## *                                                                         *
+## *   This program is distributed in the hope that it will be useful,       *
+## *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+## *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+## *   GNU General Public License for more details.                          *
+## *                                                                         *
+## *   You should have received a copy of the GNU General Public License     *
+## *   along with this program; if not, write to the                         *
+## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
+## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
+## ***
 ##
 ## ----- Modify section below to include all the details for your plugin ----- ##
 ##
@@ -191,7 +209,7 @@ endif()
 
 include("cmake/PluginConfigure.cmake")
 
-	##----------Below From Squiddio ------------------								   
+	##----------Below From Squiddio ------------------
 	SET(SRC_SQUIDDIO
     src/squiddio_pi.h
     src/squiddio_pi.cpp
@@ -299,7 +317,7 @@ INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
 
 
-##----------Above From Squiddio ------------------		
+##----------Above From Squiddio ------------------
 ##
 ## ----- Change below to match project requirements ----- ##
 ##
