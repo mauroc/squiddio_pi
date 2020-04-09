@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Author Frontend:      jongough aka. Jon Gough Copyright: License:     wxWidgets License
+# Author Frontend2:      jongough aka. Jon Gough Copyright: License:     wxWidgets License
 # ---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## Author:      Mauro Calvi
@@ -86,7 +86,7 @@ set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
 
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/sQuiddio.html")
 set(XML_SUMMARY "Global user-sourced maintained repository of sailing destination")
-set(XML_DESCRIPTION "Makes its global user-sourced and user-maintained repository of sailing destinations (marinas, anchorages, yacht clubs, docks, fuel stations, NDBD buoy data etc.) available as waypoints in OpenCPN.")
+set(XML_DESCRIPTION "Squiddio makes its global user-sourced and user-maintained repository of sailing destinations (marinas, anchorages, yacht clubs, docks, fuel stations, NDBD buoy data etc.) available as waypoints in OpenCPN.")
 set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
