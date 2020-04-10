@@ -7,7 +7,7 @@ if(OCPN_FLATPAK_CONFIG)
 endif(OCPN_FLATPAK_CONFIG)
 
 if(NOT APPLE)
-  target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES} ${EXTRA_LIBS})
+    target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES})
 endif(NOT APPLE)
 
 if(WIN32)
