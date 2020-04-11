@@ -207,10 +207,11 @@ endif()
 ##
 
 
-include("cmake/PluginConfigure.cmake")
+INCLUDE("cmake/PluginConfigure.cmake")
 
-	##----------Below From Squiddio ------------------
-	SET(SRC_SQUIDDIO
+
+##----------Below From Squiddio for SET( Headers and SRCS) ------------------
+	SET(SRCS
     src/squiddio_pi.h
     src/squiddio_pi.cpp
     src/squiddioPrefsDialogBase.cpp
@@ -318,55 +319,34 @@ INCLUDE_DIRECTORIES(api-16)
 
 
 ##----------Above From Squiddio ------------------
-##
-## ----- Change below to match project requirements ----- ##
-##
 
-add_definitions(-DUSE_S57)
-
+##=============REMOVE THESE LINES LEFT FROM TESTPLUGIN ================
+#add_definitions(-DUSE_S57)
 #set(SRCS
 #    src/tpdc.cpp
-#    src/tpControlDialogDef.cpp
-#    src/tpControlDialogImpl.cpp
-#    src/tpicons.cpp
-#    src/tpJSON.cpp
-#    src/testplugin_pi.cpp
+#    ...
 #    src/tpUtils.cpp)
 
 #set(HDRS
 #    include/testplugin_pi.h
-#    include/tpicons.h
-#    include/tpControlDialogDef.h
-#    include/tpControlDialogImpl.h
-#    include/tpIconCombo.h
-#    include/tpJSON.h
-#    include/tpdc.h
+#    ...
 #    include/tpUtils.h)
-
+#
+#
 #set(OCPNSRC ocpnsrc/TexFont.cpp)
 #set(OCPNHDRS ocpninclude/ocpn_plugin.h ocpninclude/pluginmanager.h ocpninclude/TexFont.h)
-
 #set(EXTSRC)
-
 #set(EXTINCLUDE
 #    extinclude/nlohmann/json.hpp
 #    extinclude/ODAPI.h)
-
 #set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
-
 #set(LIBHDRS
 #    libs/GL/include/gl.h
-#    libs/GL/include/gl_private.h
-#    libs/GL/include/glext.h
-#    libs/GL/include/glu.h
-#    libs/wx/include/json_defs.h
-#    libs/wx/include/jsonreader.h
-#    libs/wx/include/jsonval.h
+#    ...
 #    libs/wx/include/jsonwriter.h)
-
-
-add_definitions(-DPLUGIN_USE_SVG)
-
+#
+# add_definitions(-DPLUGIN_USE_SVG)
+#
 #IF(APPLE)
 #    OPTION(TP_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" OFF)
 #ELSE(APPLE)
@@ -374,61 +354,50 @@ add_definitions(-DPLUGIN_USE_SVG)
 #ENDIF(APPLE)
 
 #IF(TP_JSON_SCHEMA_VALIDATOR)
-#    MESSAGE(STATUS "Using JSON Schema validation - warning this changes the 'flavour' of the executable and it may not be compatible with OpenCPN")
-#    ADD_DEFINITIONS(-DTP_JSON_SCHEMA_VALIDATOR)
-#    MESSAGE(STATUS "Adding JSON Schema validation")
-
-#    SET(EXTSRC
-#        ${EXTSRC}
-#        extsrc/json-schema-validator/json-schema-draft7.json.cpp
-#        extsrc/json-schema-validator/json-uri.cpp
-#        extsrc/json-schema-validator/json-validator.cpp
-#    )
-#    SET(EXTINCLUDE
-#        ${EXTINCLUDE}
-#        extinclude/nlohmann/json.hpp
-#        extinclude/json-schema-validator/json-schema.hpp
-# )
-#    INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/extinclude/json-schema-validator)
-#ELSE(TP_JSON_SCHEMA_VALIDATOR)
-#    MESSAGE(STATUS "Not using JSON Schema validation - warning invalid JSON #'may' cause unexpected crashes")
+#...
 #ENDIF(TP_JSON_SCHEMA_VALIDATOR)
 
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/extinclude)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wx/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/lz4)
+#...
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/bitmaps)
-
-#add_library(${PACKAGE_NAME} SHARED ${SRCS} ${HDRS} ${OCPNSRC} ${EXTSRC} ${LIBSSRC})
-
-add_definitions(-DTIXML_USE_STL)
 
 #IF(UNIX AND NOT APPLE)
 #  IF(TP_JSON_SCHEMA_VALIDATOR)
-#    # Change OS/ABI to be UNIX - System V to make it run with OCPN
-#    SET(lib_name lib${PACKAGE_NAME}.so)
-#    MESSAGE(STATUS "lib-name: ${lib_name}")
-#    FIND_FILE(elfedit elfedit)
-#    IF(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
-#      MESSAGE(STATUS "Will ensure OS/ABI is set to 0 to match OCPN")
-#      ADD_CUSTOM_COMMAND(
-#        TARGET ${PACKAGE_NAME}
-#        POST_BUILD
-#        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-#        DEPENDS ${PACKAGE_NAME}
-#        COMMENT " Running post build action on ${lib_name}."
-#        COMMAND sh -c 'elfedit --input-osabi=Linux --output-osabi=none ${lib_name} || (echo 0) '
-#      )
-#    ELSE(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
-#      MESSAGE(STATUS "Cannot correct OS/ABI to match OCPN if it is generated incorrectly. Package binutils needed")
-#    ENDIF(NOT (${elfedit} STREQUAL "elfedit-NOTFOUND"))
+#  ... 
 #  ENDIF(TP_JSON_SCHEMA_VALIDATOR)
 #ENDIF(UNIX AND NOT APPLE)
-#
+## ========== REMOVE Lines above left over from TestPlugin ==================
+
+
+##
+## ----- Change below to match project requirements ----- ##
+##
+##================================================================================
+## Required to collect all the set( headers and SRCS  - Adjust as required
+## This add_library  is used in the conditionals below.
+##================================================================================
+##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
+##================================================================================
+
+ADD_DEFINITIONS(-DTIXML_USE_STL)
+IF(UNIX AND NOT APPLE)
+    INCLUDE("cmake/FindTinyXML.cmake")
+    FIND_PACKAGE(TinyXML QUIET)
+ENDIF(UNIX AND NOT APPLE)
+
+IF(TINYXML_FOUND)
+    message (STATUS "Building with system tinyxml")
+    INCLUDE_DIRECTORIES(${TINYXML_INCLUDE_DIR})
+    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183})
+    TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${TINYXML_LIBRARIES} )
+ELSE(TINYXML_FOUND)
+    message (STATUS "Building with embedded tinyxml")
+    SET(SRC_LTINYXML
+    src/tinyxml.h
+    src/tinystr.h
+      )
+    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183} ${SRC_LTINYXML})
+ENDIF(TINYXML_FOUND)
 
 
 ##
