@@ -88,10 +88,11 @@ set(UNSTABLE_REPO "rick-gleason/opencpn-plugins-beta")
 # Not needed as packages are stored in the same repository as the tarballs
 # Stable manual installation packages repository url
 #set(STABLE_PKG_REPO "mauro-calvi/manual")
+#set(STABLE_PKG_REPO "rick-gleason/opencpn-plugins-pkg")
 
 set(CLOUDSMITH_USER "rick-gleason")
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "${opencpn-plugins}")
+set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
 set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
