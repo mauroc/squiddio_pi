@@ -52,7 +52,9 @@ set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-set(GIT_USER "jongough")
+#set(GIT_USER "mauroc")
+#set(GIT_USER "jongough")
+set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
@@ -76,21 +78,23 @@ endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
 # Stable plugins artifacts repository url
-set(STABLE_REPO "mauro-calvi/squiddio-stable")
+#set(STABLE_REPO "mauro-calvi/squiddio-stable")
+set(STABLE_REPO "rick-gleason/opencpn-plugins-prod")
 
 # Scratch builds repository url
-set(UNSTABLE_REPO "mauro-calvi/squiddio-pi")
+#set(UNSTABLE_REPO "mauro-calvi/squiddio-pi")
+set(UNSTABLE_REPO "rick-gleason/opencpn-plugins-beta")
 
 # Not needed as packages are stored in the same repository as the tarballs
 # Stable manual installation packages repository url
 #set(STABLE_PKG_REPO "mauro-calvi/manual")
 
-
-set(CLOUDSMITH_USER "jon-gough")
-set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
+set(CLOUDSMITH_USER "rick-gleason")
+#set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
+set(CLOUDSMITH_BASE_REPOSITORY "${opencpn-plugins}")
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
-set(XML_DESCRIPTION "Pluging to display harbours, bouys interesting locations etc. on the chart")
+set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
 set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
