@@ -57,7 +57,7 @@ if [ "$CIRCLECI" ] || [ "$TRAVIS" ]; then
         pyenv global 3.7.0
         fi
         #pyenv global 3.7.1
-        python3 -m pip install --upgrade pip
+#        python3 -m pip install --upgrade pip
         python3 -m pip install -q cloudsmith-cli
         pyenv rehash
     elif dnf --version 2>&1 >/dev/null; then
@@ -98,7 +98,7 @@ source $BUILD_DIR/pkg_version.sh
 tarball_name=@PACKAGE_NAME@-@PACKAGE_VERSION@-${PKG_TARGET}-${PKG_TARGET_VERSION}-${OCPN_TARGET}-tarball
 pkg=$(ls $BUILD_DIR/*.${PKG_EXT})
 
-source $BUILD_DIR/pkg_version.sh
+# source $BUILD_DIR/pkg_version.sh
 echo $BUILD_BRANCH
 echo $BUILD_TAG
 echo ${#BUILD_TAG}
@@ -149,6 +149,14 @@ fi
 
 cat $xml
 ls -l $BUILD_DIR
+pwd
+gunzip $tarball
+tarball_tar=$(ls $BUILD_DIR/*.tar)
+xml_here=$(ls $BUILD_DIR/*.xml)
+tar -rf $tarball_tar $xml_here
+gzip $tarball_tar
+pwd
+ls -la
 
 cloudsmith push raw --republish --no-wait-for-sync \
     --name @PACKAGE_NAME@-@PKG_TARGET@-@PKG_TARGET_VERSION@-${OCPN_TARGET}-metadata \
