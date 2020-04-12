@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------
-# Author Frontend2:      jongough aka. Jon Gough Copyright: License:     wxWidgets License
+# Frontend2 Author: jongough aka. Jon Gough    License:wxWidgets License
 # ---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## Author:      Mauro Calvi
@@ -27,66 +27,75 @@
 # define minimum cmake version
 cmake_minimum_required(VERSION 3.1.1)
 if(COMMAND cmake_policy)
-  if(POLICY CMP0043)
-    cmake_policy(SET CMP0043 NEW)
-  endif(POLICY CMP0043)
-  cmake_policy(SET CMP0048 NEW)
-  if(POLICY CMP0077)
-    cmake_policy(SET CMP0077 NEW)
-  endif(POLICY CMP0077)
+    if(POLICY CMP0043)
+        cmake_policy(SET CMP0043 NEW)
+    endif(POLICY CMP0043)
+    cmake_policy(SET CMP0048 NEW)
+    if(POLICY CMP0077)
+        cmake_policy(SET CMP0077 NEW)
+    endif(POLICY CMP0077)
 endif(COMMAND cmake_policy)
 
-set(VERBOSE_NAME "Squiddio")
-set(COMMON_NAME "Squiddio")   #To find search "getcommon" in squiddio_pi.cpp
+SET(VERBOSE_NAME Squiddio)
+set(COMMON_NAME "squiddio")
 set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
-set(PACKAGE "squiddio")
+SET(PACKAGE "squiddio")
 
-set(VERSION_MAJOR "1")
-set(VERSION_MINOR "2")
-set(VERSION_PATCH "0")
+SET(VERSION_MAJOR "1")
+SET(VERSION_MINOR "2")
+SET(VERSION_PATCH "3")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "04/08/2020")
+set(VERSION_DATE "10/04/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
-set(TP_COMMENT "  * Release for O5 using CI")
 
 set(PARENT "opencpn")
-set(PACKAGE "squiddio")
-#set(GIT_USER "maurocalvi")
+#set(GIT_USER "mauroc")
+#set(GIT_USER "jongough")
 set(GIT_USER "rgleason")
-
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
 # This if allows for setting up your own local webserver with git on it for testing purposes
 if($ENV{CIRCLECI})
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
+    set(GIT_REPOSITORY_HOST "github.com")
+    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+    set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
 elseif($ENV{TRAVIS})
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
+    set(GIT_REPOSITORY_HOST "github.com")
+    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+    set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
 else()
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  set(GIT_REPOSITORY_BRANCH "master")
-#  set(GIT_REPOSITORY_HOST "git.eclipse.com.au")
-#  set(GIT_REPOSITORY_DIR "")
-#  set(GIT_REPOSITORY_BRANCH "cmake_flatpak_test")
+    set(GIT_REPOSITORY_HOST "github.com")
+    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+    set(GIT_REPOSITORY_BRANCH "master")
+    #  set(GIT_REPOSITORY_HOST "git.eclipse.com.au")
+    #  set(GIT_REPOSITORY_DIR "")
+    #  set(GIT_REPOSITORY_BRANCH "cmake_flatpak_test")
 endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
-#set(CLOUDSMITH_USER "jon-gough")
+# Stable plugins artifacts repository url
+#set(STABLE_REPO "mauro-calvi/squiddio-stable")
+set(STABLE_REPO "rick-gleason/opencpn-plugins-prod")
+
+# Scratch builds repository url
+#set(UNSTABLE_REPO "mauro-calvi/squiddio-pi")
+set(UNSTABLE_REPO "rick-gleason/opencpn-plugins-beta")
+
+# Not needed as packages are stored in the same repository as the tarballs
+# Stable manual installation packages repository url
+#set(STABLE_PKG_REPO "mauro-calvi/manual")
+#set(STABLE_PKG_REPO "rick-gleason/opencpn-plugins-pkg")
+
 set(CLOUDSMITH_USER "rick-gleason")
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
-
-set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/sQuiddio.html")
-set(XML_SUMMARY "Global user-sourced maintained repository of sailing destination")
-set(XML_DESCRIPTION "Squiddio makes its global user-sourced and user-maintained repository of sailing destinations (marinas, anchorages, yacht clubs, docks, fuel stations, NDBD buoy data etc.) available as waypoints in OpenCPN.")
+set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
+set(XML_SUMMARY "Plugin to display interesting objects")
+set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
 set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
@@ -103,8 +112,13 @@ set(OpenGL_GL_PREFERENCE "LEGACY")
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
 ##
 
-set(PACKAGE_NAME ${PACKAGE}_pi)
-set(PACKAGE_FILE_NAME "${PACKAGE}_pi")
+if(NOT ${PACKAGE} MATCHES "(.*)_pi")
+    set(PACKAGE_NAME ${PACKAGE}_pi)
+    set(PACKAGE_FILE_NAME "${PACKAGE}_pi")
+else(NOT ${PACKAGE} MATCHES "(.*)_pi")
+    set(PACKAGE_NAME ${PACKAGE})
+    set(PACKAGE_FILE_NAME "${PACKAGE}")
+endif(NOT ${PACKAGE} MATCHES "(.*)_pi")
 string(TOUPPER "${PACKAGE}" TITLE_NAME)
 
 project(${PACKAGE_NAME} VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
@@ -211,7 +225,7 @@ INCLUDE("cmake/PluginConfigure.cmake")
 
 
 ##----------Below From Squiddio for SET( Headers and SRCS) ------------------
-	SET(SRCS
+SET(SRCS
     src/squiddio_pi.h
     src/squiddio_pi.cpp
     src/squiddioPrefsDialogBase.cpp
@@ -245,12 +259,11 @@ INCLUDE("cmake/PluginConfigure.cmake")
     src/wxJSON/jsonval.h
     src/wxJSON/jsonwriter.cpp
     src/wxJSON/jsonwriter.h
-     )
+  )
 
 SET(SRC_NMEA0183
     src/nmea0183/LatLong.hpp
     src/nmea0183/latlong.cpp
-
     src/nmea0183/long.cpp
     src/nmea0183/nmea0183.cpp
     src/nmea0183/nmea0183.hpp
@@ -311,8 +324,7 @@ SET(SRC_NMEA0183
     src/nmea0183/vlw.hpp
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
-    )
-
+  )
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
@@ -378,6 +390,7 @@ INCLUDE_DIRECTORIES(api-16)
 ##================================================================================
 ##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
 ##================================================================================
+
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 IF(UNIX AND NOT APPLE)
