@@ -90,6 +90,7 @@ set(UNSTABLE_REPO "rick-gleason/opencpn-plugins-beta")
 #set(STABLE_PKG_REPO "mauro-calvi/manual")
 #set(STABLE_PKG_REPO "rick-gleason/opencpn-plugins-pkg")
 
+#set(CLOUDSMITH_USER "jon-gough")
 set(CLOUDSMITH_USER "rick-gleason")
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
@@ -101,8 +102,6 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-# Prefer libGL.so to libOpenGL.so, see CMP0072
-set(OpenGL_GL_PREFERENCE "LEGACY")
 
 ##
 ## ----- Modify section above to include all the details for your plugin ----- ##
@@ -129,8 +128,12 @@ set(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 message(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK}")
 message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
 
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")											  
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
+option(USE_GL "Enable OpenGL support" OFF)
+message(STATUS "USE_GL: ${USE_GL}")
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
@@ -221,9 +224,18 @@ endif()
 ##
 
 
+
 INCLUDE("cmake/PluginConfigure.cmake")
 
-
+##
+## ----- Change below to match your project requirements ----- ##
+## ------These lines are only for Testplugin - do not use ------------##
+##
+##   REMOVED
+##
+## ------The lines above are only for Testplugin -do not use------------##
+##
+# ----Remember to Add your project Set(SRCS and set(HDRS
 ##----------Below From Squiddio for SET( Headers and SRCS) ------------------
 SET(SRCS
     src/squiddio_pi.h
@@ -338,7 +350,7 @@ INCLUDE_DIRECTORIES(api-16)
 #    src/tpdc.cpp
 #    ...
 #    src/tpUtils.cpp)
-
+#
 #set(HDRS
 #    include/testplugin_pi.h
 #    ...
@@ -391,7 +403,6 @@ INCLUDE_DIRECTORIES(api-16)
 ##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
 ##================================================================================
 
-
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 IF(UNIX AND NOT APPLE)
     INCLUDE("cmake/FindTinyXML.cmake")
@@ -418,7 +429,7 @@ ENDIF(TINYXML_FOUND)
 ##
 
 ##
-## ----- do not change - needed to build app ----- ##
+## ----- Do not change - needed to build app ----- ##
 ##
 
 include("cmake/PluginInstall.cmake")
