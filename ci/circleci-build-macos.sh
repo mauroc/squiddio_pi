@@ -16,7 +16,6 @@ if [ -n "$CI" ]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
-
 set -xe
 
 set -o pipefail
@@ -26,9 +25,9 @@ set -o pipefail
 for pkg in cairo libexif xz libarchive wget cmake; do
     brew list $pkg 2>/dev/null | head -10 || brew install $pkg
 done
-brew unlink python@2
-brew upgrade python
-brew ls python3
+	brew unlink python@2
+	brew upgrade python
+	brew ls python3
 #pip3 install <package>
 #pip3 install setuptools cloudsmith-cli
 #/usr/local/opt/python@3.8/bin/pip3 install cloudsmith-cli setuptools

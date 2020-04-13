@@ -90,10 +90,12 @@ set(UNSTABLE_REPO "rick-gleason/opencpn-plugins-beta")
 #set(STABLE_PKG_REPO "mauro-calvi/manual")
 #set(STABLE_PKG_REPO "rick-gleason/opencpn-plugins-pkg")
 
-#set(CLOUDSMITH_USER "jon-gough")
-set(CLOUDSMITH_USER "rick-gleason")
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
+
+#set(CLOUDSMITH_USER "jon-gough")
+set(CLOUDSMITH_USER "rick-gleason")
+
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
 set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
@@ -129,7 +131,7 @@ message(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VER
 message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
 
 # Prefer libGL.so to libOpenGL.so, see CMP0072
-set(OpenGL_GL_PREFERENCE "LEGACY")											  
+set(OpenGL_GL_PREFERENCE "LEGACY")
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
 option(USE_GL "Enable OpenGL support" OFF)
@@ -222,7 +224,6 @@ endif()
 ##
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
 ##
-
 
 
 INCLUDE("cmake/PluginConfigure.cmake")
