@@ -6,13 +6,14 @@
 
 # Fix broken ruby on the CircleCI image:
 if [ -n "$CI" ]; then
-    curl -fsSL \
+#    curl -fsSL \
 #        https://raw.githubusercontent.com/Homebrew/install/master/uninstall \
 #        > uninstall
 #    chmod 755 uninstall
 #    ./uninstall -f
-    inst="https://raw.githubusercontent.com/Homebrew/install/master/install"
-    /usr/bin/ruby -e "$(curl -fsSL $inst)"
+#    inst="https://raw.githubusercontent.com/Homebrew/install/master/install"
+#    /usr/bin/ruby -e "$(curl -fsSL $inst)"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
 
