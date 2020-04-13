@@ -27,6 +27,7 @@ for pkg in cairo libexif xz libarchive wget cmake; do
     brew list $pkg 2>/dev/null | head -10 || brew install $pkg
 done
 brew upgrade python
+pip3 install <package>
 
 wget -q http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
 tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp
