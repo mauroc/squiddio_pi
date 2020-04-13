@@ -37,7 +37,7 @@ elif [ "$TRAVIS" ]; then
     PKG_EXT=${CLOUDSMITH_PKG_EXT:-'deb'}
 else
     BUILD_ID=${APPVEYOR_BUILD_NUMBER:-1}
-    BUILD_DIR=.
+    BUILD_DIR=$(pwd)
     BUILD_BRANCH=$APPVEYOR_REPO_BRANCH
     BUILD_TAG=$APPVEYOR_REPO_TAG_NAME
     PKG_EXT=${CLOUDSMITH_PKG_EXT:-'exe'}
@@ -54,9 +54,10 @@ if [ "$CIRCLECI" ] || [ "$TRAVIS" ]; then
     if pyenv versions 2>&1 >/dev/null; then
         pyenv versions
         if ! pyenv global 3.7.1 2>&1 >/dev/null; then
-        pyenv global 3.7.0
+            pyenv global 3.7.0
         fi
         #pyenv global 3.7.1
+        python3 -m pip install --upgrade pip
         python3 -m pip install -q cloudsmith-cli
         pyenv rehash
     elif dnf --version 2>&1 >/dev/null; then
@@ -147,12 +148,36 @@ fi
 
 cat $xml
 ls -l $BUILD_DIR
-pwd
+cur_dir=$(pwd)
 gunzip $tarball
-tarball_tar=$(ls $BUILD_DIR/*.tar)
-xml_here=$(ls $BUILD_DIR/*.xml)
-tar -rf $tarball_tar $xml_here
+cd $BUILD_DIR
+tarball_tar=$(ls *.tar)
+xml_here=$(ls *.xml)
+if [ "$TRAVIS" ] || [ "$CIRCLECI" ]; then
+    mkdir build_tar
+    cp $tarball_tar build_tar/.
+    cd build_tar
+    ls -l
+    tar -xf $tarball_tar
+    rm *.tar
+    cp $xml .
+    ls -l
+    tar -cf build_tarfile.tar *
+    tar -tf build_tarfile.tar
+    rm ../$tarball_tar
+    ls -l ../
+    cp build_tarfile.tar ../$tarball_tar
+    cd ..
+    ls -l
+    rm -rf build_tar
+else
+    tar -rf $tarball_tar $xml_here
+fi
+ls -l
+tar -tf $tarball_tar
 gzip $tarball_tar
+ls -l
+cd $cur_dir
 pwd
 ls -la
 
