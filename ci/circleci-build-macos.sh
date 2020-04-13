@@ -27,6 +27,7 @@ for pkg in cairo libexif xz libarchive wget cmake; do
     brew list $pkg 2>/dev/null | head -10 || brew install $pkg
 done
 brew upgrade python
+brew unlink python@2
 brew ls python3
 #pip3 install <package>
 #pip3 install setuptools cloudsmith-cli
