@@ -58,7 +58,8 @@ set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
-# This if allows for setting up your own local webserver with git on it for testing purposes
+
+# This 'if' allows setup of a local webserver with git for testing
 if($ENV{CIRCLECI})
     set(GIT_REPOSITORY_HOST "github.com")
     set(GIT_REPOSITORY_DIR "${GIT_USER}/")
@@ -77,22 +78,23 @@ else()
 endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
-# Stable plugins artifacts repository url
-#set(STABLE_REPO "mauro-calvi/squiddio-stable")
-set(STABLE_REPO "rick-gleason/opencpn-plugins-prod")
+# Prod builds repository url
+#set(PROD "pi")   #Mauro Repos
+set(PROD "prod")  #Standard Repos
 
-# Scratch builds repository url
-#set(UNSTABLE_REPO "mauro-calvi/squiddio-pi")
-set(UNSTABLE_REPO "rick-gleason/opencpn-plugins-beta")
+# Beta builds repository url
+#set(BETA "stable")  #Mauro Repos
+set(BETA "beta")       #Standard Repos
 
-# Not needed as packages are stored in the same repository as the tarballs
-# Stable manual installation packages repository url
-#set(STABLE_PKG_REPO "mauro-calvi/manual")
-#set(STABLE_PKG_REPO "rick-gleason/opencpn-plugins-pkg")
+# Alpha builds repository url
+#set(ALPHA "manual") # Mauro should make a Cloudsmith 'mauro-calvi/squiddio-manual' opensource repos!!! 
+set(ALPHA "alpha") #Standard Repos
 
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")
+#set(CLOUDSMITH_BASE_REPOSITORY "${squiddio}")  # Mauro's customization without the '-pi'
+set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
+#set(CLOUDSMITH_USER "mauro-calvi")
 #set(CLOUDSMITH_USER "jon-gough")
 set(CLOUDSMITH_USER "rick-gleason")
 
