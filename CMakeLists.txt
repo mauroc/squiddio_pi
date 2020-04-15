@@ -91,7 +91,7 @@ set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual'
 #set(ALPHA "alpha") #Standard Repos
 
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "${squiddio}")  # Mauro's customization without the '_pi'
+set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
 #set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
 set(CLOUDSMITH_USER "mauro-calvi")
