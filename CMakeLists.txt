@@ -101,11 +101,7 @@ set(CLOUDSMITH_USER "rick-gleason")
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
 set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
-set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
-option(PLUGIN_USE_SVG "Use SVG graphics" ON)
-
-set(CMAKE_CXX_STANDARD 11)
-
+#set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 
 ##
 ## ----- Modify section above to include all the details for your plugin ----- ##
@@ -114,6 +110,10 @@ set(CMAKE_CXX_STANDARD 11)
 ##
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
 ##
+
+option(PLUGIN_USE_SVG "Use SVG graphics" ON)
+
+set(CMAKE_CXX_STANDARD 11)
 
 if(NOT ${PACKAGE} MATCHES "(.*)_pi")
     set(PACKAGE_NAME ${PACKAGE}_pi)
