@@ -21,6 +21,8 @@ done
 	brew unlink python@2
 	brew upgrade python
 	brew ls python3
+	brew install wget
+	brew install cmake
 #pip3 install <package>
 #pip3 install setuptools cloudsmith-cli
 #/usr/local/opt/python@3.8/bin/pip3 install cloudsmith-cli setuptools
