@@ -989,7 +989,7 @@ wxBitmap *squiddio_pi::GetPlugInBitmap() {
 }
 
 wxString squiddio_pi::GetCommonName() {
-    return _T("Squiddio");
+    return _T(PLUGIN_COMMON_NAME);
 }
 
 wxString squiddio_pi::GetShortDescription() {

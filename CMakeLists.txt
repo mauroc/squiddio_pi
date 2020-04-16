@@ -1,3 +1,6 @@
+# ---------------------------------------------------------------------------
+# Frontend2 Author: jongough aka. Jon Gough    License:wxWidgets License
+# ---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## Author:      Mauro Calvi
 ##***************************************************************************
@@ -16,137 +19,229 @@
 ## *   along with this program; if not, write to the                         *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
-## ***************************************************************************
+## ***
+##
+## ----- Modify section below to include all the details for your plugin ----- ##
+##
 
-SET(PARENT "opencpn")
-SET(PACKAGE squiddio)
+# define minimum cmake version
+cmake_minimum_required(VERSION 3.1.1)
+if(COMMAND cmake_policy)
+    if(POLICY CMP0043)
+        cmake_policy(SET CMP0043 NEW)
+    endif(POLICY CMP0043)
+    cmake_policy(SET CMP0048 NEW)
+    if(POLICY CMP0077)
+        cmake_policy(SET CMP0077 NEW)
+    endif(POLICY CMP0077)
+endif(COMMAND cmake_policy)
+
 SET(VERBOSE_NAME Squiddio)
-SET(CPACK_PACKAGE_CONTACT "Mauro Calvi")
-SET(CLOUDSMITH_USER "mauro-calvi")
+set(COMMON_NAME "squiddio")
+set(TITLE_NAME "squiddio")
+set(PACKAGE_CONTACT "Mauro Calvi")
+SET(PACKAGE "squiddio")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "0")
-SET(VERSION_TWEAK "2")
-SET(VERSION_DATE "10/04/2020")
-SET(OCPN_MIN_VERSION "ov50")
-SET(OCPN_API_VERSION_MAJOR "1")
-SET(OCPN_API_VERSION_MINOR "16")
 
-# Stable plugins artifacts repository url
-set(STABLE_REPO "mauro-calvi/squiddio-stable")
+SET(VERSION_PATCH "2")
+set(VERSION_TWEAK "1")
+set(VERSION_DATE "15/04/2020")
+set(OCPN_MIN_VERSION "ov50")
+set(OCPN_API_VERSION_MAJOR "1")
+set(OCPN_API_VERSION_MINOR "16")
 
-# Scratch builds repository url
-set(UNSTABLE_REPO "mauro-calvi/squiddio-pi")
+set(PARENT "opencpn")
+set(GIT_USER "mauroc")
+#set(GIT_USER "jongough")
+#set(GIT_USER "rgleason")
+set(GIT_REPOSITORY_NAME "squiddio_pi")
+message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
+message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
 
-# Stable manual installation packages repository url
-set(STABLE_PKG_REPO "mauro-calvi/manual")
-
-# Opencpn api version, part of win32 installer name (major * 100 + minor).
-set(OCPN_API_VERSION ${OCPN_API_VERSION_MAJOR}${OCPN_API_VERSION_MINOR})
-
-SET(CMAKE_CXX_STANDARD 11)
-
-# define minimum cmake version
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1.1)
-IF (COMMAND cmake_policy)
-  if (POLICY CMP0043)
-    CMAKE_POLICY(SET CMP0043 NEW)
-  endif (POLICY CMP0043)
-  if (POLICY CMP0077)
-    CMAKE_POLICY(SET CMP0077 NEW)
-  endif (POLICY CMP0077)
-ENDIF (COMMAND cmake_policy)
-
-# Prefer libGL.so to libOpenGL.so, see CMP0072
-SET(OpenGL_GL_PREFERENCE "LEGACY")
-
-SET(PACKAGE_NAME ${PACKAGE}_pi)
-SET(PACKAGE_FILE_NAME "${PARENT}-plugin-${PACKAGE}")
-STRING(TOUPPER "${PACKAGE}" TITLE_NAME)
-
-PROJECT(${PACKAGE_NAME} VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
-
-SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-
-MESSAGE(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-MESSAGE(STATUS "OCPN API Verson: ${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR}")
-MESSAGE(STATUS "OCPN Min Verson: ${OCPN_MIN_VERSION}")
-
-# Don't use local version of GLU library
-SET(USE_LOCAL_GLU FALSE)
-
-IF("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
-ELSEIF("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build")
-ENDIF("${CMAKE_BUILD_TYPE}" STREQUAL "")
-SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel" )
-MESSAGE (STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-SET(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION}-${OCPN_MIN_VERSION}-${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR})
-
-INCLUDE("cmake/PluginSetup.cmake")
-set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
-
-SET(PKG_RELEASE "1")
-SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}.${PKG_RELEASE})
-
-# The @keyword@ references are patched to actual values by upload script.
-SET(TARBALL_URL "https://dl.cloudsmith.io/public/@pkg_repo@/raw")
-SET(TARBALL_URL ${TARBALL_URL}/names/@name@/versions/@version@/@filename@)
-
-
-
-INCLUDE("cmake/PluginSetup.cmake")
-set(PLUGIN_NAME squiddio-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
-
-configure_file(
-  # Used by flatpak, do this early.
-  ${CMAKE_SOURCE_DIR}/upload-conf.sh.in
-  ${CMAKE_CURRENT_BINARY_DIR}/upload-conf.sh
-  @ONLY
-)
-if (OCPN_FLATPAK)
-    # On a flatpak build lib libraries such as LibGL and wxWidgets are only
-    # available in the flatpak sandbox. Thus, building flatpak must be done
-    # before attempts to locate these non-existing libraries in the host i. e.,
-    # before any FindLibrary(), FindWxWidgets(), etc.
-    find_program(TAR NAMES gtar tar)
-    if (NOT TAR)
-        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
-    endif ()
-    configure_file(
-        ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
-    )
-    configure_file(
-        ${CMAKE_SOURCE_DIR}/cmake/org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml.in
-        ${CMAKE_SOURCE_DIR}/flatpak/org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml
-    )
-    add_custom_target(flatpak-build ALL
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
-        COMMAND /usr/bin/flatpak-builder --force-clean
-            ${CMAKE_CURRENT_BINARY_DIR}/app
-            org.opencpn.OpenCPN.Plugin.${PACKAGE}.yaml
-    )
-    add_custom_target("flatpak-pkg")
-    add_custom_command(
-        TARGET flatpak-pkg
-        COMMAND ${TAR}
-            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
-            --transform 's|.*/files/|${PACKAGE}-flatpak-${PACKAGE_VERSION}/|'
-            ${CMAKE_CURRENT_BINARY_DIR}/app/files
-    )
-    return ()
+# This 'if' allows setup of a local webserver with git for testing
+if($ENV{CIRCLECI})
+    set(GIT_REPOSITORY_HOST "github.com")
+    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+    set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
+elseif($ENV{TRAVIS})
+    set(GIT_REPOSITORY_HOST "github.com")
+    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+    set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
+else()
+    set(GIT_REPOSITORY_HOST "github.com")
+    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+    set(GIT_REPOSITORY_BRANCH "master")
+    #  set(GIT_REPOSITORY_HOST "git.eclipse.com.au")
+    #  set(GIT_REPOSITORY_DIR "")
+    #  set(GIT_REPOSITORY_BRANCH "cmake_flatpak_test")
 endif()
+message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
+
+# Prod builds repository url
+set(PROD "pi")   #Mauro Repos
+#set(PROD "prod")  #Standard Repos
+
+# Beta builds repository url
+set(BETA "stable")  #Mauro Repos
+#set(BETA "beta")       #Standard Repos
+
+# Alpha builds repository url
+set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
+#set(ALPHA "alpha") #Standard Repos
+
+#set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
+set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
+#set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
+
+set(CLOUDSMITH_USER "mauro-calvi")
+#set(CLOUDSMITH_USER "jon-gough")
+#set(CLOUDSMITH_USER "rick-gleason")
+
+set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
+set(XML_SUMMARY "Plugin to display interesting objects")
+set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
+#set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
+
+##
+## ----- Modify section above to include all the details for your plugin ----- ##
+##
+
+##
+## ----- Modify section below if there are special requirements for the plugin ----- ##
+##
+
+option(PLUGIN_USE_SVG "Use SVG graphics" ON)
+
+set(CMAKE_CXX_STANDARD 11)
+
+if(NOT ${PACKAGE} MATCHES "(.*)_pi")
+    set(PACKAGE_NAME ${PACKAGE}_pi)
+    set(PACKAGE_FILE_NAME "${PACKAGE}_pi")
+else(NOT ${PACKAGE} MATCHES "(.*)_pi")
+    set(PACKAGE_NAME ${PACKAGE})
+    set(PACKAGE_FILE_NAME "${PACKAGE}")
+endif(NOT ${PACKAGE} MATCHES "(.*)_pi")
+string(TOUPPER "${PACKAGE}" TITLE_NAME)
+
+project(${PACKAGE_NAME} VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
+message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
+
+set(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+
+message(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK}")
+message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
 
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
+# Don't use local version of GLU library
+set(USE_LOCAL_GLU FALSE)
+option(USE_GL "Enable OpenGL support" OFF)
+message(STATUS "USE_GL: ${USE_GL}")
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
+endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+# set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION}-${OCPN_MIN_VERSION}-${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR})
+set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION})
+set(PKG_URL "https://dl.cloudsmith.io/public/--pkg_repo--/raw/names/--name--/versions/--version--/--filename--")
+
+include("cmake/PluginSetup.cmake")
+
+if(DEFINED ENV{OCPN_TARGET})
+    set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}-$ENV{OCPN_TARGET}")
+else(DEFINED ENV{OCPN_TARGET})
+    set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}")
+endif(DEFINED ENV{OCPN_TARGET})
+message(STATUS "PACKAGING_NAME: ${PACKAGING_NAME}")
+
+set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+option(Plugin_CXX11 "Use c++11" OFF)
+
+if(Plugin_CXX11)
+  message(STATUS "Attempting to use c++11")
+  include(CheckCXXCompilerFlag)
+  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
+  check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+  if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(Plugin_USE_CXX11 ON)
+  elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set(Plugin_USE_CXX11 ON)
+  else()
+    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+    set(Plugin_USE_CXX11 OFF)
+  endif()
+else()
+  set(Plugin_USE_CXX11 OFF)
+endif()
+
+if(Plugin_USE_CXX11)
+  message(STATUS "Allowing use of c++11")
+endif()
+
+message(STATUS "CMAKE version: ${CMAKE_VERSION}")
+if(CMAKE_VERSION VERSION_GREATER 3.4)
+  set(ENABLE_CLANG_TIDY
+      OFF
+      CACHE BOOL "Add clang-tidy automatically to builds")
+  if(ENABLE_CLANG_TIDY)
+    find_program(
+      CLANG_TIDY_EXE
+      NAMES "clang-tidy"
+      PATHS /usr/local/opt/llvm/bin)
+    if(CLANG_TIDY_EXE)
+      message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+      # For more, see http://clang.llvm.org/extra/clang-tidy/ set(CLANG_TIDY_CHECKS "-*,modernize-*")
+      set(CLANG_TIDY_CHECKS "-*,performance-*")
+      set(CMAKE_CXX_CLANG_TIDY
+          "${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_CHECKS};-header-filter='${CMAKE_SOURCE_DIR}/*'"
+          CACHE STRING "" FORCE)
+    else()
+      message(AUTHOR_WARNING "clang-tidy not found!")
+      set(CMAKE_CXX_CLANG_TIDY
+          ""
+          CACHE STRING "" FORCE) # delete it
+    endif()
+  endif()
+endif()
+
+if(CMAKE_VERSION VERSION_GREATER 3.9)
+  set(ENABLE_CPPCHECK
+      OFF
+      CACHE BOOL "Add cppcheck automatically to builds")
+  if(ENABLE_CPPCHECK)
+    find_program(CPPCHECK_EXECUTABLE NAMES "cppcheck")
+    set(CMAKE_CXX_CPPCHECK ${CPPCHECK_EXECUTABLE})
+  endif()
+endif()
+
+##
+## ----- Modify section above if there are special requirements for the plugin ----- ##
+##
+
 
 INCLUDE("cmake/PluginConfigure.cmake")
 
-SET(SRC_SQUIDDIO
+##
+## ----- Change below to match your project requirements ----- ##
+## ------These lines are only for Testplugin - do not use ------------##
+##
+##   REMOVED
+##
+## ------The lines above are only for Testplugin -do not use------------##
+##
+# ----Remember to Add your project Set(SRCS and set(HDRS
+##----------Below From Squiddio for SET( Headers and SRCS) ------------------
+SET(SRCS
     src/squiddio_pi.h
     src/squiddio_pi.cpp
     src/squiddioPrefsDialogBase.cpp
@@ -180,7 +275,7 @@ SET(SRC_SQUIDDIO
     src/wxJSON/jsonval.h
     src/wxJSON/jsonwriter.cpp
     src/wxJSON/jsonwriter.h
-     )
+  )
 
 SET(SRC_NMEA0183
     src/nmea0183/LatLong.hpp
@@ -245,36 +340,102 @@ SET(SRC_NMEA0183
     src/nmea0183/vlw.hpp
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
-    )
+  )
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
 
+
+##----------Above From Squiddio ------------------
+
+##=============REMOVE THESE LINES LEFT FROM TESTPLUGIN ================
+#add_definitions(-DUSE_S57)
+#set(SRCS
+#    src/tpdc.cpp
+#    ...
+#    src/tpUtils.cpp)
+#
+#set(HDRS
+#    include/testplugin_pi.h
+#    ...
+#    include/tpUtils.h)
+#
+#
+#set(OCPNSRC ocpnsrc/TexFont.cpp)
+#set(OCPNHDRS ocpninclude/ocpn_plugin.h ocpninclude/pluginmanager.h ocpninclude/TexFont.h)
+#set(EXTSRC)
+#set(EXTINCLUDE
+#    extinclude/nlohmann/json.hpp
+#    extinclude/ODAPI.h)
+#set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
+#set(LIBHDRS
+#    libs/GL/include/gl.h
+#    ...
+#    libs/wx/include/jsonwriter.h)
+#
+# add_definitions(-DPLUGIN_USE_SVG)
+#
+#IF(APPLE)
+#    OPTION(TP_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" OFF)
+#ELSE(APPLE)
+#    OPTION(TP_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" ON)
+#ENDIF(APPLE)
+
+#IF(TP_JSON_SCHEMA_VALIDATOR)
+#...
+#ENDIF(TP_JSON_SCHEMA_VALIDATOR)
+
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude)
+#...
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/bitmaps)
+
+#IF(UNIX AND NOT APPLE)
+#  IF(TP_JSON_SCHEMA_VALIDATOR)
+#  ... 
+#  ENDIF(TP_JSON_SCHEMA_VALIDATOR)
+#ENDIF(UNIX AND NOT APPLE)
+## ========== REMOVE Lines above left over from TestPlugin ==================
+
+
+##
+## ----- Change below to match project requirements ----- ##
+##
+##================================================================================
+## Required to collect all the set( headers and SRCS  - Adjust as required
+## This add_library  is used in the conditionals below.
+##================================================================================
+##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
+##================================================================================
+
 ADD_DEFINITIONS(-DTIXML_USE_STL)
 IF(UNIX AND NOT APPLE)
- INCLUDE("cmake/FindTinyXML.cmake")
- FIND_PACKAGE(TinyXML QUIET)
+    INCLUDE("cmake/FindTinyXML.cmake")
+    FIND_PACKAGE(TinyXML QUIET)
 ENDIF(UNIX AND NOT APPLE)
 
 IF(TINYXML_FOUND)
- message (STATUS "Building with system tinyxml")
- INCLUDE_DIRECTORIES(${TINYXML_INCLUDE_DIR})
- ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} ${SRC_NMEA0183})
- TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${TINYXML_LIBRARIES} )
+    message (STATUS "Building with system tinyxml")
+    INCLUDE_DIRECTORIES(${TINYXML_INCLUDE_DIR})
+    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183})
+    TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${TINYXML_LIBRARIES} )
 ELSE(TINYXML_FOUND)
- message (STATUS "Building with embedded tinyxml")
- SET(SRC_LTINYXML
+    message (STATUS "Building with embedded tinyxml")
+    SET(SRC_LTINYXML
     src/tinyxml.h
     src/tinystr.h
- )
- ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_SQUIDDIO} ${SRC_NMEA0183} ${SRC_LTINYXML})
+      )
+    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183} ${SRC_LTINYXML})
 ENDIF(TINYXML_FOUND)
 
-INCLUDE("cmake/PluginInstall.cmake")
-INCLUDE("cmake/PluginLocalization.cmake")
-INCLUDE("cmake/PluginPackage.cmake")
 
-configure_file(
-  ${CMAKE_SOURCE_DIR}/${PACKAGE}-plugin.xml.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
-)
+##
+## ----- Change above to match project requirements ----- ##
+##
+
+##
+## ----- Do not change - needed to build app ----- ##
+##
+
+include("cmake/PluginInstall.cmake")
+include("cmake/PluginLocalization.cmake")
+include("cmake/PluginPackage.cmake")
