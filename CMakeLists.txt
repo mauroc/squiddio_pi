@@ -53,9 +53,9 @@ set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-set(GIT_USER "mauroc")
+#set(GIT_USER "mauroc")
 #set(GIT_USER "jongough")
-#set(GIT_USER "rgleason")
+set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
@@ -79,25 +79,25 @@ else()
 endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
-# Prod builds repository url
-set(PROD "pi")   #Mauro Repos
-#set(PROD "prod")  #Standard Repos
-
-# Beta builds repository url
-set(BETA "stable")  #Mauro Repos
-#set(BETA "beta")       #Standard Repos
-
-# Alpha builds repository url
-set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
-#set(ALPHA "alpha") #Standard Repos
+#set(CLOUDSMITH_USER "mauro-calvi")
+#set(CLOUDSMITH_USER "jon-gough")
+set(CLOUDSMITH_USER "rick-gleason")
 
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
-#set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
+#set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
+set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
-set(CLOUDSMITH_USER "mauro-calvi")
-#set(CLOUDSMITH_USER "jon-gough")
-#set(CLOUDSMITH_USER "rick-gleason")
+# Prod builds repository url
+#set(PROD "pi")   #Mauro Repos
+set(PROD "prod")  #Standard Repos
+
+# Beta builds repository url
+#set(BETA "stable")  #Mauro Repos
+set(BETA "beta")       #Standard Repos
+
+# Alpha builds repository url
+#set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
+set(ALPHA "alpha") #Standard Repos
 
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
