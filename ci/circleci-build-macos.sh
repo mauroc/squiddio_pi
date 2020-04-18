@@ -12,9 +12,6 @@ fi
 set -xe
 
 set -o pipefail
-#for pkg in cairo libexif xz libarchive python3 wget cmake; do
-#    brew list $pkg 2>/dev/null | head -10 || brew install $pkg
-#done
 for pkg in cairo libexif xz libarchive wget cmake; do
     brew list $pkg 2>/dev/null | head -10 || brew install $pkg
 done
@@ -23,9 +20,6 @@ done
 	brew ls python3
 	brew install wget
 	brew install cmake
-#pip3 install <package>
-#pip3 install setuptools cloudsmith-cli
-#/usr/local/opt/python@3.8/bin/pip3 install cloudsmith-cli setuptools
 
 wget -q http://opencpn.navnux.org/build_deps/wx312_opencpn50_macos109.tar.xz
 tar xJf wx312_opencpn50_macos109.tar.xz -C /tmp
