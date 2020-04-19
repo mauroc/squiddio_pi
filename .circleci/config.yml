@@ -97,6 +97,22 @@ jobs:
         - run: chmod a+x ci/*.sh
         - run: ci/circleci-build-debian.sh
         - run: ci/cloudsmith-upload.sh
+    build-focal:
+       docker:
+       - image: circleci/buildpack-deps:focal-scm
+       environment:
+       - OCPN_TARGET:  focal
+       steps:
+       - checkout
+       - run: >
+           echo "deb-src http://us.archive.ubuntu.com/ubuntu/ focal main"
+           | sudo tee -a /etc/apt/sources.list
+       - run: >
+           echo "deb-src http://us.archive.ubuntu.com/ubuntu/ focal-updates main"
+           | sudo tee -a /etc/apt/sources.list
+       - run: cat /etc/apt/sources.list
+       - run: ci/circleci-build-debian.sh
+       - run: ci/circleci-upload.sh
     build-buster:
         docker:
         - image: circleci/buildpack-deps:buster-scm
@@ -217,6 +233,12 @@ workflows:
                     ignore:
                     - devel
                     - tmp
+        - build-focal:
+            filters:
+                branches:
+                    ignore:
+                    - devel
+                    - tmp					
         - build-buster:
             filters:
                 branches:
