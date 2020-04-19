@@ -23,7 +23,9 @@
 ##
 ## ----- Modify section below to include all the details for your plugin ----- ##
 ##
-
+## ====FRONTEND 2==============
+## 
+## 
 # define minimum cmake version
 cmake_minimum_required(VERSION 3.1.1)
 if(COMMAND cmake_policy)
@@ -79,25 +81,21 @@ else()
 endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
-#set(CLOUDSMITH_USER "mauro-calvi")
 #set(CLOUDSMITH_USER "jon-gough")
+#set(CLOUDSMITH_USER "mauro-calvi")
 set(CLOUDSMITH_USER "rick-gleason")
 
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
 #set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
 set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
-# Prod builds repository url
-#set(PROD "pi")   #Mauro Repos
+# Set Cloudsmith upload repository suffix for each catalog
 set(PROD "prod")  #Standard Repos
-
-# Beta builds repository url
-#set(BETA "stable")  #Mauro Repos
+#set(PROD "pi")   #Mauro Repos
 set(BETA "beta")       #Standard Repos
-
-# Alpha builds repository url
-#set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
+#set(BETA "stable")  #Mauro Repos
 set(ALPHA "alpha") #Standard Repos
+#set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
 
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
@@ -150,7 +148,9 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION})
 set(PKG_URL "https://dl.cloudsmith.io/public/--pkg_repo--/raw/names/--name--/versions/--version--/--filename--")
 
-include("cmake/PluginSetup.cmake")
+#===========================================================
+INCLUDE("cmake/PluginSetup.cmake")
+#===========================================================
 
 if(DEFINED ENV{OCPN_TARGET})
     set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}-$ENV{OCPN_TARGET}")
@@ -228,8 +228,9 @@ endif()
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
 ##
 
-
+#===========================================================
 INCLUDE("cmake/PluginConfigure.cmake")
+#===========================================================
 
 ##
 ## ----- Change below to match your project requirements ----- ##
