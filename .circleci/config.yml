@@ -241,6 +241,12 @@ workflows:
                     ignore:
                     - devel
                     - tmp
+        - build-debian:
+            filters:
+                branches:
+                    ignore:
+                    - devel
+                    - tmp
         - build-flatpak:
             filters:
                 branches:
