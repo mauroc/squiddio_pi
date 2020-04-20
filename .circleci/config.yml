@@ -5,7 +5,7 @@ jobs:
         machine: true
         environment:
         - OCPN_TARGET=stretch-armhf
-        - DOCKER_IMAGE=raspbian/stretch
+        - DOCKER_IMAGE=jongough/raspbian-stretch:latest
         - BUILD_FLAGS=-j3
         steps:
         - checkout
