@@ -48,16 +48,16 @@ SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 
 SET(VERSION_PATCH "2")
-set(VERSION_TWEAK "4")
-set(VERSION_DATE "20/04/2020")
+set(VERSION_TWEAK "5")
+set(VERSION_DATE "29/04/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-#set(GIT_USER "mauroc")
+set(GIT_USER "mauroc")
 #set(GIT_USER "jongough")
-set(GIT_USER "rgleason")
+#set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
@@ -82,12 +82,12 @@ endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
 #set(CLOUDSMITH_USER "jon-gough")
-#set(CLOUDSMITH_USER "mauro-calvi")
-set(CLOUDSMITH_USER "rick-gleason")
+set(CLOUDSMITH_USER "mauro-calvi")
+#set(CLOUDSMITH_USER "rick-gleason")
 
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-#set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
-set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
+set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
+#set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
 # Set Cloudsmith upload repository suffix for each catalog
 set(PROD "prod")  #Standard Repos
