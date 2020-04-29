@@ -23,7 +23,9 @@
 ##
 ## ----- Modify section below to include all the details for your plugin ----- ##
 ##
-
+## ====FRONTEND 2==============
+## 
+## 
 # define minimum cmake version
 cmake_minimum_required(VERSION 3.1.1)
 if(COMMAND cmake_policy)
@@ -46,16 +48,16 @@ SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 
 SET(VERSION_PATCH "2")
-set(VERSION_TWEAK "1")
-set(VERSION_DATE "15/04/2020")
+set(VERSION_TWEAK "4")
+set(VERSION_DATE "20/04/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-set(GIT_USER "mauroc")
+#set(GIT_USER "mauroc")
 #set(GIT_USER "jongough")
-#set(GIT_USER "rgleason")
+set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
@@ -79,25 +81,21 @@ else()
 endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
 
-# Prod builds repository url
-set(PROD "pi")   #Mauro Repos
-#set(PROD "prod")  #Standard Repos
-
-# Beta builds repository url
-set(BETA "stable")  #Mauro Repos
-#set(BETA "beta")       #Standard Repos
-
-# Alpha builds repository url
-set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
-#set(ALPHA "alpha") #Standard Repos
+#set(CLOUDSMITH_USER "jon-gough")
+#set(CLOUDSMITH_USER "mauro-calvi")
+set(CLOUDSMITH_USER "rick-gleason")
 
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
-#set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
+#set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
+set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
-set(CLOUDSMITH_USER "mauro-calvi")
-#set(CLOUDSMITH_USER "jon-gough")
-#set(CLOUDSMITH_USER "rick-gleason")
+# Set Cloudsmith upload repository suffix for each catalog
+set(PROD "prod")  #Standard Repos
+#set(PROD "pi")   #Mauro Repos
+set(BETA "beta")       #Standard Repos
+#set(BETA "stable")  #Mauro Repos
+set(ALPHA "alpha") #Standard Repos
+#set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
 
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
@@ -150,7 +148,9 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION})
 set(PKG_URL "https://dl.cloudsmith.io/public/--pkg_repo--/raw/names/--name--/versions/--version--/--filename--")
 
-include("cmake/PluginSetup.cmake")
+#===========================================================
+INCLUDE("cmake/PluginSetup.cmake")
+#===========================================================
 
 if(DEFINED ENV{OCPN_TARGET})
     set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}-$ENV{OCPN_TARGET}")
@@ -228,8 +228,9 @@ endif()
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
 ##
 
-
+#===========================================================
 INCLUDE("cmake/PluginConfigure.cmake")
+#===========================================================
 
 ##
 ## ----- Change below to match your project requirements ----- ##
