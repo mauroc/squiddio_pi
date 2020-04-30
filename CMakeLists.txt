@@ -98,8 +98,8 @@ set(BETA "beta")       #Standard Repos
 set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual'
 
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
-set(XML_SUMMARY "Plugin to display interesting objects")
-set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
+set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
+set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
 #set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 
 ##
