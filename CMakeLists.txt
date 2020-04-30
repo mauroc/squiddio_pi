@@ -94,8 +94,8 @@ set(PROD "prod")  #Standard Repos
 #set(PROD "pi")   #Mauro Repos
 set(BETA "beta")       #Standard Repos
 #set(BETA "stable")  #Mauro Repos
-# set(ALPHA "alpha") #Standard Repos
-set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual'
+set(ALPHA "alpha") #Standard Repos
+# set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual'
 
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
