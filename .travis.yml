@@ -4,7 +4,6 @@ matrix:
   include:
   - env:
     - OCPN_TARGET=stretch-armhf
-						
     - DOCKER_IMAGE=raspbian/stretch
     - BUILD_FLAGS="-j2"
     services:
@@ -15,7 +14,6 @@ matrix:
     - travis_wait 120 sleep infinity & bash ./ci/travis-build-raspbian-armhf-part2.sh
   - env:
     - OCPN_TARGET=buster-armhf
-						
     - DOCKER_IMAGE=jongough/raspbian-buster:plugin_build_tooling_current
     - BUILD_FLAGS=-j2
     services:
