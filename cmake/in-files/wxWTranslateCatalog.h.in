@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ${PROJECT_NAME}_pi,v 1.0 2015/01/28 01:54:37 jongough Exp $
+ * $Id: ocpn_draw_pi.h,v 1.0 2015/01/28 01:54:37 jongough Exp $
  *
  * Project:  OpenCPN
  * Purpose:  Redefine _() macro to allow usage of catalog
@@ -25,8 +25,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  */
-#ifndef _CATTRANS_H_
-#define _CATTRANS_H_
+#ifndef _PICATTRANS_H_
+#define _PICATTRANS_H_
 
 #ifndef WXINTL_NO_GETTEXT_MACRO
 #ifdef _

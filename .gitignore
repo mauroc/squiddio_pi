@@ -1,13 +1,8 @@
-cscope.files
 tags
 index.sh
 include/version.h
 build
 Debug
-cmake
-CMakeFiles
-cscope.out
-.cproject
 .project
 Release
 core

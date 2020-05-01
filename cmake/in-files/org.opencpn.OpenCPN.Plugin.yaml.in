@@ -12,11 +12,11 @@ modules:
     builddir: true
     config-opts:
         - -DCMAKE_INSTALL_PREFIX=/app/extensions/${PACKAGE}
-        - -DOCPN_FLATPAK=ON
+        - -DOCPN_FLATPAK_BUILD=ON
     build-options:
         cflags: -fPIC
         cxxflags: -fPIC
     sources:
        - type: git
-         url: https://github.com/mauroc/${PACKAGE}_pi.git
-         commit: d474c8ffa3c4addbaf724d55b1b464e894b1934d
+         url: git://${GIT_REPOSITORY_HOST}/${GIT_REPOSITORY_DIR}${GIT_REPOSITORY_NAME}
+         branch: ${GIT_REPOSITORY_BRANCH}
