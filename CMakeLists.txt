@@ -50,17 +50,18 @@ SET(PACKAGE "squiddio")
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 
-SET(VERSION_PATCH "2")
-set(VERSION_TWEAK "4")
-set(VERSION_DATE "20/04/2020")
+
+SET(VERSION_PATCH "4")
+set(VERSION_TWEAK "2")
+set(VERSION_DATE "01/05/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-#set(GIT_USER "mauroc")
+set(GIT_USER "mauroc")
 #set(GIT_USER "jongough")
-set(GIT_USER "rgleason")
+#set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
@@ -106,17 +107,13 @@ set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
 # Set Cloudsmith upload repository suffix for each catalog
 set(PROD "prod")  #Standard Repos
-#set(PROD "pi")   #Mauro Repos
-set(BETA "beta")       #Standard Repos
-#set(BETA "stable")  #Mauro Repos
+set(BETA "beta")  #Standard Repos
 set(ALPHA "alpha") #Standard Repos
-#set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
-
 
 # Set Plugin info-url, summary and description
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
-set(XML_SUMMARY "Plugin to display interesting objects")
-set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
+set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
+set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
 
 ##
 ## ----- Modify above to include all the plugin details --------- ##
@@ -369,8 +366,6 @@ INCLUDE_DIRECTORIES(api-16)
 
 
 ##----------Above From Squiddio ------------------
-
-
 
 ##
 ## ----- Change below to match project requirements ----- ##
