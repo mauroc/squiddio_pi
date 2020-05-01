@@ -20,13 +20,15 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
-##
-## ----- Modify section below to include all the details for your plugin ----- ##
-##
-## ====FRONTEND 2==============
-## 
-## 
-# define minimum cmake version
+#-----------------------------------------------------------------------------
+# Frontend2 Author: Jon Gough  
+# ---------------------------------------------------------------------------
+# CMake-CI Number: 0.0.005  
+#    - 2/19/2020 10 environments needed for beta testing.
+#    - 3/30/2020 MacOS build fixed 12 env
+# ---------------------------------------------------------------------------
+# ----- Modify section below to include all the details for your plugin ----- ##
+
 cmake_minimum_required(VERSION 3.1.1)
 if(COMMAND cmake_policy)
     if(POLICY CMP0043)
@@ -39,6 +41,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 SET(VERBOSE_NAME Squiddio)
+# Search "getcommonname"in weather_routing_pi.cpp
 set(COMMON_NAME "squiddio")
 set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
@@ -62,24 +65,36 @@ set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
 
-# This 'if' allows setup of a local webserver with git for testing
+# Permits setup of a local webserver with git for testing
 if($ENV{CIRCLECI})
-    set(GIT_REPOSITORY_HOST "github.com")
-    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-    set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
+  set(GIT_REPOSITORY_HOST "github.com")
+  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+  set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
 elseif($ENV{TRAVIS})
-    set(GIT_REPOSITORY_HOST "github.com")
-    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-    set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
+  set(GIT_REPOSITORY_HOST "github.com")
+  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+  set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
+elseif($ENV{APPVEYOR})
+  set(GIT_REPOSITORY_HOST "github.com")
+  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+  set(GIT_REPOSITORY_BRANCH "$ENV{APPVEYOR_REPO_BRANCH}")
 else()
-    set(GIT_REPOSITORY_HOST "github.com")
-    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+  set(GIT_REPOSITORY_HOST "github.com")
+  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
+  # Get the current working branch
+  execute_process(
+    COMMAND git rev-parse --abbrev-ref HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_REPOSITORY_BRANCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  if(${GIT_REPOSITORY_BRANCH} EQUAL "")
+    message(STATUS "Setting default GIT repository branch - master")
     set(GIT_REPOSITORY_BRANCH "master")
-    #  set(GIT_REPOSITORY_HOST "git.eclipse.com.au")
-    #  set(GIT_REPOSITORY_DIR "")
-    #  set(GIT_REPOSITORY_BRANCH "cmake_flatpak_test")
+  endif()
 endif()
 message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
+
 
 #set(CLOUDSMITH_USER "jon-gough")
 #set(CLOUDSMITH_USER "mauro-calvi")
@@ -97,17 +112,15 @@ set(BETA "beta")       #Standard Repos
 set(ALPHA "alpha") #Standard Repos
 #set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual' 
 
+
+# Set Plugin info-url, summary and description
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to display interesting objects")
 set(XML_DESCRIPTION "Plugin to display harbours, bouys, interesting locations etc. on the chart")
-#set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 
 ##
-## ----- Modify section above to include all the details for your plugin ----- ##
-##
-
-##
-## ----- Modify section below if there are special requirements for the plugin ----- ##
+## ----- Modify above to include all the plugin details --------- ##
+## ----- Modify below for plugin special requirements------------ ##
 ##
 
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
@@ -135,6 +148,7 @@ message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
 set(OpenGL_GL_PREFERENCE "LEGACY")
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
+
 option(USE_GL "Enable OpenGL support" OFF)
 message(STATUS "USE_GL: ${USE_GL}")
 
@@ -144,7 +158,6 @@ endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-# set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION}-${OCPN_MIN_VERSION}-${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR})
 set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION})
 set(PKG_URL "https://dl.cloudsmith.io/public/--pkg_repo--/raw/names/--name--/versions/--version--/--filename--")
 
@@ -161,10 +174,12 @@ message(STATUS "PACKAGING_NAME: ${PACKAGING_NAME}")
 
 set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
+# Settings and Options
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
+# Check on compiler support
 if(Plugin_CXX11)
   message(STATUS "Attempting to use c++11")
   include(CheckCXXCompilerFlag)
@@ -224,20 +239,17 @@ if(CMAKE_VERSION VERSION_GREATER 3.9)
   endif()
 endif()
 
-##
-## ----- Modify section above if there are special requirements for the plugin ----- ##
-##
-
+# -------Section above is directly from Testplugin --------------#  
+# ----- Modify section above for special plugin requirements----- ##
 #===========================================================
 INCLUDE("cmake/PluginConfigure.cmake")
 #===========================================================
+# ----- Change below to match project requirements ----- ##
 
-##
-## ----- Change below to match your project requirements ----- ##
+add_definitions(-DUSE_S57)
+
 ## ------These lines are only for Testplugin - do not use ------------##
-##
 ##   REMOVED
-##
 ## ------The lines above are only for Testplugin -do not use------------##
 ##
 # ----Remember to Add your project Set(SRCS and set(HDRS
@@ -342,12 +354,23 @@ SET(SRC_NMEA0183
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
   )
+  
+##=============================================================
+# Modify/configure 'Include' Directories below for the Plugin
+##=============================================================
+# EG  also in some of the cmake/Plugin____.cmake files
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wx/include)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
+  
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
 
 
 ##----------Above From Squiddio ------------------
+
+
 
 ##
 ## ----- Change below to match project requirements ----- ##
@@ -359,7 +382,8 @@ INCLUDE_DIRECTORIES(api-16)
 ##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
 ##================================================================================
 
-ADD_DEFINITIONS(-DTIXML_USE_STL)
+ADD_DEFINITIONS(-DTIXML_USE_STL)								
+
 IF(UNIX AND NOT APPLE)
     INCLUDE("cmake/FindTinyXML.cmake")
     FIND_PACKAGE(TinyXML QUIET)
