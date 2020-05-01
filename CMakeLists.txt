@@ -50,6 +50,7 @@ SET(PACKAGE "squiddio")
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 
+
 SET(VERSION_PATCH "4")
 set(VERSION_TWEAK "2")
 set(VERSION_DATE "01/05/2020")
@@ -58,9 +59,9 @@ set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-#set(GIT_USER "mauroc")
+set(GIT_USER "mauroc")
 #set(GIT_USER "jongough")
-set(GIT_USER "rgleason")
+#set(GIT_USER "rgleason")
 set(GIT_REPOSITORY_NAME "squiddio_pi")
 message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
 message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
@@ -106,7 +107,7 @@ set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
 
 # Set Cloudsmith upload repository suffix for each catalog
 set(PROD "prod")  #Standard Repos
-set(BETA "beta")       #Standard Repos
+set(BETA "beta")  #Standard Repos
 set(ALPHA "alpha") #Standard Repos
 
 # Set Plugin info-url, summary and description
