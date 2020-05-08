@@ -998,7 +998,7 @@ wxString squiddio_pi::GetShortDescription() {
 
 wxString squiddio_pi::GetLongDescription() {
     return _(
-"== User-sourced database of sailing destinations ==\n\
+"== User-sourced database of sailing Points of Interest ==\n\
 To download (or update) Points of Interest (POIs) for a desired region (requires Internet connection):\n\
 * Position cursor on area where you want to view POIs and right click mouse\n\
 * Select 'sQuiddio: Download (or Update) local Points of Interest' from context-sensitive menu.\n\n\
