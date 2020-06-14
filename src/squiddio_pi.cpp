@@ -241,6 +241,9 @@ int squiddio_pi::Init(void) {
     wxString base_dir = *GetpPrivateApplicationDataLocation()+wxFileName::GetPathSeparator();
     layerdir = base_dir + _T("plugins") + wxFileName::GetPathSeparator()+ _T("squiddio");
 
+    if (!wxDir::Exists(base_dir + _T("plugins")))
+        wxFileName::Mkdir(base_dir + _T("plugins"));
+
     if (!wxDir::Exists(layerdir)) {
         wxFileName::Mkdir(layerdir);
         wxString old_dir = base_dir + _T("squiddio");
@@ -418,7 +421,7 @@ bool squiddio_pi::LoadConfig(void) {
     
     pConf->Read(_T("ChartDnldDir"), &g_BaseChartDir);
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
-    pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap);
+    pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap, false);
     pConf->Read(_T("DelGpxs"), &g_DelGpxs, false);
     pConf->Read(_T("SendXml"), &g_SendXml, false);
 
@@ -998,7 +1001,7 @@ wxString squiddio_pi::GetShortDescription() {
 
 wxString squiddio_pi::GetLongDescription() {
     return _(
-"== User-sourced database of sailing destinations ==\n\
+"== User-sourced database of sailing Points of Interest ==\n\
 To download (or update) Points of Interest (POIs) for a desired region (requires Internet connection):\n\
 * Position cursor on area where you want to view POIs and right click mouse\n\
 * Select 'sQuiddio: Download (or Update) local Points of Interest' from context-sensitive menu.\n\n\

@@ -20,15 +20,20 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
-#-----------------------------------------------------------------------------
-# Frontend2 Author: Jon Gough  
-# ---------------------------------------------------------------------------
-# CMake-CI Number: 0.0.005  
-#    - 2/19/2020 10 environments needed for beta testing.
-#    - 3/30/2020 MacOS build fixed 12 env
-# ---------------------------------------------------------------------------
-# ----- Modify section below to include all the details for your plugin ----- ##
+##
+## ====FRONTEND 2  Version: 1.0.115 (corresponds with testplugin)=============
+##     
+## ----- When changing this file do NOT change the order in which sections occur        ----- ##
+## ----- Changes should only be made between the section blocks that identify where     ----- ##
+## ----- these changes should be. The whole configuration process relies on this        ----- ##
+## ----- sequence to be successful                                                      ----- ##
+##
+## ----- Modify section below to include all the details for your plugin ----- ##
+##
 
+set(CMLOC "CMakeLists: ")
+
+# define minimum cmake version
 cmake_minimum_required(VERSION 3.1.1)
 if(COMMAND cmake_policy)
     if(POLICY CMP0043)
@@ -40,6 +45,7 @@ if(COMMAND cmake_policy)
     endif(POLICY CMP0077)
 endif(COMMAND cmake_policy)
 
+# define plugin name, owner and versions
 SET(VERBOSE_NAME Squiddio)
 # Search "getcommonname"in weather_routing_pi.cpp
 set(COMMON_NAME "squiddio")
@@ -49,71 +55,46 @@ SET(PACKAGE "squiddio")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-
-
 SET(VERSION_PATCH "4")
-set(VERSION_TWEAK "2")
-set(VERSION_DATE "01/05/2020")
+set(VERSION_TWEAK "5")
+set(VERSION_DATE "1/14/2020")
+
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-set(GIT_USER "mauroc")
-#set(GIT_USER "jongough")
+
+#Used to set up a local webserver with git loaded, for testing purposes.
+set(GIT_REPOSITORY_SERVER "github.com")
+
+#No longer needed, queried and found by PluginConfigure.cmake.
+#set(GIT_USER "mauroc")
 #set(GIT_USER "rgleason")
-set(GIT_REPOSITORY_NAME "squiddio_pi")
-message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
-message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
+#set(GIT_REPOSITORY_NAME "squiddio_pi")
 
-# Permits setup of a local webserver with git for testing
-if($ENV{CIRCLECI})
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
-elseif($ENV{TRAVIS})
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
-elseif($ENV{APPVEYOR})
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  set(GIT_REPOSITORY_BRANCH "$ENV{APPVEYOR_REPO_BRANCH}")
-else()
-  set(GIT_REPOSITORY_HOST "github.com")
-  set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-  # Get the current working branch
-  execute_process(
-    COMMAND git rev-parse --abbrev-ref HEAD
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_REPOSITORY_BRANCH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-  if(${GIT_REPOSITORY_BRANCH} EQUAL "")
-    message(STATUS "Setting default GIT repository branch - master")
-    set(GIT_REPOSITORY_BRANCH "master")
-  endif()
-endif()
-message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
-
-
-#set(CLOUDSMITH_USER "jon-gough")
-#set(CLOUDSMITH_USER "mauro-calvi")
-set(CLOUDSMITH_USER "rick-gleason")
-
-#set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-#set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
-set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
-
-# Set Cloudsmith upload repository suffix for each catalog
+# Specifies Cloudsmith upload repository suffix for each catalog
 set(PROD "prod")  #Standard Repos
-set(BETA "beta")  #Standard Repos
+set(BETA "beta")       #Standard Repos
 set(ALPHA "alpha") #Standard Repos
+
+#set(CLOUDSMITH_USER "mauro-calvi")
+#set(CLOUDSMITH_USER "rick-gleason")
+set(CLOUDSMITH_USER "opencpn")
+
+# Set if  Cloudsmith Base Repository name does not match your Git Repository name.
+set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # without the '_pi'
+
 
 # Set Plugin info-url, summary and description
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
 set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
+
+##
+## ----- Modify section above to include all the details for your plugin ----- ##
+##
+
 
 ##
 ## ----- Modify above to include all the plugin details --------- ##
@@ -124,133 +105,54 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-if(NOT ${PACKAGE} MATCHES "(.*)_pi")
-    set(PACKAGE_NAME ${PACKAGE}_pi)
-    set(PACKAGE_FILE_NAME "${PACKAGE}_pi")
-else(NOT ${PACKAGE} MATCHES "(.*)_pi")
-    set(PACKAGE_NAME ${PACKAGE})
-    set(PACKAGE_FILE_NAME "${PACKAGE}")
-endif(NOT ${PACKAGE} MATCHES "(.*)_pi")
-string(TOUPPER "${PACKAGE}" TITLE_NAME)
-
-project(${PACKAGE_NAME} VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
-message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
-
-set(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-
-message(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK}")
-message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
-
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
 
 option(USE_GL "Enable OpenGL support" OFF)
-message(STATUS "USE_GL: ${USE_GL}")
+message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
+    set(CMAKE_BUILD_TYPE
+        "Release"
+        CACHE STRING "Choose the type of build" FORCE)
 endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
 
-set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION})
-set(PKG_URL "https://dl.cloudsmith.io/public/--pkg_repo--/raw/names/--name--/versions/--version--/--filename--")
+
+##
+## ----- The statements below are used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
+##
+
+project(${PACKAGE})
+
 
 #===========================================================
 INCLUDE("cmake/PluginSetup.cmake")
 #===========================================================
-
-if(DEFINED ENV{OCPN_TARGET})
-    set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}-$ENV{OCPN_TARGET}")
-else(DEFINED ENV{OCPN_TARGET})
-    set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}")
-endif(DEFINED ENV{OCPN_TARGET})
-message(STATUS "PACKAGING_NAME: ${PACKAGING_NAME}")
-
-set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+## ----- The above is used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
+## ----- Modify section below if there are special requirements for the plugin ----- ##
+##
 
 # Settings and Options
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
-# Check on compiler support
-if(Plugin_CXX11)
-  message(STATUS "Attempting to use c++11")
-  include(CheckCXXCompilerFlag)
-  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
-  check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-  if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    set(Plugin_USE_CXX11 ON)
-  elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-    set(Plugin_USE_CXX11 ON)
-  else()
-    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-    set(Plugin_USE_CXX11 OFF)
-  endif()
-else()
-  set(Plugin_USE_CXX11 OFF)
-endif()
-
-if(Plugin_USE_CXX11)
-  message(STATUS "Allowing use of c++11")
-endif()
-
-message(STATUS "CMAKE version: ${CMAKE_VERSION}")
-if(CMAKE_VERSION VERSION_GREATER 3.4)
-  set(ENABLE_CLANG_TIDY
-      OFF
-      CACHE BOOL "Add clang-tidy automatically to builds")
-  if(ENABLE_CLANG_TIDY)
-    find_program(
-      CLANG_TIDY_EXE
-      NAMES "clang-tidy"
-      PATHS /usr/local/opt/llvm/bin)
-    if(CLANG_TIDY_EXE)
-      message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-      # For more, see http://clang.llvm.org/extra/clang-tidy/ set(CLANG_TIDY_CHECKS "-*,modernize-*")
-      set(CLANG_TIDY_CHECKS "-*,performance-*")
-      set(CMAKE_CXX_CLANG_TIDY
-          "${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_CHECKS};-header-filter='${CMAKE_SOURCE_DIR}/*'"
-          CACHE STRING "" FORCE)
-    else()
-      message(AUTHOR_WARNING "clang-tidy not found!")
-      set(CMAKE_CXX_CLANG_TIDY
-          ""
-          CACHE STRING "" FORCE) # delete it
-    endif()
-  endif()
-endif()
-
-if(CMAKE_VERSION VERSION_GREATER 3.9)
-  set(ENABLE_CPPCHECK
-      OFF
-      CACHE BOOL "Add cppcheck automatically to builds")
-  if(ENABLE_CPPCHECK)
-    find_program(CPPCHECK_EXECUTABLE NAMES "cppcheck")
-    set(CMAKE_CXX_CPPCHECK ${CPPCHECK_EXECUTABLE})
-  endif()
-endif()
-
-# -------Section above is directly from Testplugin --------------#  
-# ----- Modify section above for special plugin requirements----- ##
+##
+## ----- Modify section above if there are special requirements for the plugin ----- ##
+## ----- do not change next section - needed to configure build process ----- ##
 #===========================================================
 INCLUDE("cmake/PluginConfigure.cmake")
 #===========================================================
-# ----- Change below to match project requirements ----- ##
+## ----- do not change section above - needed to configure build process ----- ##
+## ----- Change below to match project requirements for source, headers, etc. ----- ##
 
-add_definitions(-DUSE_S57)
-
-## ------These lines are only for Testplugin - do not use ------------##
-##   REMOVED
-## ------The lines above are only for Testplugin -do not use------------##
 ##
-# ----Remember to Add your project Set(SRCS and set(HDRS
 ##----------Below From Squiddio for SET( Headers and SRCS) ------------------
+
 SET(SRCS
     src/squiddio_pi.h
     src/squiddio_pi.cpp
@@ -364,7 +266,6 @@ INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
 
-
 ##----------Above From Squiddio ------------------
 
 ##
@@ -377,7 +278,7 @@ INCLUDE_DIRECTORIES(api-16)
 ##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
 ##================================================================================
 
-ADD_DEFINITIONS(-DTIXML_USE_STL)								
+ADD_DEFINITIONS(-DTIXML_USE_STL)
 
 IF(UNIX AND NOT APPLE)
     INCLUDE("cmake/FindTinyXML.cmake")
@@ -398,7 +299,6 @@ ELSE(TINYXML_FOUND)
     ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183} ${SRC_LTINYXML})
 ENDIF(TINYXML_FOUND)
 
-
 ##
 ## ----- Change above to match project requirements ----- ##
 ##
@@ -410,3 +310,7 @@ ENDIF(TINYXML_FOUND)
 include("cmake/PluginInstall.cmake")
 include("cmake/PluginLocalization.cmake")
 include("cmake/PluginPackage.cmake")
+
+##
+## ----- do not change section above - needed to configure build process ----- ##
+##
