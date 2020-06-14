@@ -21,7 +21,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 ##
-## ====FRONTEND 2  Version: 0.1.00 ==============
+## ====FRONTEND 2  Version: 1.0.115 (corresponds with testplugin)=============
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
 ## ----- Changes should only be made between the section blocks that identify where     ----- ##
@@ -56,8 +56,8 @@ SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 
 SET(VERSION_PATCH "4")
-set(VERSION_TWEAK "4")
-set(VERSION_DATE "1/13/2020")
+set(VERSION_TWEAK "5")
+set(VERSION_DATE "1/14/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
@@ -260,6 +260,7 @@ INCLUDE_DIRECTORIES(api-16)
 ##================================================================================
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
+
 IF(UNIX AND NOT APPLE)
     INCLUDE("cmake/FindTinyXML.cmake")
     FIND_PACKAGE(TinyXML QUIET)
