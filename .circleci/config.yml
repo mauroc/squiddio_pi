@@ -117,6 +117,7 @@ jobs:
         docker:
         - image: circleci/buildpack-deps:focal-scm
         environment:
+        - BUILD_GTK3: true
         - OCPN_TARGET:  focal
         steps:
         - checkout
