@@ -69,3 +69,15 @@ artifacts:
 #  on:
 #    appveyor_repo_tag: true # deploy on tag push only
 #    configuration: Release  # Debug contains non-redist MS DLLs
+
+#deploy:
+#  description: 'release created by AppVeyor CI'
+#  provider: GitHub
+#  #auth_token: '%GitHub_auth_token%'
+#  auth_token: '%git-ptoken-testplugin-into-appveyor%'
+#  artifact: installer,portable
+#  draft: true
+#  prerelease: true
+#  on:
+#    appveyor_repo_tag: true # deploy on tag push only
+#    configuration: Release  # Debug contains non-redist MS DLLs
