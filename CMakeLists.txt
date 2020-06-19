@@ -47,6 +47,7 @@ endif(COMMAND cmake_policy)
 
 # define plugin name, owner and versions
 SET(VERBOSE_NAME Squiddio)
+# Search "getcommonname"in weather_routing_pi.cpp
 set(COMMON_NAME "squiddio")
 set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
@@ -82,6 +83,8 @@ set(CLOUDSMITH_USER "opencpn")
 # Set if  Cloudsmith Base Repository name does not match your Git Repository name.
 set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # without the '_pi'
 
+
+# Set Plugin info-url, summary and description
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
 set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
@@ -90,8 +93,10 @@ set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weathe
 ## ----- Modify section above to include all the details for your plugin ----- ##
 ##
 
+
 ##
-## ----- Modify section below if there are special requirements for the plugin ----- ##
+## ----- Modify above to include all the plugin details --------- ##
+## ----- Modify below for plugin special requirements------------ ##
 ##
 
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
@@ -102,6 +107,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(OpenGL_GL_PREFERENCE "LEGACY")
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
+
 option(USE_GL "Enable OpenGL support" OFF)
 message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
 
@@ -113,11 +119,13 @@ endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
 
+
 ##
 ## ----- The statements below are used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
 ##
 
 project(${PACKAGE})
+
 
 #===========================================================
 INCLUDE("cmake/PluginSetup.cmake")
@@ -126,6 +134,7 @@ INCLUDE("cmake/PluginSetup.cmake")
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
 ##
 
+# Settings and Options
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
@@ -138,6 +147,7 @@ INCLUDE("cmake/PluginConfigure.cmake")
 #===========================================================
 ## ----- do not change section above - needed to configure build process ----- ##
 ## ----- Change below to match project requirements for source, headers, etc. ----- ##
+
 ##
 ##----------Below From Squiddio for SET( Headers and SRCS) ------------------
 
@@ -241,6 +251,15 @@ SET(SRC_NMEA0183
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
   )
+  
+##=============================================================
+# Modify/configure 'Include' Directories below for the Plugin
+##=============================================================
+# EG  also in some of the cmake/Plugin____.cmake files
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wx/include)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
+  
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)

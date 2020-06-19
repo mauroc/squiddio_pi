@@ -117,3 +117,4 @@ file(MAKE_DIRECTORY "Resources")
 message(STATUS "${CMLOC}Creating Resources directory")
 
 set(CMLOC ${SAVE_CMLOC})
+
