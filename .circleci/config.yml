@@ -133,17 +133,17 @@ jobs:
         - run: ci/cloudsmith-upload.sh
     build-focal-gtk3:
         docker:
-        - image: circleci/buildpack-deps:buster-scm
+        - image: circleci/buildpack-deps:focal-scm
         environment:
         - BUILD_GTK3: true
         - OCPN_TARGET: focal-gtk3
         steps:
         - checkout
         - run: >
-            echo "deb-src http://ftp.us.debian.org/debian buster main"
+            echo "deb-src http://us.archive.ubuntu.com/ubuntu/ focal main"
             | sudo tee -a /etc/apt/sources.list
         - run: >
-            echo "deb-src http://ftp.us.debian.org/debian buster-updates main"
+            echo "deb-src http://us.archive.ubuntu.com/ubuntu/ focal-updates main"
             | sudo tee -a /etc/apt/sources.list
         - run: cat /etc/apt/sources.list
         - run: chmod a+x ci/*.sh
@@ -272,14 +272,15 @@ workflows:
                     - tmp
                 tags:
                     only: /.*/
-        - build-focal:
-            filters:
-                branches:
-                    ignore:
-                    - devel
-                    - tmp
-                tags:
-                    only: /.*/
+# there is no focal gtk2 available so this will not be built
+#        - build-focal:
+#            filters:
+#                branches:
+#                    ignore:
+#                    - devel
+#                    - tmp
+#                tags:
+#                    only: /.*/
         - build-focal-gtk3:
             filters:
                 branches:
@@ -304,14 +305,15 @@ workflows:
                     - tmp
                 tags:
                     only: /.*/
-        - build-fedora:
-            filters:
-                branches:
-                    ignore:
-                    - devel
-                    - tmp
-                tags:
-                    only: /.*/
+# Fedora is being removed from the supplied list of environments so don't build
+#        - build-fedora:
+#            filters:
+#                branches:
+#                    ignore:
+#                    - devel
+#                    - tmp
+#                tags:
+#                    only: /.*/
         - build-mingw:
             filters:
                 branches:
