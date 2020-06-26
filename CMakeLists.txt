@@ -21,7 +21,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 ##
-## ====FRONTEND 2  Version: 1.0.116 (corresponds with testplugin)=============
+## ====FRONTEND 2  Version: 1.0.119 (corresponds with testplugin 1.0.119)=============
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
 ## ----- Changes should only be made between the section blocks that identify where     ----- ##
@@ -56,8 +56,8 @@ SET(PACKAGE "squiddio")
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "6")
-set(VERSION_TWEAK "0")
-set(VERSION_DATE "6/19/2020")
+set(VERSION_TWEAK "1")
+set(VERSION_DATE "6/26/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
