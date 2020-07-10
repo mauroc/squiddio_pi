@@ -69,9 +69,9 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_NmeaFileName = p_plugin->layerdir + wxFileName::GetPathSeparator() + _("nmea.txt");
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
 
-    m_pauimgr = GetFrameAuiManager();
-    m_pauimgr->Connect( wxEVT_AUI_PANE_CLOSE, wxAuiManagerEventHandler( logsWindow::OnClose ),
-            NULL, this );
+    // can't get the follwoing to work as expected:
+    // the OnClose function only gets triggered by the closing of the parent window instead of this logsWindow.
+    // this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
 
     if (g_RetrieveSecs > 0)  // display friends' logs
     {
@@ -91,6 +91,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 }
 
 logsWindow::~logsWindow(){
+//     this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
     delete m_pRecTimer;
     delete m_pSenTimer;
     delete m_pRefreshTimer;
@@ -424,8 +425,9 @@ void logsWindow::DisplayLogsLayer() {
     }
 }
 
-void logsWindow::OnClose(wxAuiManagerEvent &event) {
-    wxMessageBox(_("This will deactivate logs sharing.\n\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
+void logsWindow::OnClose(wxCloseEvent &event) {
+    // this function is never called. See note in the window consutrctor above
+    wxMessageBox(_("This will deactivate sQuiddio logs sharing.\n\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
     p_plugin->g_PostPeriod = 0;
     p_plugin->g_RetrievePeriod = 0;
     g_SendSecs = 0;

@@ -50,8 +50,6 @@ public:
       void OnRecTimerTimeout(wxTimerEvent& event);
       void OnSenTimerTimeout(wxTimerEvent& event);
       void OnRefreshTimeout(wxTimerEvent& event);
-//       void OnClose(wxCloseEvent& event);
-      void OnClose(wxAuiManagerEvent& event);
       void SetRecTimer(int RetrieveSecs);
       void SetSenTimer(int SendSecs);
       void OnPaint(wxPaintEvent& event);
@@ -88,6 +86,8 @@ private:
       wxDateTime    lastRcvd;
       wxDateTime    lastSent;
       wxAuiManager  *m_pauimgr;
+      void OnClose(wxCloseEvent& event);
+//       void OnClose(wxAuiManagerEvent& event);
 
 DECLARE_EVENT_TABLE()
 };
