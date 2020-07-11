@@ -198,7 +198,7 @@ void squiddio_pi::DownloadSatImages() {
 //         int zoom_levels = g_ZoomLevels.Freq(* _T(",")) + 1;
         int num_zooms = wxSplit(g_ZoomLevels, * sep_comma).GetCount();
 
-        wxString mess_prompt = _("You are about to download satellite maps for ")+ poi_count_str + _(" POI") + ((poi_count > 1) ? _("s") : _(""));
+        wxString mess_prompt = _("You are about to download satellite maps for ")+ poi_count_str + _(" POI") + ((poi_count > 1) ? _("s") : _T(""));
         mess_prompt +=  _(" at zoom level") +  ((num_zooms > 1) ? _("s ") : _(" ")) + g_ZoomLevels;
         if (g_DownloadVPMap)
             mess_prompt += _(", plus one map for the entire viewport.");
