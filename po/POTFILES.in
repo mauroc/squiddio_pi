@@ -1,0 +1,9 @@
+src\logs.cpp
+src\NavObjectCollection.cpp
+src\sJSON.cpp
+src\squiddioKaps.cpp
+src\squiddioPrefsDialogBase.cpp
+src\squiddioPrefsDialogBase.h
+src\squiddio_pi.cpp
+src\squiddio_pi.h
+

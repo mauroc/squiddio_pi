@@ -218,9 +218,9 @@ bool GPXCreateWpt( pugi::xml_node node, Poi *pr, unsigned int flags )
     pugi::xml_node child;
     pugi::xml_attribute attr;
     
-    s.Printf(_("%.9f"), pr->m_lat);
+    s.Printf(_T("%.9f"), pr->m_lat);
     node.append_attribute("lat") = s.mb_str();
-    s.Printf(_("%.9f"), pr->m_lon);
+    s.Printf(_T("%.9f"), pr->m_lon);
     node.append_attribute("lon") = s.mb_str();
  
     if(flags & OUT_TIME) {
@@ -407,7 +407,7 @@ bool NavObjectCollection1::LoadAllGPXObjects()
     for (pugi::xml_node object = objects.first_child(); object; object = object.next_sibling())
     {
         if( !strcmp(object.name(), "wpt") ) {
-            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _(""), false, false, false, 0 );
+            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _T(""), false, false, false, 0 );
             pWp->m_bIsolatedMark = true;      // This is an isolated mark
             
             if(pWp) {
@@ -437,7 +437,7 @@ int NavObjectCollection1::LoadAllGPXObjectsAsLayer(int layer_id, bool b_layerviz
     for (pugi::xml_node object = objects.first_child(); object; object = object.next_sibling())
     {
         if( !strcmp(object.name(), "wpt") ) {
-            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _(""), true, true, b_layerviz, layer_id );
+            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _T(""), true, true, b_layerviz, layer_id );
             pWp->m_bIsolatedMark = true;      // This is an isolated mark
             
             if(pWp) {
