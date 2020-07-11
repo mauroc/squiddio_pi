@@ -112,7 +112,7 @@ class SquiddioPrefsDialogBase : public wxDialog
 		wxCheckBox* m_checkBoxDelGpxs;
 		wxChoice* m_choiceHowOften;
 		wxChoice* m_choiceReceive;
-		wxCheckBox* m_checkBoxSendXml;
+		wxCheckBox* m_checkBoxSendNmea;
 		wxTextCtrl* m_textSquiddioID;
 		wxTextCtrl* m_textApiKey;
 		wxStaticText* m_version;

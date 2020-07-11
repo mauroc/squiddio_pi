@@ -239,7 +239,8 @@ public:
       wxString   g_UrlVersion;
       int        g_LastLogSent;
       int        g_LastLogsRcvd;
-      bool       g_SendXml;
+      bool       g_SendNmea;
+      int        g_NmeaDownSample;
       bool       g_OCPN;
       
       bool  m_bODAPIOK;
@@ -364,7 +365,7 @@ public:
 
     void OnCheckBoxAll( wxCommandEvent& event );
     void LaunchHelpPage( wxCommandEvent& event );
-    void OnSendXml( wxCommandEvent& event );
+    void OnSendNmea( wxCommandEvent& event );
     void OnButtonClickFonts( wxCommandEvent& event );
     void m_sdbButtonSizerOnCancelButtonClick( wxCommandEvent& event ) { EndModal(wxCANCEL); }
     void m_sdbButtonSizerOnOKButtonClick( wxCommandEvent& event ) { EndModal(wxOK); }

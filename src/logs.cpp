@@ -36,11 +36,13 @@
 #define HOUR 3600
 #define DAY 86400
 
+
 BEGIN_EVENT_TABLE(logsWindow, wxWindow)
     EVT_TIMER(TIMER_ID0,  logsWindow::OnRecTimerTimeout)
     EVT_TIMER(TIMER_ID1,  logsWindow::OnSenTimerTimeout)
     EVT_TIMER(TIMER_ID2,  logsWindow::OnRefreshTimeout)
-    EVT_PAINT (logsWindow::OnPaint)
+    EVT_PAINT(logsWindow::OnPaint)
+//     EVT_CLOSE(logsWindow::OnClose)
 END_EVENT_TABLE();
 
 logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
@@ -71,7 +73,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
     // can't get the follwoing to work as expected:
     // the OnClose function only gets triggered by the closing of the parent window instead of this logsWindow.
-    // this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
+//     this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
 
     if (g_RetrieveSecs > 0)  // display friends' logs
     {
@@ -92,6 +94,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
 
 logsWindow::~logsWindow(){
 //     this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( logsWindow::OnClose ) );
+
     delete m_pRecTimer;
     delete m_pSenTimer;
     delete m_pRefreshTimer;
@@ -277,8 +280,8 @@ void logsWindow::OnPaint(wxPaintEvent& event) {
 
 void logsWindow::SetSentence(wxString &sentence) {
 
+//     wxLongLong curr_time_msec = wxDateTime::Now().GetValue();
     int curr_time = wxDateTime::Now().GetTicks();
-    int down_sample;
 
     m_NMEA0183 << sentence;
 
@@ -286,37 +289,34 @@ void logsWindow::SetSentence(wxString &sentence) {
 
         wxString last_id = m_NMEA0183.LastSentenceIDReceived;
 
-        if (last_id == _T("RMC")) {
-            if (m_NMEA0183.Parse()) {
-                if (m_NMEA0183.Rmc.IsDataValid == NTrue) {
-                    float llt = m_NMEA0183.Rmc.Position.Latitude.Latitude;
-                    int lat_deg_int = (int) (llt / 100);
-                    float lat_deg = lat_deg_int;
-                    float lat_min = llt - (lat_deg * 100);
-                    mLat = lat_deg + (lat_min / 60.);
-                    if (m_NMEA0183.Rmc.Position.Latitude.Northing == South)
-                        mLat = -mLat;
+        if (m_NMEA0183.Parse()) {
+            if (m_NMEA0183.Rmc.IsDataValid == NTrue) {
+                float llt = m_NMEA0183.Rmc.Position.Latitude.Latitude;
+                int lat_deg_int = (int) (llt / 100);
+                float lat_deg = lat_deg_int;
+                float lat_min = llt - (lat_deg * 100);
+                mLat = lat_deg + (lat_min / 60.);
+                if (m_NMEA0183.Rmc.Position.Latitude.Northing == South)
+                    mLat = -mLat;
 
-                    float lln = m_NMEA0183.Rmc.Position.Longitude.Longitude;
-                    int lon_deg_int = (int) (lln / 100);
-                    float lon_deg = lon_deg_int;
-                    float lon_min = lln - (lon_deg * 100);
-                    mLon = lon_deg + (lon_min / 60.);
-                    if (m_NMEA0183.Rmc.Position.Longitude.Easting == West)
-                        mLon = -mLon;
+                float lln = m_NMEA0183.Rmc.Position.Longitude.Longitude;
+                int lon_deg_int = (int) (lln / 100);
+                float lon_deg = lon_deg_int;
+                float lon_min = lln - (lon_deg * 100);
+                mLon = lon_deg + (lon_min / 60.);
+                if (m_NMEA0183.Rmc.Position.Longitude.Easting == West)
+                    mLon = -mLon;
 
-                    mSog = m_NMEA0183.Rmc.SpeedOverGroundKnots;
-                    mCog = m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue;
+                mSog = m_NMEA0183.Rmc.SpeedOverGroundKnots;
+                mCog = m_NMEA0183.Rmc.TrackMadeGoodDegreesTrue;
 
-                    m_nmea_ready = true;
-                    down_sample = 20;
-                }
+                m_nmea_ready = true;
             }
-        } else
-            down_sample = 40;
+        }
 
-        if (m_NmeaLog[last_id] == 0 || (curr_time - m_NmeaLog[last_id] > down_sample) ) {
-            m_NmeaFile.Write(sentence);
+        if (m_NmeaLog[last_id] == 0 || (curr_time - m_NmeaLog[last_id] > p_plugin->g_NmeaDownSample) ) {
+//             m_NmeaFile.Write(wxString::Format(wxT("%f"), curr_time_msec) + _T(",") + sentence);
+            m_NmeaFile.Write(wxString::Format(wxT("%i"), curr_time) + _T(",") + sentence);
             wxTextFile::GetEOL();
             m_NmeaLog[last_id] = curr_time;
         }
@@ -330,7 +330,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
     m_NmeaFile.Close();
     wxString nmea_seq = wxEmptyString;
 
-    if (p_plugin->g_SendXml) {
+    if (p_plugin->g_SendNmea) {
         if (length < 100000) {
             // file is not too big to be read in memory.
             wxFile f( m_NmeaFileName );
@@ -427,6 +427,7 @@ void logsWindow::DisplayLogsLayer() {
 
 void logsWindow::OnClose(wxCloseEvent &event) {
     // this function is never called. See note in the window consutrctor above
+
     wxMessageBox(_("This will deactivate sQuiddio logs sharing.\n\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
     p_plugin->g_PostPeriod = 0;
     p_plugin->g_RetrievePeriod = 0;

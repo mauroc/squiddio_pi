@@ -281,11 +281,11 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxStaticBoxSizer* sbSizer11;
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( sbLogSizer->GetStaticBox(), wxID_ANY, _("Logs Sharing Options") ), wxVERTICAL );
 
-	m_checkBoxSendXml = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include NMEA samples with each send"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_checkBoxSendXml->SetValue(true);
-	m_checkBoxSendXml->SetToolTip( _("(Beta feature) Include a sample of your recent NMEA messages each time you send a log update. See stats about your wind, depth, temperature,  engine readings etc. online.") );
+	m_checkBoxSendNmea = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, _("Include NMEA samples with each send"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxSendNmea->SetValue(true);
+	m_checkBoxSendNmea->SetToolTip( _("(Beta feature) Include a sample of your recent NMEA messages each time you send a log update. See stats about your wind, depth, temperature,  engine readings etc. online.") );
 
-	sbSizer11->Add( m_checkBoxSendXml, 0, wxALL, 5 );
+	sbSizer11->Add( m_checkBoxSendNmea, 0, wxALL, 5 );
 
 
 	sbLogSizer->Add( sbSizer11, 1, wxEXPAND, 5 );

@@ -423,7 +423,8 @@ bool squiddio_pi::LoadConfig(void) {
     pConf->Read(_T("ZoomLevels"), &g_ZoomLevels);
     pConf->Read(_T("DownloadVPMap"), &g_DownloadVPMap, false);
     pConf->Read(_T("DelGpxs"), &g_DelGpxs, false);
-    pConf->Read(_T("SendXml"), &g_SendXml, false);
+    pConf->Read(_T("SendNmea"), &g_SendNmea, false);
+    pConf->Read(_T("NmeaDownSample"), &g_NmeaDownSample, 20);
 
     pConf->Read(_T("TextPointShowName"), &g_bODTextPointShowName, true);
     pConf->Read(_T("TextPosition"), &g_iODTextPointTextPosition, TEXT_BOTTOM);
@@ -497,7 +498,7 @@ bool squiddio_pi::SaveConfig(void) {
     pConf->Write(_T("ZoomLevels"), g_ZoomLevels);
     pConf->Write(_T("DownloadVPMap"), g_DownloadVPMap);
     pConf->Write(_T("DelGpxs"), g_DelGpxs);
-    pConf->Write(_T("SendXml"), g_SendXml);
+    pConf->Write(_T("SendNmea"), g_SendNmea);
 
     pConf->Write(_T("TextPointShowName"), g_bODTextPointShowName);
     pConf->Write(_T("TextPosition"), g_iODTextPointTextPosition);
@@ -1103,7 +1104,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_dirPickerDownload->SetPath(g_BaseChartDir);
         dialog->m_checkBoxVPMap->SetValue(g_DownloadVPMap);
         dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
-        dialog->m_checkBoxSendXml->SetValue(g_SendXml);
+        dialog->m_checkBoxSendNmea->SetValue(g_SendNmea);
 
         wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
 
@@ -1216,8 +1217,8 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 g_DelGpxs = dialog->m_checkBoxDelGpxs->GetValue();
                 l_bChanged = true;
             }
-            if(g_SendXml != dialog->m_checkBoxSendXml->GetValue()) {
-                g_SendXml = dialog->m_checkBoxSendXml->GetValue();
+            if(g_SendNmea != dialog->m_checkBoxSendNmea->GetValue()) {
+                g_SendNmea = dialog->m_checkBoxSendNmea->GetValue();
                 l_bChanged = true;
             }
             if(g_ViewOthers != dialog->m_checkBoxOthers->GetValue()) {
@@ -1686,7 +1687,7 @@ void SquiddioPrefsDialog::OnCheckBoxAll(wxCommandEvent& event) {
     }
 }
 
-void SquiddioPrefsDialog::OnSendXml(wxCommandEvent& event) {
+void SquiddioPrefsDialog::OnSendNmea(wxCommandEvent& event) {
     wxCheckBox *checkbox = (wxCheckBox*) event.GetEventObject();
     if (checkbox->IsChecked())
         wxMessageBox(_("Your GPS positions and other navigational information will be sent to the server and may be shared with other sQuidd.io users. Check https://squidd.io/privacy for additional information."));
