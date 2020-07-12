@@ -3,17 +3,17 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-11 16:30+0200\n"
-"PO-Revision-Date: 2020-07-12 19:51\n"
+"PO-Revision-Date: 2020-07-12 19:52\n"
 "Last-Translator: \n"
-"Language-Team: Romanian\n"
-"Language: ro_RO\n"
+"Language-Team: Icelandic\n"
+"Language: is_IS\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Crowdin-Project: opencpn\n"
 "X-Crowdin-Project-ID: 49843\n"
-"X-Crowdin-Language: ro\n"
+"X-Crowdin-Language: is\n"
 "X-Crowdin-File: /plugins/squiddio_pi/po/squiddio_pi.pot\n"
 "X-Crowdin-File-ID: 149\n"
 
@@ -39,11 +39,11 @@ msgstr ""
 
 #: src\logs.cpp:104
 msgid "Just now"
-msgstr ""
+msgstr "Núna"
 
 #: src\logs.cpp:105
 msgid "One second ago"
-msgstr ""
+msgstr "Fyrir einni sekúndu"
 
 #: src\logs.cpp:108
 #, c-format
@@ -70,7 +70,7 @@ msgstr ""
 
 #: src\logs.cpp:123
 msgid "Yesterday"
-msgstr ""
+msgstr "Í gær"
 
 #: src\logs.cpp:126
 #, c-format
@@ -191,7 +191,7 @@ msgstr ""
 
 #: src\squiddioPrefsDialogBase.cpp:35
 msgid "All"
-msgstr ""
+msgstr "Allt"
 
 #: src\squiddioPrefsDialogBase.cpp:38
 msgid "Marinas"
@@ -348,7 +348,7 @@ msgstr ""
 #: src\squiddioPrefsDialogBase.cpp:175 src\squiddioPrefsDialogBase.cpp:258
 #: src\squiddioPrefsDialogBase.cpp:270
 msgid "Never"
-msgstr ""
+msgstr "Aldrei"
 
 #: src\squiddioPrefsDialogBase.cpp:175
 msgid "On Rollover Only"
@@ -418,35 +418,35 @@ msgstr ""
 
 #: src\squiddioPrefsDialogBase.cpp:254
 msgid "Send"
-msgstr ""
+msgstr "Senda"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Every 10 seconds"
-msgstr ""
+msgstr "Með 10 sekúnta millibili"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Once a day"
-msgstr ""
+msgstr "Einu sinni á dag"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Once a minute"
-msgstr ""
+msgstr "Á hverri mínútu"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Once an hour"
-msgstr ""
+msgstr "Einu sinni á klukkutíma"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Twice a day"
-msgstr ""
+msgstr "Tvisvar á dag"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Twice a minute"
-msgstr ""
+msgstr "Aðra hverja mínútu"
 
 #: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
 msgid "Twice an hour"
-msgstr ""
+msgstr "Tvisvar á klukkutíma"
 
 #: src\squiddioPrefsDialogBase.cpp:266
 msgid "Receive"
@@ -482,7 +482,7 @@ msgstr ""
 
 #: src\squiddioPrefsDialogBase.cpp:311
 msgid "API Key"
-msgstr ""
+msgstr "API lykill"
 
 #: src\squiddioPrefsDialogBase.cpp:316
 msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\n"
