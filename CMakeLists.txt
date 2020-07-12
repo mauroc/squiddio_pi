@@ -21,7 +21,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 ##
-## ====FRONTEND 2  Version: 1.0.115 (corresponds with testplugin)=============
+## ====FRONTEND 2  Version: 1.0.124 (corresponds with testplugin 1.0.124)=============
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
 ## ----- Changes should only be made between the section blocks that identify where     ----- ##
@@ -55,10 +55,9 @@ SET(PACKAGE "squiddio")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "4")
-set(VERSION_TWEAK "8")
-set(VERSION_DATE "18/06/2020")
-
+SET(VERSION_PATCH "7")
+set(VERSION_TWEAK "0")
+set(VERSION_DATE "7/05/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
@@ -70,16 +69,14 @@ set(GIT_REPOSITORY_SERVER "github.com")
 
 #No longer needed, queried and found by PluginConfigure.cmake.
 #set(GIT_USER "mauroc")
-#set(GIT_USER "rgleason")
 #set(GIT_REPOSITORY_NAME "squiddio_pi")
 
 # Specifies Cloudsmith upload repository suffix for each catalog
-set(PROD "prod")  #Standard Repos
-set(BETA "beta")       #Standard Repos
+set(PROD "prod")   #Standard Repos
+set(BETA "beta")   #Standard Repos
 set(ALPHA "alpha") #Standard Repos
 
 #set(CLOUDSMITH_USER "mauro-calvi")
-#set(CLOUDSMITH_USER "rick-gleason")
 set(CLOUDSMITH_USER "opencpn")
 
 # Set if  Cloudsmith Base Repository name does not match your Git Repository name.
