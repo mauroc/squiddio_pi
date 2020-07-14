@@ -21,7 +21,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 ##
-## ====FRONTEND 2  Version: 1.0.124 (corresponds with testplugin 1.0.124)=============
+## ====FRONTEND 2  Version: 1.0.126 (corresponds with testplugin 1.0.126)=============
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
 ## ----- Changes should only be made between the section blocks that identify where     ----- ##
@@ -57,7 +57,7 @@ SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "7")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "7/05/2020")
+set(VERSION_DATE "07/13/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
@@ -125,15 +125,15 @@ message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
 
 project(${PACKAGE})
 
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;")
 
 #===========================================================
-INCLUDE("cmake/PluginSetup.cmake")
+include("PluginSetup")
 #===========================================================
 ## ----- The above is used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
 ##
 
-# Settings and Options
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
@@ -142,7 +142,7 @@ option(Plugin_CXX11 "Use c++11" OFF)
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
 ## ----- do not change next section - needed to configure build process ----- ##
 #===========================================================
-INCLUDE("cmake/PluginConfigure.cmake")
+include("PluginConfigure")
 #===========================================================
 ## ----- do not change section above - needed to configure build process ----- ##
 ## ----- Change below to match project requirements for source, headers, etc. ----- ##
@@ -304,9 +304,9 @@ ENDIF(TINYXML_FOUND)
 ## ----- Do not change - needed to build app ----- ##
 ##
 
-include("cmake/PluginInstall.cmake")
-include("cmake/PluginLocalization.cmake")
-include("cmake/PluginPackage.cmake")
+include("PluginInstall")
+include("PluginLocalization")
+include("PluginPackage")
 
 ##
 ## ----- do not change section above - needed to configure build process ----- ##
