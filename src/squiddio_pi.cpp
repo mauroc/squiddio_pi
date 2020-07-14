@@ -167,7 +167,8 @@ int squiddio_pi::Init(void) {
     m_pODDeletePointIcon = NULL;
     g_UrlVersion =  wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) + wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
     
-    xAddLocaleCatalog( _T("opencpn-squiddio_pi") );
+    AddLocaleCatalog( _T("opencpn-squiddio_pi") );
+    wxLogMessage(_T("Adding locale catalog: opencpn-squiddio_pi"));
 
     // Get a pointer to the opencpn display canvas, to use as a parent for windows created
     m_parent_window = GetOCPNCanvasWindow();
