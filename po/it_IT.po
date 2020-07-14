@@ -2,994 +2,695 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-08 15:20-0700\n"
-"PO-Revision-Date: 2020-05-08 15:22-0700\n"
-"Last-Translator: nohal <pavel@kalian.cz>\n"
+"POT-Creation-Date: 2020-07-11 16:30+0200\n"
+"PO-Revision-Date: 2020-07-12 19:52\n"
+"Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
 "X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Project-ID: 49843\n"
 "X-Crowdin-Language: it\n"
 "X-Crowdin-File: /plugins/squiddio_pi/po/squiddio_pi.pot\n"
+"X-Crowdin-File-ID: 149\n"
 
-#: src/squiddio_pi.h:362
-msgid "Squiddio Preferences"
-msgstr "Impostazioni sQuiddio"
-
-#: src/squiddio_pi.cpp:176
-msgid "sQuiddio: Show local POIs"
-msgstr "sQuiddio: Mostra PDI locali"
-
-#: src/squiddio_pi.cpp:181
-msgid "sQuiddio: Hide local POIs"
-msgstr "sQuiddio: Nascondi Punti di Interesse locali"
-
-#: src/squiddio_pi.cpp:186
-msgid "sQuiddio: Download local Points of Interest"
-msgstr "sQuiddio: Scarica Punti di Interesse locali"
-
-#: src/squiddio_pi.cpp:191
-msgid "sQuiddio: Update local Points of Interest"
-msgstr "sQuiddio: Aggiorna Punti di Interesse locali"
-
-#: src/squiddio_pi.cpp:196
-msgid "sQuiddio: Report a POI at this location"
-msgstr "sQuiddio: Proponi un Punto di Interesse  in questa posizione"
-
-#: src/squiddio_pi.cpp:201
-msgid "sQuiddio: Download satellite images for POIs"
-msgstr "Scarica immagine satellitare per questo PDI"
-
-#: src/squiddio_pi.cpp:270
-msgid "sQuiddio"
-msgstr "sQuiddio"
-
-#: src/squiddio_pi.cpp:865 src/squiddio_pi.cpp:1695
-msgid "Could not launch default browser. Check your Internet connection"
-msgstr "Il browser non risponde. Verifica il collegamento a Internet"
-
-#: src/squiddio_pi.cpp:908 src/squiddioKaps.cpp:237
-msgid "Downloading"
-msgstr "Download in corso"
-
-#: src/squiddio_pi.cpp:908
-msgid "Downloading: "
-msgstr "Download in corso: "
-
-#: src/squiddio_pi.cpp:996
-msgid "Squiddio for OpenCPN"
-msgstr "Squiddio per OpenCPN"
-
-#: src/squiddio_pi.cpp:1001
-#, fuzzy
-#| msgid ""
-#| "== User-sourced database of sailing destinations ==\n"
-#| "To download (or update) Points of Interest (POIs) for a desired region "
-#| "(requires Internet connection):\n"
-#| "* Position cursor on area where you want to view POIs and right click "
-#| "mouse\n"
-#| "* Select 'sQuiddio: Download (or Update) local Points of Interest' from "
-#| "context-sensitive menu.\n"
-#| "\n"
-#| "Destinations appear as OpenCPN waypoints (default) or Draw Text Points "
-#| "(if the Draw plugin is installed):  \n"
-#| "* Hover on waypoints to view a synopsis of POI information* Right-click "
-#| "on waypoint for link to sQuiddio's destination page. \n"
-#| "* Follow link to rate destination and add comments online.\n"
-#| "\n"
-#| "Other menu options: \n"
-#| "* Toggle visibility for local POIs on/off \n"
-#| "* Submit a new destination (requires Internet connection and free user "
-#| "account)\n"
-#| "* Download Google Maps as OCPN charts for all POIs in viewport\n"
-#| "\n"
-#| "== In-chart log-sharing for cruisers ==\n"
-#| "* Share your GPS coordinates and other navigational information with your "
-#| "cruising friends\n"
-#| "and visualize their position on your OpenCPN charts (requires a free "
-#| "sQuiddio account)\n"
-#| "\n"
-#| "IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n"
-#| "and Conditions, available at http://squidd.io/enduser_agreement"
-msgid ""
-"== User-sourced database of sailing Points of Interest ==\n"
-"To download (or update) Points of Interest (POIs) for a desired region "
-"(requires Internet connection):\n"
-"* Position cursor on area where you want to view POIs and right click mouse\n"
-"* Select 'sQuiddio: Download (or Update) local Points of Interest' from "
-"context-sensitive menu.\n"
-"\n"
-"Destinations appear as OpenCPN waypoints (default) or Draw Text Points (if "
-"the Draw plugin is installed):  \n"
-"* Hover on waypoints to view a synopsis of POI information* Right-click on "
-"waypoint for link to sQuiddio's destination page. \n"
-"* Follow link to rate destination and add comments online.\n"
-"\n"
-"Other menu options: \n"
-"* Toggle visibility for local POIs on/off \n"
-"* Submit a new destination (requires Internet connection and free user "
-"account)\n"
-"* Download Google Maps as OCPN charts for all POIs in viewport\n"
-"\n"
-"== In-chart log-sharing for cruisers ==\n"
-"* Share your GPS coordinates and other navigational information with your "
-"cruising friends\n"
-"and visualize their position on your OpenCPN charts (requires a free "
-"sQuiddio account)\n"
-"\n"
-"IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n"
-"and Conditions, available at http://squidd.io/enduser_agreement"
-msgstr ""
-"==Database open-source di Punti di Interesse nautici==\n"
-"\n"
-"Per scaricare (o aggiornare) i Punti di Ineresse (PDI) di una regione "
-"(richiede collegamento a Internet):\n"
-"* Posiziona il cursore sulla zona in cui desideri visualizzare le "
-"destinazioni e fai click destro\n"
-"* Seleziona l'opzione 'sQuiddio: Scarica (o Aggiorna) i Punti di Interesse "
-"Locali' dal menu contestuale\n"
-" \n"
-"\n"
-"Le destinazioni compaiono come Waypoints OpenCPN (default) o Punti Testo "
-"ODraw (se il plugin ODraw e' installato):\n"
-"* Muovi il cursore sui PDI per visualizzarne i dati principali. Fai click "
-"destro sul PDI per ottere il link alla pagina sQuiddio relativa al PDI\n"
-"* Segui il link per votare la destinazione e aggiungere commenti online \n"
-"Altre opzioni del menu: \n"
-"* Visualizza/nascondi le destinazioni locali\n"
-"* Proponi una nuova destinazione (richiede collegamento a Internet e "
-"registrazione gratuita al servizio)\n"
-"* Scarica mappe satellitari Google come carte OCPN per tutti i PDI nel "
-"Viewport"
-
-#: src/squiddio_pi.cpp:1105
-msgid "sQuiddio plugin version: "
-msgstr "Versione sQuiddio plugin:"
-
-#: src/squiddio_pi.cpp:1105
-msgid "."
+#: src\NavObjectCollection.cpp:169
+msgid "LayGUID"
 msgstr ""
 
-#: src/squiddio_pi.cpp:1127
-#, c-format
-msgid ""
-"OD Text Points not available, wrong version of API\n"
-"Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"
-msgstr ""
-"Punti Testo OD non disponibili. Versione errata dell'API. \n"
-"Squiddio API vers. maggiore: %i, minore %i, OD API vers. maggiore: %i, "
-"minore %i"
-
-#: src/squiddio_pi.cpp:1130
-#, c-format
-msgid ""
-"squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio "
-"API Major: %i, Minor %i, OD API Major: %i, Minor %i"
-msgstr ""
-"squiddio_pi: Punti Testo OD non disponibili. Versione errata dell API. "
-"Squiddio API vers. Maggiore: %i, Minore %i, OD API Maggiore: %i, Minore %i"
-
-#: src/squiddio_pi.cpp:1258
-msgid "Please specify at least one zoom level"
-msgstr "Specifica almeno un livello di zoom"
-
-#: src/squiddio_pi.cpp:1264
-msgid "Zoom Levels must be betweeen 10 and 18"
-msgstr "I livelli di zoom devono essere nell'intervallo 10 -18"
-
-#: src/squiddio_pi.cpp:1279
-msgid ""
-"Log sharing was not activated. Please enter your sQuiddio user ID and API "
-"Key.\n"
-"\n"
-"To obtain your API Key, log into sQuidd.io (http://squidd.io), click on "
-"Preferences in the top blue bar, then select the 'Numbers & Keys' tab."
-msgstr ""
-"Condivisione dei log non attivata. Inserisci il tuo identificativo sQuiddio "
-"e chiave API. \n"
-"\n"
-" Per ottenere la chiave API, registrati a sQuidd.io (http://squidd.io/"
-"signup) e visita la tua pagina di profilo. (clicca su Preferences nella "
-"barra blu in alto, poi la scheda Numbers & Keys)"
-
-#: src/squiddio_pi.cpp:1345
-msgid "sQuiddio log updates (drag this to the bottom to minimize)"
-msgstr ""
-"Aggiornamento logs sQuiddio (trascina questa finestra sul bordo inferiore "
-"per minimizzare)"
-
-#: src/squiddio_pi.cpp:1541
-#, fuzzy
-#| msgid "Marinas"
-msgid "Marina"
-msgstr "Marina"
-
-#: src/squiddio_pi.cpp:1545
-#, fuzzy
-#| msgid "Anchorages"
-msgid "Anchorage"
-msgstr "Ancoraggi"
-
-#: src/squiddio_pi.cpp:1549
-#, fuzzy
-#| msgid "Docks/piers"
-msgid "Dock/Pier"
-msgstr "Moli/Pontili"
-
-#: src/squiddio_pi.cpp:1553
-#, fuzzy
-#| msgid "Yacht clubs"
-msgid "Yacht Club"
-msgstr "Circoli Nautici"
-
-#: src/squiddio_pi.cpp:1557 src/squiddioPrefsDialogBase.cpp:50
-msgid "Mooring Buoys"
-msgstr "Boe di ormeggio"
-
-#: src/squiddio_pi.cpp:1561
-#, fuzzy
-#| msgid "Fuel Stations"
-msgid "Fuel Station"
-msgstr "Stazioni carburante"
-
-#: src/squiddio_pi.cpp:1565
-msgid "Boat Yard"
-msgstr "Cantieri nautici"
-
-#: src/squiddio_pi.cpp:1569
-#, fuzzy
-#| msgid "Boat ramps"
-msgid "Boat Ramp"
-msgstr "Rampe di accesso"
-
-#: src/squiddio_pi.cpp:1573
-msgid "AIS ATON Marker"
-msgstr "Segnalatore AIS"
-
-#: src/squiddio_pi.cpp:1577
-#, fuzzy
-msgid "NDBC Buoy"
-msgstr "Boa NDBC"
-
-#: src/squiddio_pi.cpp:1581
-msgid "NDBC Ship"
-msgstr "Nave NDBC"
-
-#: src/squiddio_pi.cpp:1585
-msgid "Generic POI"
-msgstr "PDI generico"
-
-#: src/squiddio_pi.cpp:1590
-msgid "North"
-msgstr "Nord"
-
-#: src/squiddio_pi.cpp:1594
-msgid "North East"
-msgstr "Nord-est"
-
-#: src/squiddio_pi.cpp:1598
-msgid "East"
-msgstr "Est"
-
-#: src/squiddio_pi.cpp:1602
-msgid "South East"
-msgstr "Sud-est"
-
-#: src/squiddio_pi.cpp:1606
-msgid "South"
-msgstr "Sud"
-
-#: src/squiddio_pi.cpp:1610
-msgid "South West"
-msgstr "Sud-ovest"
-
-#: src/squiddio_pi.cpp:1614
-msgid "West"
-msgstr "Ovest"
-
-#: src/squiddio_pi.cpp:1618
-msgid "North West"
-msgstr "Nord-ovest"
-
-#: src/squiddio_pi.cpp:1622
-msgid "Checked in"
-msgstr "Registrato"
-
-#: src/squiddio_pi.cpp:1626
-msgid "Unknown heading"
-msgstr "Direzione non nota"
-
-#: src/squiddio_pi.cpp:1689
-msgid ""
-"Your GPS positions and other navigational information will be sent to the "
-"server and may be shared with other sQuidd.io users. Check https://squidd.io/"
-"privacy for additional information."
-msgstr ""
-"La tua posizione GPS e altre informazioni riguardanti la navigazione "
-"verranno inviate al server e possono essere condivise con altri utenti "
-"sQuiddio.  Ulteriori informazioni a https://squidd.io/privacy."
-
-#: src/squiddioPrefsDialogBase.cpp:28
-msgid "Destinations"
-msgstr "Destinazioni"
-
-#: src/squiddioPrefsDialogBase.cpp:35
-msgid "All"
-msgstr "Tutte"
-
-#: src/squiddioPrefsDialogBase.cpp:38
-msgid "Marinas"
-msgstr "Marina"
-
-#: src/squiddioPrefsDialogBase.cpp:41
-msgid "Anchorages"
-msgstr "Ancoraggi"
-
-#: src/squiddioPrefsDialogBase.cpp:44
-#, fuzzy
-#| msgid "Docks/piers"
-msgid "Docks/Piers"
-msgstr "Moli/Pontili"
-
-#: src/squiddioPrefsDialogBase.cpp:47
-#, fuzzy
-#| msgid "Yacht clubs"
-msgid "Yacht Clubs"
-msgstr "Circoli Nautici"
-
-#: src/squiddioPrefsDialogBase.cpp:53
-msgid "Fuel Stations"
-msgstr "Stazioni carburante"
-
-#: src/squiddioPrefsDialogBase.cpp:56
-msgid "Boat Yards"
-msgstr "Cantieri nautici"
-
-#: src/squiddioPrefsDialogBase.cpp:59
-#, fuzzy
-#| msgid "Boat ramps"
-msgid "Boat Ramps"
-msgstr "Rampe di accesso"
-
-#: src/squiddioPrefsDialogBase.cpp:62
-msgid "Other"
-msgstr "Altro"
-
-#: src/squiddioPrefsDialogBase.cpp:69
-msgid "Cruising Aids"
-msgstr "Aiuti alla navigazione"
-
-#: src/squiddioPrefsDialogBase.cpp:71
-msgid "NDBC Buoy Reports"
-msgstr "Dati Boe NDBC"
-
-#: src/squiddioPrefsDialogBase.cpp:72
-msgid ""
-"Get quasi-real time wind, wave and pressure report from thousands of NDBC "
-"buoys right from your chart."
-msgstr ""
-"Visualizza dati in tempo quasi reale su vento, onde, pressione atmosferica "
-"etc.  da migliaia di boe NDBC direttamente sulla carta nautica."
-
-#: src/squiddioPrefsDialogBase.cpp:76
-msgid "NDBC Ship Reports"
-msgstr "Dati Navi NDBC"
-
-#: src/squiddioPrefsDialogBase.cpp:77
-msgid ""
-"Get quasi-real time wind, wave and pressure report from participating NDBC "
-"ships right from your chart."
-msgstr ""
-"Visualizza dati sul vento, onde, pressione atmosferica da Boe NDBC "
-"direttamente sulla carta nautica"
-
-#: src/squiddioPrefsDialogBase.cpp:81
-msgid "AIS markers"
-msgstr "Segnalatore AIS"
-
-#: src/squiddioPrefsDialogBase.cpp:91
-msgid "View"
-msgstr "Visualizza"
-
-#: src/squiddioPrefsDialogBase.cpp:93
-msgid ""
-"Delete downloaded POI files for sectors you have hidden. This limits the "
-"proliferation of old unecessary POI files and reduced the computational "
-"burden."
-msgstr ""
-"Rimuovi files di PDI per settori nascossti (limita la proliferazione di "
-"files non necessari e riduce il carico computazionale)"
-
-#: src/squiddioPrefsDialogBase.cpp:98
-msgid "OpenCPN Waypoint"
-msgstr "Waypoint OpenCPN"
-
-#: src/squiddioPrefsDialogBase.cpp:98
-msgid "ODraw TextPoint"
-msgstr "Text Point OCPN Draw"
-
-#: src/squiddioPrefsDialogBase.cpp:100
-msgid "Use OCPN or ODraw (recommended)"
-msgstr "Usa OCPN o ODraw (consigliato)"
-
-#: src/squiddioPrefsDialogBase.cpp:102
-msgid ""
-"Render sQuiddio POIs as legacy OpenCPN waypoints or  ODraw Textpoints "
-"(recommended, provided ODraw plugin is enabled)."
-msgstr ""
-"Visualizza PDI sQuiddio come waypoints OpenCPN tradizionali, o come  Punti "
-"di Testo ODraw  (consigliato, qualora il plugin ODRaw sia abilitato)"
-
-#: src/squiddioPrefsDialogBase.cpp:110
-msgid "ODraw Settings"
-msgstr "Impostazioni ODRaw"
-
-#: src/squiddioPrefsDialogBase.cpp:117
-msgid "Show Name"
-msgstr "Visualizza Nome"
-
-#: src/squiddioPrefsDialogBase.cpp:124
-msgid "Text position relative to point"
-msgstr "Posizione del testo relativa al punto"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Top"
-msgstr "In alto"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Top Centre"
-msgstr "In alto, centro"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Bottom"
-msgstr "In basso"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Bottom Centre"
-msgstr "In basso, centro"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Centre"
-msgstr "Centro"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Right"
-msgstr "Destra"
-
-#: src/squiddioPrefsDialogBase.cpp:128
-msgid "Left"
-msgstr "Sinistra"
-
-#: src/squiddioPrefsDialogBase.cpp:134
-msgid "Text Colour"
-msgstr "Colore del testo"
-
-#: src/squiddioPrefsDialogBase.cpp:141
-#, fuzzy
-#| msgid "Baackground Colour"
-msgid "Background Colour"
-msgstr "Colore di sottofondo"
-
-#: src/squiddioPrefsDialogBase.cpp:148
-msgid "Background Transparency"
-msgstr "Trasparenza di sottofondo"
-
-#: src/squiddioPrefsDialogBase.cpp:158
-msgid "Text Font"
-msgstr "Carattere testo"
-
-#: src/squiddioPrefsDialogBase.cpp:162
-msgid "Example"
-msgstr "Esempio"
-
-#: src/squiddioPrefsDialogBase.cpp:169
-msgid "Fonts"
-msgstr "Caratteri"
-
-#: src/squiddioPrefsDialogBase.cpp:175
-msgid "Always"
-msgstr "Sempre"
-
-#: src/squiddioPrefsDialogBase.cpp:175
-msgid "On Rollover Only"
-msgstr "Solamente su rollover"
-
-#: src/squiddioPrefsDialogBase.cpp:175 src/squiddioPrefsDialogBase.cpp:258
-#: src/squiddioPrefsDialogBase.cpp:270
-msgid "Never"
-msgstr "Mai"
-
-#: src/squiddioPrefsDialogBase.cpp:177
-msgid "Show Display Text"
-msgstr "Visualizza testo"
-
-#: src/squiddioPrefsDialogBase.cpp:188
-msgid "POI Rendering"
-msgstr "Rappresentazione dei PDI"
-
-#: src/squiddioPrefsDialogBase.cpp:191
-msgid "Google Maps"
-msgstr "Mappe Google"
-
-#: src/squiddioPrefsDialogBase.cpp:198
-msgid "Zoom Levels"
-msgstr "Livelli di zoom"
-
-#: src/squiddioPrefsDialogBase.cpp:203
-msgid ""
-"Download one satellite map for each destination and for each of these zoom "
-"levels. Separate values with a comma. Minimum zoom level is 10, maximum "
-"18. \n"
-"\n"
-"Example: 15,17. \n"
-"\n"
-"15 is typically suitable approaching a destination, 17 for detailed map of "
-"marina or anchorage. Keep zoom levels to a minimum to reduce download times. "
-msgstr ""
-"Scarica una mappa satellitare per ciascuna destinazione, e per ciascuno di "
-"questi livelli di zoom. Separa i valori con una virgola. Livello minimo di "
-"zoom: 10, massimo: 18.\n"
-"\n"
-"Esempio 15,17.\n"
-"\n"
-"Il 15 e' normalmente indicato per la navigazione di avvicinamento a una "
-"destinazione, 17 per una mappa dettagliata di un marina o ancoraggio. "
-"Minimizza il numero di livelli per ridurre i tempi di scarica."
-
-#: src/squiddioPrefsDialogBase.cpp:207
-msgid "Download .kap files to:"
-msgstr "Salva i files .kap in:"
-
-#: src/squiddioPrefsDialogBase.cpp:211
-msgid "Select a folder"
-msgstr "Seleziona una cartella"
-
-#: src/squiddioPrefsDialogBase.cpp:212
-msgid ""
-"Select directory where you want to save downloaded maps. Must be one of your "
-"OpenCPN chart directories."
-msgstr ""
-"Seleziona una cartella in cui  salvare le mappe satellitari scaricate. Deve "
-"essere una delle tue cartelle di carte nautiche OpenCPN."
-
-#: src/squiddioPrefsDialogBase.cpp:216
-msgid "Include viewport map"
-msgstr "Includi mappa satellitare per il viewport"
-
-#: src/squiddioPrefsDialogBase.cpp:222
-msgid ""
-"In addition to maps for each destination, download a smaller-scale map to "
-"cover the entire viewport area"
-msgstr ""
-"Oltre alle mappe satellitari per ciascuna destinazione, scarica una mappa in "
-"scala ridotta per l'intera area del viewport"
-
-#: src/squiddioPrefsDialogBase.cpp:230
-msgid "House Keeping"
-msgstr "Manutenzione"
-
-#: src/squiddioPrefsDialogBase.cpp:232
-msgid "Delete .gpx files for hidden layers upon exiting OpenCPN"
-msgstr "Cancella i file .gpx per livelli nascosti all'uscita da OpenCPN"
-
-#: src/squiddioPrefsDialogBase.cpp:233
-msgid ""
-"Delete downloaded POI files for sectors you have hidden. This limits the "
-"proliferation of unecessary files and reduced OpenCPN's computational burden."
-msgstr ""
-"Rimuovi i files contenenti POI per settori nascosti. Questo limita la "
-"proliferazione di file non necessari e riduce il carico computazionale di "
-"OpenCPN."
-
-#: src/squiddioPrefsDialogBase.cpp:244
-msgid "Downloads"
-msgstr "Download"
-
-#: src/squiddioPrefsDialogBase.cpp:247
-msgid "Share logs with sQuiddio"
-msgstr "Condividi i tuoi log con gli amici"
-
-#: src/squiddioPrefsDialogBase.cpp:254
-msgid "Send"
-msgstr "Invia"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Once a day"
-msgstr "Una volta al giorno"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Twice a day"
-msgstr "Due volte al giorno"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Once an hour"
-msgstr "Una volta all'ora"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Twice an hour"
-msgstr "Due volte all'ora"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Once a minute"
-msgstr "Una volta al minuto"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Twice a minute"
-msgstr "Due volte al minuto"
-
-#: src/squiddioPrefsDialogBase.cpp:258 src/squiddioPrefsDialogBase.cpp:270
-msgid "Every 10 seconds"
-msgstr "Ogni 10 secondi"
-
-#: src/squiddioPrefsDialogBase.cpp:266
-msgid "Receive"
-msgstr "Ricevi"
-
-#: src/squiddioPrefsDialogBase.cpp:282
-msgid "Logs Sharing Options"
-msgstr "Opzioni di condivisione dei log"
-
-#: src/squiddioPrefsDialogBase.cpp:284
-msgid "Include NMEA samples with each send"
-msgstr "Includi dei campioni di messaggi NMEA con ciascun invio"
-
-#: src/squiddioPrefsDialogBase.cpp:286
-msgid ""
-"(Beta feature) Include a sample of your recent NMEA messages each time you "
-"send a log update. See stats about your wind, depth, temperature,  engine "
-"readings etc. online."
-msgstr ""
-"(funzione Beta) Includi un campione di messaggi NMEA recenti ogni volta che "
-"invii un log. Visualizza statistiche sul vento, temperatura, profondita', "
-"sensori motore etc. online."
-
-#: src/squiddioPrefsDialogBase.cpp:297
-msgid "Log Sharing"
-msgstr "Condivisione log"
-
-#: src/squiddioPrefsDialogBase.cpp:300
-msgid "Your sQuidd.io credentials"
-msgstr "Le tue credenziali sQuiddio"
-
-#: src/squiddioPrefsDialogBase.cpp:302
-msgid "sQuiddio ID"
-msgstr "Identificativo sQuiddio"
-
-#: src/squiddioPrefsDialogBase.cpp:307
-msgid "The email address you use to log into sQuidd.io"
-msgstr "L'indirizzo email che utilizzi per accedere a sQuidd.io"
-
-#: src/squiddioPrefsDialogBase.cpp:311
-msgid "API Key"
-msgstr "Chiave API"
-
-#: src/squiddioPrefsDialogBase.cpp:316
-msgid ""
-"Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io "
-"and click Edit Profile in the Dashboard, then select the Numbers and Keys "
-"tab. Click Help for more information. \n"
-"\n"
-"IMPORTANT! Do not use your sQuiddio Password as your API Key! "
-msgstr ""
-"Recupera la Chiave API dal tuo profilo sQuidd.io. Accedi a http://squidd.io "
-"e fare clic su Preferences nella barra blu in alto, quindi seleziona la "
-"scheda \"Numbers and Keys\". Fai clic su Help per ulteriori informazioni. \n"
-"\n"
-"IMPORTANTE! Non utilizzare la  password di sQuidd.io come chiave API! "
-
-#: src/squiddioPrefsDialogBase.cpp:327
-msgid "About this plugin"
-msgstr "Circa questo plugin"
-
-#: src/squiddioPrefsDialogBase.cpp:330
-msgid "version"
-msgstr "versione"
-
-#: src/squiddioPrefsDialogBase.cpp:341
-msgid "Authentication"
-msgstr "Autenticazione"
-
-#: src/squiddioPrefsDialogBase.h:120
-msgid "sQuiddio Preferences"
-msgstr "Impostazioni sQuiddio"
-
-#: src/squiddioKaps.cpp:193
-msgid ""
-"No sQuiddio POIs in viewport. Download local POIs, zoom out or pan to a "
-"different area."
-msgstr ""
-"Nessun PDI sQuiddio presente nel viewport. Scarica PDI locali, allarga lo "
-"zoom o seleziona un'area contenente PDI."
-
-#: src/squiddioKaps.cpp:195
-msgid ""
-"Too many sQuiddio POIs in viewport. Zoom in to reduce the number of POIs to "
-"less than 20"
-msgstr ""
-"Troppi PDI sQuiddio nel viewport.  Riduci lo zoom per portare il numero di "
-"PDI a meno di 20"
-
-#: src/squiddioKaps.cpp:201
-msgid "You are about to download satellite maps for "
-msgstr "Stai per scaricare mappe satellitari per "
-
-#: src/squiddioKaps.cpp:201
-msgid " POI"
-msgstr "PDI"
-
-#: src/squiddioKaps.cpp:201
-msgid "s"
+#: src\NavObjectCollection.cpp:231
+msgid "T"
 msgstr ""
 
-#: src/squiddioKaps.cpp:202
-msgid " at zoom level"
-msgstr "al livello di zoom"
-
-#: src/squiddioKaps.cpp:202
-msgid "s "
+#: src\NavObjectCollection.cpp:231
+msgid "Z"
 msgstr ""
 
-#: src/squiddioKaps.cpp:202
-msgid " "
+#: src\NavObjectCollection.cpp:410 src\NavObjectCollection.cpp:440
+msgid "circle"
 msgstr ""
 
-#: src/squiddioKaps.cpp:204
-msgid ", plus one map for the entire viewport."
-msgstr ", piu' una mappa per l'intero viewport."
-
-#: src/squiddioKaps.cpp:207
-msgid ""
-"\n"
-"\n"
-"The estimated compressed file size is approximately "
-msgstr ""
-"\n"
-"\n"
-"La dimensione stimata del file compresso e' circa "
-
-#: src/squiddioKaps.cpp:209
-msgid ""
-"\n"
-"Zoom in to a lower number of visible POIs to reduce download time, or reduce "
-"the number of zoom levels. "
-msgstr ""
-"\n"
-"Ingrandisci il viewport per ridurre il numero di PDI e il tempo di "
-"scaricamento,  o riduci il numero di livelli di zoom."
-
-#: src/squiddioKaps.cpp:210
-msgid ""
-"\n"
-"\n"
-"See settings in your squiddio plugin -> Downloads tab to change your zoom "
-"levels"
-msgstr ""
-"\n"
-"\n"
-"Vedi le impostazioni del plugin squiddio -> scheda Downloads"
-
-#: src/squiddioKaps.cpp:212
-msgid " or exclude the viewport map."
-msgstr "o escludi la mappa del viewport."
-
-#: src/squiddioKaps.cpp:214
-msgid "Goodle Maps Downloader"
-msgstr "Scarica mappe satellitari Google"
-
-#: src/squiddioKaps.cpp:248
-msgid "Unable to update the chart database"
-msgstr "Impossibile aggiornare il database delle carte nautiche"
-
-#: src/sJSON.cpp:157
-msgid "OCPN_Draw_pi not available. POI's will be rendered with OCPN Waypoints."
-msgstr ""
-"OCPN_Draw_pi non disponibile. I PDI saranno rappresentati come waypoints "
-"OCPN."
-
-#: src/logs.cpp:69
+#: src\logs.cpp:69
 msgid "nmea.txt"
-msgstr "nmea.txt"
+msgstr ""
 
-#: src/logs.cpp:104
+#: src\logs.cpp:104
 msgid "Just now"
 msgstr "In questo istante"
 
-#: src/logs.cpp:105
+#: src\logs.cpp:105
 msgid "One second ago"
 msgstr "Un secondo fa"
 
-#: src/logs.cpp:108
+#: src\logs.cpp:108
 #, c-format
 msgid "%i seconds ago"
 msgstr "%i secondi fa"
 
-#: src/logs.cpp:111
+#: src\logs.cpp:111
 msgid "About a minute ago"
 msgstr "Circa un minuto fa"
 
-#: src/logs.cpp:114
+#: src\logs.cpp:114
 #, c-format
 msgid "%i minutes ago"
 msgstr "%i minuti fa"
 
-#: src/logs.cpp:117
+#: src\logs.cpp:117
 msgid "About an hour ago"
 msgstr "Circa un ora fa"
 
-#: src/logs.cpp:120
+#: src\logs.cpp:120
 #, c-format
 msgid "%i hours ago"
 msgstr "%i ore fa"
 
-#: src/logs.cpp:123
+#: src\logs.cpp:123
 msgid "Yesterday"
 msgstr "Ieri"
 
-#: src/logs.cpp:126
+#: src\logs.cpp:126
 #, c-format
 msgid "%i days ago"
 msgstr "%i giorni fa"
 
-#: src/logs.cpp:230
+#: src\logs.cpp:230
 msgid "Buffering NMEA events.."
-msgstr "Buffering eventi NMEA...."
+msgstr ""
 
-#: src/logs.cpp:242 src/logs.cpp:246
+#: src\logs.cpp:242 src\logs.cpp:246
 msgid "Offline"
-msgstr "Scollegato"
+msgstr ""
 
-#: src/logs.cpp:250
+#: src\logs.cpp:250
 msgid "sQuiddio logs sent:"
-msgstr "Aggiornamento log inviato:"
+msgstr ""
 
-#: src/logs.cpp:264
+#: src\logs.cpp:264
 msgid " (demo)"
-msgstr "(demo)"
+msgstr ""
 
-#: src/logs.cpp:265
+#: src\logs.cpp:265
 msgid "Received"
-msgstr "Ricevuto"
+msgstr ""
 
-#: src/logs.cpp:352
+#: src\logs.cpp:352
 msgid "\n"
 msgstr ""
 
-#: src/logs.cpp:368
+#: src\logs.cpp:368
 msgid "squiddio_pi: Created sQuiddio log update:"
-msgstr "squiddio_pi: Aggiornamento log creato:"
+msgstr ""
 
-#: src/logs.cpp:412
+#: src\logs.cpp:412
 msgid "Unable to retrieve friends logs: check your credentials and Follow List"
 msgstr ""
-"Impossibile ricevere logs degli amici: verifica le credenziali e la Follow "
-"List"
 
-#: src/logs.cpp:428
-msgid ""
-"This will deactivate logs sharing.\n"
-"\n"
+#: src\logs.cpp:428
+msgid "This will deactivate logs sharing.\n\n"
 " To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."
 msgstr ""
-"Questo disattiva la condivisione dei log.\n"
-"\n"
-"Per riattivarla, vai alle impostazioni del plugin sQuiddio -> scheda "
-"Condivisione Log"
 
-#: src/NavObjectCollection.cpp:169
-msgid "LayGUID"
+#: src\sJSON.cpp:157
+msgid "OCPN_Draw_pi not available. POI's will be rendered with OCPN Waypoints."
 msgstr ""
 
-#: src/NavObjectCollection.cpp:221 src/NavObjectCollection.cpp:223
+#: src\squiddioKaps.cpp:193
+msgid "No sQuiddio POIs in viewport. Download local POIs, zoom out or pan to a different area."
+msgstr ""
+
+#: src\squiddioKaps.cpp:195
+msgid "Too many sQuiddio POIs in viewport. Zoom in to reduce the number of POIs to less than 20"
+msgstr ""
+
+#: src\squiddioKaps.cpp:201
+msgid " POI"
+msgstr ""
+
+#: src\squiddioKaps.cpp:201
+msgid "You are about to download satellite maps for "
+msgstr ""
+
+#: src\squiddioKaps.cpp:201
+msgid "s"
+msgstr ""
+
+#: src\squiddioKaps.cpp:202
+msgid " "
+msgstr ""
+
+#: src\squiddioKaps.cpp:202
+msgid " at zoom level"
+msgstr ""
+
+#: src\squiddioKaps.cpp:202
+msgid "s "
+msgstr ""
+
+#: src\squiddioKaps.cpp:204
+msgid ", plus one map for the entire viewport."
+msgstr ""
+
+#: src\squiddioKaps.cpp:207
+msgid "\n\n"
+"The estimated compressed file size is approximately "
+msgstr ""
+
+#: src\squiddioKaps.cpp:209
+msgid "\n"
+"Zoom in to a lower number of visible POIs to reduce download time, or reduce the number of zoom levels. "
+msgstr ""
+
+#: src\squiddioKaps.cpp:210
+msgid "\n\n"
+"See settings in your squiddio plugin -> Downloads tab to change your zoom levels"
+msgstr ""
+
+#: src\squiddioKaps.cpp:212
+msgid " or exclude the viewport map."
+msgstr ""
+
+#: src\squiddioKaps.cpp:214
+msgid "Goodle Maps Downloader"
+msgstr ""
+
+#: src\squiddioKaps.cpp:237 src\squiddio_pi.cpp:911
+msgid "Downloading"
+msgstr "Download in corso"
+
+#: src\squiddioKaps.cpp:248
+msgid "Unable to update the chart database"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:28
+msgid "Destinations"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:35
+msgid "All"
+msgstr "Tutte"
+
+#: src\squiddioPrefsDialogBase.cpp:38
+msgid "Marinas"
+msgstr "Marina"
+
+#: src\squiddioPrefsDialogBase.cpp:41
+msgid "Anchorages"
+msgstr "Ancoraggi"
+
+#: src\squiddioPrefsDialogBase.cpp:44
+msgid "Docks/Piers"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:47
+msgid "Yacht Clubs"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:50 src\squiddio_pi.cpp:1560
+msgid "Mooring Buoys"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:53
+msgid "Fuel Stations"
+msgstr "Stazioni carburante"
+
+#: src\squiddioPrefsDialogBase.cpp:56
+msgid "Boat Yards"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:59
+msgid "Boat Ramps"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:62
+msgid "Other"
+msgstr "Altro"
+
+#: src\squiddioPrefsDialogBase.cpp:69
+msgid "Cruising Aids"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:71
+msgid "NDBC Buoy Reports"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:72
+msgid "Get quasi-real time wind, wave and pressure report from thousands of NDBC buoys right from your chart."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:76
+msgid "NDBC Ship Reports"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:77
+msgid "Get quasi-real time wind, wave and pressure report from participating NDBC ships right from your chart."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:81
+msgid "AIS markers"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:91
+msgid "View"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:93
+msgid "Delete downloaded POI files for sectors you have hidden. This limits the proliferation of old unecessary POI files and reduced the computational burden."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:98
+msgid "ODraw TextPoint"
+msgstr "Text Point OCPN Draw"
+
+#: src\squiddioPrefsDialogBase.cpp:98
+msgid "OpenCPN Waypoint"
+msgstr "Waypoint OpenCPN"
+
+#: src\squiddioPrefsDialogBase.cpp:100
+msgid "Use OCPN or ODraw (recommended)"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:102
+msgid "Render sQuiddio POIs as legacy OpenCPN waypoints or  ODraw Textpoints (recommended, provided ODraw plugin is enabled)."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:110
+msgid "ODraw Settings"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:117
+msgid "Show Name"
+msgstr "Visualizza Nome"
+
+#: src\squiddioPrefsDialogBase.cpp:124
+msgid "Text position relative to point"
+msgstr "Posizione del testo relativa al punto"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Bottom"
+msgstr "In basso"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Bottom Centre"
+msgstr "In basso, centro"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Centre"
+msgstr "Centro"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Left"
+msgstr "Sinistra"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Right"
+msgstr "Destra"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Top"
+msgstr "In alto"
+
+#: src\squiddioPrefsDialogBase.cpp:128
+msgid "Top Centre"
+msgstr "In alto, centro"
+
+#: src\squiddioPrefsDialogBase.cpp:134
+msgid "Text Colour"
+msgstr "Colore del testo"
+
+#: src\squiddioPrefsDialogBase.cpp:141
+msgid "Background Colour"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:148
+msgid "Background Transparency"
+msgstr "Trasparenza di sottofondo"
+
+#: src\squiddioPrefsDialogBase.cpp:158
+msgid "Text Font"
+msgstr "Carattere testo"
+
+#: src\squiddioPrefsDialogBase.cpp:162
+msgid "Example"
+msgstr "Esempio"
+
+#: src\squiddioPrefsDialogBase.cpp:169
+msgid "Fonts"
+msgstr "Caratteri"
+
+#: src\squiddioPrefsDialogBase.cpp:175
+msgid "Always"
+msgstr "Sempre"
+
+#: src\squiddioPrefsDialogBase.cpp:175 src\squiddioPrefsDialogBase.cpp:258
+#: src\squiddioPrefsDialogBase.cpp:270
+msgid "Never"
+msgstr "Mai"
+
+#: src\squiddioPrefsDialogBase.cpp:175
+msgid "On Rollover Only"
+msgstr "Solamente su rollover"
+
+#: src\squiddioPrefsDialogBase.cpp:177
+msgid "Show Display Text"
+msgstr "Visualizza testo"
+
+#: src\squiddioPrefsDialogBase.cpp:188
+msgid "POI Rendering"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:191
+msgid "Google Maps"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:198
+msgid "Zoom Levels"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:203
+msgid "Download one satellite map for each destination and for each of these zoom levels. Separate values with a comma. Minimum zoom level is 10, maximum 18. \n\n"
+"Example: 15,17. \n\n"
+"15 is typically suitable approaching a destination, 17 for detailed map of marina or anchorage. Keep zoom levels to a minimum to reduce download times. "
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:207
+msgid "Download .kap files to:"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:211
+msgid "Select a folder"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:212
+msgid "Select directory where you want to save downloaded maps. Must be one of your OpenCPN chart directories."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:216
+msgid "Include viewport map"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:222
+msgid "In addition to maps for each destination, download a smaller-scale map to cover the entire viewport area"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:230
+msgid "House Keeping"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:232
+msgid "Delete .gpx files for hidden layers upon exiting OpenCPN"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:233
+msgid "Delete downloaded POI files for sectors you have hidden. This limits the proliferation of unecessary files and reduced OpenCPN's computational burden."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:244
+msgid "Downloads"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:247
+msgid "Share logs with sQuiddio"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:254
+msgid "Send"
+msgstr "Invia"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Every 10 seconds"
+msgstr "Ogni 10 secondi"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Once a day"
+msgstr "Una volta al giorno"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Once a minute"
+msgstr "Una volta al minuto"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Once an hour"
+msgstr "Una volta all'ora"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Twice a day"
+msgstr "Due volte al giorno"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Twice a minute"
+msgstr "Due volte al minuto"
+
+#: src\squiddioPrefsDialogBase.cpp:258 src\squiddioPrefsDialogBase.cpp:270
+msgid "Twice an hour"
+msgstr "Due volte all'ora"
+
+#: src\squiddioPrefsDialogBase.cpp:266
+msgid "Receive"
+msgstr "Ricevi"
+
+#: src\squiddioPrefsDialogBase.cpp:282
+msgid "Logs Sharing Options"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:284
+msgid "Include NMEA samples with each send"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:286
+msgid "(Beta feature) Include a sample of your recent NMEA messages each time you send a log update. See stats about your wind, depth, temperature,  engine readings etc. online."
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:297
+msgid "Log Sharing"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:300
+msgid "Your sQuidd.io credentials"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:302
+msgid "sQuiddio ID"
+msgstr "Identificativo sQuiddio"
+
+#: src\squiddioPrefsDialogBase.cpp:307
+msgid "The email address you use to log into sQuidd.io"
+msgstr "L'indirizzo email che utilizzi per accedere a sQuidd.io"
+
+#: src\squiddioPrefsDialogBase.cpp:311
+msgid "API Key"
+msgstr "Chiave API"
+
+#: src\squiddioPrefsDialogBase.cpp:316
+msgid "Retrieve your API Key from your sQuidd.io profile. Log into http://squidd.io and click Edit Profile in the Dashboard, then select the Numbers and Keys tab. Click Help for more information. \n\n"
+"IMPORTANT! Do not use your sQuiddio Password as your API Key! "
+msgstr "Recupera la Chiave API dal tuo profilo sQuidd.io. Accedi a http://squidd.io e fare clic su Preferences nella barra blu in alto, quindi seleziona la scheda \"Numbers and Keys\". Fai clic su Help per ulteriori informazioni. \n\n"
+"IMPORTANTE! Non utilizzare la  password di sQuidd.io come chiave API! "
+
+#: src\squiddioPrefsDialogBase.cpp:327
+msgid "About this plugin"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:330
+msgid "version"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.cpp:341
+msgid "Authentication"
+msgstr ""
+
+#: src\squiddioPrefsDialogBase.h:120
+msgid "sQuiddio Preferences"
+msgstr "Impostazioni sQuiddio"
+
+#: src\squiddio_pi.cpp:176
+msgid "sQuiddio: Show local POIs"
+msgstr ""
+
+#: src\squiddio_pi.cpp:181
+msgid "sQuiddio: Hide local POIs"
+msgstr ""
+
+#: src\squiddio_pi.cpp:186
+msgid "sQuiddio: Download local Points of Interest"
+msgstr ""
+
+#: src\squiddio_pi.cpp:191
+msgid "sQuiddio: Update local Points of Interest"
+msgstr ""
+
+#: src\squiddio_pi.cpp:196
+msgid "sQuiddio: Report a POI at this location"
+msgstr ""
+
+#: src\squiddio_pi.cpp:201
+msgid "sQuiddio: Download satellite images for POIs"
+msgstr ""
+
+#: src\squiddio_pi.cpp:273
+msgid "sQuiddio"
+msgstr "sQuiddio"
+
+#: src\squiddio_pi.cpp:868 src\squiddio_pi.cpp:1698
+msgid "Could not launch default browser. Check your Internet connection"
+msgstr "Il browser non risponde. Verifica il collegamento a Internet"
+
+#: src\squiddio_pi.cpp:911
+msgid "Downloading: "
+msgstr "Download in corso: "
+
+#: src\squiddio_pi.cpp:999
+msgid "Squiddio for OpenCPN"
+msgstr "Squiddio per OpenCPN"
+
+#: src\squiddio_pi.cpp:1004
+msgid "== User-sourced database of sailing Points of Interest ==\n"
+"To download (or update) Points of Interest (POIs) for a desired region (requires Internet connection):\n"
+"* Position cursor on area where you want to view POIs and right click mouse\n"
+"* Select 'sQuiddio: Download (or Update) local Points of Interest' from context-sensitive menu.\n\n"
+"Destinations appear as OpenCPN waypoints (default) or Draw Text Points (if the Draw plugin is installed):  \n"
+"* Hover on waypoints to view a synopsis of POI information* Right-click on waypoint for link to sQuiddio's destination page. \n"
+"* Follow link to rate destination and add comments online.\n\n"
+"Other menu options: \n"
+"* Toggle visibility for local POIs on/off \n"
+"* Submit a new destination (requires Internet connection and free user account)\n"
+"* Download Google Maps as OCPN charts for all POIs in viewport\n\n"
+"== In-chart log-sharing for cruisers ==\n"
+"* Share your GPS coordinates and other navigational information with your cruising friends\n"
+"and visualize their position on your OpenCPN charts (requires a free sQuiddio account)\n\n"
+"IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n"
+"and Conditions, available at http://squidd.io/enduser_agreement"
+msgstr ""
+
+#: src\squiddio_pi.cpp:1108
+msgid "."
+msgstr ""
+
+#: src\squiddio_pi.cpp:1108
+msgid "sQuiddio plugin version: "
+msgstr ""
+
+#: src\squiddio_pi.cpp:1130
 #, c-format
-msgid "%.9f"
+msgid "OD Text Points not available, wrong version of API\n"
+"Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"
+msgstr "Punti Testo OD non disponibili. Versione errata dell'API. \n"
+"Squiddio API vers. maggiore: %i, minore %i, OD API vers. maggiore: %i, minore %i"
+
+#: src\squiddio_pi.cpp:1133
+#, c-format
+msgid "squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"
 msgstr ""
 
-#: src/NavObjectCollection.cpp:231
-msgid "T"
+#: src\squiddio_pi.cpp:1261
+msgid "Please specify at least one zoom level"
 msgstr ""
 
-#: src/NavObjectCollection.cpp:231
-msgid "Z"
+#: src\squiddio_pi.cpp:1267
+msgid "Zoom Levels must be betweeen 10 and 18"
 msgstr ""
 
-#: src/NavObjectCollection.cpp:410 src/NavObjectCollection.cpp:440
-msgid "circle"
+#: src\squiddio_pi.cpp:1282
+msgid "Log sharing was not activated. Please enter your sQuiddio user ID and API Key.\n\n"
+"To obtain your API Key, log into sQuidd.io (http://squidd.io), click on Preferences in the top blue bar, then select the 'Numbers & Keys' tab."
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "Black"
+#: src\squiddio_pi.cpp:1348
+msgid "sQuiddio log updates (drag this to the bottom to minimize)"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkRed"
+#: src\squiddio_pi.cpp:1544
+msgid "Marina"
+msgstr "Marina"
+
+#: src\squiddio_pi.cpp:1548
+msgid "Anchorage"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkGreen"
+#: src\squiddio_pi.cpp:1552
+msgid "Dock/Pier"
+msgstr "Molo/Pontile"
+
+#: src\squiddio_pi.cpp:1556
+msgid "Yacht Club"
+msgstr "Circolo Nautico"
+
+#: src\squiddio_pi.cpp:1564
+msgid "Fuel Station"
+msgstr "Stazione carburante"
+
+#: src\squiddio_pi.cpp:1568
+msgid "Boat Yard"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkYellow"
+#: src\squiddio_pi.cpp:1572
+msgid "Boat Ramp"
+msgstr "Rampa di accesso"
+
+#: src\squiddio_pi.cpp:1576
+msgid "AIS ATON Marker"
+msgstr "Segnalatore AIS"
+
+#: src\squiddio_pi.cpp:1580
+msgid "NDBC Buoy"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkBlue"
+#: src\squiddio_pi.cpp:1584
+msgid "NDBC Ship"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkMagenta"
+#: src\squiddio_pi.cpp:1588
+msgid "Generic POI"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkCyan"
+#: src\squiddio_pi.cpp:1593
+msgid "North"
+msgstr "Nord"
+
+#: src\squiddio_pi.cpp:1597
+msgid "North East"
+msgstr "Nord-est"
+
+#: src\squiddio_pi.cpp:1601
+msgid "East"
+msgstr "Est"
+
+#: src\squiddio_pi.cpp:1605
+msgid "South East"
+msgstr "Sud-est"
+
+#: src\squiddio_pi.cpp:1609
+msgid "South"
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "LightGray"
+#: src\squiddio_pi.cpp:1613
+msgid "South West"
+msgstr "Sud-ovest"
+
+#: src\squiddio_pi.cpp:1617
+msgid "West"
+msgstr "Ovest"
+
+#: src\squiddio_pi.cpp:1621
+msgid "North West"
+msgstr "Nord-ovest"
+
+#: src\squiddio_pi.cpp:1625
+msgid "Checked in"
+msgstr "Registrato"
+
+#: src\squiddio_pi.cpp:1629
+msgid "Unknown heading"
+msgstr "Direzione non nota"
+
+#: src\squiddio_pi.cpp:1692
+msgid "Your GPS positions and other navigational information will be sent to the server and may be shared with other sQuidd.io users. Check https://squidd.io/privacy for additional information."
 msgstr ""
 
-#: src/gpxdocument.h:35
-msgid "DarkGray"
-msgstr ""
+#: src\squiddio_pi.h:362
+msgid "Squiddio Preferences"
+msgstr "Impostazioni sQuiddio"
 
-#: src/gpxdocument.h:35
-msgid "Red"
-msgstr ""
-
-#: src/gpxdocument.h:35
-msgid "Green"
-msgstr ""
-
-#: src/gpxdocument.h:35
-msgid "Yellow"
-msgstr ""
-
-#: src/gpxdocument.h:35
-msgid "Blue"
-msgstr ""
-
-#: src/gpxdocument.h:35
-msgid "Magenta"
-msgstr ""
-
-#: src/gpxdocument.h:35
-msgid "Cyan"
-msgstr ""
-
-#: src/gpxdocument.h:35
-msgid "White"
-msgstr ""
-
-#~ msgid "Show local sQuiddio destinations"
-#~ msgstr "Visualizza le destinazioni sQuiddio locali"
-
-#~ msgid "Hide local sQuiddio destinations"
-#~ msgstr "Nascondi le destinazioni sQuiddio locali"
-
-#~ msgid "Download local sQuiddio destinations"
-#~ msgstr "Scarica le destinazioni sQuiddio locali"
-
-#~ msgid "Local destinations have been updated"
-#~ msgstr "Destinazioni locali aggiornate"
-
-#~ msgid "No destinations available for the region"
-#~ msgstr "Spiacenti. Nessuna destinazione in questa regione"
-
-#~ msgid "Server not responding. Check your Internet connection"
-#~ msgstr "Il server non risponde. Verifica il collegamento a Internet"
-
-#~ msgid "Squiddio_pi: unable to connect to host"
-#~ msgstr "Squiddio_pi non riesce a collegarsi all'host"
-
-#~ msgid "Squiddio"
-#~ msgstr "Squiddio"
-
-#~ msgid "Log sent:"
-#~ msgstr "Log inviato:"
-
-#~ msgid "Logs received"
-#~ msgstr "Log  ricevuti:"
