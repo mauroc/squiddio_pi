@@ -252,9 +252,10 @@ int squiddio_pi::Init(void) {
     }
 
     if (wxDir::Exists(layerdir)) {
-//         wxString laymsg;
-//         laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
-        wxLogMessage(wxString::Format(_T("squiddio_pi: getting .gpx layer files from: %s")), layerdir.c_str() );
+        wxString laymsg;
+        laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
+        wxLogMessage(laymsg);
+//         wxLogMessage(wxString::Format(_T("squiddio_pi: getting .gpx layer files from: %s")), layerdir.c_str() );
 
         LoadLayers(layerdir);
 
