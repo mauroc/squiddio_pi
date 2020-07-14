@@ -28,20 +28,16 @@ install:
   # install dependencies:
   - choco install poedit
   - choco install git
-
   - ps: Start-FileDownload http://opencpn.navnux.org/build_deps/nsis-3.04-setup.exe
   - cmd: nsis-3.04-setup.exe /S
 
   # Download and unzip wxwidgets
   - ps: Start-FileDownload http://opencpn.navnux.org/build_deps/wxWidgets-3.1.2.7z
   - cmd: 7z x wxWidgets-3.1.2.7z -o%WXWIN% > null
-
   - set
 
 before_build:
   - cd c:\project\ocpn_project
-																													  
-																			 
   - cd buildwin
   - ps: Start-FileDownload https://downloads.sourceforge.net/project/opencpnplugins/opencpn_packaging_data/PVW32Con.exe
   - cd ..
@@ -61,16 +57,6 @@ build_script:
 artifacts:
   - path: 'build\*.exe'
     name: installer
-		
-												
-				   
-									
-							   
-			  
-				   
-	  
-													  
-																
 
 # Removed from process as not providing real benefit at the moment
 #deploy:
@@ -78,7 +64,6 @@ artifacts:
 #  provider: GitHub
 #  #auth_token: '%GitHub_auth_token%'
 #  auth_token:  '%git-ptoken-testplugin-into-appveyor%'
-
 #  artifact: installer,portable
 #  draft: true
 #  prerelease: true
