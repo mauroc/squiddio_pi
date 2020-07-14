@@ -134,6 +134,8 @@ int squiddio_pi::Init(void) {
 
     wxLogMessage(_T("squiddio_pi: Init( )"));
 
+    AddLocaleCatalog( _T("opencpn-squiddio_pi") );
+
     m_plogs_window = NULL;
     g_PostPeriod = 0;
     g_RetrievePeriod = 0;
@@ -254,7 +256,7 @@ int squiddio_pi::Init(void) {
     if (wxDir::Exists(layerdir)) {
         wxString laymsg;
         laymsg.Printf(wxT("squiddio_pi: getting .gpx layer files from: %s"), layerdir.c_str());
-        wxLogMessage(laymsg);
+//         wxLogMessage(laymsg);
 //         wxLogMessage(wxString::Format(_T("squiddio_pi: getting .gpx layer files from: %s")), layerdir.c_str() );
 
         LoadLayers(layerdir);
@@ -1107,7 +1109,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
         dialog->m_checkBoxSendNmea->SetValue(g_SendNmea);
 
-        wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR);
+        wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR) +_(".") + wxString::Format(wxT("%i"),PLUGIN_VERSION_PATCH) +_(".") + wxString::Format(wxT("%i"),PLUGIN_VERSION_TWEAK);
 
         dialog->m_version->SetLabel(version);
 
