@@ -138,7 +138,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_colourPickerText = new wxColourPickerCtrl( sbSizer6->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	m_fgSizerODSettings->Add( m_colourPickerText, 0, wxALIGN_RIGHT|wxALL, 5 );
 
-	m_staticTextBackgroundColour = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Baackground Colour"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextBackgroundColour = new wxStaticText( sbSizer6->GetStaticBox(), wxID_ANY, _("Background Colour"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticTextBackgroundColour->Wrap( -1 );
 	m_fgSizerODSettings->Add( m_staticTextBackgroundColour, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 

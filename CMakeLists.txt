@@ -21,11 +21,18 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 ##
+## ====FRONTEND 2  Version: 1.0.126 (corresponds with testplugin 1.0.126)=============
+##     
+## ----- When changing this file do NOT change the order in which sections occur        ----- ##
+## ----- Changes should only be made between the section blocks that identify where     ----- ##
+## ----- these changes should be. The whole configuration process relies on this        ----- ##
+## ----- sequence to be successful                                                      ----- ##
+##
 ## ----- Modify section below to include all the details for your plugin ----- ##
 ##
-## ====FRONTEND 2==============
-## 
-## 
+
+set(CMLOC "CMakeLists: ")
+
 # define minimum cmake version
 cmake_minimum_required(VERSION 3.1.1)
 if(COMMAND cmake_policy)
@@ -38,7 +45,9 @@ if(COMMAND cmake_policy)
     endif(POLICY CMP0077)
 endif(COMMAND cmake_policy)
 
+# define plugin name, owner and versions
 SET(VERBOSE_NAME Squiddio)
+# Search "getcommonname"in weather_routing_pi.cpp
 set(COMMON_NAME "squiddio")
 set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
@@ -46,202 +55,101 @@ SET(PACKAGE "squiddio")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-
-SET(VERSION_PATCH "2")
-set(VERSION_TWEAK "5")
-set(VERSION_DATE "29/04/2020")
+SET(VERSION_PATCH "8")
+set(VERSION_TWEAK "0")
+set(VERSION_DATE "07/14/2020")
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
 set(OCPN_API_VERSION_MINOR "16")
 
 set(PARENT "opencpn")
-set(GIT_USER "mauroc")
-#set(GIT_USER "jongough")
-#set(GIT_USER "rgleason")
-set(GIT_REPOSITORY_NAME "squiddio_pi")
-message(STATUS "CIRCLECI: ${CIRCLECLI}, Env CIRCLECI: $ENV{CIRCLECI}")
-message(STATUS "TRAVIS: ${TRAVIS}, Env TRAVIS: $ENV{TRAVIS}")
 
-# This 'if' allows setup of a local webserver with git for testing
-if($ENV{CIRCLECI})
-    set(GIT_REPOSITORY_HOST "github.com")
-    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-    set(GIT_REPOSITORY_BRANCH "$ENV{CIRCLE_BRANCH}")
-elseif($ENV{TRAVIS})
-    set(GIT_REPOSITORY_HOST "github.com")
-    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-    set(GIT_REPOSITORY_BRANCH "$ENV{TRAVIS_BRANCH}")
-else()
-    set(GIT_REPOSITORY_HOST "github.com")
-    set(GIT_REPOSITORY_DIR "${GIT_USER}/")
-    set(GIT_REPOSITORY_BRANCH "master")
-    #  set(GIT_REPOSITORY_HOST "git.eclipse.com.au")
-    #  set(GIT_REPOSITORY_DIR "")
-    #  set(GIT_REPOSITORY_BRANCH "cmake_flatpak_test")
-endif()
-message(STATUS "Git Branch: ${GIT_REPOSITORY_BRANCH}")
+#Used to set up a local webserver with git loaded, for testing purposes.
+set(GIT_REPOSITORY_SERVER "github.com")
 
-#set(CLOUDSMITH_USER "jon-gough")
-set(CLOUDSMITH_USER "mauro-calvi")
-#set(CLOUDSMITH_USER "rick-gleason")
+#No longer needed, queried and found by PluginConfigure.cmake.
+#set(GIT_USER "mauroc")
+#set(GIT_REPOSITORY_NAME "squiddio_pi")
 
-#set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # Mauro's customization without the '_pi'
-#set(CLOUDSMITH_BASE_REPOSITORY "opencpn-plugins")  #Rick's customization
+# Specifies Cloudsmith upload repository suffix for each catalog
+set(PROD "prod")   #Standard Repos
+set(BETA "beta")   #Standard Repos
+set(ALPHA "alpha") #Standard Repos
 
-# Set Cloudsmith upload repository suffix for each catalog
-set(PROD "prod")  #Standard Repos
-#set(PROD "pi")   #Mauro Repos
-set(BETA "beta")       #Standard Repos
-#set(BETA "stable")  #Mauro Repos
-# set(ALPHA "alpha") #Standard Repos
-set(ALPHA "manual") # for Mauro's  Cloudsmith 'mauro-calvi/squiddio-manual'
+#set(CLOUDSMITH_USER "mauro-calvi")
+set(CLOUDSMITH_USER "opencpn")
 
+# Set if  Cloudsmith Base Repository name does not match your Git Repository name.
+set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # without the '_pi'
+
+
+# Set Plugin info-url, summary and description
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
 set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
-#set(APPVEYOR_TEST_DEPLOY_TO_CLOUDSMITH "true")
 
 ##
 ## ----- Modify section above to include all the details for your plugin ----- ##
 ##
 
+
 ##
-## ----- Modify section below if there are special requirements for the plugin ----- ##
+## ----- Modify above to include all the plugin details --------- ##
+## ----- Modify below for plugin special requirements------------ ##
 ##
 
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-if(NOT ${PACKAGE} MATCHES "(.*)_pi")
-    set(PACKAGE_NAME ${PACKAGE}_pi)
-    set(PACKAGE_FILE_NAME "${PACKAGE}_pi")
-else(NOT ${PACKAGE} MATCHES "(.*)_pi")
-    set(PACKAGE_NAME ${PACKAGE})
-    set(PACKAGE_FILE_NAME "${PACKAGE}")
-endif(NOT ${PACKAGE} MATCHES "(.*)_pi")
-string(TOUPPER "${PACKAGE}" TITLE_NAME)
-
-project(${PACKAGE_NAME} VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK})
-message(STATUS "PROJECT_VERSION: ${PROJECT_VERSION}")
-
-set(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-
-message(STATUS "${VERBOSE_NAME} Version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK}")
-message(STATUS "OPCN_FLATPAK: ${OCPN_FLATPAK}")
-
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
 # Don't use local version of GLU library
 set(USE_LOCAL_GLU FALSE)
+
 option(USE_GL "Enable OpenGL support" OFF)
-message(STATUS "USE_GL: ${USE_GL}")
+message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
+    set(CMAKE_BUILD_TYPE
+        "Release"
+        CACHE STRING "Choose the type of build" FORCE)
 endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
 
-# set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION}-${OCPN_MIN_VERSION}-${OCPN_API_VERSION_MAJOR}.${OCPN_API_VERSION_MINOR})
-set(PKG_NVR ${PACKAGE_NAME}-${PROJECT_VERSION})
-set(PKG_URL "https://dl.cloudsmith.io/public/--pkg_repo--/raw/names/--name--/versions/--version--/--filename--")
+
+##
+## ----- The statements below are used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
+##
+
+project(${PACKAGE})
+
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;")
 
 #===========================================================
-INCLUDE("cmake/PluginSetup.cmake")
+include("PluginSetup")
 #===========================================================
-
-if(DEFINED ENV{OCPN_TARGET})
-    set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}-$ENV{OCPN_TARGET}")
-else(DEFINED ENV{OCPN_TARGET})
-    set(PACKAGING_NAME "${PKG_NVR}_${PKG_TARGET}-${PKG_TARGET_VERSION}")
-endif(DEFINED ENV{OCPN_TARGET})
-message(STATUS "PACKAGING_NAME: ${PACKAGING_NAME}")
-
-set(PLUGIN_NAME ${PACKAGE}-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+## ----- The above is used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
+## ----- Modify section below if there are special requirements for the plugin ----- ##
+##
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
-if(Plugin_CXX11)
-  message(STATUS "Attempting to use c++11")
-  include(CheckCXXCompilerFlag)
-  check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
-  check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-  if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    set(Plugin_USE_CXX11 ON)
-  elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-    set(Plugin_USE_CXX11 ON)
-  else()
-    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-    set(Plugin_USE_CXX11 OFF)
-  endif()
-else()
-  set(Plugin_USE_CXX11 OFF)
-endif()
-
-if(Plugin_USE_CXX11)
-  message(STATUS "Allowing use of c++11")
-endif()
-
-message(STATUS "CMAKE version: ${CMAKE_VERSION}")
-if(CMAKE_VERSION VERSION_GREATER 3.4)
-  set(ENABLE_CLANG_TIDY
-      OFF
-      CACHE BOOL "Add clang-tidy automatically to builds")
-  if(ENABLE_CLANG_TIDY)
-    find_program(
-      CLANG_TIDY_EXE
-      NAMES "clang-tidy"
-      PATHS /usr/local/opt/llvm/bin)
-    if(CLANG_TIDY_EXE)
-      message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-      # For more, see http://clang.llvm.org/extra/clang-tidy/ set(CLANG_TIDY_CHECKS "-*,modernize-*")
-      set(CLANG_TIDY_CHECKS "-*,performance-*")
-      set(CMAKE_CXX_CLANG_TIDY
-          "${CLANG_TIDY_EXE};-checks=${CLANG_TIDY_CHECKS};-header-filter='${CMAKE_SOURCE_DIR}/*'"
-          CACHE STRING "" FORCE)
-    else()
-      message(AUTHOR_WARNING "clang-tidy not found!")
-      set(CMAKE_CXX_CLANG_TIDY
-          ""
-          CACHE STRING "" FORCE) # delete it
-    endif()
-  endif()
-endif()
-
-if(CMAKE_VERSION VERSION_GREATER 3.9)
-  set(ENABLE_CPPCHECK
-      OFF
-      CACHE BOOL "Add cppcheck automatically to builds")
-  if(ENABLE_CPPCHECK)
-    find_program(CPPCHECK_EXECUTABLE NAMES "cppcheck")
-    set(CMAKE_CXX_CPPCHECK ${CPPCHECK_EXECUTABLE})
-  endif()
-endif()
-
 ##
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
-##
-
+## ----- do not change next section - needed to configure build process ----- ##
 #===========================================================
-INCLUDE("cmake/PluginConfigure.cmake")
+include("PluginConfigure")
 #===========================================================
+## ----- do not change section above - needed to configure build process ----- ##
+## ----- Change below to match project requirements for source, headers, etc. ----- ##
 
 ##
-## ----- Change below to match your project requirements ----- ##
-## ------These lines are only for Testplugin - do not use ------------##
-##
-##   REMOVED
-##
-## ------The lines above are only for Testplugin -do not use------------##
-##
-# ----Remember to Add your project Set(SRCS and set(HDRS
 ##----------Below From Squiddio for SET( Headers and SRCS) ------------------
+
 SET(SRCS
     src/squiddio_pi.h
     src/squiddio_pi.cpp
@@ -342,61 +250,20 @@ SET(SRC_NMEA0183
     src/nmea0183/mda.cpp
     src/nmea0183/mda.hpp
   )
+  
+##=============================================================
+# Modify/configure 'Include' Directories below for the Plugin
+##=============================================================
+# EG  also in some of the cmake/Plugin____.cmake files
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wx/include)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
+  
 INCLUDE_DIRECTORIES(nmea0183)
 INCLUDE_DIRECTORIES(src/wxJSON)
 INCLUDE_DIRECTORIES(api-16)
 
-
 ##----------Above From Squiddio ------------------
-
-##=============REMOVE THESE LINES LEFT FROM TESTPLUGIN ================
-#add_definitions(-DUSE_S57)
-#set(SRCS
-#    src/tpdc.cpp
-#    ...
-#    src/tpUtils.cpp)
-#
-#set(HDRS
-#    include/testplugin_pi.h
-#    ...
-#    include/tpUtils.h)
-#
-#
-#set(OCPNSRC ocpnsrc/TexFont.cpp)
-#set(OCPNHDRS ocpninclude/ocpn_plugin.h ocpninclude/pluginmanager.h ocpninclude/TexFont.h)
-#set(EXTSRC)
-#set(EXTINCLUDE
-#    extinclude/nlohmann/json.hpp
-#    extinclude/ODAPI.h)
-#set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
-#set(LIBHDRS
-#    libs/GL/include/gl.h
-#    ...
-#    libs/wx/include/jsonwriter.h)
-#
-# add_definitions(-DPLUGIN_USE_SVG)
-#
-#IF(APPLE)
-#    OPTION(TP_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" OFF)
-#ELSE(APPLE)
-#    OPTION(TP_JSON_SCHEMA_VALIDATOR "Use JSON Schema validator" ON)
-#ENDIF(APPLE)
-
-#IF(TP_JSON_SCHEMA_VALIDATOR)
-#...
-#ENDIF(TP_JSON_SCHEMA_VALIDATOR)
-
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude)
-#...
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/bitmaps)
-
-#IF(UNIX AND NOT APPLE)
-#  IF(TP_JSON_SCHEMA_VALIDATOR)
-#  ... 
-#  ENDIF(TP_JSON_SCHEMA_VALIDATOR)
-#ENDIF(UNIX AND NOT APPLE)
-## ========== REMOVE Lines above left over from TestPlugin ==================
-
 
 ##
 ## ----- Change below to match project requirements ----- ##
@@ -409,6 +276,7 @@ INCLUDE_DIRECTORIES(api-16)
 ##================================================================================
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
+
 IF(UNIX AND NOT APPLE)
     INCLUDE("cmake/FindTinyXML.cmake")
     FIND_PACKAGE(TinyXML QUIET)
@@ -428,7 +296,6 @@ ELSE(TINYXML_FOUND)
     ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183} ${SRC_LTINYXML})
 ENDIF(TINYXML_FOUND)
 
-
 ##
 ## ----- Change above to match project requirements ----- ##
 ##
@@ -437,6 +304,10 @@ ENDIF(TINYXML_FOUND)
 ## ----- Do not change - needed to build app ----- ##
 ##
 
-include("cmake/PluginInstall.cmake")
-include("cmake/PluginLocalization.cmake")
-include("cmake/PluginPackage.cmake")
+include("PluginInstall")
+include("PluginLocalization")
+include("PluginPackage")
+
+##
+## ----- do not change section above - needed to configure build process ----- ##
+##

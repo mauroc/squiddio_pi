@@ -358,7 +358,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
 
     wxString reply = wxEmptyString;
     wxString parameters;
-    wxString url = p_plugin->g_DomainName+_("/positions.json");
+    wxString url = p_plugin->g_DomainName+_T("/positions.json");
     parameters.Printf(_T("api_key=%s&email=%s&lat=%f&lon=%f&sog=%f&cog=%f&nmea=%s&source=ocpn&version=%s"),
                         p_plugin->g_ApiKey.c_str(), p_plugin->g_Email.c_str(),lat, lon, sog, cog, nmea_seq, p_plugin->g_UrlVersion);
 
