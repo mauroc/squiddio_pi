@@ -69,6 +69,7 @@ logsWindow::logsWindow(squiddio_pi * plugin, wxWindow *pparent, wxWindowID id) :
     m_LogsFilePath.Append(_T("logs.gpx"));
 
     m_NmeaFileName = p_plugin->layerdir + wxFileName::GetPathSeparator() + _("nmea.txt");
+
     bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
 
     // can't get the follwoing to work as expected:
@@ -326,12 +327,13 @@ void logsWindow::SetSentence(wxString &sentence) {
 wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog) {
 
     ssize_t length = m_NmeaFile.Length();
+    if (m_NmeaFile.IsOpened())
+        m_NmeaFile.Close();
 
-    m_NmeaFile.Close();
     wxString nmea_seq = wxEmptyString;
 
     if (p_plugin->g_SendNmea) {
-        if (length < 100000) {
+        if (length < 150000) {
             // file is not too big to be read in memory.
             wxFile f( m_NmeaFileName );
             f.ReadAll( &nmea_seq );
@@ -339,7 +341,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
             wxStringTokenizer str_arr(nmea_seq, _T("\n"));
 
             int num_lines = str_arr.CountTokens();
-            int max_lines = 1000;
+            int max_lines = 3000;
             if (num_lines > max_lines) {
                 // file too big to post. Take only last max_lines.
                 nmea_seq = wxEmptyString;
@@ -352,8 +354,12 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
                     if (i > offset)
                         nmea_seq += line + _("\n");
                 }
-                wxLogMessage(_T("squiddio_pi: Nmea file too large. Truncated before post"));
+                wxLogMessage(_T("squiddio_pi: Nmea sequence too long. Truncated before post"));
             }
+        } else {
+            // file may have grown too large due to multiple post fails. Let's restart from scratch.
+            wxLogMessage(_T("squiddio_pi: Deleted Nmea file due to excessive size"));
+            ::wxRemoveFile(m_NmeaFileName);
         }
     }
 
@@ -366,9 +372,13 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
     if( res == OCPN_DL_NO_ERROR ) {
-        wxLogMessage(_("squiddio_pi: Created sQuiddio log update:") + reply);
-        ::wxRemoveFile(m_NmeaFileName);
+        wxLogMessage(_("squiddio_pi: Created log update:") + reply);
+        if (::wxFileExists(m_NmeaFileName))
+            ::wxRemoveFile(m_NmeaFileName);
         bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
+    } else {
+        wxLogMessage(_T("squiddio_pi: Log update failed"));
+        bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
     }
 
     return reply;
