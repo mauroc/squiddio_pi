@@ -343,7 +343,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
             int num_lines = str_arr.CountTokens();
             int max_lines = 3000;
             if (num_lines > max_lines) {
-                // file too big to post. Take only last max_lines.
+                // Nmea sequence too long to post (may be due to post interval too long for the size of the Nmea stream). Take only last max_lines.
                 nmea_seq = wxEmptyString;
                 int offset = num_lines - max_lines;
                 int i = 0;
@@ -371,16 +371,18 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
 
     _OCPN_DLStatus res = OCPN_postDataHttp(url , parameters, reply, 5);
 
-    if( res == OCPN_DL_NO_ERROR ) {
+    if( res == OCPN_DL_NO_ERROR) {
         wxLogMessage(_("squiddio_pi: Created log update:") + reply);
         if (::wxFileExists(m_NmeaFileName))
             ::wxRemoveFile(m_NmeaFileName);
+        m_ErrorCondition = wxEmptyString;
         bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write);
     } else {
-        wxLogMessage(_T("squiddio_pi: Log update failed"));
+        wxLogMessage(_T("squiddio_pi: Log update failed. Server unreachable. Check internet connection"));
+        if (reply == wxEmptyString)
+            reply = _T("{\"error\":\"Server unreachable\"}");
         bool ok = m_NmeaFile.Open(m_NmeaFileName, wxFile::write_append);
     }
-
     return reply;
 }
 
