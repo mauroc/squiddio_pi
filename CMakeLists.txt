@@ -55,11 +55,10 @@ SET(PACKAGE "squiddio")
 set(SHORT_DESCRIPTION "Plugin to download and display Points of Interest on a chart")
 set(LONG_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
 
-
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "8")
-set(VERSION_TWEAK "6")
+set(VERSION_TWEAK "8")
 set(VERSION_DATE "8/28/2020")
 
 set(OCPN_MIN_VERSION "ov50")
