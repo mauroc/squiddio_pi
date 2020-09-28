@@ -21,7 +21,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 ##
-## ====FRONTEND 2  Version: 1.0.126 (corresponds with testplugin 1.0.126)=============
+## ====FRONTEND 2  Version: 1.0.137 (corresponds with testplugin 1.0.137)=============
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
 ## ----- Changes should only be made between the section blocks that identify where     ----- ##
@@ -52,12 +52,15 @@ set(COMMON_NAME "squiddio")
 set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
 SET(PACKAGE "squiddio")
+set(SHORT_DESCRIPTION "Plugin to download and display Points of Interest on a chart")
+set(LONG_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
+
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "8")
-set(VERSION_TWEAK "4")
-set(VERSION_DATE "7/27/2020")
+set(VERSION_TWEAK "6")
+set(VERSION_DATE "8/28/2020")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
@@ -86,16 +89,11 @@ set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # without the '_pi'
 
 # Set Plugin info-url, summary and description
 set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
-set(XML_SUMMARY "Plugin to download and display Points of Interest on a chart")
-set(XML_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
+set(XML_SUMMARY ${SHORT_DESCRIPTION})
+set(XML_DESCRIPTION ${LONG_DESCRIPTION})
 
 ##
 ## ----- Modify section above to include all the details for your plugin ----- ##
-##
-
-
-##
-## ----- Modify above to include all the plugin details --------- ##
 ## ----- Modify below for plugin special requirements------------ ##
 ##
 
