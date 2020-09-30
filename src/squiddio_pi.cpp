@@ -1136,7 +1136,9 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                     m_bODAPIMessageShown = true;
                     sMsg.Printf(_("OD Text Points not available, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
 //                    wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
-					wxMessageBox(sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
+//					wxMessageBox(sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
+                      OCPNMessageBox_PlugIn(NULL, sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
+
                 }
                 sMsg.Printf(_("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
                 wxLogMessage(sMsg);
