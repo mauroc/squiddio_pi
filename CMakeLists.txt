@@ -57,7 +57,7 @@ set(LONG_DESCRIPTION "Plugin to download and display harbours, anchorages, weath
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "9")
-set(VERSION_TWEAK "0")
+set(VERSION_TWEAK "1")
 set(VERSION_DATE "8/29/2020")
 
 set(OCPN_MIN_VERSION "ov50")
