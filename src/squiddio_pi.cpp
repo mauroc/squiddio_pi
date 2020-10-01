@@ -1151,9 +1151,9 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             dialog->m_radioBoxOCPNorOD->Disable();
         }
         
+#ifndef __OCPN__ANDROID__        
         dialog->m_fgMainSizer->SetMinSize(dialog->m_fgSubSizer->ComputeFittingClientSize(dialog));
         dialog->SetMinClientSize(dialog->m_fgMainSizer->ComputeFittingClientSize(dialog));
-#ifndef __OCPN__ANDROID__        
         dialog->GetSizer()->Fit(dialog);
         dialog->Layout();
 
