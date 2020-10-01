@@ -1153,18 +1153,26 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         
         dialog->m_fgMainSizer->SetMinSize(dialog->m_fgSubSizer->ComputeFittingClientSize(dialog));
         dialog->SetMinClientSize(dialog->m_fgMainSizer->ComputeFittingClientSize(dialog));
+#ifndef __OCPN__ANDROID__        
         dialog->GetSizer()->Fit(dialog);
         dialog->Layout();
+
+#else        
+        wxWindow *ccwin = GetOCPNCanvasWindow();
+
+        if( ccwin ){
+          int xmax = ccwin->GetSize().GetWidth();
+          int ymax = ccwin->GetParent()->GetSize().GetHeight();  // This would be the Frame itself
+          dialog->SetSize( xmax, ymax );
+          dialog->Layout();
+          dialog->Move(0,0);
+        }
+#endif        
 
         wxColour cl;
         GetGlobalColor(_T("DILG1"), &cl);
         dialog->SetBackgroundColour(cl);
 
-#ifdef __OCPN__ANDROID__        
-        wxSize dsize = dialog->GetParent()->GetSize();
-        dialog->SetSize(dsize);
-#endif        
-        
         bool l_bChanged = false;
         if (dialog->ShowModal() == wxOK) {
             if(g_PostPeriod != dialog->m_choiceHowOften->GetSelection()) {
