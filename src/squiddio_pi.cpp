@@ -1160,6 +1160,11 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         GetGlobalColor(_T("DILG1"), &cl);
         dialog->SetBackgroundColour(cl);
 
+#ifdef __OCPN__ANDROID__        
+        wxSize dsize = GetParent()->GetSize();
+        dialog->SetSize(dsize);
+#endif        
+        
         bool l_bChanged = false;
         if (dialog->ShowModal() == wxOK) {
             if(g_PostPeriod != dialog->m_choiceHowOften->GetSelection()) {
