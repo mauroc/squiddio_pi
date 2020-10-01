@@ -1161,7 +1161,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->SetBackgroundColour(cl);
 
 #ifdef __OCPN__ANDROID__        
-        wxSize dsize = GetParent()->GetSize();
+        wxSize dsize = dialog->GetParent()->GetSize();
         dialog->SetSize(dsize);
 #endif        
         
