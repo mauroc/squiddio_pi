@@ -1,6 +1,3 @@
-# ---------------------------------------------------------------------------
-# Frontend2 Author: jongough aka. Jon Gough    License:wxWidgets License
-# ---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## Author:      Mauro Calvi
 ##***************************************************************************
@@ -20,8 +17,10 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
-##
-## ====FRONTEND 2  Version: 1.0.137 (corresponds with testplugin 1.0.137)=============
+# ---------------------------------------------------------------------------
+##    Frontend2 v 1.0.137  1.0.137 (corresponds with testplugin 1.0.137)     *
+##    Author: jongough, Jon Gough                                            *
+# ---------------------------------------------------------------------------
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
 ## ----- Changes should only be made between the section blocks that identify where     ----- ##
@@ -57,9 +56,9 @@ set(LONG_DESCRIPTION "Plugin to download and display harbours, anchorages, weath
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "8")
-set(VERSION_TWEAK "8")
-set(VERSION_DATE "8/28/2020")
+SET(VERSION_PATCH "10")
+set(VERSION_TWEAK "0")
+set(VERSION_DATE "9/01/2020")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")

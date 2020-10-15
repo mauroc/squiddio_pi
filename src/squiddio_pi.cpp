@@ -1135,7 +1135,10 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 if(!m_bODAPIMessageShown) {
                     m_bODAPIMessageShown = true;
                     sMsg.Printf(_("OD Text Points not available, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
-                    wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
+//                    wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
+//					wxMessageBox(sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
+                      OCPNMessageBox_PlugIn(NULL, sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
+
                 }
                 sMsg.Printf(_("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
                 wxLogMessage(sMsg);
@@ -1148,10 +1151,23 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
             dialog->m_radioBoxOCPNorOD->Disable();
         }
         
+#ifndef __OCPN__ANDROID__        
         dialog->m_fgMainSizer->SetMinSize(dialog->m_fgSubSizer->ComputeFittingClientSize(dialog));
         dialog->SetMinClientSize(dialog->m_fgMainSizer->ComputeFittingClientSize(dialog));
         dialog->GetSizer()->Fit(dialog);
         dialog->Layout();
+
+#else        
+        wxWindow *ccwin = GetOCPNCanvasWindow();
+
+        if( ccwin ){
+          int xmax = ccwin->GetSize().GetWidth();
+          int ymax = ccwin->GetParent()->GetSize().GetHeight();  // This would be the Frame itself
+          dialog->SetSize( xmax, ymax );
+          dialog->Layout();
+          dialog->Move(0,0);
+        }
+#endif        
 
         wxColour cl;
         GetGlobalColor(_T("DILG1"), &cl);
