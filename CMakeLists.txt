@@ -18,7 +18,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 # ---------------------------------------------------------------------------
-##    Frontend2 v 1.0.137  1.0.137 (corresponds with testplugin 1.0.137)     *
+##    Frontend2 v 1.0.137  (corresponds with testplugin 1.0.137)     *
 ##    Author: jongough, Jon Gough                                            *
 # ---------------------------------------------------------------------------
 ##     
@@ -52,13 +52,13 @@ set(TITLE_NAME "squiddio")
 set(PACKAGE_CONTACT "Mauro Calvi")
 SET(PACKAGE "squiddio")
 set(SHORT_DESCRIPTION "Plugin to download and display Points of Interest on a chart")
-set(LONG_DESCRIPTION "Plugin to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart")
+set(LONG_DESCRIPTION "User Sourced database to download and display harbours, anchorages, weather bouys, satellite maps and other interesting cruise-planning objects on the chart and log sharing.")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "10")
-set(VERSION_TWEAK "0")
-set(VERSION_DATE "9/01/2020")
+set(VERSION_TWEAK "1")
+set(VERSION_DATE "10/01/2020")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")

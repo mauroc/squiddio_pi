@@ -121,9 +121,6 @@ std::cout << x  << std::endl ; } while (0)
   #include "wx/wx.h"
 #endif //precompiled headers
 
-#define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    16
-
 #include "version.h"
 #include "squiddio_pi_thread.h"
 #include <wx/list.h>
