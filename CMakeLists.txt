@@ -18,7 +18,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 # ---------------------------------------------------------------------------
-##    Frontend2 v 1.0.176.0  07/10/2021  Author: jongough, Jon Gough         *
+##    Frontend2 v 1.0.176.1  08/10/2021  Author: jongough, Jon Gough         *
 # ---------------------------------------------------------------------------
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
@@ -70,12 +70,11 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 ##IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
 ## and Conditions, available at http://squidd.io/enduser_agreement");
 
-
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "10")
-set(VERSION_TWEAK "13")
-set(VERSION_DATE "07/10/2021")
+SET(VERSION_PATCH "11")
+set(VERSION_TWEAK "0")
+set(VERSION_DATE "08/10/2021")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
@@ -85,7 +84,6 @@ set(PARENT "opencpn")
 
 #Used to set up a local webserver with git loaded, for testing purposes.
 set(GIT_REPOSITORY_SERVER "github.com")
-
 
 # Specifies Cloudsmith upload repository suffix for each catalog
 set(PROD "prod")   #Standard Repos
@@ -107,11 +105,8 @@ set(XML_INFO_URL "https://opencpn.org/OpenCPN/plugins/squiddio.html")
 set(XML_SUMMARY ${SHORT_DESCRIPTION})
 set(XML_DESCRIPTION ${LONG_DESCRIPTION})
 
-##
 ## ----- Modify section above to include all the details for your plugin ----- ##
-
 ## ----- Modify below for plugin special requirements------------ ##
-##
 
 option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
@@ -135,10 +130,7 @@ endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
 
-
-##
 ## ----- The statements below are used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
-##
 
 project(${PACKAGE})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -149,23 +141,21 @@ include("PluginSetup")
 
 ## ----- The above is used to setup standard variables that are required by the CMAKE process - do not remove ----- ##
 ## ----- Modify section below if there are special requirements for the plugin ----- ##
-##
+
 
 set(CMAKE_VERBOSE_MAKEFILE "Activate verbose mode for make files" ON)
 
 option(Plugin_CXX11 "Use c++11" OFF)
 
-##
 ## ----- Modify section above if there are special requirements for the plugin ----- ##
-## ----- do not change next section - needed to configure build process ----- ##
+## ----- Do not change next section - needed to configure build process ----- ##
 #===========================================================
 include("PluginConfigure")
 #===========================================================
-## ----- do not change section above - needed to configure build process ----- ##
-
+## ----- Do not change section above - needed to configure build process ----- ##
 ## ----- Change below to match project requirements for source, headers, etc. ----- ##
 
-##----------Below From Squiddio for SET( Headers and SRCS) ------------------
+##----- Below From Squiddio for SET( Headers and SRCS) ------------------
 
 add_definitions(-DUSE_S57)
 
@@ -183,9 +173,9 @@ SET(SRCS
     src/pugixml.hpp
     src/pugixml.cpp
     src/pugiconfig.hpp
-    src/wxJSON/jsonval.cpp
-    src/wxJSON/jsonreader.cpp
-    src/wxJSON/jsonwriter.cpp
+#    src/wxJSON/jsonval.cpp
+#    src/wxJSON/jsonreader.cpp
+#    src/wxJSON/jsonwriter.cpp
   )
   
 SET(HDRS
@@ -207,7 +197,6 @@ SET(HDRS
 #    libs/wxJSON/include/jsonval.h
 #    libs/wxJSON/include/jsonwriter.h
   )
-   
 
 SET(SRC_NMEA0183
     src/nmea0183/LatLong.hpp
@@ -274,16 +263,13 @@ SET(SRC_NMEA0183
     src/nmea0183/mda.hpp
   )
 
-
 #  Below Added ====
-
-
 set(EXTINCLUDE
     extinclude/ODAPI.h
     extinclude/ODJSONSchemas.h
 )
 
-# set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
+set(LIBSSRC libs/wxJSON/src/jsonreader.cpp libs/wxJSON/src/jsonval.cpp libs/wxJSON/src/jsonwriter.cpp)
 
 set(LIBHDRS
     libs/GL/gl.h
@@ -296,25 +282,22 @@ set(LIBHDRS
     libs/wxJSON/include/jsonwriter.h
     )
 
-
 add_definitions(-DPLUGIN_USE_SVG)
 
-#set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
+set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
 
 # Above added ====
 
 # Not using Json validator  
-  
- 
+
 ##=============================================================
 # Modify/configure 'Include' Directories below for the Plugin
 ##=============================================================
 
-
 # Not doing JSON Schema Validator
 
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/nmea0183)
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/wxJSON)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/wxJSON)
 
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude)
@@ -328,6 +311,7 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl/include)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/lz4)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/bitmaps)
+
 if(QT_ANDROID)
     include_directories(BEFORE ${qt_android_include})
     include_directories( ${CMAKE_SOURCE_DIR}/extinclude/GLES2)
@@ -335,11 +319,7 @@ if(QT_ANDROID)
     #    #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glshim/include/GLES)
 endif(QT_ANDROID)
 
-
-
 target_sources(${PACKAGE_NAME} PUBLIC ${SRCS} ${HDRS} ${SRC_NMEA0183} ${EXTSRC} ${LIBHDRS} ${LIBSSRC})
-
-
 
 if(NOT OCPN_FLATPAK_CONFIG)
     # Build environment not available when flatpak is being configured so following statements will not work
@@ -351,7 +331,6 @@ if(NOT OCPN_FLATPAK_CONFIG)
 endif(NOT OCPN_FLATPAK_CONFIG)
 
 add_definitions(-DTIXML_USE_STL)
-
 
 ##----------Above From Squiddio ------------------
 
@@ -388,7 +367,6 @@ ADD_DEFINITIONS(-DTIXML_USE_STL)
 #    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183} ${SRC_LTINYXML})
 #ENDIF(TINYXML_FOUND)
 
-
 ## ----- Change above to match project requirements ----- ##
 ## ----- Do not change next section - needed to configure build process -- ##
 
@@ -397,7 +375,6 @@ if(QT_ANDROID)
     include_directories(BEFORE ${qt_android_include})
 endif(QT_ANDROID)
 
-
 ## Needed for all builds
 
 include("PluginInstall")
@@ -405,7 +382,7 @@ include("PluginLocalization")
 include("PluginPackage")
 
 ##
-## ----- do not change section above - needed to configure build process ----- ##
+## ----- Do not change section above - needed to configure build process ----- ##
 ##
 message(STATUS "${CMLOC}include directories: ")
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
