@@ -72,9 +72,9 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "11")
+SET(VERSION_PATCH "12")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "08/10/2021")
+set(VERSION_DATE "10/10/2021")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
@@ -119,7 +119,7 @@ set(OpenGL_GL_PREFERENCE "LEGACY")
 # Don't use local version of GLU library
 #set(USE_LOCAL_GLU FALSE)
 
-option(USE_GL "Enable OpenGL support" ON)
+option(USE_GL "Enable OpenGL support" OFF)
 message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
@@ -198,70 +198,71 @@ SET(HDRS
 #    libs/wxJSON/include/jsonwriter.h
   )
 
-SET(SRC_NMEA0183
-    src/nmea0183/LatLong.hpp
-    src/nmea0183/latlong.cpp
-    src/nmea0183/long.cpp
-    src/nmea0183/nmea0183.cpp
-    src/nmea0183/nmea0183.hpp
-    src/nmea0183/Response.hpp
-    src/nmea0183/response.cpp
-    src/nmea0183/RMB.hpp
-    src/nmea0183/rmb.cpp
-    src/nmea0183/Sentence.hpp
-    src/nmea0183/sentence.cpp
-    src/nmea0183/talkerid.cpp
-    src/nmea0183/RMC.HPP
-    src/nmea0183/rmc.cpp
-    src/nmea0183/hexvalue.cpp
-    src/nmea0183/lat.cpp
-    src/nmea0183/expid.cpp
-    src/nmea0183/wpl.hpp
-    src/nmea0183/wpl.cpp
-    src/nmea0183/rte.hpp
-    src/nmea0183/rte.cpp
-    src/nmea0183/hdt.hpp
-    src/nmea0183/hdt.cpp
-    src/nmea0183/hdg.hpp
-    src/nmea0183/hdg.cpp
-    src/nmea0183/hdm.hpp
-    src/nmea0183/hdm.cpp
-    src/nmea0183/gll.hpp
-    src/nmea0183/gll.cpp
-    src/nmea0183/vtg.hpp
-    src/nmea0183/vtg.cpp
-    src/nmea0183/gga.hpp
-    src/nmea0183/gga.cpp
-    src/nmea0183/gsv.hpp
-    src/nmea0183/gsv.cpp
-    src/nmea0183/dbt.cpp
-    src/nmea0183/dbt.hpp
-    src/nmea0183/dpt.cpp
-    src/nmea0183/dpt.hpp
-    src/nmea0183/mtw.cpp
-    src/nmea0183/mtw.hpp
-    src/nmea0183/mwv.cpp
-    src/nmea0183/mwv.hpp
-    src/nmea0183/vhw.hpp
-    src/nmea0183/vhw.cpp
-    src/nmea0183/vwr.cpp
-    src/nmea0183/vwr.hpp
-    src/nmea0183/zda.cpp
-    src/nmea0183/zda.hpp
-    src/nmea0183/rsa.hpp
-    src/nmea0183/rsa.cpp
-    src/nmea0183/SatInfo.h
-    src/nmea0183/mwd.cpp
-    src/nmea0183/mwd.hpp
-    src/nmea0183/vwt.cpp
-    src/nmea0183/vwt.hpp
-    src/nmea0183/mta.cpp
-    src/nmea0183/mta.hpp
-    src/nmea0183/vlw.cpp
-    src/nmea0183/vlw.hpp
-    src/nmea0183/mda.cpp
-    src/nmea0183/mda.hpp
-  )
+# Commented out, now using libs/nmea
+# SET(SRC_NMEA0183
+#    src/nmea0183/LatLong.hpp
+#    src/nmea0183/latlong.cpp
+#    src/nmea0183/long.cpp
+#    src/nmea0183/nmea0183.cpp
+#    src/nmea0183/nmea0183.hpp
+#    src/nmea0183/Response.hpp
+#    src/nmea0183/response.cpp
+#    src/nmea0183/RMB.hpp
+#    src/nmea0183/rmb.cpp
+#    src/nmea0183/Sentence.hpp
+#    src/nmea0183/sentence.cpp
+#    src/nmea0183/talkerid.cpp
+#    src/nmea0183/RMC.HPP
+#    src/nmea0183/rmc.cpp
+#    src/nmea0183/hexvalue.cpp
+#    src/nmea0183/lat.cpp
+#    src/nmea0183/expid.cpp
+#    src/nmea0183/wpl.hpp
+#    src/nmea0183/wpl.cpp
+#    src/nmea0183/rte.hpp
+#    src/nmea0183/rte.cpp
+#    src/nmea0183/hdt.hpp
+#    src/nmea0183/hdt.cpp
+#    src/nmea0183/hdg.hpp
+#    src/nmea0183/hdg.cpp
+#    src/nmea0183/hdm.hpp
+#    src/nmea0183/hdm.cpp
+#    src/nmea0183/gll.hpp
+#    src/nmea0183/gll.cpp
+#    src/nmea0183/vtg.hpp
+#    src/nmea0183/vtg.cpp
+#    src/nmea0183/gga.hpp
+#    src/nmea0183/gga.cpp
+#    src/nmea0183/gsv.hpp
+#    src/nmea0183/gsv.cpp
+#    src/nmea0183/dbt.cpp
+#    src/nmea0183/dbt.hpp
+#    src/nmea0183/dpt.cpp
+#    src/nmea0183/dpt.hpp
+#    src/nmea0183/mtw.cpp
+#    src/nmea0183/mtw.hpp
+#    src/nmea0183/mwv.cpp
+#    src/nmea0183/mwv.hpp
+#    src/nmea0183/vhw.hpp
+#    src/nmea0183/vhw.cpp
+#    src/nmea0183/vwr.cpp
+#    src/nmea0183/vwr.hpp
+#    src/nmea0183/zda.cpp
+#    src/nmea0183/zda.hpp
+#    src/nmea0183/rsa.hpp
+#    src/nmea0183/rsa.cpp
+#    src/nmea0183/SatInfo.h
+#    src/nmea0183/mwd.cpp
+#    src/nmea0183/mwd.hpp
+#    src/nmea0183/vwt.cpp
+#    src/nmea0183/vwt.hpp
+#    src/nmea0183/mta.cpp
+#    src/nmea0183/mta.hpp
+#    src/nmea0183/vlw.cpp
+#    src/nmea0183/vlw.hpp
+#    src/nmea0183/mda.cpp
+#    src/nmea0183/mda.hpp
+#  )
 
 #  Below Added ====
 set(EXTINCLUDE
@@ -296,6 +297,7 @@ set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
 
 # Not doing JSON Schema Validator
 
+# Next step is to use libs/nmea0183
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/nmea0183)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/wxJSON)
 
@@ -307,6 +309,8 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/nmea0183/src)
+
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl/include)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/lz4)
@@ -319,15 +323,24 @@ if(QT_ANDROID)
     #    #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glshim/include/GLES)
 endif(QT_ANDROID)
 
-target_sources(${PACKAGE_NAME} PUBLIC ${SRCS} ${HDRS} ${SRC_NMEA0183} ${EXTSRC} ${LIBHDRS} ${LIBSSRC})
+## Statement below is required to collect all the set( headers and SRCS  - Adjust as required
+## This add_library  can be used in conditionals below.
+#======================================================================================
+target_sources(${PACKAGE_NAME} PUBLIC ${SRCS} ${HDRS} ${EXTSRC} ${LIBHDRS} ${LIBSSRC})
+#=======================================================================================
+##  OLD   add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
+##================================================================================
 
 if(NOT OCPN_FLATPAK_CONFIG)
     # Build environment not available when flatpak is being configured so following statements will not work
     message(STATUS "${CMLOC}Adding target link libraries to ${PACKAGE_NAME}")
 
+    add_subdirectory(libs/nmea0183)
     add_subdirectory(libs/tinyxml)
 
+    target_link_libraries(${PACKAGE_NAME} ocpn::nmea0183)
     target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
+	
 endif(NOT OCPN_FLATPAK_CONFIG)
 
 add_definitions(-DTIXML_USE_STL)
@@ -336,36 +349,9 @@ add_definitions(-DTIXML_USE_STL)
 
 # Not using Json validator  
 
-##
 ## ----- Change below to match project requirements ----- ##
-##
-##================================================================================
-## Required to collect all the set( headers and SRCS  - Adjust as required
-## This add_library  is used in the conditionals below.
-##================================================================================
-##    add_library(${PACKAGE_NAME} SHARED ${SRCS}  ${SRC_NMEA0183})
-##================================================================================
 
 ADD_DEFINITIONS(-DTIXML_USE_STL)
-
-#IF(UNIX AND NOT APPLE)
-#    INCLUDE("cmake/FindTinyXML.cmake")
-#    FIND_PACKAGE(TinyXML QUIET)
-#ENDIF(UNIX AND NOT APPLE)
-
-#IF(TINYXML_FOUND)
-#    message (STATUS "Building with system tinyxml")
-#    INCLUDE_DIRECTORIES(${TINYXML_INCLUDE_DIR})
-#    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183})
-#    TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${TINYXML_LIBRARIES} )
-#ELSE(TINYXML_FOUND)
-#    message (STATUS "Building with embedded tinyxml")
-#    SET(SRC_LTINYXML
-#    src/tinyxml.h
-#    src/tinystr.h
-#      )
-#    ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRCS} ${SRC_NMEA0183} ${SRC_LTINYXML})
-#ENDIF(TINYXML_FOUND)
 
 ## ----- Change above to match project requirements ----- ##
 ## ----- Do not change next section - needed to configure build process -- ##
@@ -376,11 +362,11 @@ if(QT_ANDROID)
 endif(QT_ANDROID)
 
 ## Needed for all builds
-
+##=======================================
 include("PluginInstall")
 include("PluginLocalization")
 include("PluginPackage")
-
+##=======================================
 ##
 ## ----- Do not change section above - needed to configure build process ----- ##
 ##

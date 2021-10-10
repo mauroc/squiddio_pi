@@ -11,9 +11,6 @@ src/PoiMan.cpp
 src/pugixml.hpp
 src/pugixml.cpp
 src/pugiconfig.hpp
-src/wxJSON/jsonval.cpp
-src/wxJSON/jsonreader.cpp
-src/wxJSON/jsonwriter.cpp
 src/squiddio_pi.h
 src/squiddioPrefsDialogBase.h
 src/squiddio_pi_thread.h
