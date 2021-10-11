@@ -1,7 +1,9 @@
 tags
 index.sh
 include/version.h
-build
+build/
+buildwin/
+po/POTFILES.in.test
 Debug
 .project
 Release

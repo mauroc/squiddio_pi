@@ -979,60 +979,53 @@ void squiddio_pi::appendOSDirSlash(wxString* pString) {
         pString->Append(sep);
 }
 
-int squiddio_pi::GetAPIVersionMajor() {
-    return MY_API_VERSION_MAJOR;
+int squiddio_pi::GetAPIVersionMajor() 
+{
+    return OCPN_API_VERSION_MAJOR;
 }
 
-int squiddio_pi::GetAPIVersionMinor() {
-    return MY_API_VERSION_MINOR;
+int squiddio_pi::GetAPIVersionMinor()
+{
+    return OCPN_API_VERSION_MINOR;
 }
 
-int squiddio_pi::GetPlugInVersionMajor() {
+int squiddio_pi::GetPlugInVersionMajor()
+{
     return PLUGIN_VERSION_MAJOR;
 }
 
-int squiddio_pi::GetPlugInVersionMinor() {
+int squiddio_pi::GetPlugInVersionMinor()
+{
     return PLUGIN_VERSION_MINOR;
 }
-wxBitmap *squiddio_pi::GetPlugInBitmap() {
+wxBitmap *squiddio_pi::GetPlugInBitmap()
+{
     return _img_plugin_logo;
 }
 
-wxString squiddio_pi::GetCommonName() {
+wxString squiddio_pi::GetCommonName()
+{
     return _T(PLUGIN_COMMON_NAME);
 }
 
-wxString squiddio_pi::GetShortDescription() {
-    return _("Squiddio for OpenCPN");
+wxString squiddio_pi::GetShortDescription()
+{
+    return _(PLUGIN_SHORT_DESCRIPTION);
 }
 
-wxString squiddio_pi::GetLongDescription() {
-    return _(
-"== User-sourced database of sailing Points of Interest ==\n\
-To download (or update) Points of Interest (POIs) for a desired region (requires Internet connection):\n\
-* Position cursor on area where you want to view POIs and right click mouse\n\
-* Select 'sQuiddio: Download (or Update) local Points of Interest' from context-sensitive menu.\n\n\
-Destinations appear as OpenCPN waypoints (default) or Draw Text Points (if the Draw plugin is installed):  \n\
-* Hover on waypoints to view a synopsis of POI information\
-* Right-click on waypoint for link to sQuiddio's destination page. \n\
-* Follow link to rate destination and add comments online.\n\n\
-Other menu options: \n\
-* Toggle visibility for local POIs on/off \n\
-* Submit a new destination (requires Internet connection and free user account)\n\
-* Download Google Maps as OCPN charts for all POIs in viewport\n\n\
-== In-chart log-sharing for cruisers ==\n\
-* Share your GPS coordinates and other navigational information with your cruising friends\n\
-and visualize their position on your OpenCPN charts (requires a free sQuiddio account)\n\n\
-IMPORTANT: By using this plugin you are agreeing to the sQuidd.io Terms \n\
-and Conditions, available at http://squidd.io/enduser_agreement");
+wxString squiddio_pi::GetLongDescription()
+{
+    return _(PLUGIN_LONG_DESCRIPTION);
 }
 
-bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp) {
+bool squiddio_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
+{
     // supperseded by RenderOverlayMultiCanvas in API v. 116?
     return false;
 }
 
-bool squiddio_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp) {
+bool squiddio_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
+{
     // supperseded by RenderglOverlayMultiCanvas in API v 116?
     return false;
 }
