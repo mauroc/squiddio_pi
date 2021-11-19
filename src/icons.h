@@ -6,6 +6,8 @@
 #ifndef WX_PRECOMP
 #	include <wx/wx.h>
 #endif
+#include <wx/file.h>
+#include <wx/filename.h>
 
 extern void initialize_images(void);
 
@@ -32,5 +34,11 @@ extern wxBitmap *_img_pier_yel;
 extern wxBitmap *_img_plugin_logo;
 extern wxBitmap *_img_ramp_azu;
 extern wxBitmap *_img_ramp_grn;
+
+#ifdef PLUGIN_USE_SVG
+extern wxString _svg_squiddio;
+extern wxString _svg_squiddio_rollover;
+extern wxString _svg_squiddio_toggled;
+#endif
 
 #endif /* ICONS_H */

@@ -98,6 +98,32 @@ squiddio_pi::squiddio_pi(void *ppimgr) :
 {
     // Create the PlugIn icons
     initialize_images();
+	
+// Create the PlugIn icons  -from shipdriver
+// loads png file for the listing panel icon
+    wxFileName fn;
+    auto path = GetPluginDataDir("squiddio_pi");
+    fn.SetPath(path);
+    fn.AppendDir("data");
+    fn.SetFullName("poi_panel.png");
+
+    path = fn.GetFullPath();
+
+    wxInitAllImageHandlers();
+
+    wxLogDebug(wxString("Using icon path: ") + path);
+    if (!wxImage::CanRead(path)) {
+        wxLogDebug("Initiating image handlers.");
+        wxInitAllImageHandlers();
+    }
+    wxImage panelIcon(path);
+    if (panelIcon.IsOk())
+        m_panelBitmap = wxBitmap(panelIcon);
+    else
+        wxLogWarning("Squiddio panel icon has NOT been loaded");
+// End of from Shipdriver	
+	
+	
     SetThreadRunning(false);
     g_squiddio_pi = this;
     g_bODAvailable = false;
@@ -275,10 +301,18 @@ int squiddio_pi::Init(void) {
     }
 
     //    This PlugIn needs a toolbar icon, so request its insertion
+	
+#ifdef PLUGIN_USE_SVG
+      m_leftclick_tool_id = InsertPlugInToolSVG( _T( "Squiddio" ),
+	  _svg_squiddio, _svg_squiddio, _svg_squiddio_toggled, 
+	  wxITEM_CHECK, _("Squiddio"), _T( "") , NULL, 
+	  SQUIDDIO_TOOL_POSITION, 0, this);
+#else
     m_leftclick_tool_id = InsertPlugInTool(_T(""), _img_plugin_logo,
             _img_plugin_logo, wxITEM_CHECK, _("sQuiddio"), _T(""), NULL,
             SQUIDDIO_TOOL_POSITION, 0, this);
-            
+#endif
+ 
     m_pThread = new SquiddioThread(this);
     wxThreadError err = m_pThread->Run();
 
@@ -998,10 +1032,17 @@ int squiddio_pi::GetPlugInVersionMinor()
 {
     return PLUGIN_VERSION_MINOR;
 }
-wxBitmap *squiddio_pi::GetPlugInBitmap()
-{
-    return _img_plugin_logo;
-}
+
+
+//wxBitmap *squiddio_pi::GetPlugInBitmap()
+//{
+//    return _img_plugin_logo;
+//}
+
+// Shipdriver uses the climatology_panel.png file to make the bitmap.
+wxBitmap *squiddio_pi::GetPlugInBitmap()  { return &m_panelBitmap; }
+// End of shipdriver process
+
 
 wxString squiddio_pi::GetCommonName()
 {
