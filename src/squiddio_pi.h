@@ -190,6 +190,7 @@ public:
       wxString GetCommonName();
       wxString GetShortDescription();
       wxString GetLongDescription();
+	  wxBitmap m_panelBitmap; 
 
 //    The optional method overrides
 

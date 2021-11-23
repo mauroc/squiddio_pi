@@ -18,7 +18,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 # ---------------------------------------------------------------------------
-##    Frontend2 v 1.0.176.1  08/10/2021  Author: jongough, Jon Gough         *
+##    Frontend2 v 1.0.180  17/11/2021  Author: jongough, Jon Gough         *
 # ---------------------------------------------------------------------------
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
@@ -32,12 +32,14 @@
 set(CMLOC "CMakeLists: ")
 
 # define minimum cmake version
-cmake_minimum_required(VERSION 3.1.1)
+cmake_minimum_required(VERSION 3.5.1)
 if(COMMAND cmake_policy)
     if(POLICY CMP0043)
         cmake_policy(SET CMP0043 NEW)
     endif(POLICY CMP0043)
     cmake_policy(SET CMP0048 NEW)
+# Need cmake 3.13 to implement this, but raspbian builds are at 3.7.2 and bionic at 3.10 and xenial builds at 3.5.1
+#    cmake_policy(SET CMP0076 NEW)
     if(POLICY CMP0077)
         cmake_policy(SET CMP0077 NEW)
     endif(POLICY CMP0077)
@@ -73,8 +75,8 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
 SET(VERSION_PATCH "13")
-set(VERSION_TWEAK "0")
-set(VERSION_DATE "19/10/2021")
+set(VERSION_TWEAK "3")
+set(VERSION_DATE "17/11/2021")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
@@ -123,9 +125,7 @@ option(USE_GL "Enable OpenGL support" OFF)
 message(STATUS "${CMLOC}USE_GL: ${USE_GL}")
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
-    set(CMAKE_BUILD_TYPE
-        "Release"
-        CACHE STRING "Choose the type of build" FORCE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
 endif("${CMAKE_BUILD_TYPE}" STREQUAL "")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 message(STATUS "${CMLOC}Build type: ${CMAKE_BUILD_TYPE}")
@@ -289,7 +289,15 @@ set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
 
 # Above added ====
 
+#
+# ----- If using JSON validation in plugin section below is needed ----- ##
+#
 # Not using Json validator  
+
+#
+# ----- If using JSON validation in plugin section above is needed ----- ##
+#
+
 
 ##=============================================================
 # Modify/configure 'Include' Directories below for the Plugin
@@ -311,17 +319,21 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/nmea0183/src)
 
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpninclude/wxcurl/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/lz4)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/ocpnsrc/bitmaps)
+#
+# ----- Change below to match project requirements for android build ----- ##
+#
 
 if(QT_ANDROID)
     include_directories(BEFORE ${qt_android_include})
     include_directories( ${CMAKE_SOURCE_DIR}/extinclude/GLES2)
-
-    #    #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glshim/include/GLES)
 endif(QT_ANDROID)
+
+##
+## ----- Change above to match project requirements for android build ----- ##
+##
+
+
+
 
 ## Statement below is required to collect all the set( headers and SRCS  - Adjust as required
 ## This add_library  can be used in conditionals below.
@@ -346,20 +358,27 @@ endif(NOT OCPN_FLATPAK_CONFIG)
 add_definitions(-DTIXML_USE_STL)
 
 ##----------Above From Squiddio ------------------
+#
+# ----- If using JSON validation in plugin section below is needed ----- ##
+#
 
 # Not using Json validator  
+#
+# ----- If using JSON validation in plugin section above is needed ----- ##
+#
 
-## ----- Change below to match project requirements ----- ##
-
-ADD_DEFINITIONS(-DTIXML_USE_STL)
 
 ## ----- Change above to match project requirements ----- ##
-## ----- Do not change next section - needed to configure build process -- ##
+##
+## ----- do not change next section - needed to configure build process ----- ##
+##
 
+#
 # Needed for android builds
 if(QT_ANDROID)
     include_directories(BEFORE ${qt_android_include})
 endif(QT_ANDROID)
+
 
 ## Needed for all builds
 ##=======================================
