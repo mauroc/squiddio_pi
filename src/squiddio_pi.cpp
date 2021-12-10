@@ -35,7 +35,7 @@
 #include "sJSON.h"
 #include "version.h"
 
-#include "wxJSON/jsonwriter.h"
+#include "jsonwriter.h"
 
 WX_DEFINE_LIST (LayerList);
 WX_DEFINE_LIST (HyperlinkList);

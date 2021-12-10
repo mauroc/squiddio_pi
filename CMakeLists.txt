@@ -74,9 +74,9 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "15")
+SET(VERSION_PATCH "16")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "08/12/2021")
+set(VERSION_DATE "10/12/2021")
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
@@ -173,9 +173,6 @@ SET(SRCS
     src/pugixml.hpp
     src/pugixml.cpp
     src/pugiconfig.hpp
-#    src/wxJSON/jsonval.cpp
-#    src/wxJSON/jsonreader.cpp
-#    src/wxJSON/jsonwriter.cpp
   )
   
 SET(HDRS
@@ -192,77 +189,8 @@ SET(HDRS
     src/ocpn_types.h
     src/Hyperlink.h
     src/gpxdocument.h
-#    libs/wxJSON/include/json_defs.h
-#    libs/wxJSON/include/jsoneader.h
-#    libs/wxJSON/include/jsonval.h
-#    libs/wxJSON/include/jsonwriter.h
   )
 
-# Commented out, now using libs/nmea
-# SET(SRC_NMEA0183
-#    src/nmea0183/LatLong.hpp
-#    src/nmea0183/latlong.cpp
-#    src/nmea0183/long.cpp
-#    src/nmea0183/nmea0183.cpp
-#    src/nmea0183/nmea0183.hpp
-#    src/nmea0183/Response.hpp
-#    src/nmea0183/response.cpp
-#    src/nmea0183/RMB.hpp
-#    src/nmea0183/rmb.cpp
-#    src/nmea0183/Sentence.hpp
-#    src/nmea0183/sentence.cpp
-#    src/nmea0183/talkerid.cpp
-#    src/nmea0183/RMC.HPP
-#    src/nmea0183/rmc.cpp
-#    src/nmea0183/hexvalue.cpp
-#    src/nmea0183/lat.cpp
-#    src/nmea0183/expid.cpp
-#    src/nmea0183/wpl.hpp
-#    src/nmea0183/wpl.cpp
-#    src/nmea0183/rte.hpp
-#    src/nmea0183/rte.cpp
-#    src/nmea0183/hdt.hpp
-#    src/nmea0183/hdt.cpp
-#    src/nmea0183/hdg.hpp
-#    src/nmea0183/hdg.cpp
-#    src/nmea0183/hdm.hpp
-#    src/nmea0183/hdm.cpp
-#    src/nmea0183/gll.hpp
-#    src/nmea0183/gll.cpp
-#    src/nmea0183/vtg.hpp
-#    src/nmea0183/vtg.cpp
-#    src/nmea0183/gga.hpp
-#    src/nmea0183/gga.cpp
-#    src/nmea0183/gsv.hpp
-#    src/nmea0183/gsv.cpp
-#    src/nmea0183/dbt.cpp
-#    src/nmea0183/dbt.hpp
-#    src/nmea0183/dpt.cpp
-#    src/nmea0183/dpt.hpp
-#    src/nmea0183/mtw.cpp
-#    src/nmea0183/mtw.hpp
-#    src/nmea0183/mwv.cpp
-#    src/nmea0183/mwv.hpp
-#    src/nmea0183/vhw.hpp
-#    src/nmea0183/vhw.cpp
-#    src/nmea0183/vwr.cpp
-#    src/nmea0183/vwr.hpp
-#    src/nmea0183/zda.cpp
-#    src/nmea0183/zda.hpp
-#    src/nmea0183/rsa.hpp
-#    src/nmea0183/rsa.cpp
-#    src/nmea0183/SatInfo.h
-#    src/nmea0183/mwd.cpp
-#    src/nmea0183/mwd.hpp
-#    src/nmea0183/vwt.cpp
-#    src/nmea0183/vwt.hpp
-#    src/nmea0183/mta.cpp
-#    src/nmea0183/mta.hpp
-#    src/nmea0183/vlw.cpp
-#    src/nmea0183/vlw.hpp
-#    src/nmea0183/mda.cpp
-#    src/nmea0183/mda.hpp
-#  )
 
 #  Below Added ====
 set(EXTINCLUDE
@@ -305,8 +233,7 @@ set(EXTINCLUDE_DIR ${EXTINCLUDE_DIR} extinclude libs/ocpn-api/)
 
 # Not doing JSON Schema Validator
 
-# Next step is to use libs/nmea0183
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/nmea0183)
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/nmea0183)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/src/wxJSON)
 
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)

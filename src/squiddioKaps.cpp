@@ -34,7 +34,7 @@
 #include "sJSON.h"
 #include "version.h"
 
-#include "wxJSON/jsonwriter.h"
+#include "jsonwriter.h"
 #include <wx/zipstrm.h>
 #include <wx/wfstream.h>
 #include <wx/filesys.h>
