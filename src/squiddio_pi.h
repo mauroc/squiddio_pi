@@ -144,7 +144,7 @@ std::cout << x  << std::endl ; } while (0)
 #include "Poi.h"
 #include "NavObjectCollection.h"
 #include "squiddioPrefsDialogBase.h"
-#include "nmea0183/nmea0183.h"
+#include "nmea0183.h"
 #include "logs.h"
 #include "ODAPI.h"
 

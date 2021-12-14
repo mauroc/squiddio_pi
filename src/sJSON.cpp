@@ -32,8 +32,8 @@
 #ifndef  WX_PRECOMP
 #include "wx/wx.h"
 #endif //precompiled headers
-#include <wxJSON/jsonreader.h>
-#include "wxJSON/jsonwriter.h"
+#include <jsonreader.h>
+#include "jsonwriter.h"
 #include <wx/ffile.h>
 
 #include "squiddio_pi.h"
