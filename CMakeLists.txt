@@ -18,7 +18,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx          *
 ## ***
 # ---------------------------------------------------------------------------
-## Author: jongough, Jon Gough Frontend2 v 1.0.222.0 24/12/2022 # DD/MM/YYYY format *
+## Author: jongough, Jon Gough Frontend2 v 1.0.226.0 17/02/2023 # DD/MM/YYYY format *
 # ---------------------------------------------------------------------------
 ##     
 ## ----- When changing this file do NOT change the order in which sections occur        ----- ##
@@ -74,9 +74,9 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "23")
+SET(VERSION_PATCH "24")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "25/12/2022") # DD/MM/YYYY format
+set(VERSION_DATE "27/02/2023") # DD/MM/YYYY format
 
 set(OCPN_MIN_VERSION "ov50")
 set(OCPN_API_VERSION_MAJOR "1")
