@@ -74,9 +74,9 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "25")
+SET(VERSION_PATCH "26")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE "11/06/2023") # DD/MM/YYYY format
+set(VERSION_DATE "08/08/2023") # DD/MM/YYYY format
 
 set(OCPN_MIN_VERSION "ov58")
 set(OCPN_API_VERSION_MAJOR "1")

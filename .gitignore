@@ -1,12 +1,5 @@
-tags
-index.sh
-include/version.h
-build/
-buildwin/
+./build*
 po/POTFILES.in.test
-Debug
-.project
-Release
-core
-.settings/
-src/version.h
+temp
+tmp
+master.zip
