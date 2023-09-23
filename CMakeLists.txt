@@ -73,8 +73,8 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "30")
-set(VERSION_TWEAK "2")
+SET(VERSION_PATCH "31")
+set(VERSION_TWEAK "0")
 set(VERSION_DATE  "23/09/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
 
@@ -215,6 +215,8 @@ SET(SRC ${SRCS} ${HDRS} )
 ##=============================================================
 
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
+
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/opencpn-libs/wxJSON/include/wx)
 
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
