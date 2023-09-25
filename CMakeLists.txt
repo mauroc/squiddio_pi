@@ -73,9 +73,9 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "31")
+SET(VERSION_PATCH "32")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE  "23/09/2023")#DD/MM/YYYY format
+set(VERSION_DATE  "25/09/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
 
 set(OCPN_API_VERSION_MAJOR "1")
@@ -215,17 +215,7 @@ SET(SRC ${SRCS} ${HDRS} )
 ##=============================================================
 
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
-
-include_directories(BEFORE ${PROJECT_SOURCE_DIR}/opencpn-libs/wxJSON/include/wx)
-
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/GL)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/glu/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/ocpn-api)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/wxJSON/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/nmea0183/src)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/libs/pluginDC/include)
-
+#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/opencpn-libs/wxJSON/include/wx)
 
 ## Change target_sources to match your project needs.
 ##==============================================================
