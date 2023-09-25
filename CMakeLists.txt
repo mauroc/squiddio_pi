@@ -73,7 +73,7 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "33")
+SET(VERSION_PATCH "34")
 set(VERSION_TWEAK "0")
 set(VERSION_DATE  "25/09/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
@@ -215,7 +215,6 @@ SET(SRC ${SRCS} ${HDRS} )
 ##=============================================================
 
 #include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
-#include_directories(BEFORE ${PROJECT_SOURCE_DIR}/opencpn-libs/wxJSON/include/wx)
 
 ## Change target_sources to match your project needs.
 ##==============================================================
@@ -237,16 +236,6 @@ if(NOT OCPN_FLATPAK_CONFIG)
 
     add_subdirectory(opencpn-libs/tinyxml)
     target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
-
-#  does not fix json 
-#    add_subdirectory(opencpn-libs/jsoncpp)
-#    target_link_libraries(${PACKAGE_NAME} ocpn::jsoncpp)
-
-#  does not fix json
-#    add_subdirectory(opencpn-libs/jsonlib)
-#    target_link_libraries(${PACKAGE_NAME} ocpn::jsonlib)
-
-
 
     add_subdirectory(opencpn-libs/wxJSON)
     target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
