@@ -94,7 +94,7 @@ BEGIN_EVENT_TABLE( squiddio_pi, wxEvtHandler )
 END_EVENT_TABLE()
 
 squiddio_pi::squiddio_pi(void *ppimgr) :
-        opencpn_plugin_116(ppimgr) // constructor initialization
+        opencpn_plugin_117(ppimgr) // constructor initialization
 {
     // Create the PlugIn icons
     initialize_images();
@@ -1033,6 +1033,15 @@ int squiddio_pi::GetPlugInVersionMinor()
     return PLUGIN_VERSION_MINOR;
 }
 
+int squiddio_pi::GetPlugInVersionPatch()
+{
+    return PLUGIN_VERSION_PATCH;
+}
+
+int squiddio_pi::GetPlugInVersionPost()
+{
+    return PLUGIN_VERSION_TWEAK;
+}
 
 //wxBitmap *squiddio_pi::GetPlugInBitmap()
 //{
