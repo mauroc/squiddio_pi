@@ -19,7 +19,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                       *
 #-----------------------------------------------------------------------------
 # Frontend2 Author: Jon Gough 
-# Testplugin(TP) v1.0.259.0 01/10/2023 DD/MM/YYYY format
+# Testplugin(TP) v1.0.260 07/10/2023 DD/MM/YYYY format
 # buildCI:yes useODAPI:no validateJSON:no
 # ---------------------------------------------------------------------------
 ## -- When changing this file do NOT change the order of the sections.    -- ##
@@ -73,9 +73,9 @@ set(LONG_DESCRIPTION "User Sourced database to download and display harbours, an
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "3")
-SET(VERSION_PATCH "35")
+SET(VERSION_PATCH "37")
 set(VERSION_TWEAK "0")
-set(VERSION_DATE  "02/10/2023")#DD/MM/YYYY format
+set(VERSION_DATE  "07/10/2023")#DD/MM/YYYY format
 set(OCPN_MIN_VERSION "ov58")
 
 set(OCPN_API_VERSION_MAJOR "1")
@@ -95,8 +95,8 @@ set(ALPHA "alpha") #Standard Repos
 
 # Set if  Cloudsmith Base Repository name does not match your Git Repository name.
 #set(CLOUDSMITH_BASE_REPOSITORY "${GIT_REPOSITORY_NAME}")
-set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # without the '_pi'
 
+set(CLOUDSMITH_BASE_REPOSITORY "squiddio")  # without the '_pi'
 
 # Set the following to use OpenCPN cloudsmith repositories instead of own repositories
 set(CLOUDSMITH_USER "opencpn")
@@ -228,8 +228,8 @@ if(NOT OCPN_FLATPAK_CONFIG)
 	# so following statements will not work
     message(STATUS "${CMLOC}Adding target link libraries to ${PACKAGE_NAME}")
 
-    add_subdirectory(opencpn-libs/WindowsHeaders)
-    target_link_libraries(${PACKAGE_NAME} windows::headers)
+#    add_subdirectory(opencpn-libs/WindowsHeaders)
+#    target_link_libraries(${PACKAGE_NAME} windows::headers)
 
     add_subdirectory(opencpn-libs/api-17)
     target_link_libraries(${PACKAGE_NAME} ocpn::api)
