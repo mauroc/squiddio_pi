@@ -110,25 +110,25 @@ wxString logsWindow::timeAgo(wxDateTime currTime) {
     else if (delta == 1) return _("One second ago");
     else if (delta < MINUTE)
     {
-        timeString.Printf(_("%i seconds ago"), delta);
+        timeString.Printf("%i " + _("seconds ago"), delta);
         return timeString;
     }
     else if (delta < 2 * MINUTE) return _("About a minute ago");
     else if (delta < 45 * MINUTE)
     {
-        timeString.Printf(_("%i minutes ago"), delta/MINUTE);
+        timeString.Printf("%i " + _("minutes ago"), delta/MINUTE);
         return timeString;
     }
     else if (delta < 90 * MINUTE) return _("About an hour ago");
     else if (delta < DAY)
     {
-        timeString.Printf(_("%i hours ago"), delta/HOUR);
+        timeString.Printf("%i " +  _("hours ago"), delta/HOUR);
         return timeString;
     }
     else if (delta < 48 * HOUR) return _("Yesterday");
     else if (delta < 365 * DAY)
     {
-        timeString.Printf(_("%i days ago"), delta/DAY);
+        timeString.Printf("%i " + _("days ago"), delta/DAY);
         return timeString;
     } else return wxEmptyString;
 }
@@ -352,7 +352,7 @@ wxString logsWindow::PostPosition(double lat, double lon, double sog, double cog
                     line = str_arr.GetNextToken();
                     i+= 1;
                     if (i > offset)
-                        nmea_seq += line + _("\n");
+                        nmea_seq += line + _T("\n");
                 }
                 wxLogMessage(_T("squiddio_pi: Nmea sequence too long. Truncated before post"));
             }
@@ -440,7 +440,7 @@ void logsWindow::DisplayLogsLayer() {
 void logsWindow::OnClose(wxCloseEvent &event) {
     // this function is never called. See note in the window consutrctor above
 
-    wxMessageBox(_("This will deactivate sQuiddio logs sharing.\n\n To reactivate, go to the sQuiddio plugin settings -> Logs Sharing tab."));
+    wxMessageBox(_("This will deactivate sQuiddio logs sharing.") + "\n\n" +  _("To reactivate, go to the sQuiddio plugin settings->Logs Sharing tab."));
     p_plugin->g_PostPeriod = 0;
     p_plugin->g_RetrievePeriod = 0;
     g_SendSecs = 0;

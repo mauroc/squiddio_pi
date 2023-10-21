@@ -1155,7 +1155,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
         dialog->m_checkBoxDelGpxs->SetValue(g_DelGpxs);
         dialog->m_checkBoxSendNmea->SetValue(g_SendNmea);
 
-        wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR) +_(".") + wxString::Format(wxT("%i"),PLUGIN_VERSION_PATCH) +_(".") + wxString::Format(wxT("%i"),PLUGIN_VERSION_TWEAK);
+        wxString version = _("sQuiddio plugin version: ")+wxString::Format(wxT("%i"),PLUGIN_VERSION_MAJOR) +_T(".")+ wxString::Format(wxT("%i"),PLUGIN_VERSION_MINOR) +_T(".") + wxString::Format(wxT("%i"),PLUGIN_VERSION_PATCH) +_T(".") + wxString::Format(wxT("%i"),PLUGIN_VERSION_TWEAK);
 
         dialog->m_version->SetLabel(version);
 
@@ -1177,13 +1177,13 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
                 wxString sMsg;
                 if(!m_bODAPIMessageShown) {
                     m_bODAPIMessageShown = true;
-                    sMsg.Printf(_("OD Text Points not available, wrong version of API\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+                    sMsg.Printf(_("OD Text Points not available, wrong version of API") + "\nSquiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i", ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
 //                    wxMessageBox(sMsg, wxMessageBoxCaptionStr, wxOK | wxCENTRE | wxSTAY_ON_TOP);
 //					wxMessageBox(sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
                       OCPNMessageBox_PlugIn(NULL, sMsg, _T("Message"), wxOK | wxCENTRE | wxSTAY_ON_TOP);
 
                 }
-                sMsg.Printf(_("squiddio_pi: OD Text Points cannot be used, wrong version of API. Squiddio API Major: %i, Minor %i, OD API Major: %i, Minor %i"), ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
+                sMsg.Printf(_("squiddio_pi: OD Text Points cannot be used, wrong version of API.") + "\nSquiddio API Major : %i, Minor %i, OD API Major : %i, Minor %i", ODAPI_VERSION_MAJOR, ODAPI_VERSION_MINOR, m_iODAPIVersionMajor, m_iODAPIVersionMinor);
                 wxLogMessage(sMsg);
                 dialog->m_radioBoxOCPNorOD->SetSelection(0);
                 dialog->m_radioBoxOCPNorOD->Disable();
@@ -1345,7 +1345,7 @@ void squiddio_pi::PreferencesDialog(wxWindow* parent) {
 
             if ((g_RetrievePeriod > 0 || g_PostPeriod > 0) && (g_Email.Length() == 0 || g_ApiKey.Length() == 0))
             {
-                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key.\n\nTo obtain your API Key, log into sQuidd.io (http://squidd.io), click on Preferences in the top blue bar, then select the 'Numbers & Keys' tab."));
+                wxMessageBox(_("Log sharing was not activated. Please enter your sQuiddio user ID and API Key.") + "\n\n" + _("To obtain your API Key, log into sQuidd.io") + "(http://squidd.io)," + _("click on Preferences in the top blue bar, then select the 'Numbers & Keys' tab."));
                 g_RetrievePeriod=0;
                 g_PostPeriod    =0;
             }
