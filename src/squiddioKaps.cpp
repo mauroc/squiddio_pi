@@ -198,16 +198,16 @@ void squiddio_pi::DownloadSatImages() {
 //         int zoom_levels = g_ZoomLevels.Freq(* _T(",")) + 1;
         int num_zooms = wxSplit(g_ZoomLevels, * sep_comma).GetCount();
 
-        wxString mess_prompt = _("You are about to download satellite maps for ")+ poi_count_str + _(" POI") + ((poi_count > 1) ? _("s") : _T(""));
-        mess_prompt +=  _(" at zoom level") +  ((num_zooms > 1) ? _("s ") : _(" ")) + g_ZoomLevels;
+        wxString mess_prompt = _("You are about to download satellite maps for ")+ poi_count_str + _T(" POI") + ((poi_count > 1) ? _("s") : _T(""));
+        mess_prompt +=  _(" at zoom level") +  ((num_zooms > 1) ? _("s ") : _T(" ")) + g_ZoomLevels;
         if (g_DownloadVPMap)
-            mess_prompt += _(", plus one map for the entire viewport.");
+            mess_prompt += ", " + _("plus one map for the entire viewport.");
         float download_size = (poi_count * num_zooms + ((g_DownloadVPMap) ? 1 : 0) ) * 0.82;
         wxString download_size_str = wxString::Format(wxT("%.0f"), download_size);
-        mess_prompt += _("\n\nThe estimated compressed file size is approximately ") + download_size_str + " MB. ";
+        mess_prompt += "\n\n" + _("The estimated compressed file size is approximately ") + download_size_str + " MB. ";
         if (download_size > 20.0)
-            mess_prompt += _("\nZoom in to a lower number of visible POIs to reduce download time, or reduce the number of zoom levels. ");
-        mess_prompt += _("\n\nSee settings in your squiddio plugin -> Downloads tab to change your zoom levels");
+            mess_prompt += "\n" + _("Zoom in to a lower number of visible POIs to reduce download time, or reduce the number of zoom levels. ");
+        mess_prompt += "\n\n" + _("See settings in your squiddio plugin->Downloads tab to change your zoom levels");
         if (g_DownloadVPMap)
             mess_prompt += _(" or exclude the viewport map.");
 
