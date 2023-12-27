@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
+// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -21,8 +21,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_fgSubSizer->SetFlexibleDirection( wxBOTH );
 	m_fgSubSizer->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
-	m_fgSubSizer->SetMinSize( wxSize( -1,380 ) );
-	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxSize( 480,-1 ), 0 );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_panel1 = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbDestSizer;
 	sbDestSizer = new wxStaticBoxSizer( new wxStaticBox( m_panel1, wxID_ANY, _("Destinations") ), wxVERTICAL );
@@ -88,7 +87,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel1->SetSizer( sbDestSizer );
 	m_panel1->Layout();
 	sbDestSizer->Fit( m_panel1 );
-	m_notebook1->AddPage( m_panel1, _("View"), true );
+	m_notebook1->AddPage( m_panel1, _("View"), false );
 	rendering = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	rendering->SetToolTip( _("Delete downloaded POI files for sectors you have hidden. This limits the proliferation of old unecessary POI files and reduced the computational burden.") );
 
@@ -241,7 +240,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	m_panel3->SetSizer( downloads );
 	m_panel3->Layout();
 	downloads->Fit( m_panel3 );
-	m_notebook1->AddPage( m_panel3, _("Downloads"), false );
+	m_notebook1->AddPage( m_panel3, _("Downloads"), true );
 	logSharing = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* sbLogSizer;
 	sbLogSizer = new wxStaticBoxSizer( new wxStaticBox( logSharing, wxID_ANY, _("Share logs with sQuiddio") ), wxVERTICAL );
@@ -259,8 +258,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	int m_choiceHowOftenNChoices = sizeof( m_choiceHowOftenChoices ) / sizeof( wxString );
 	m_choiceHowOften = new wxChoice( sbLogSizer->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceHowOftenNChoices, m_choiceHowOftenChoices, 0 );
 	m_choiceHowOften->SetSelection( 0 );
-	m_choiceHowOften->SetMinSize( wxSize( 250,-1 ) );
-
 	fgSizerLogs->Add( m_choiceHowOften, 0, wxALL, 5 );
 
 	m_staticText4 = new wxStaticText( sbLogSizer->GetStaticBox(), wxID_ANY, _("Receive"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -271,8 +268,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	int m_choiceReceiveNChoices = sizeof( m_choiceReceiveChoices ) / sizeof( wxString );
 	m_choiceReceive = new wxChoice( sbLogSizer->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choiceReceiveNChoices, m_choiceReceiveChoices, 0 );
 	m_choiceReceive->SetSelection( 0 );
-	m_choiceReceive->SetMinSize( wxSize( 250,-1 ) );
-
 	fgSizerLogs->Add( m_choiceReceive, 0, wxALL, 5 );
 
 
@@ -326,7 +321,6 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 	wxStaticBoxSizer* sbSizer9;
 	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( sbSizer7->GetStaticBox(), wxID_ANY, _("About this plugin") ), wxVERTICAL );
 
-	sbSizer9->SetMinSize( wxSize( 12,1 ) );
 	m_version = new wxStaticText( sbSizer9->GetStaticBox(), wxID_ANY, _("version"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_version->Wrap( -1 );
 	sbSizer9->Add( m_version, 0, wxALL, 5 );
@@ -359,6 +353,7 @@ SquiddioPrefsDialogBase::SquiddioPrefsDialogBase( wxWindow* parent, wxWindowID i
 
 	this->SetSizer( m_fgMainSizer );
 	this->Layout();
+	m_fgMainSizer->Fit( this );
 
 	this->Centre( wxBOTH );
 

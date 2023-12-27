@@ -171,7 +171,7 @@ int period_secs(int period);
 
 typedef void (wxEvtHandler::*myEventFunction)(SquiddioEvent&);
 
-class squiddio_pi : public opencpn_plugin_116, public wxEvtHandler
+class squiddio_pi : public opencpn_plugin_117, public wxEvtHandler
 {
 public:
       squiddio_pi(void *ppimgr);
@@ -185,6 +185,8 @@ public:
       int GetAPIVersionMinor();
       int GetPlugInVersionMajor();
       int GetPlugInVersionMinor();
+      int GetPlugInVersionPatch();
+      int GetPlugInVersionPost();
       wxBitmap * GetPlugInBitmap();
 
       wxString GetCommonName();

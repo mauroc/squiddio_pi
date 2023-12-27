@@ -166,7 +166,7 @@ Poi * GPXLoadWaypoint1( pugi::xml_node &wpt_node,
 
     if( b_layer ) {
         if( GuidString.IsEmpty() )
-            GuidString = _("LayGUID");
+            GuidString = _T("LayGUID");
     }
 
     pWP = new Poi( rlat, rlon, SymString, NameString, GuidString, false ); // do not add to global WP list yet...
@@ -228,7 +228,7 @@ bool GPXCreateWpt( pugi::xml_node node, Poi *pr, unsigned int flags )
             if( pr->m_timestring.Len() )
                 child.append_child(pugi::node_pcdata).set_value(pr->m_timestring.mb_str());
             else {
-                wxString t = pr->GetCreateTime().FormatISODate().Append(_("T")).Append(pr->GetCreateTime().FormatISOTime()).Append(_("Z"));
+                wxString t = pr->GetCreateTime().FormatISODate().Append(_T("T")).Append(pr->GetCreateTime().FormatISOTime()).Append(_T("Z"));
                 child.append_child(pugi::node_pcdata).set_value(t.mb_str());
             }
     }
@@ -407,7 +407,7 @@ bool NavObjectCollection1::LoadAllGPXObjects()
     for (pugi::xml_node object = objects.first_child(); object; object = object.next_sibling())
     {
         if( !strcmp(object.name(), "wpt") ) {
-            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _T(""), false, false, false, 0 );
+            Poi *pWp = ::GPXLoadWaypoint1( object, _T("circle"), _T(""), false, false, false, 0 );
             pWp->m_bIsolatedMark = true;      // This is an isolated mark
             
             if(pWp) {
@@ -437,7 +437,7 @@ int NavObjectCollection1::LoadAllGPXObjectsAsLayer(int layer_id, bool b_layerviz
     for (pugi::xml_node object = objects.first_child(); object; object = object.next_sibling())
     {
         if( !strcmp(object.name(), "wpt") ) {
-            Poi *pWp = ::GPXLoadWaypoint1( object, _("circle"), _T(""), true, true, b_layerviz, layer_id );
+            Poi *pWp = ::GPXLoadWaypoint1( object, _T("circle"), _T(""), true, true, b_layerviz, layer_id );
             pWp->m_bIsolatedMark = true;      // This is an isolated mark
             
             if(pWp) {
