@@ -31,7 +31,7 @@ up-to-date user-sourced information available.
 == Links
 
 * Website: https://squidd.io[sQuiddio.io]
-* Source: https://github.com/mauroc/squiddio_pi[Github Repository]
+* Source: https://github.com/mauroc/squiddio_pi[https://github.com/mauroc/squiddio_pi  Github Repository]
 * Maintenance Source: https://github.com/rgleason/squiddio_pi
 * Release: https://github.com/mauroc/squiddio_pi/releases[Github Release]
 * Download: https://opencpn.org/OpenCPN/plugins/sQuiddio.html[Website Download]
