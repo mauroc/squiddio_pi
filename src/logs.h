@@ -27,9 +27,9 @@
 #define LOGS_H_
 
 #include "squiddio_pi.h"
-#include "jsonreader.h"
+#include "wx/jsonreader.h"
 #include <wx/tokenzr.h>
-//#include "wxJSON/jsonwriter.h"
+//#include "wx/jsonwriter.h"
 
 enum
 {
