@@ -1489,7 +1489,7 @@ void squiddio_pi::GetODAPI()
             
             m_iODAPIVersionMajor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMajor")].AsInt();
             m_iODAPIVersionMinor = g_ReceivedODAPIJSONMsg[_T("ODAPIVersionMinor")].AsInt();
-            if(m_iODAPIVersionMajor == ODAPI_VERSION_MAJOR && m_iODAPIVersionMinor == ODAPI_VERSION_MINOR ) m_bODAPIOK = true;
+            if(m_iODAPIVersionMajor >= ODAPI_VERSION_MAJOR && m_iODAPIVersionMinor >= ODAPI_VERSION_MINOR ) m_bODAPIOK = true;
             else g_OCPN = OCPN_WAYPOINTS;
             
             wxString sptr = g_ReceivedODAPIJSONMsg[_T("OD_FindPointInAnyBoundary")].AsString();
