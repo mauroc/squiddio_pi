@@ -72,14 +72,9 @@ if [[ -z "$CI" ]]; then
     exit 0
 fi
 
-# not-reproducible error on first invocation, seemingly tarball-conf-stamp
+# non-reproducible error on first invocation, seemingly tarball-conf-stamp
 # is not created as required.
-# make package || make package
-make
-make install
-make package
-make package
-
+make package || make package
 
 # Create the cached /usr/local archive
 if [ -n "$CI"  ]; then
